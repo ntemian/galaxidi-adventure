@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>Cutscene Viewer — Το Μυστήριο του Γαλαξειδίου</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+  canvas { image-rendering: pixelated; width: 100vw; height: calc(100vw * 400/640); max-height: 100vh; max-width: calc(100vh * 640/400); }
+</style>
+</head><body>
+<canvas id="c" width="640" height="400"></canvas>
+<script>
+const CVS = document.getElementById('c');
+const ctx = CVS.getContext('2d');
+const GW = 640, GH = 400;
+
+// Image loader
+const images = {};
+function loadImg(key, src) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => { images[key] = img; resolve(img); };
+    img.onerror = () => { console.warn('Failed:', src); resolve(null); };
+    img.src = src;
+  });
+}
+
+// Load all cutscene images
+Promise.all([
+  loadImg('cutscene-road', 'assets/cutscene-road.png'),
+  loadImg('cutscene-descent', 'assets/cutscene-descent.png'),
+  loadImg('bg-exterior', 'assets/pixel-exterior.webp'),
+  loadImg('cutscene-letter', 'assets/cutscene-letter.png'),
+  loadImg('cutscene-cave', 'assets/cutscene-cave.png'),
+  loadImg('cutscene-ghost', 'assets/cutscene-ghost.png'),
+  loadImg('cutscene-crossing', 'assets/cutscene-crossing.png'),
+  loadImg('cutscene-treasure', 'assets/cutscene-treasure.png'),
+  loadImg('cutscene-epilogue', 'assets/cutscene-epilogue.png'),
+]).then(() => {
+  requestAnimationFrame(loop);
+});
+
+// Ken Burns
+function drawKenBurns(imgKey, zoom, panX, panY) {
+  const img = images[imgKey];
+  if (!img) { ctx.fillStyle = '#0a0812'; ctx.fillRect(0, 0, GW, GH); return; }
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  const baseScale = Math.max(GW / img.naturalWidth, GH / img.naturalHeight);
+  const scale = baseScale * zoom;
+  const dw = img.naturalWidth * scale;
+  const dh = img.naturalHeight * scale;
+  const dx = (GW - dw) / 2 + panX;
+  const dy = (GH - dh) / 2 + panY;
+  ctx.drawImage(img, dx, dy, dw, dh);
+  ctx.imageSmoothingEnabled = false;
+  ctx.restore();
+}
+
+// Draw functions per cutscene
+function drawArrivalRoad(t, p, tick) {
+  drawKenBurns('cutscene-road', 1.18 - p * 0.12, -p * 15, -20 + p * 15);
+  ctx.save(); ctx.globalAlpha = 0.03 + Math.sin(tick * 0.02) * 0.01; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawArrivalDescent(t, p, tick) {
+  drawKenBurns('cutscene-descent', 1.15 - p * 0.08, p * 10, -30 + p * 45);
+  if (p > 0.3) {
+    ctx.save(); ctx.globalAlpha = Math.min(1, (p - 0.3) / 0.2) * 0.8;
+    ctx.font = '10px monospace'; ctx.fillStyle = '#FFE8A0'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#000'; ctx.shadowBlur = 8; ctx.fillText('ΓΑΛΑΞΙΔΙ', GW / 2, 60); ctx.restore();
+  }
+}
+function drawArrivalHarbor(t, p, tick) {
+  drawKenBurns('bg-exterior', 1.08 + p * 0.06, 0, p * -10);
+  ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#D4A03C'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawLetterClose(t, p, tick) {
+  drawKenBurns('cutscene-letter', 1.05 + p * 0.15, 0, p * -20);
+  ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.08) * 0.02; ctx.fillStyle = '#FFB040'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawLetterRoom(t, p, tick) {
+  drawKenBurns('cutscene-letter', 1.20 - p * 0.15, p * 10, -20 + p * 20);
+  ctx.save(); ctx.globalAlpha = 0.03; ctx.fillStyle = '#D4A03C'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawCaveEntrance(t, p, tick) {
+  drawKenBurns('cutscene-cave', 1.10 + p * 0.10, 0, p * -15);
+  ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.06) * 0.03; ctx.fillStyle = '#FFa040'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  ctx.save();
+  const v = ctx.createRadialGradient(GW/2, GH/2, GW*0.15, GW/2, GH/2, GW*0.55);
+  v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.45)');
+  ctx.fillStyle = v; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawGhostAppear(t, p, tick) {
+  drawKenBurns('cutscene-ghost', 1.08 + p * 0.08, 0, p * -10);
+  ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.04) * 0.03; ctx.fillStyle = '#40D8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawGhostFade(t, p, tick) {
+  drawKenBurns('cutscene-ghost', 1.16 - p * 0.08, 0, -10 + p * 10);
+  ctx.save(); ctx.globalAlpha = (1 - p) * 0.06; ctx.fillStyle = '#40D8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.12 + p * 0.08; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawCrossingWide(t, p, tick) {
+  drawKenBurns('cutscene-crossing', 1.12 - p * 0.06, -10 + p * 20, 0);
+  ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.015) * 0.02; ctx.fillStyle = '#FFB8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawCrossingClose(t, p, tick) {
+  drawKenBurns('cutscene-crossing', 1.06 + p * 0.14, p * 15, p * -20);
+  ctx.save(); ctx.globalAlpha = 0.03; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawTreasureReveal(t, p, tick) {
+  drawKenBurns('cutscene-treasure', 1.08 + p * 0.12, 0, p * -25);
+  ctx.save(); ctx.globalAlpha = p * 0.08; ctx.fillStyle = '#FFD040'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawTreasureFamily(t, p, tick) {
+  drawKenBurns('cutscene-treasure', 1.20 - p * 0.12, 0, -25 + p * 25);
+  ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawEpilogueHarbor(t, p, tick) {
+  drawKenBurns('cutscene-epilogue', 1.12 - p * 0.06, p * 8, 0);
+  ctx.save(); ctx.globalAlpha = 0.06 + Math.sin(tick * 0.03) * 0.02; ctx.fillStyle = '#FFB860'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawEpilogueClose(t, p, tick) {
+  drawKenBurns('cutscene-epilogue', 1.06 + p * 0.14, -p * 10, p * -15);
+  ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+
+// All cutscenes with titles
+const allCutscenes = [
+  { title: '1. Η ΑΦΙΞΗ — The Arrival', frames: [
+    { duration: 7, draw: drawArrivalRoad, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Πόσο ακόμα, μπαμπά;', at: 1.2 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Λίγο ακόμα. Σχεδόν φτάσαμε.', at: 3.0 },
+    ]},
+    { duration: 6, draw: drawArrivalDescent, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Βλέπω τη θάλασσα! Κοίτα, καράβια!', at: 0.8 },
+      { s: 'ΑΙΑΣ', t: 'Θα κολυμπήσουμε;', at: 2.8 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Πρώτα θα βρούμε το σπίτι του παππού.', at: 4.2 },
+    ]},
+    { duration: 5, draw: drawArrivalHarbor, dialogue: [
+      { s: 'ΝΤΕΜΗΣ', t: 'Φτάσαμε. Γαλαξίδι.', at: 1.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Μυρίζει αλάτι και πεύκο!', at: 3.2 },
+    ]},
+  ]},
+  { title: '2. ΤΟ ΓΡΑΜΜΑ — The Letter', frames: [
+    { duration: 7, draw: drawLetterClose, dialogue: [
+      { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα...»', at: 1.5 },
+      { s: 'ΑΙΑΣ', t: 'Τι πράσινο πέτρωμα;', at: 3.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Ο Καπετάν Βισβίκης. Ο προπάππους μου.', at: 5.0 },
+    ]},
+    { duration: 6, draw: drawLetterRoom, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά, αυτός μας ζητάει να βρούμε κάτι!', at: 1.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Μας ζητάει να βρούμε την αλήθεια.', at: 3.2 },
+    ]},
+  ]},
+  { title: '3. ΤΟ ΣΠΗΛΑΙΟ — The Cave', frames: [
+    { duration: 8, draw: drawCaveEntrance, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Σκοτεινά... Μπαμπά, κράτα ψηλά το φανάρι!', at: 1.0 },
+      { s: 'ΚΛΕΙΩ', t: 'Κοίτα στον τοίχο! Ονόματα πλοίων!', at: 3.2 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Οι καπεταναίοι σημάδευαν το πέρασμά τους εδώ.', at: 5.5 },
+    ]},
+  ]},
+  { title: '4. Ο ΚΑΠΕΤΑΝΙΟΣ — The Captain', frames: [
+    { duration: 8, draw: drawGhostAppear, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί.', at: 1.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη...', at: 3.5 },
+      { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι.', at: 5.5 },
+    ]},
+    { duration: 6, draw: drawGhostFade, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε!', at: 1.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
+    ]},
+  ]},
+  { title: '5. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
+    { duration: 8, draw: drawCrossingWide, dialogue: [
+      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω.', at: 1.5 },
+      { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη;', at: 4.0 },
+      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η Ελπίδα. Το τελευταίο του ταξίδι.', at: 5.5 },
+    ]},
+    { duration: 7, draw: drawCrossingClose, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Βλέπω το νησάκι!', at: 1.5 },
+      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της.', at: 3.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Αλλιώς πνίγεσαι.', at: 5.8 },
+    ]},
+  ]},
+  { title: '6. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
+    { duration: 7, draw: drawTreasureReveal, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Χρυσάφι... Κοίτα, μπαμπά!', at: 1.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Και ένα κολιέ. Πράσινο σαν το πέτρωμα!', at: 3.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Το βιβλίο... Η αλληλασφάλεια. 104 υπογραφές.', at: 5.2 },
+    ]},
+    { duration: 8, draw: drawTreasureFamily, dialogue: [
+      { s: 'ΝΤΕΜΗΣ', t: '«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»', at: 1.5 },
+      { s: 'ΑΙΑΣ', t: 'Τι εννοεί "άλλαξε το πλοίο";', at: 4.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 5.8 },
+    ]},
+  ]},
+  { title: '7. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
+    { duration: 8, draw: drawEpilogueHarbor, dialogue: [
+      { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι.', at: 1.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Μας άφησε μια ιδέα. Την αλληλεγγύη.', at: 4.0 },
+    ]},
+    { duration: 8, draw: drawEpilogueClose, dialogue: [
+      { s: 'ΑΚΗΣ', t: 'Γυρνάω την κάμερα. Αυτό πρέπει να το δει ο κόσμος.', at: 1.0 },
+      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... η θάλασσα θυμάται;', at: 4.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.', at: 5.8 },
+    ]},
+  ]},
+];
+
+// Player state
+let csIdx = 0, frameIdx = 0, frameTime = 0, tick = 0;
+let dlgText = '', dlgDisplayed = '', dlgSpeaker = '', dlgCharIdx = 0, dlgTimer = 0;
+let dlgTriggered = new Set();
+let fadeAlpha = 1, transitioning = false;
+let titleTimer = 0, showingTitle = true;
+let started = false;
+
+function resetFrame() {
+  frameTime = 0;
+  dlgText = ''; dlgDisplayed = ''; dlgSpeaker = ''; dlgCharIdx = 0; dlgTimer = 0;
+  dlgTriggered = new Set();
+  fadeAlpha = 1;
+  transitioning = false;
+}
+
+function nextFrame() {
+  const cs = allCutscenes[csIdx];
+  if (frameIdx < cs.frames.length - 1) {
+    transitioning = true;
+  } else {
+    // Next cutscene
+    csIdx++;
+    frameIdx = 0;
+    if (csIdx >= allCutscenes.length) { csIdx = 0; } // loop
+    resetFrame();
+    showingTitle = true;
+    titleTimer = 0;
+  }
+}
+
+let lastTime = 0;
+function loop(now) {
+  const dt = Math.min(0.1, (now - lastTime) / 1000);
+  lastTime = now;
+  tick++;
+
+  ctx.fillStyle = '#0a0812';
+  ctx.fillRect(0, 0, GW, GH);
+
+  if (!started) {
+    // Start screen
+    ctx.fillStyle = '#D4A03C';
+    ctx.font = '12px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('CUTSCENE VIEWER', GW/2, GH/2 - 30);
+    ctx.fillStyle = '#FFE8A0';
+    ctx.font = '8px monospace';
+    ctx.fillText('Το Μυστήριο του Γαλαξειδίου', GW/2, GH/2);
+    ctx.fillStyle = '#888';
+    ctx.font = '7px monospace';
+    ctx.fillText('Click to start · Click to skip frames · Esc to skip cutscene', GW/2, GH/2 + 40);
+    requestAnimationFrame(loop);
+    return;
+  }
+
+  const cs = allCutscenes[csIdx];
+
+  // Title card between cutscenes
+  if (showingTitle) {
+    titleTimer += dt;
+    ctx.fillStyle = '#D4A03C';
+    ctx.font = '10px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const alpha = titleTimer < 0.5 ? titleTimer / 0.5 : titleTimer > 2.5 ? Math.max(0, 1 - (titleTimer - 2.5) / 0.5) : 1;
+    ctx.globalAlpha = alpha;
+    ctx.fillText(cs.title, GW/2, GH/2);
+    ctx.globalAlpha = 0.5 * alpha;
+    ctx.fillStyle = '#888';
+    ctx.font = '6px monospace';
+    ctx.fillText(`${csIdx + 1} / ${allCutscenes.length}`, GW/2, GH/2 + 25);
+    ctx.globalAlpha = 1;
+    if (titleTimer >= 3) {
+      showingTitle = false;
+      resetFrame();
+    }
+    requestAnimationFrame(loop);
+    return;
+  }
+
+  // Transition between frames
+  if (transitioning) {
+    fadeAlpha = Math.min(1, fadeAlpha + dt * 2.0);
+    if (fadeAlpha >= 1) {
+      frameIdx++;
+      resetFrame();
+    }
+    // Draw current frame dimming out
+    const frame = cs.frames[frameIdx];
+    const t = frameTime;
+    const p = Math.min(1, t / frame.duration);
+    ctx.save(); frame.draw(t, p, tick); ctx.restore();
+    ctx.save(); ctx.globalAlpha = fadeAlpha; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+    requestAnimationFrame(loop);
+    return;
+  }
+
+  const frame = cs.frames[frameIdx];
+  frameTime += dt;
+  const t = frameTime;
+  const p = Math.min(1, t / frame.duration);
+
+  // Fade in
+  if (fadeAlpha > 0) fadeAlpha = Math.max(0, fadeAlpha - dt * 1.5);
+
+  // Trigger dialogue
+  if (frame.dialogue) {
+    for (let i = 0; i < frame.dialogue.length; i++) {
+      const key = `${frameIdx}-${i}`;
+      if (!dlgTriggered.has(key) && frameTime >= frame.dialogue[i].at) {
+        dlgTriggered.add(key);
+        dlgSpeaker = frame.dialogue[i].s;
+        dlgText = frame.dialogue[i].t;
+        dlgDisplayed = '';
+        dlgCharIdx = 0;
+        dlgTimer = 0;
+      }
+    }
+  }
+
+  // Typewriter
+  if (dlgCharIdx < dlgText.length) {
+    dlgTimer += dt;
+    while (dlgTimer >= 0.03 && dlgCharIdx < dlgText.length) {
+      dlgDisplayed += dlgText[dlgCharIdx++];
+      dlgTimer -= 0.03;
+    }
+  }
+
+  // Draw scene
+  ctx.save(); frame.draw(t, p, tick); ctx.restore();
+
+  // Vignette
+  ctx.save();
+  const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.28, GW/2, GH/2, GW*0.72);
+  vig.addColorStop(0, 'rgba(0,0,0,0)'); vig.addColorStop(1, 'rgba(0,0,0,0.35)');
+  ctx.fillStyle = vig; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+
+  // Letterbox
+  const barH = 38;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, GW, barH);
+  ctx.fillRect(0, GH - barH, GW, barH);
+
+  // Film grain
+  ctx.save(); ctx.globalAlpha = 0.02;
+  for (let i = 0; i < 40; i++) {
+    ctx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
+    ctx.fillRect(Math.random() * GW | 0, Math.random() * GH | 0, 1, 1);
+  }
+  ctx.restore();
+
+  // Dialogue
+  if (dlgDisplayed) {
+    const dlgY = GH - barH;
+    ctx.save();
+    ctx.globalAlpha = 0.6; ctx.fillStyle = '#000'; ctx.fillRect(0, dlgY - 42, GW, 42);
+    ctx.globalAlpha = 1;
+    if (dlgSpeaker) {
+      ctx.font = '6px monospace'; ctx.fillStyle = '#D4A03C';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.shadowColor = '#000'; ctx.shadowBlur = 3;
+      ctx.fillText(dlgSpeaker, GW/2, dlgY - 26);
+    }
+    ctx.font = '8px monospace'; ctx.fillStyle = '#FFF5E0';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
+    ctx.fillText(dlgDisplayed, GW/2, dlgY - 8);
+    ctx.restore();
+  }
+
+  // Fade overlay
+  if (fadeAlpha > 0) {
+    ctx.save(); ctx.globalAlpha = fadeAlpha; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  }
+
+  // Cutscene counter
+  ctx.save(); ctx.globalAlpha = 0.3; ctx.font = '5px monospace'; ctx.fillStyle = '#fff';
+  ctx.textAlign = 'right'; ctx.fillText(`${csIdx+1}/${allCutscenes.length}`, GW - 8, 14); ctx.restore();
+
+  // Auto-advance
+  if (frameTime >= frame.duration) nextFrame();
+
+  requestAnimationFrame(loop);
+}
+
+// Click to start / skip
+CVS.addEventListener('click', () => {
+  if (!started) { started = true; return; }
+  if (showingTitle) { showingTitle = false; resetFrame(); return; }
+  // Speed up typewriter or advance frame
+  if (dlgCharIdx < dlgText.length) {
+    dlgDisplayed = dlgText; dlgCharIdx = dlgText.length;
+  } else {
+    nextFrame();
+  }
+});
+
+// Escape to skip entire cutscene
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    csIdx++;
+    frameIdx = 0;
+    if (csIdx >= allCutscenes.length) csIdx = 0;
+    resetFrame();
+    showingTitle = true;
+    titleTimer = 0;
+  }
+});
+
+requestAnimationFrame(loop);
+</script>
+</body></html>

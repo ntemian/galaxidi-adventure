@@ -1254,6 +1254,30 @@ function skipCutscene() {
   cs.onComplete();
 }
 
+// Debug: play all cutscenes back to back (call from console: playAllCutscenes())
+function playAllCutscenes() {
+  const ids = ['arrival','letter','cave_enter','ghost','crossing','treasure','epilogue'];
+  let i = 0;
+  const savedCompletes = {};
+  ids.forEach(id => { savedCompletes[id] = cutscenes[id].onComplete; });
+  function playNext() {
+    if (i >= ids.length) {
+      // Restore original onComplete handlers
+      ids.forEach(id => { cutscenes[id].onComplete = savedCompletes[id]; });
+      console.log('All cutscenes played!');
+      state.phase = 'playing';
+      startScene('exterior');
+      return;
+    }
+    const id = ids[i++];
+    cutscenes[id].onComplete = () => { playNext(); };
+    startCutscene(id);
+  }
+  document.getElementById('ui-panel').classList.remove('on');
+  document.getElementById('action-line').classList.remove('on');
+  playNext();
+}
+
 function renderCutscene() {
   if (!state.cutscene.active) return;
   const cs = cutscenes[state.cutscene.id];
@@ -3461,7 +3485,7 @@ function startGhostSequence() {
       if (!sc.exits.find(e => e.target === 'church')) {
         sc.exits.push({ side: 'right', target: 'church', label: 'Αγ. Νικόλαος →' });
       }
-      npcChars.ghost.visible = true;
+      npcChars.ghost.visible = false;
     }},
   ]);
 }
@@ -4324,7 +4348,7 @@ const sceneMusic = {
   boat:     'music/the-crossing-1.mp3',
   cave_final:'music/the-treasure-1.mp3',
   epilogue:  'music/the-sea-remembers-1.mp3',
-  _ghost:    'music/the-ghost-of-captain-visvikis-1.mp3',
+  _ghost:    'music/graveyard-veil-1.mp3',
 };
 
 let currentMusicSrc = '';
