@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Η Θάλασσα Θυμάται — Canvas Engine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+  body { background: #000; overflow: hidden; font-family: 'Press Start 2P', monospace; display: flex; flex-direction: column; height: 100vh; }
+
+  /* ── CANVAS ── */
+  #game-canvas {
+    display: block; background: #0a0812;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    cursor: crosshair;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+
+  /* ── ACTION LINE ── */
+  #action-line {
+    height: 22px; background: #12100e; display: none; align-items: center; justify-content: center;
+    font-size: .55rem; color: #D4A03C; border-top: 2px solid #2a2218;
+  }
+  #action-line.on { display: flex; }
+
+  /* ── UI PANEL ── */
+  #ui-panel {
+    height: 130px; min-height: 130px; background: #12100e; border-top: 2px solid #2a2218;
+    display: none; grid-template-columns: 220px 1fr;
+  }
+  #ui-panel.on { display: grid; }
+  #verb-panel { display: grid; grid-template-columns: repeat(2,1fr); grid-template-rows: repeat(4,1fr); gap: 2px; padding: 6px; }
+  .vb {
+    font-family: 'Press Start 2P', monospace; font-size: .5rem; color: #6B6252;
+    background: #1a1714; border: 1px solid #2a2218; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; padding: 0 4px; transition: all .1s;
+  }
+  .vb:hover { color: #D4A03C; border-color: #D4A03C; }
+  .vb:active { transform: scale(.93); }
+  .vb.on { color: #D4A03C; background: #221e18; border-color: #D4A03C; }
+  #inv-panel { display: flex; flex-direction: column; padding: 6px 10px; gap: 4px; }
+  #inv-label { font-size: .4rem; color: #4a4a4a; letter-spacing: .1em; }
+  #inv-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, 70px); gap: 3px; align-content: start; }
+  .inv-slot {
+    height: 32px; background: #1a1714; border: 1px solid #2a2218;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Press Start 2P', monospace; font-size: .4rem; color: #6B6252;
+    cursor: pointer; transition: all .1s; padding: 2px 4px;
+  }
+  .inv-slot:hover { border-color: #D4A03C; color: #D4A03C; }
+  .inv-slot.on { border-color: #D4A03C; background: #221e18; color: #D4A03C; }
+
+  /* ── TITLE OVERLAY ── */
+  #title-screen {
+    position: fixed; inset: 0; background: #0a0812;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 2000; cursor: pointer; transition: opacity 2s;
+  }
+  @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:.9} }
+  @keyframes glow {
+    0%,100% { text-shadow: 0 0 40px rgba(212,160,60,.3), 3px 3px 0 #1B3A5C; }
+    50% { text-shadow: 0 0 60px rgba(212,160,60,.5), 0 0 100px rgba(212,160,60,.15), 3px 3px 0 #1B3A5C; }
+  }
+  .t-main { font-size: clamp(1rem,3vw,2rem); color:#D4A03C; letter-spacing:.08em; text-align:center; line-height:1.8; animation: glow 3s ease-in-out infinite; }
+  .t-sub { font-size: clamp(.5rem,1vw,.7rem); color:#5C6B3C; letter-spacing:.15em; margin-top:2rem; }
+  .t-go { font-size:.6rem; color:#4a4a4a; margin-top:3rem; animation: blink 2s infinite; }
+
+  /* ── INTRO OVERLAY ── */
+  #intro-screen {
+    position: fixed; inset: 0; background: #0a0812;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 1500; padding: 2rem; cursor: pointer; transition: opacity 1.5s;
+  }
+  #intro-screen.show { display: flex; }
+  #intro-text { max-width:600px; font-size:clamp(.6rem,1.2vw,.8rem); color:#D4A03C; line-height:2.5; text-align:center; opacity:0; transition: opacity 1.5s; }
+  #intro-hint { font-size:.5rem; color:#4a4a4a; margin-top:2rem; opacity:0; transition: opacity .5s; }
+  #intro-hint.on { opacity:1; animation: blink 2s infinite; }
+
+  /* ── FADE ── */
+  #fade { position: fixed; inset: 0; background: #000; z-index: 3000; opacity: 0; pointer-events: none; transition: opacity .5s; }
+  #fade.on { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div id="fade"></div>
+
+<div id="title-screen">
+  <div class="t-main">Η ΘΑΛΑΣΣΑ<br>ΘΥΜΑΤΑΙ</div>
+  <div class="t-sub">ΣΚΗΝΗ ΠΡΩΤΗ — Η ΑΦΙΞΗ</div>
+  <div class="t-go">ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ</div>
+</div>
+
+<div id="intro-screen">
+  <div id="intro-text"></div>
+  <div id="intro-hint">▶ ΚΛΙΚ</div>
+</div>
+
+<canvas id="game-canvas" width="640" height="400"></canvas>
+
+<div id="action-line"></div>
+
+<div id="ui-panel">
+  <div id="verb-panel">
+    <button class="vb on" data-v="look" onclick="setVerb('look')">Κοίτα</button>
+    <button class="vb" data-v="use" onclick="setVerb('use')">Χρησιμοποίησε</button>
+    <button class="vb" data-v="talk" onclick="setVerb('talk')">Μίλα</button>
+    <button class="vb" data-v="open" onclick="setVerb('open')">Άνοιξε</button>
+    <button class="vb" data-v="pick" onclick="setVerb('pick')">Πάρε</button>
+    <button class="vb" data-v="push" onclick="setVerb('push')">Σπρώξε</button>
+    <button class="vb" data-v="close" onclick="setVerb('close')">Κλείσε</button>
+    <button class="vb" data-v="walk" onclick="setVerb('walk')">Πήγαινε</button>
+  </div>
+  <div id="inv-panel">
+    <div id="inv-label">ΑΝΤΙΚΕΙΜΕΝΑ</div>
+    <div id="inv-grid"></div>
+  </div>
+</div>
+
+<audio id="bgm" loop preload="auto"><source src="music/scene1-music.mp3" type="audio/mpeg"></audio>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// CANVAS ENGINE — Pure requestAnimationFrame game loop
+// ════════════════════════════════════════════════════════════
+const CVS = document.getElementById('game-canvas');
+const ctx = CVS.getContext('2d');
+const GW = 640, GH = 400; // internal game resolution
+CVS.width = GW; CVS.height = GH;
+
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+const state = {
+  phase: 'title', // title, intro, playing
+  scene: null,
+  verb: 'look',
+  inv: [],
+  flags: {},
+  visited: new Set(),
+  tick: 0,
+  mouseGX: 0, mouseGY: 0,
+  hoverObj: null,
+  musicOn: false,
+  dlg: { active: false, queue: [], text: '', displayed: '', charIdx: 0, timer: 0, speaker: '', cb: null },
+  fade: { active: false, alpha: 0, dir: 0, cb: null },
+  introPage: 0,
+};
+
+// Characters
+const chars = {
+  ntemis: { x: 0, y: 0, dir: 1, walking: false, frame: 0, targetX: null, startX: 0, walkT: 0, walkDur: 0, visible: true, fadeIn: 0 },
+  ajax:   { x: 0, y: 0, dir: 1, walking: false, frame: 0, targetX: null, startX: 0, walkT: 0, walkDur: 0, visible: true, fadeIn: 0 },
+  clio:   { x: 0, y: 0, dir: 1, walking: false, frame: 0, targetX: null, startX: 0, walkT: 0, walkDur: 0, visible: true, fadeIn: 0 },
+};
+let walkDoneCallback = null;
+
+// ════════════════════════════════════════════════════════════
+// IMAGE LOADING
+// ════════════════════════════════════════════════════════════
+const images = {};
+function loadImg(key, src) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => { images[key] = img; resolve(img); };
+    img.onerror = () => { console.warn('Failed to load:', src); resolve(null); };
+    img.src = src;
+  });
+}
+
+// Character idle sprites
+const CHAR_IMGS = {};
+const WALK_FRAMES = { ntemis: [], ajax: [], clio: [] };
+const PORTRAITS = {};
+
+async function loadAllAssets() {
+  // Backgrounds
+  await Promise.all([
+    loadImg('bg-exterior', 'assets/pixel-exterior.png'),
+    loadImg('bg-terrace', 'assets/pixel-terrace.png'),
+    loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
+  ]);
+
+  // Character idle sprites
+  const charPromises = ['ntemis','ajax','clio'].map(id =>
+    loadImg(`char-${id}`, `assets/char-${id}-final.png`).then(img => { CHAR_IMGS[id] = img; })
+  );
+
+  // Portraits
+  const portPromises = [
+    loadImg('port-ntemis', 'assets/portrait-ntemis.png').then(img => { PORTRAITS['ΝΤΕΜΗΣ'] = img; }),
+    loadImg('port-ajax', 'assets/portrait-ajax.png').then(img => { PORTRAITS['ΑΙΑΣ'] = img; }),
+    loadImg('port-clio', 'assets/portrait-clio.png').then(img => { PORTRAITS['ΚΛΕΙΩ'] = img; }),
+  ];
+
+  await Promise.all([...charPromises, ...portPromises]);
+
+  // Walk frames from JSON
+  try {
+    const resp = await fetch('assets/walk-frames-b64.json');
+    const data = await resp.json();
+    for (const who of ['ntemis','ajax','clio']) {
+      if (data[who]) {
+        for (let i = 0; i < data[who].length; i++) {
+          const img = new Image();
+          img.src = 'data:image/png;base64,' + data[who][i];
+          WALK_FRAMES[who].push(img);
+        }
+      }
+    }
+  } catch(e) { console.warn('Walk frames load failed:', e); }
+}
+
+// ════════════════════════════════════════════════════════════
+// SCENES DATA
+// ════════════════════════════════════════════════════════════
+const scenes = {
+  exterior: {
+    label: 'ΤΟ ΣΠΙΤΙ — ΓΑΛΑΞΙΔΙ', bg: 'bg-exterior',
+    charPos: {
+      ntemis: { x: 290, y: 340 },
+      ajax:   { x: 370, y: 348 },
+      clio:   { x: 210, y: 348 },
+    },
+    objects: [
+      { id:'door', x:115, y:100, w:70, h:120, label:'Πόρτα',
+        verbs: { look:[{s:'',t:'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.'}],
+                 open:[{s:'ΝΤΕΜΗΣ',t:'Ας μπούμε μέσα.'}], walk:'kitchen', use:'kitchen' }},
+      { id:'bougainvillea', x:175, y:20, w:150, h:120, label:'Μπουκαμβίλιες',
+        verbs: { look:[{s:'',t:'Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.'}],
+                 pick:[{s:'ΚΛΕΙΩ',t:'Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.'}] }},
+      { id:'flowerpots', x:75, y:195, w:65, h:55, label:'Γλάστρες',
+        verbs: { look:[{s:'',t:'Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.'}] }},
+      { id:'barrel', x:245, y:180, w:55, h:60, label:'Βαρέλι',
+        verbs: { look:[{s:'',t:'Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.'}],
+                 open:[{s:'ΑΙΑΣ',t:'Άδειο. Κρίμα!'}] }},
+      { id:'boats', x:380, y:120, w:140, h:80, label:'Ψαροκάικα',
+        verbs: { look:[{s:'',t:'Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.'},{s:'ΑΙΑΣ',t:'Μπαμπά, θα πάμε βόλτα με βάρκα;'}] }},
+      { id:'sea', x:350, y:60, w:230, h:60, label:'Η θάλασσα',
+        verbs: { look:[{s:'',t:'Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.'}] }},
+    ],
+    exits: [{ side:'right', target:'terrace', label:'Βεράντα →' }],
+    entry: [
+      {s:'',t:'Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.'},
+      {s:'ΝΤΕΜΗΣ',t:'Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.'},
+      {s:'ΑΙΑΣ',t:'Τέλειο! Πάμε κατευθείαν στο λιμάνι;'},
+      {s:'ΚΛΕΙΩ',t:'Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.'},
+    ],
+  },
+  terrace: {
+    label: 'Η ΒΕΡΑΝΤΑ', bg: 'bg-terrace',
+    charPos: {
+      ntemis: { x: 320, y: 345 },
+      ajax:   { x: 420, y: 350 },
+      clio:   { x: 225, y: 350 },
+    },
+    objects: [
+      { id:'harbor', x:140, y:120, w:280, h:100, label:'Το λιμάνι',
+        verbs: { look:()=>{
+          if(!state.flags.dolphins){state.flags.dolphins=1;return[
+            {s:'',t:'Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.'},
+            {s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα! Δελφίνια!'},
+            {s:'',t:'Τρία δελφίνια κόβουν βόλτες στο λιμάνι.'},
+            {s:'ΑΙΑΣ',t:'Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...'}];}
+          return[{s:'',t:'Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.'}];}}},
+      { id:'rooftops', x:30, y:80, w:130, h:100, label:'Σκεπές',
+        verbs: { look:[{s:'',t:'Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.'}] }},
+      { id:'mountains', x:250, y:12, w:300, h:80, label:'Παρνασσός',
+        verbs: { look:[{s:'',t:'Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.'},{s:'ΚΛΕΙΩ',t:'Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.'}] }},
+      { id:'balustrade', x:90, y:240, w:370, h:40, label:'Κάγκελο',
+        verbs: { look:[{s:'',t:'Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.'}],
+                 push:[{s:'ΚΛΕΙΩ',t:'Μπαμπά, μην ακουμπάς, φαίνεται παλιό!'}] }},
+      { id:'flowerpot', x:10, y:220, w:65, h:60, label:'Γλάστρα',
+        verbs: { look:[{s:'',t:'Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.'}] }},
+    ],
+    exits: [{ side:'left', target:'exterior', label:'← Σπίτι' }],
+    entry: [
+      {s:'',t:'Η θέα κόβει την ανάσα.'},
+      {s:'ΚΛΕΙΩ',t:'Αυτό είναι το πιο όμορφο μέρος στον κόσμο.'},
+      {s:'ΝΤΕΜΗΣ',t:'Καλωσορίσατε στο Γαλαξίδι.'},
+    ],
+  },
+  kitchen: {
+    label: 'Η ΚΟΥΖΙΝΑ', bg: 'bg-kitchen',
+    charPos: {
+      ntemis: { x: 350, y: 340 },
+      ajax:   { x: 450, y: 345 },
+      clio:   { x: 100, y: 345 },
+    },
+    objects: [
+      { id:'figs', x:180, y:175, w:100, h:55, label:'Σύκα',
+        verbs: { look:[{s:'',t:'Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.'}],
+                 pick:[{s:'ΑΙΑΣ',t:'Μπαμπά, μπορώ να φάω ένα;'},{s:'ΝΤΕΜΗΣ',t:'Φυσικά.'}],
+                 use:[{s:'',t:'Τρως ένα σύκο. Γλυκό σαν μέλι.'}] }},
+      { id:'satchel', x:340, y:168, w:80, h:85, label:'Δερμάτινη τσάντα',
+        verbs: {
+          look:()=>{if(!state.flags.note)return[{s:'',t:'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.'}];return[{s:'',t:'Η τσάντα είναι άδεια τώρα.'}];},
+          open:()=>{if(!state.flags.note){state.flags.note=1;addInv({id:'note',label:'Σημείωμα'});return[{s:'',t:'Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.'},{s:'ΚΛΕΙΩ',t:'Διάβασέ το!'},{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'ΑΙΑΣ',t:'Ποιος είναι ο «Γ.»;'},{s:'ΝΤΕΜΗΣ',t:'Και πώς ξέρει ότι είμαστε τρεις;'}];}return[{s:'',t:'Η τσάντα είναι πλέον άδεια.'}];},
+          pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.'}] }},
+      { id:'window', x:455, y:50, w:95, h:115, label:'Παράθυρο',
+        verbs: { look:[{s:'',t:'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.'}],
+                 open:[{s:'',t:'Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.'}] }},
+      { id:'pots', x:150, y:35, w:240, h:65, label:'Χάλκινα σκεύη',
+        verbs: { look:[{s:'',t:'Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.'}] }},
+      { id:'fireplace', x:0, y:75, w:95, h:145, label:'Τζάκι',
+        verbs: { look:[{s:'',t:'Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.'}] }},
+    ],
+    exits: [{ side:'left', target:'exterior', label:'← Έξω' }],
+    entry: [
+      {s:'',t:'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.'},
+      {s:'ΚΛΕΙΩ',t:'Κοιτάξτε — κάποιος μας άφησε σύκα!'},
+      {s:'ΑΙΑΣ',t:'Και κάτι πάνω στην καρέκλα... μια τσάντα;'},
+    ],
+  },
+};
+
+// ════════════════════════════════════════════════════════════
+// INTRO PAGES
+// ════════════════════════════════════════════════════════════
+const introPages = [
+  'Γαλαξίδι.\nΤέλη Σεπτεμβρίου, 2026.',
+  'Ένα μικρό λιμάνι\nστον Κορινθιακό κόλπο.\n\nΕκεί που κάποτε ξεκινούσαν\nτα πιο τολμηρά καράβια\nτης Ελλάδας.',
+  'Ο Ντέμης έφτασε\nμε τα δυο του παιδιά\nγια ένα ήσυχο\nΣαββατοκύριακο.\n\nΤουλάχιστον,\nαυτό νόμιζε.',
+];
+
+// ════════════════════════════════════════════════════════════
+// EASING
+// ════════════════════════════════════════════════════════════
+function easeInOutCubic(t) { return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+
+// ════════════════════════════════════════════════════════════
+// COORDINATE CONVERSION
+// ════════════════════════════════════════════════════════════
+function screenToGame(sx, sy) {
+  const rect = CVS.getBoundingClientRect();
+  const scaleX = GW / rect.width;
+  const scaleY = GH / rect.height;
+  return { x: (sx - rect.left) * scaleX, y: (sy - rect.top) * scaleY };
+}
+
+// ════════════════════════════════════════════════════════════
+// DUST PARTICLES (canvas-drawn)
+// ════════════════════════════════════════════════════════════
+const particles = [];
+function initParticles() {
+  particles.length = 0;
+  for (let i = 0; i < 20; i++) {
+    particles.push({
+      x: Math.random() * GW,
+      y: 60 + Math.random() * 240,
+      vx: 0.1 + Math.random() * 0.25,
+      vy: -0.05 - Math.random() * 0.12,
+      size: 0.8 + Math.random() * 1.8,
+      alpha: 0,
+      maxAlpha: 0.12 + Math.random() * 0.18,
+      life: Math.random() * 700,
+      maxLife: 500 + Math.random() * 400,
+    });
+  }
+}
+
+function updateParticles() {
+  for (const p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life++;
+    const prog = p.life / p.maxLife;
+    if (prog < 0.3) p.alpha = p.maxAlpha * (prog / 0.3) * (prog / 0.3); // quadratic fade-in
+    else if (prog > 0.7) { const f = (prog - 0.7) / 0.3; p.alpha = p.maxAlpha * (1 - f * f); } // quadratic fade-out
+    else p.alpha = p.maxAlpha;
+    if (p.life >= p.maxLife || p.x > GW + 10 || p.y < -10) {
+      p.x = -5 + Math.random() * 20;
+      p.y = 80 + Math.random() * 200;
+      p.life = 0;
+      p.alpha = 0;
+    }
+  }
+}
+
+function drawParticles() {
+  for (const p of particles) {
+    if (p.alpha <= 0) continue;
+    ctx.save();
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = '#D4A03C';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// CHARACTER RENDERING (ported from Galaxidi Adventure)
+// ════════════════════════════════════════════════════════════
+const CHAR_HEIGHTS = { ntemis: 118, ajax: 84, clio: 92 };
+
+// Per-character anatomy: waist split ratio & max leg stride (pixels)
+const WALK_ANATOMY = {
+  ntemis: { waist: 0.62, stride: 7 },
+  ajax:   { waist: 0.58, stride: 6 },
+  clio:   { waist: 0.60, stride: 6 },
+};
+
+function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
+  const img = CHAR_IMGS[who];
+  if (!img || !img.complete || !img.naturalWidth) {
+    drawFallbackPerson(gx, gy, who);
+    return;
+  }
+  const sprW = img.naturalWidth;
+  const sprH = img.naturalHeight;
+  const anat = WALK_ANATOMY[who] || { waist: 0.60, stride: 6 };
+
+  if (walking) {
+    // ── WALK PHASE ──
+    const walkPhase = frame * Math.PI * 3 + frameOffset * Math.PI / 3;
+    const bob = -Math.abs(Math.sin(walkPhase)) * 3;
+    const lean = dir * 0.025;
+    const strideDir = Math.sin(walkPhase); // -1 to 1
+
+    const waistY = Math.floor(sprH * anat.waist);
+    const legH = sprH - waistY;
+    const maxStride = anat.stride;
+
+    // Ground shadow (stretches with stride)
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#4A3A28';
+    const sw = sprW * 0.6 + Math.abs(strideDir) * 3;
+    ctx.beginPath();
+    ctx.ellipse(gx, gy + 3, sw, 3.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.translate(gx, gy + bob);
+    if (dir < 0) ctx.scale(-1, 1);
+    ctx.rotate(lean);
+
+    // ── UPPER BODY (slight counter-sway) ──
+    const counterSway = -strideDir * 1.5;
+    ctx.drawImage(img,
+      0, 0, sprW, waistY,
+      -sprW/2 + counterSway, -sprH, sprW, waistY
+    );
+
+    // ── BACK LEG (drawn first, darker, shifted opposite, lifted) ──
+    const bandH = 2;
+    ctx.save();
+    ctx.globalAlpha = 0.7;
+    for (let y = 0; y < legH; y += bandH) {
+      const progress = y / Math.max(1, legH - 1);
+      const backOff = -strideDir * maxStride * 0.7 * (0.3 + 0.7 * progress);
+      const lift = Math.abs(strideDir) * 3 * progress;
+      const h = Math.min(bandH, legH - y);
+      ctx.drawImage(img,
+        0, waistY + y, sprW, h,
+        -sprW/2 + backOff, -sprH + waistY + y - lift, sprW, h
+      );
+    }
+    ctx.restore();
+
+    // ── FRONT LEG (on top, full brightness, shifted forward) ──
+    for (let y = 0; y < legH; y += bandH) {
+      const progress = y / Math.max(1, legH - 1);
+      const frontOff = strideDir * maxStride * (0.3 + 0.7 * progress);
+      const h = Math.min(bandH, legH - y);
+      ctx.drawImage(img,
+        0, waistY + y, sprW, h,
+        -sprW/2 + frontOff, -sprH + waistY + y, sprW, h
+      );
+    }
+
+    ctx.restore();
+
+  } else {
+    // ── IDLE ANIMATION ──
+    const bp = tick * 0.03 + frameOffset * 3;
+    const breathe = Math.sin(bp) * 1.0 + Math.sin(bp * 0.6 + 0.5) * 0.4;
+    const sway = Math.sin(tick * 0.01 + frameOffset * 2.5) * 0.008
+               + Math.sin(tick * 0.023 + frameOffset) * 0.003;
+    const bc = Math.sin(bp);
+    const squashX = 1 + bc * 0.005;
+    const squashY = 1 - bc * 0.005;
+
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = '#4A3A28';
+    ctx.beginPath();
+    ctx.ellipse(gx, gy + 3, sprW * 0.6, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.translate(gx, gy + breathe);
+    if (dir < 0) ctx.scale(-1, 1);
+    ctx.rotate(sway);
+    ctx.scale(squashX, squashY);
+    ctx.drawImage(img, -sprW/2, -sprH);
+    ctx.restore();
+  }
+}
+
+function drawFallbackPerson(x, y, who) {
+  const colors = {
+    ntemis: { shirt: '#2A4466', pants: '#1a2a3a', skin: '#DDAA88' },
+    ajax:   { shirt: '#4A6644', pants: '#2a3a2a', skin: '#DDBB99' },
+    clio:   { shirt: '#664466', pants: '#3a2a3a', skin: '#DDC0A0' },
+  };
+  const c = colors[who] || colors.ntemis;
+  const h = who === 'ntemis' ? 40 : 32;
+  // Simple rectangle person
+  ctx.fillStyle = c.skin;
+  ctx.fillRect(x - 4, y - h, 8, 10); // head
+  ctx.fillStyle = c.shirt;
+  ctx.fillRect(x - 6, y - h + 10, 12, 14); // body
+  ctx.fillStyle = c.pants;
+  ctx.fillRect(x - 5, y - h + 24, 10, h - 24); // legs
+}
+
+function drawCharacter(who, tick) {
+  const c = chars[who];
+  if (!c.visible) return;
+  const offsets = { ntemis: 0, ajax: 1.05, clio: 2.1 };
+  // Fade-in alpha with smoothstep
+  let alpha = Math.min(1, c.fadeIn);
+  if (alpha < 1) {
+    alpha = alpha * alpha * (3 - 2 * alpha); // smoothstep
+    ctx.save();
+    ctx.globalAlpha = alpha;
+  }
+  drawSprite(who, c.x, c.y, c.dir, c.walking, c.frame, tick, offsets[who]);
+  if (alpha < 1) ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════════
+// WALKING SYSTEM
+// ════════════════════════════════════════════════════════════
+function startWalk(who, targetX, cb) {
+  const c = chars[who];
+  const dist = Math.abs(targetX - c.x);
+  if (dist < 5) { if (cb) cb(); return; }
+  targetX = Math.max(30, Math.min(GW - 30, targetX));
+  c.dir = targetX > c.x ? 1 : -1;
+  c.walking = true;
+  c.startX = c.x;
+  c.targetX = targetX;
+  c.walkT = 0;
+  c.walkDur = Math.max(0.4, Math.min(2.0, (dist / GW) * 2.5));
+  c.frame = 0;
+  walkDoneCallback = cb;
+}
+
+function updateWalking(dt) {
+  for (const who of ['ntemis','ajax','clio']) {
+    const c = chars[who];
+    if (!c.walking) continue;
+    c.walkT += dt;
+    const p = Math.min(1, c.walkT / c.walkDur);
+    const ep = easeInOutCubic(p);
+    c.x = c.startX + (c.targetX - c.startX) * ep;
+
+    // Store raw walk time for smooth interpolation in drawSprite
+    c.frame = c.walkT;
+
+    if (p >= 1) {
+      c.x = c.targetX;
+      c.walking = false;
+      c.targetX = null;
+      c.dir = 1;
+      if (who === 'ntemis' && walkDoneCallback) {
+        const cb = walkDoneCallback;
+        walkDoneCallback = null;
+        cb();
+      }
+    }
+  }
+}
+
+// Family follow: Ajax and Clio follow Ntemis with offset
+function familyFollow(targetX) {
+  const nX = targetX;
+  // Ajax follows to the right, Clio to the left
+  const ajaxTarget = Math.min(GW - 30, nX + 70);
+  const clioTarget = Math.max(30, nX - 70);
+  setTimeout(() => startWalk('ajax', ajaxTarget), 150);
+  setTimeout(() => startWalk('clio', clioTarget), 280);
+}
+
+// ════════════════════════════════════════════════════════════
+// HOTSPOT HIT TESTING
+// ════════════════════════════════════════════════════════════
+function hitTestObj(gx, gy) {
+  if (!state.scene) return null;
+  const sc = scenes[state.scene];
+  for (const obj of sc.objects) {
+    if (gx >= obj.x && gx <= obj.x + obj.w && gy >= obj.y && gy <= obj.y + obj.h) {
+      return obj;
+    }
+  }
+  return null;
+}
+
+function hitTestExit(gx, gy) {
+  if (!state.scene) return null;
+  const sc = scenes[state.scene];
+  if (!sc.exits) return null;
+  for (const exit of sc.exits) {
+    if (exit.side === 'left' && gx < 25) return exit;
+    if (exit.side === 'right' && gx > GW - 25) return exit;
+  }
+  return null;
+}
+
+// ════════════════════════════════════════════════════════════
+// DIALOGUE SYSTEM
+// ════════════════════════════════════════════════════════════
+function showDlg(lines, cb) {
+  const filtered = lines.filter(l => l.t);
+  if (!filtered.length) { if (cb) cb(); return; }
+  state.dlg.queue = [...filtered];
+  state.dlg.active = true;
+  state.dlg.cb = cb || null;
+  nextDlgLine();
+}
+
+function nextDlgLine() {
+  if (!state.dlg.queue.length) { closeDlg(); return; }
+  const l = state.dlg.queue.shift();
+  state.dlg.speaker = l.s || '';
+  state.dlg.text = l.t;
+  state.dlg.displayed = '';
+  state.dlg.charIdx = 0;
+  state.dlg.timer = 0;
+}
+
+function updateDlg(dt) {
+  if (!state.dlg.active) return;
+  if (state.dlg.charIdx < state.dlg.text.length) {
+    state.dlg.timer += dt;
+    while (state.dlg.timer >= 0.03 && state.dlg.charIdx < state.dlg.text.length) {
+      state.dlg.timer -= 0.03;
+      state.dlg.charIdx++;
+      state.dlg.displayed = state.dlg.text.substring(0, state.dlg.charIdx);
+    }
+  }
+}
+
+function advanceDlg() {
+  if (!state.dlg.active) return;
+  if (state.dlg.charIdx < state.dlg.text.length) {
+    // Skip typewriter
+    state.dlg.charIdx = state.dlg.text.length;
+    state.dlg.displayed = state.dlg.text;
+  } else {
+    nextDlgLine();
+  }
+}
+
+function closeDlg() {
+  state.dlg.active = false;
+  state.dlg.queue = [];
+  if (state.dlg.cb) { const cb = state.dlg.cb; state.dlg.cb = null; cb(); }
+  checkEnd();
+}
+
+function drawDialogue() {
+  if (!state.dlg.active) return;
+  const boxH = 90;
+  const boxY = GH - boxH;
+
+  // Background
+  ctx.save();
+  ctx.globalAlpha = 0.92;
+  ctx.fillStyle = '#0a0806';
+  ctx.fillRect(0, boxY, GW, boxH);
+  ctx.restore();
+
+  // Top border
+  ctx.fillStyle = '#D4A03C';
+  ctx.fillRect(0, boxY, GW, 2);
+
+  // Portrait
+  const portSize = 56;
+  const portX = 12;
+  const portY = boxY + 8;
+  ctx.strokeStyle = '#D4A03C';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(portX, portY, portSize, portSize);
+  ctx.fillStyle = '#1a1714';
+  ctx.fillRect(portX + 1, portY + 1, portSize - 2, portSize - 2);
+
+  const portImg = PORTRAITS[state.dlg.speaker];
+  if (portImg && portImg.complete) {
+    ctx.drawImage(portImg, portX + 2, portY + 2, portSize - 4, portSize - 4);
+  } else {
+    // Symbol for narrator
+    ctx.fillStyle = '#4a4a4a';
+    ctx.font = '16px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(state.dlg.speaker ? '?' : '✦', portX + portSize/2, portY + portSize/2);
+  }
+
+  // Speaker name
+  const textX = portX + portSize + 12;
+  if (state.dlg.speaker) {
+    ctx.fillStyle = '#D4A03C';
+    ctx.font = '9px "Press Start 2P", monospace';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(state.dlg.speaker, textX, portY + 2);
+  }
+
+  // Dialogue text with word wrapping
+  ctx.fillStyle = '#e8dcc8';
+  ctx.font = '8px "Press Start 2P", monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  const maxW = GW - textX - 16;
+  const lineH = 16;
+  const startY = portY + (state.dlg.speaker ? 18 : 6);
+  wrapText(state.dlg.displayed, textX, startY, maxW, lineH);
+
+  // Continue indicator
+  if (state.dlg.charIdx >= state.dlg.text.length) {
+    const blink = Math.sin(state.tick * 0.12) > 0;
+    if (blink) {
+      ctx.fillStyle = '#4a4a4a';
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('▶', GW - 12, boxY + boxH - 14);
+    }
+  }
+}
+
+function wrapText(text, x, y, maxW, lineH) {
+  const words = text.split(' ');
+  let line = '';
+  let curY = y;
+  for (const word of words) {
+    const test = line ? line + ' ' + word : word;
+    const m = ctx.measureText(test);
+    if (m.width > maxW && line) {
+      ctx.fillText(line, x, curY);
+      line = word;
+      curY += lineH;
+    } else {
+      line = test;
+    }
+  }
+  if (line) ctx.fillText(line, x, curY);
+}
+
+// ════════════════════════════════════════════════════════════
+// VERB SYSTEM
+// ════════════════════════════════════════════════════════════
+const verbLabels = { look:'Κοίτα', talk:'Μίλα σε', pick:'Πάρε', use:'Χρησιμοποίησε', open:'Άνοιξε', close:'Κλείσε', push:'Σπρώξε', walk:'Πήγαινε σε' };
+
+function setVerb(v) {
+  state.verb = v;
+  document.querySelectorAll('.vb').forEach(b => b.classList.remove('on'));
+  document.querySelector(`[data-v="${v}"]`)?.classList.add('on');
+  updateActionLine();
+}
+
+function updateActionLine() {
+  const al = document.getElementById('action-line');
+  const obj = state.hoverObj;
+  al.textContent = obj ? `${verbLabels[state.verb]} ${obj.label}` : (verbLabels[state.verb] || '');
+}
+
+function objClick(obj) {
+  if (state.dlg.active) return;
+  const objCenterX = obj.x + obj.w / 2;
+
+  // Walk Ntemis to object, then execute verb
+  startWalk('ntemis', objCenterX, () => {
+    let d = obj.verbs[state.verb];
+    if (!d) {
+      const defs = {
+        talk:[{s:'ΝΤΕΜΗΣ',t:'Δεν μπορώ να μιλήσω σε αυτό.'}],
+        pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν χρειάζεται να το πάρω.'}],
+        push:[{s:'ΝΤΕΜΗΣ',t:'Δεν κουνιέται.'}],
+        close:[{s:'ΝΤΕΜΗΣ',t:'Δεν κλείνει.'}],
+        use:[{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρω πώς.'}],
+        open:[{s:'ΝΤΕΜΗΣ',t:'Δεν ανοίγει.'}],
+        look:[{s:'',t:'Τίποτα ιδιαίτερο.'}],
+        walk:[],
+      };
+      if (defs[state.verb]?.length) showDlg(defs[state.verb]);
+      return;
+    }
+    if (typeof d === 'string') { changeScene(d); return; }
+    if (typeof d === 'function') d = d();
+    if (Array.isArray(d) && d.length) showDlg(d);
+  });
+  familyFollow(objCenterX);
+}
+
+// ════════════════════════════════════════════════════════════
+// INVENTORY
+// ════════════════════════════════════════════════════════════
+function addInv(item) {
+  if (state.inv.find(i => i.id === item.id)) return;
+  state.inv.push(item);
+  renderInvUI();
+}
+
+function renderInvUI() {
+  document.getElementById('inv-grid').innerHTML = state.inv.map(i =>
+    `<div class="inv-slot" data-id="${i.id}" onclick="invClick('${i.id}')">${i.label}</div>`
+  ).join('');
+}
+
+function invClick(id) {
+  if (id === 'note' && state.verb === 'look') {
+    showDlg([{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'',t:'Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.'}]);
+  }
+  document.querySelectorAll('.inv-slot').forEach(s => s.classList.remove('on'));
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('on');
+}
+
+// ════════════════════════════════════════════════════════════
+// SCENE MANAGEMENT
+// ════════════════════════════════════════════════════════════
+function startScene(id) {
+  const sc = scenes[id];
+  state.scene = id;
+  state.hoverObj = null;
+
+  document.getElementById('ui-panel').classList.add('on');
+  document.getElementById('action-line').classList.add('on');
+
+  // Position characters
+  for (const [who, pos] of Object.entries(sc.charPos)) {
+    chars[who].x = pos.x;
+    chars[who].y = pos.y;
+    chars[who].walking = false;
+    chars[who].visible = true;
+    chars[who].fadeIn = 0; // start fade-in
+    chars[who].dir = 1;
+  }
+
+  initParticles();
+
+  // Entry dialogue
+  if (!state.visited.has(id) && sc.entry) {
+    state.visited.add(id);
+    setTimeout(() => showDlg(sc.entry), 600);
+  } else {
+    state.visited.add(id);
+  }
+}
+
+function changeScene(id) {
+  state.fade.active = true;
+  state.fade.alpha = 0;
+  state.fade.dir = 1; // fade out
+  state.fade.cb = () => {
+    startScene(id);
+    state.fade.dir = -1; // fade in
+    state.fade.cb = () => { state.fade.active = false; };
+  };
+}
+
+function checkEnd() {
+  if (state.flags.note && !state.flags.done) {
+    state.flags.done = 1;
+    setTimeout(() => showDlg([
+      {s:'ΝΤΕΜΗΣ',t:'«Σας περιμέναμε»... Ποιος μας περιμένει;'},
+      {s:'ΚΛΕΙΩ',t:'Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.'},
+      {s:'ΑΙΑΣ',t:'Πάμε στο λιμάνι!'},
+      {s:'',t:'Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.'},
+      {s:'',t:'— Τέλος Σκηνής 1 —'},
+      {s:'',t:'Συνέχεια στη Σκηνή 2: Το Γράμμα...'},
+    ]), 1500);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// RENDER — Main drawing function
+// ════════════════════════════════════════════════════════════
+function render() {
+  ctx.clearRect(0, 0, GW, GH);
+
+  if (state.phase !== 'playing') return;
+  if (!state.scene) return;
+
+  const sc = scenes[state.scene];
+
+  // Background
+  const bgImg = images[sc.bg];
+  if (bgImg) {
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(bgImg, 0, 0, GW, GH);
+  } else {
+    ctx.fillStyle = '#1a1510';
+    ctx.fillRect(0, 0, GW, GH);
+  }
+
+  // Ambient overlay
+  const grad = ctx.createLinearGradient(0, 0, 0, GH);
+  grad.addColorStop(0, 'rgba(212,160,60,0.03)');
+  grad.addColorStop(0.3, 'rgba(0,0,0,0)');
+  grad.addColorStop(0.7, 'rgba(0,0,0,0)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.15)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, GW, GH);
+
+  // Dust particles
+  drawParticles();
+
+  // Hotspot highlight on hover
+  if (state.hoverObj) {
+    const obj = state.hoverObj;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(212,160,60,0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  // Exit zone highlights
+  if (sc.exits) {
+    for (const exit of sc.exits) {
+      const isHover = (exit.side === 'left' && state.mouseGX < 25) ||
+                      (exit.side === 'right' && state.mouseGX > GW - 25);
+      if (isHover) {
+        ctx.save();
+        const exGrad = exit.side === 'left'
+          ? ctx.createLinearGradient(0, 0, 25, 0)
+          : ctx.createLinearGradient(GW, 0, GW - 25, 0);
+        exGrad.addColorStop(0, 'rgba(212,160,60,0.15)');
+        exGrad.addColorStop(1, 'rgba(212,160,60,0)');
+        ctx.fillStyle = exGrad;
+        if (exit.side === 'left') ctx.fillRect(0, 0, 25, GH);
+        else ctx.fillRect(GW - 25, 0, 25, GH);
+        // Arrow
+        ctx.fillStyle = '#D4A03C';
+        ctx.font = '16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if (exit.side === 'left') ctx.fillText('◀', 12, GH / 2);
+        else ctx.fillText('▶', GW - 12, GH / 2);
+        ctx.restore();
+      }
+    }
+  }
+
+  // Characters — back to front for depth
+  drawCharacter('clio', state.tick);
+  drawCharacter('ajax', state.tick);
+  drawCharacter('ntemis', state.tick);
+
+  // Scene label
+  ctx.save();
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '8px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.shadowColor = '#000';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetX = 2;
+  ctx.shadowOffsetY = 2;
+  ctx.fillText(sc.label, GW / 2, 8);
+  ctx.restore();
+
+  // Music toggle icon
+  ctx.save();
+  ctx.globalAlpha = state.musicOn ? 0.5 : 0.2;
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('♪', GW - 8, 8);
+  ctx.restore();
+
+  // Dialogue overlay
+  drawDialogue();
+
+  // Fade overlay
+  if (state.fade.active && state.fade.alpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.fade.alpha;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// UPDATE — Main logic update
+// ════════════════════════════════════════════════════════════
+function update(dt) {
+  state.tick++;
+
+  if (state.phase !== 'playing') return;
+
+  // Walking
+  updateWalking(dt);
+
+  // Character fade-in
+  for (const who of ['ntemis','ajax','clio']) {
+    if (chars[who].fadeIn < 1) {
+      const delays = { ntemis: 0.1, ajax: 0.3, clio: 0.5 };
+      if (state.tick > delays[who] * 60) {
+        chars[who].fadeIn = Math.min(1, chars[who].fadeIn + dt * 1.5);
+      }
+    }
+  }
+
+  // Dialogue typewriter
+  updateDlg(dt);
+
+  // Particles
+  updateParticles();
+
+  // Fade transition
+  if (state.fade.active) {
+    const speed = 2.0; // fade speed (slower = smoother)
+    state.fade.alpha += state.fade.dir * dt * speed;
+    if (state.fade.dir > 0 && state.fade.alpha >= 1) {
+      state.fade.alpha = 1;
+      if (state.fade.cb) { const cb = state.fade.cb; state.fade.cb = null; cb(); }
+    }
+    if (state.fade.dir < 0 && state.fade.alpha <= 0) {
+      state.fade.alpha = 0;
+      if (state.fade.cb) { const cb = state.fade.cb; state.fade.cb = null; cb(); }
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// GAME LOOP
+// ════════════════════════════════════════════════════════════
+let lastTime = 0;
+
+function gameLoop(timestamp) {
+  const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.05) : 0.016;
+  lastTime = timestamp;
+
+  // Resize canvas to fill available space
+  const rect = CVS.getBoundingClientRect();
+  // Keep internal resolution fixed, CSS handles scaling
+
+  update(dt);
+  render();
+  requestAnimationFrame(gameLoop);
+}
+
+// ════════════════════════════════════════════════════════════
+// INPUT HANDLING
+// ════════════════════════════════════════════════════════════
+CVS.addEventListener('mousemove', (e) => {
+  const g = screenToGame(e.clientX, e.clientY);
+  state.mouseGX = g.x;
+  state.mouseGY = g.y;
+
+  if (state.phase !== 'playing' || state.dlg.active) {
+    state.hoverObj = null;
+    updateActionLine();
+    return;
+  }
+
+  // Check hotspots
+  const obj = hitTestObj(g.x, g.y);
+  state.hoverObj = obj;
+
+  // Check exits for cursor change
+  const exit = hitTestExit(g.x, g.y);
+  if (exit) {
+    CVS.style.cursor = exit.side === 'left' ? 'w-resize' : 'e-resize';
+    state.hoverObj = { label: exit.label }; // fake obj for action line
+  } else if (obj) {
+    CVS.style.cursor = 'pointer';
+  } else {
+    CVS.style.cursor = 'crosshair';
+  }
+  updateActionLine();
+});
+
+CVS.addEventListener('click', (e) => {
+  const g = screenToGame(e.clientX, e.clientY);
+
+  if (state.phase !== 'playing') return;
+
+  // Dialogue advance
+  if (state.dlg.active) { advanceDlg(); return; }
+
+  // Music toggle (top-right corner)
+  if (g.x > GW - 30 && g.y < 25) { toggleMusic(); return; }
+
+  // Check exit zones
+  const exit = hitTestExit(g.x, g.y);
+  if (exit) { changeScene(exit.target); return; }
+
+  // Check hotspots
+  const obj = hitTestObj(g.x, g.y);
+  if (obj) { objClick(obj); return; }
+
+  // Click ground — walk Ntemis
+  if (g.y > 200) { // Only walk on ground area
+    startWalk('ntemis', g.x);
+    familyFollow(g.x);
+  }
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    if (state.dlg.active) advanceDlg();
+  }
+  const vk = {'1':'look','2':'use','3':'talk','4':'open','5':'pick','6':'push','7':'close','8':'walk'};
+  if (vk[e.key] && state.phase === 'playing') setVerb(vk[e.key]);
+});
+
+// ════════════════════════════════════════════════════════════
+// MUSIC
+// ════════════════════════════════════════════════════════════
+const bgm = document.getElementById('bgm');
+bgm.volume = 0.25;
+
+function toggleMusic() {
+  if (state.musicOn) {
+    bgm.pause(); state.musicOn = false;
+  } else {
+    bgm.play().catch(() => {}); state.musicOn = true;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// TITLE & INTRO FLOW
+// ════════════════════════════════════════════════════════════
+document.getElementById('title-screen').onclick = () => {
+  const ts = document.getElementById('title-screen');
+  ts.style.opacity = '0';
+  bgm.play().catch(() => {}); state.musicOn = true;
+  setTimeout(() => {
+    ts.style.display = 'none';
+    const intro = document.getElementById('intro-screen');
+    intro.classList.add('show');
+    showIntroPage();
+  }, 2000);
+};
+
+function showIntroPage() {
+  const t = document.getElementById('intro-text');
+  const h = document.getElementById('intro-hint');
+  t.style.opacity = '0';
+  h.classList.remove('on');
+  setTimeout(() => {
+    t.innerHTML = introPages[state.introPage].replace(/\n/g, '<br>');
+    t.style.opacity = '1';
+    setTimeout(() => h.classList.add('on'), 1200);
+  }, 300);
+}
+
+document.getElementById('intro-screen').onclick = () => {
+  state.introPage++;
+  if (state.introPage >= introPages.length) {
+    const is = document.getElementById('intro-screen');
+    is.style.opacity = '0';
+    setTimeout(() => {
+      is.style.display = 'none';
+      state.phase = 'playing';
+      startScene('exterior');
+    }, 1500);
+  } else {
+    showIntroPage();
+  }
+};
+
+// ════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════
+loadAllAssets().then(() => {
+  requestAnimationFrame(gameLoop);
+});
+</script>
+</body>
+</html>
