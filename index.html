@@ -257,6 +257,7 @@ const PORTRAITS = {};
 async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
+    loadImg('title-bg', 'assets/title-bg.jpg'),
     loadImg('bg-exterior', 'assets/pixel-exterior.png'),
     loadImg('bg-terrace', 'assets/pixel-terrace.png'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
