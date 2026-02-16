@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Το Μυστήριο του Γαλαξειδίου — Storyboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #D4A03C;
+    --gold-light: #F0D080;
+    --gold-dim: #8A6A20;
+    --sea: #1a3a5c;
+    --sea-deep: #0d1f33;
+    --sea-light: #2a5a8c;
+    --stone: #2a2420;
+    --stone-light: #3a3430;
+    --cream: #f4e8d0;
+    --cream-dim: #c4b8a0;
+    --ghost: #88bbcc;
+    --jade: #2a8a5a;
+    --jade-glow: #40cc80;
+  }
+
+  body {
+    background: var(--sea-deep);
+    color: var(--cream);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(180deg, #0a1520 0%, var(--sea-deep) 40%, #1a2a3a 70%, var(--gold-dim) 100%);
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    background: linear-gradient(0deg, rgba(212,160,60,0.15) 0%, transparent 100%);
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 0 2px 20px rgba(212,160,60,0.3);
+    margin-bottom: 10px;
+  }
+
+  .hero .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--cream-dim);
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    max-width: 500px;
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .hero .scroll-hint {
+    color: var(--cream-dim);
+    font-size: 0.9rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(5px); }
+  }
+
+  /* ── SCENE CARDS ── */
+  .scene {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 30px;
+    border-bottom: 1px solid rgba(212,160,60,0.15);
+    position: relative;
+  }
+
+  .scene:last-of-type {
+    border-bottom: none;
+  }
+
+  .scene-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold-dim);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .scene-title {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 5px;
+  }
+
+  .scene-subtitle {
+    font-size: 1.1rem;
+    color: var(--cream-dim);
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+
+  /* Visual description box */
+  .visual-box {
+    background: linear-gradient(135deg, rgba(42,36,32,0.8) 0%, rgba(26,58,92,0.3) 100%);
+    border-left: 3px solid var(--gold-dim);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .visual-box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .visual-box p {
+    color: var(--cream-dim);
+    font-style: italic;
+    font-size: 1rem;
+  }
+
+  /* Story text */
+  .story {
+    margin-bottom: 25px;
+    font-size: 1.05rem;
+  }
+
+  .story em {
+    color: var(--cream-dim);
+    font-style: italic;
+  }
+
+  /* Dialog */
+  .dialog {
+    margin: 20px 0;
+    padding: 15px 0;
+  }
+
+  .dialog-line {
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .dialog-line::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+  }
+
+  .speaker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+    display: block;
+  }
+
+  .speaker-ntemis { color: #c4a060; }
+  .speaker-ajax { color: #60a0c4; }
+  .speaker-clio { color: #c46080; }
+  .speaker-narrator { color: var(--cream-dim); }
+  .speaker-stavros { color: #80a060; }
+  .speaker-papas { color: #a080c0; }
+  .speaker-chrysostomos { color: #60c4a0; }
+
+  .dialog-text {
+    color: var(--cream);
+    font-size: 1.1rem;
+  }
+
+  .dialog-text.greek {
+    font-size: 1.15rem;
+  }
+
+  .stage-direction {
+    color: var(--cream-dim);
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  /* Letter / document */
+  .letter {
+    background: linear-gradient(135deg, rgba(60,50,35,0.6) 0%, rgba(40,35,25,0.8) 100%);
+    border: 1px solid rgba(212,160,60,0.3);
+    padding: 30px;
+    margin: 25px 0;
+    border-radius: 4px;
+    font-style: italic;
+    position: relative;
+  }
+
+  .letter::before {
+    content: '✉';
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: var(--sea-deep);
+    padding: 0 10px;
+    color: var(--gold);
+    font-size: 1.2rem;
+  }
+
+  .letter p {
+    margin-bottom: 12px;
+    color: var(--gold-light);
+  }
+
+  .letter .signature {
+    text-align: right;
+    color: var(--gold);
+    font-weight: 600;
+    margin-top: 15px;
+  }
+
+  /* Green stone highlight */
+  .jade-highlight {
+    color: var(--jade-glow);
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(64,204,128,0.3);
+  }
+
+  /* Ghost text */
+  .ghost-text {
+    color: var(--ghost);
+    font-style: italic;
+    text-shadow: 0 0 15px rgba(136,187,204,0.2);
+  }
+
+  /* Gameplay box */
+  .gameplay-box {
+    background: rgba(15,25,35,0.6);
+    border: 1px solid rgba(42,90,140,0.3);
+    padding: 20px 25px;
+    margin: 25px 0;
+    border-radius: 8px;
+  }
+
+  .gameplay-box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--sea-light);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .gameplay-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .gameplay-box li {
+    padding: 4px 0 4px 20px;
+    position: relative;
+    color: var(--cream-dim);
+    font-size: 0.95rem;
+  }
+
+  .gameplay-box li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--sea-light);
+  }
+
+  /* Music box */
+  .music-box {
+    background: rgba(30,20,35,0.5);
+    border-left: 3px solid #6a4a8a;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .music-box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: #8a6aaa;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .music-box p {
+    color: #b8a0d0;
+    font-style: italic;
+    font-size: 0.95rem;
+  }
+
+  /* Dividers */
+  .scene-divider {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--gold-dim);
+    font-size: 1.5rem;
+    letter-spacing: 15px;
+  }
+
+  /* Ending */
+  .ending {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 30px;
+    text-align: center;
+  }
+
+  .ending .final-text {
+    font-size: 1.2rem;
+    color: var(--cream);
+    max-width: 600px;
+    margin: 0 auto 30px;
+    line-height: 2;
+  }
+
+  .ending .final-text em {
+    color: var(--gold-light);
+  }
+
+  .ending .game-title {
+    font-size: 2rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin: 40px 0 20px;
+    letter-spacing: 2px;
+  }
+
+  .ending .pact {
+    color: var(--gold-light);
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  /* Post-credits */
+  .post-credits {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 60px 30px 100px;
+    text-align: center;
+    color: var(--cream-dim);
+    font-size: 0.95rem;
+    line-height: 2;
+  }
+
+  /* Items tracker */
+  .item-acquired {
+    display: inline-block;
+    background: rgba(212,160,60,0.15);
+    border: 1px solid rgba(212,160,60,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 1px;
+    margin: 10px 5px;
+  }
+
+  .item-acquired.jade {
+    background: rgba(42,138,90,0.15);
+    border-color: rgba(64,204,128,0.3);
+    color: var(--jade-glow);
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .scene { padding: 50px 20px; }
+    body { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div class="hero">
+  <h1>Το Μυστήριο του Γαλαξειδίου</h1>
+  <div class="subtitle">The Mystery of Galaxidi</div>
+  <div class="tagline">
+    8 σκηνές. Ένας θησαυρός. Μια πράσινη πέτρα. Ένα φάντασμα που θυμάται.<br>
+    <em>8 scenes. One treasure. One green stone. One ghost who remembers.</em>
+  </div>
+  <div class="scroll-hint">↓ Scroll to begin ↓</div>
+</div>
+
+<!-- ═══════════════ SCENE 1 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 1 / Scene 1</div>
+  <div class="scene-title">ΑΦΙΞΗ</div>
+  <div class="scene-subtitle">"Arrival"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>The crescent harbor at golden hour. Stone houses climbing the hill, blue shutters, bougainvillea. Oversized bollards holding tiny fishing boats. A cat watches from a doorstep. The family walks in from the left.</p>
+  </div>
+
+  <div class="story">The family arrives at Galaxidi by car. Late afternoon, the light turning everything to honey. The town stretches along its crescent harbor — beautiful, quiet, full of ghosts it doesn't know about yet.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Φτάσαμε. Πρέπει να βρούμε το σπίτι του παππού.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">Ποιου παππού;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Του παππού μου. Κανένας δεν έχει μπει εδώ χρόνια. Κληρονομιά.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Θα έχει φαντάσματα;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">...Όχι, Κλειώ. Θα έχει σκόνη.</span>
+    </div>
+  </div>
+
+  <div class="story">They walk through the harbor. A fisherman nods. A cat follows Clio — it will follow her for the entire game. They find the house on a narrow lane climbing from the port. Old stone, blue door, bougainvillea choking the balcony. The key barely turns.</div>
+
+  <div class="story"><em>The door opens. Dust and memory pour out.</em></div>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Tutorial: learn to click, walk, look at objects</li>
+      <li>Explore harbor (2-3 interactive objects — bollards, boats, cat)</li>
+      <li>Walk to grandfather's house → exit to Scene 2</li>
+      <li>Cat follows Clio (running gag throughout game)</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Warm acoustic guitar. The main theme, simple and solo. Cicadas in the mix. Mediterranean afternoon warmth.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 2 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 2 / Scene 2</div>
+  <div class="scene-title">ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ</div>
+  <div class="scene-subtitle">"The Grandfather's House"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>Dark interior, shutters closed. As each shutter opens, golden light floods in to reveal: model ships on shelves, nautical instruments on walls, a faded photograph of Captain Visvikis. A captain's house frozen in 1903.</p>
+  </div>
+
+  <div class="story">Ntemis opens shutters one by one. Light floods in. It's a captain's house — model ships, brass instruments, charts on walls. A faded photograph: a man in captain's dress, standing proud on a ship deck.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Ποιος είναι αυτός;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Ο Καπετάν Βισβίκης. Ο προπάππους μου. Ταξίδεψε σε όλο τον κόσμο με ιστιοφόρο.</span>
+    </div>
+  </div>
+
+  <div class="story">Ajax finds a locked desk drawer. Clio finds the key — in a copper pot on the mantle, exactly where a seven-year-old would look. Inside the drawer: <strong>a letter</strong>. Old paper, careful handwriting, sealed with wax.</div>
+
+  <div class="letter">
+    <p>Σε όποιον βρει αυτό το γράμμα — εγώ, Καπετάν Δημήτρης Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα. Δεν τον δίνω σε κανέναν. Τον δίνω μόνο σε αυτόν που θα βρει <span class="jade-highlight">την πράσινη πέτρα</span>.</p>
+    <p>Την πέτρα τη βρήκα στα ταξίδια μου στην Ανατολή. Την έκρυψα εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο κι ο ήχος δεν φεύγει ποτέ.</p>
+    <p>Βρες την πέτρα. Φέρε τη σε μένα. Θα σου δείξω τον δρόμο.</p>
+    <div class="signature">— Καπ. Δ. Βισβίκης, 1887</div>
+  </div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">"Φέρε τη σε μένα"... Είναι νεκρός εδώ και εκατό χρόνια. Πώς θα του τη φέρουμε;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Στο νεκροταφείο, βλάκα.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">...Κλειώ.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Τι; Λογικό είναι.</span>
+    </div>
+  </div>
+
+  <div class="story">Ajax looks at the letter again: <em>"εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο."</em> A cave. They need to find a cave. But first — someone in town might know.</div>
+
+  <span class="item-acquired">+ Γράμμα Βισβίκη</span>
+  <span class="item-acquired">+ Φωτογραφία Καπετάνιου</span>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Open shutters one by one (light reveals room gradually)</li>
+      <li>Examine photo, model ships, instruments</li>
+      <li>Find locked drawer → find key in copper pot → open drawer</li>
+      <li>Read letter → quest begins</li>
+      <li>Letter + photo go into inventory</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Mysterious piano. Soft, dust-in-sunbeams. Swells when the letter is read — the adventure theme enters for the first time.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 3 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 3 / Scene 3</div>
+  <div class="scene-title">ΤΟ ΛΙΜΑΝΙ</div>
+  <div class="scene-subtitle">"Asking Around"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>The harbor in early evening warmth. Taverna lights coming on. Fishermen pulling nets. Cats on bollards. Stavros, old and weathered, sits by the quay mending nets.</p>
+  </div>
+
+  <div class="story">They show the letter around. Most people shrug. One old woman crosses herself. A taverna owner laughs: "Βισβίκης! Ο τρελός καπετάνιος!" But <strong>Σταύρος</strong>, mending nets by the quay, goes very still when he sees the name.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-stavros">ΣΤΑΥΡΟΣ</span>
+      <span class="dialog-text greek">Βισβίκης... Ο Δημήτρης. Ο παππούς μου μιλούσε γι' αυτόν. Ταξίδεψε στη Σμύρνη, στην Αλεξάνδρεια, στη Βηρυτό. Λέγανε ότι γύρισε με κάτι... κάτι πράσινο. Δεν το έδειξε ποτέ σε κανέναν.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Ξέρεις πού μπορεί να το έκρυψε;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-stavros">ΣΤΑΥΡΟΣ</span>
+      <span class="dialog-text greek">"Εκεί που η γη μιλάει"... Υπάρχει μόνο ένα μέρος. Ο Κάρκαρος. Το σπήλαιο πίσω από την πλατεία Μάμα. Μπαίνεις μέσα και η φωνή σου γυρίζει πίσω τρεις φορές. Η γη μιλάει, λένε.</span>
+    </div>
+  </div>
+
+  <div class="story">He leans closer, his voice dropping:</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-stavros">ΣΤΑΥΡΟΣ</span>
+      <span class="dialog-text greek">Αλλά πρόσεξε. Ο Βισβίκης δεν ήταν απλός καπετάνιος. Ήταν ο τελευταίος που πίστευε ότι το Γαλαξίδι μπορούσε να ξαναγίνει μεγάλο. Οι άλλοι τα παράτησαν. Αυτός όχι. Ό,τι κι αν έκρυψε... το έκρυψε για κάποιον λόγο.</span>
+    </div>
+  </div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek stage-direction">(to the cat following her)</span>
+      <span class="dialog-text greek">Ξέρεις εσύ πού είναι η σπηλιά;</span>
+    </div>
+  </div>
+
+  <div class="story"><em>The cat walks toward Plateia Mama. Clio follows.</em></div>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Show letter to 2-3 NPCs (comic/dismissive responses)</li>
+      <li>Find Stavros — main dialog tree with history</li>
+      <li>Stavros reveals: "Karkaros" cave behind Plateia Mama</li>
+      <li>Cat leads toward cave exit</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Bouzouki, lively harbor warmth. Shifts subtler, lower when Stavros speaks about Visvikis. The mystery deepens in the music.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 4 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 4 / Scene 4</div>
+  <div class="scene-title">ΤΟ ΣΠΗΛΑΙΟ</div>
+  <div class="scene-subtitle">"The Cave of Karkaros"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>Dark cave interior. Phone flashlight casting long shadows. Dripping water. Ancient markings scratched into stone walls — ship names, captain initials, dates. Deep in the chamber, a crack in the wall glows faintly green.</p>
+  </div>
+
+  <div class="story">Plateia Mama. Small, overlooked. Behind old crates and overgrown bushes: the cave entrance. The tunnel carved in 1940, leading into the natural chamber of Karkaros.</div>
+
+  <div class="story">Inside: dripping water, echo, darkness. Ntemis uses his phone flashlight. The walls are covered in old marks — ship names, initials, dates scratched into stone over centuries. Captain marks. History written by hand in rock.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. "Δ.Β. 1887."</span>
+    </div>
+  </div>
+
+  <div class="story">They search. Ntemis looks at ground level. Ajax checks crevices at his height. Nothing. Then Clio, looking up at the angle only a seven-year-old would — she sees it. Wedged into a crack in the wall above eye level, catching the phone light in a way that makes it seem almost alive.</div>
+
+  <div class="story"><strong class="jade-highlight">THE GREEN STONE.</strong> Smooth, dark green, roughly the size of a fist. It catches light in a strange way — almost glowing. It's warm to the touch.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Σμαράγδι; Όχι... νεφρίτης. Jade. Από την Ανατολή, σίγουρα.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">Αξίζει κάτι;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Αξίζει ό,τι ο Βισβίκης ήθελε να δείξει μ' αυτό. Τώρα πρέπει... να του το πάμε.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Σας το είπα.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">...Στο νεκροταφείο.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Σας. Το. Είπα.</span>
+    </div>
+  </div>
+
+  <span class="item-acquired jade">+ Πράσινη Πέτρα (Jade)</span>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Enter cave — atmospheric transition (light → dark)</li>
+      <li>Examine wall markings — find "Δ.Β. 1887"</li>
+      <li>Search for stone — try wrong spots first (ground level, crevices)</li>
+      <li>Clio finds it (she looks UP — only she has the right angle)</li>
+      <li>Green stone goes into inventory</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Underground wonder. Echoing, dripping, mysterious but warm — not scary. Resonant crystalline tone when the stone is found. The jade has its own sound.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 5 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 5 / Scene 5</div>
+  <div class="scene-title">ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ</div>
+  <div class="scene-subtitle">"The Captain's Rest"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>Dusk. The old cemetery above town. Marble headstones with carved ships. Cypress trees. Wild thyme. The gulf visible between the trees, catching the last light. Visvikis's grave: a marble captain's headstone with a carved schooner.</p>
+  </div>
+
+  <div class="story">The old cemetery above town. Every headstone is a biography — ships carved in marble, epitaphs about the sea. Clio reads them aloud. They find Visvikis's grave: marble headstone, carved schooner, <em>1841-1903</em>.</div>
+
+  <div class="story">Ntemis places the green stone on the headstone.</div>
+
+  <div class="story"><em>Silence.</em></div>
+
+  <div class="story">Then the air changes. Not cold — <em>different</em>. The light shifts. Clio grabs Ntemis's hand. Ajax steps back.</div>
+
+  <div class="story"><strong class="ghost-text">The ghost of Captain Visvikis appears.</strong></div>
+
+  <div class="story"><span class="ghost-text">Not frightening. Weathered, proud, tired. Captain's coat, white beard, eyes that have seen every port in the Mediterranean. He looks at the stone. He looks at the family. He smiles — the smile of a man who has waited 120 years.</span></div>
+
+  <div class="story"><span class="ghost-text">He doesn't speak. He gestures. He points — not at them, not at the grave. He points <strong>down the hill, toward the harbor, toward the church of Agios Nikolaos</strong>. Then he traces something in the air: a cross — but also a compass rose.</span></div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek" style="font-style:italic;">(ψιθυριστά)</span>
+      <span class="dialog-text greek">Ο χάρτης. Θέλει να βρούμε τον χάρτη. Είναι στον Άγιο Νικόλαο.</span>
+    </div>
+  </div>
+
+  <div class="story"><span class="ghost-text">The ghost nods. He fades. The green stone glows once, then goes dark.</span></div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">...Μόλις μας έδωσε οδηγίες ένα φάντασμα.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Μόλις μας έδωσε οδηγίες ο προπάππους μου.</span>
+    </div>
+  </div>
+
+  <div class="story"><em>Clio draws the ghost in her notebook. "Κουρασμένος αλλά χαρούμενος."</em></div>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Explore graveyard — read 3-4 captain headstones</li>
+      <li>Find Visvikis's grave</li>
+      <li>Use green stone on headstone → ghost sequence triggers</li>
+      <li>Ghost appears, gestures, points to church → fades</li>
+      <li>Clio interprets: the map is at Agios Nikolaos</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>THE GHOST'S THEME. Solo Greek lyra. Starts lonely and melancholy. Warms as the ghost smiles. Goes quiet as he fades. Resolves into peace. The sound of a man who waited and was finally found.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 6 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 6 / Scene 6</div>
+  <div class="scene-title">ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ</div>
+  <div class="scene-subtitle">"The Map in the Church"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>Church interior at candlelight. Icons gleaming gold. The famous wooden iconostasis. Light through windows making dust motes glow. The Papas in black robes, slightly amused.</p>
+  </div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Πάτερ, ψάχνουμε κάτι που άφησε ο Καπετάν Βισβίκης. Στην εκκλησία.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-papas">ΠΑΠΑΣ</span>
+      <span class="dialog-text greek">Βισβίκης... Ο Δημήτρης. Ήταν ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας. Πλήρωσε για τη στέγη, για τα εικονίσματα, ακόμα και για το τέμπλο. Πολλά μυστικά έκρυψε αυτός ο άνθρωπος.</span>
+    </div>
+  </div>
+
+  <div class="story">They search. Ntemis examines the icons. Ajax tries to climb the iconostasis.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-papas">ΠΑΠΑΣ</span>
+      <span class="dialog-text greek">ΟΧΙ στις εικόνες!</span>
+    </div>
+  </div>
+
+  <div class="story">Clio sits quietly, looking at the floor. Everyone else is looking up.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Μπαμπά. Το πάτωμα.</span>
+    </div>
+  </div>
+
+  <div class="story">A floor tile near the altar has Visvikis's mark — the same "Δ.Β." from the cave. It's loose. Underneath: <strong>a rolled nautical chart</strong>, sealed in oilcloth. Protected for over a century.</div>
+
+  <div class="story">They unroll it. Hand-drawn. The Corinthian Gulf. Galaxidi. And marked with an X — the tiny island of <strong>Άγιος Γεώργιος</strong>, just offshore.</div>
+
+  <div class="letter">
+    <p>Το βράχι κοιτάει νοτιοδυτικά. Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.</p>
+    <p><em>"The rock faces southwest. Below the cross, five steps. Dig."</em></p>
+    <div class="signature">— margin note, Visvikis's hand</div>
+  </div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">Ξέρω αυτό το νησάκι! Φαίνεται από το λιμάνι! Μπορούμε να πάμε με βάρκα!</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-papas">ΠΑΠΑΣ</span>
+      <span class="dialog-text greek stage-direction">(crossing himself)</span>
+      <span class="dialog-text greek">Αν βρείτε κάτι... θυμηθείτε ποιος το σώζει. Αυτή η πόλη χρειάζεται θαύματα.</span>
+    </div>
+  </div>
+
+  <span class="item-acquired">+ Ναυτικός Χάρτης</span>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Talk to Papas — he lets you search</li>
+      <li>Examine icons, iconostasis, windows (wrong spots)</li>
+      <li>Ajax tries climbing (comic beat, Papas stops him)</li>
+      <li>Clio spots the floor tile with "Δ.Β."</li>
+      <li>Open tile → nautical chart found</li>
+      <li>Map goes into inventory → exit to harbor/boat</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Sacred warmth. Deep choral tones with warm reverb. Swells when the map is discovered — the adventure theme returns, now richer, with strings.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 7 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 7 / Scene 7</div>
+  <div class="scene-title">ΤΟ ΚΑΡΑΒΙ</div>
+  <div class="scene-subtitle">"The Crossing"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>Dawn. The boat Ελπίδα on the gulf. Galaxidi receding behind them, glowing in first light. Mountains rising. The tiny island of Agios Georgios ahead — rocky, a small white chapel, wild herbs. Chrysostomos at the helm, effortless.</p>
+  </div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-chrysostomos">ΧΡΥΣΟΣΤΟΜΟΣ</span>
+      <span class="dialog-text greek">Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν. Δεν πίστευα ότι θα ζούσα να το δω.</span>
+    </div>
+  </div>
+
+  <div class="story">The crossing to Agios Georgios. Short — the island is close — but magical. Galaxidi seen from the water, the town in its landscape, the mountains behind, the gulf stretching.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-chrysostomos">ΧΡΥΣΟΣΤΟΜΟΣ</span>
+      <span class="dialog-text greek">Ήταν ο τελευταίος ρομαντικός. Όταν οι άλλοι καπεταναίοι τα παράτησαν, αυτός ταξίδεψε μέχρι την Κίνα κι επέστρεψε. Έλεγε ότι βρήκε κάτι που θα σώσει το Γαλαξίδι. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.</span>
+    </div>
+  </div>
+
+  <div class="story">They land on the rocky islet. A tiny chapel of Agios Georgios. Wild thyme and oregano. Seagulls wheeling. The rock that faces southwest. The old stone cross. Five steps.</div>
+
+  <div class="story">Ajax digs. Clio counts the steps. Ntemis watches.</div>
+
+  <div class="story"><em>The shovel hits wood.</em></div>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Board boat (scenic transition)</li>
+      <li>Click landmarks during crossing for Chrysostomos stories</li>
+      <li>Arrive at island — small explorable area</li>
+      <li>Find southwest-facing rock → find cross → count 5 steps</li>
+      <li>Dig → transition to treasure reveal</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>THE MOST BEAUTIFUL MUSIC IN THE GAME. Acoustic guitar and lyra. Dawn on the water. A melody that aches with hope. The sound of being on water with people you love, heading toward something that matters.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 8 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 8 / Scene 8</div>
+  <div class="scene-title">Ο ΘΗΣΑΥΡΟΣ</div>
+  <div class="scene-subtitle">"The Treasure"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <p>Close-up: an old sea chest, iron-bound, emerging from the earth. The family gathered around it. Morning light. The gulf behind them. Galaxidi across the water, small and beautiful and waiting.</p>
+  </div>
+
+  <div class="story">A sea chest. Old, iron-bound, the lock rusted but the wood sound. Visvikis built things to last. They open it.</div>
+
+  <div class="story">Inside:</div>
+
+  <div class="story"><strong>Gold coins</strong> — Ottoman, Venetian, a few ancient Greek. A lifetime of savings from a lifetime at sea.</div>
+
+  <div class="story"><strong class="jade-highlight">A jade necklace</strong> — matching the green stone. From the same journey east.</div>
+
+  <div class="story"><strong>The original αλληλασφάλεια ledger</strong> — the mutual insurance pact of 1860, with the signatures of 104 captains. Visvikis kept it. The real one.</div>
+
+  <div class="story">And <strong>a letter</strong>:</div>
+
+  <div class="letter">
+    <p>Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.</p>
+    <p>Ταξίδεψα στην Ανατολή και γύρισα πλούσιος. Αλλά ο αληθινός πλούτος δεν είναι ο χρυσός. Είναι αυτό που χτίσαμε μαζί — η αλληλεγγύη. Κανείς δεν ταξιδεύει μόνος.</p>
+    <p>Το Γαλαξίδι σβήνει. Τα καράβια φεύγουν. Ο κόσμος αλλάζει κι εμείς δεν αλλάζουμε μαζί του. Αλλά αυτός ο θησαυρός μπορεί να ξαναχτίσει αυτό που χάσαμε — αν αυτός που τον βρει αγαπάει αυτή την πόλη αρκετά.</p>
+    <p><strong>Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.</strong></p>
+    <div class="signature">— Καπ. Δ. Βισβίκης</div>
+  </div>
+
+  <div class="story"><em>Silence on the island. Just the waves and the gulls.</em></div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Μπαμπά, τι θα κάνουμε;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Αυτό που ήθελε ο Βισβίκης. Θα τα δώσουμε στο Γαλαξίδι.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek stage-direction">(holding the ledger, reading the old signatures)</span>
+      <span class="dialog-text greek">Εκατό τέσσερις. Εκατό τέσσερις άνθρωποι υπέγραψαν. Κανένας δεν ταξιδεύει μόνος.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Μπαμπά; Αν ο Βισβίκης μπορούσε να δει τώρα, θα χαμογελούσε;</span>
+    </div>
+  </div>
+
+  <div class="story">Ntemis looks at the harbor across the water. Galaxidi in the morning light. Small. Beautiful. Waiting.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Ναι, μικρή μου. Νομίζω ότι τώρα, μπορεί επιτέλους να κοιμηθεί.</span>
+    </div>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Building from silence. Each item revealed adds an instrument — coins (gentle percussion), necklace (lyra), ledger (strings), letter (full theme). When Clio speaks: a new melody we haven't heard. Gentle. Hopeful. Forward-looking. The sound of the future.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ ENDING ═══════════════ -->
+<div class="ending">
+  <div class="scene-number">Επίλογος / Epilogue</div>
+
+  <div class="final-text">
+    <em>Ο Καπετάν Βισβίκης ταξίδεψε στην Ανατολή, γύρισε πλούσιος, κι έκρυψε τον θησαυρό του για κάποιον που θα αγαπούσε το Γαλαξίδι αρκετά για να τον βρει.</em>
+  </div>
+
+  <div class="final-text">
+    <em>Εκατόν είκοσι χρόνια αργότερα, τρεις ταξιδιώτες τον βρήκαν.</em>
+  </div>
+
+  <div class="final-text">
+    <em>Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.</em>
+  </div>
+
+  <div class="game-title">ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ</div>
+
+  <div class="pact">Κρατήστε το σύμφωνο. Αλλάξτε το πλοίο.</div>
+</div>
+
+<!-- ═══════════════ POST-CREDITS ═══════════════ -->
+<div class="post-credits">
+  <p><em>Το Γαλαξίδι είναι αληθινό. Η ιστορία του είναι αληθινή.</em></p>
+  <p><em>Αυτό το παιχνίδι είναι δώρο στο Γαλαξίδι και στον κόσμο.</em></p>
+  <br>
+  <p><em>Κεφάλαιο 2 — Σύντομα...</em></p>
+</div>
+
+</body>
+</html>
