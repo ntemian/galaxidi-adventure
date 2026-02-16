@@ -1,6 +1,6 @@
 # ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ — PILOT STORY
 
-### 8 Scenes. One treasure. One green stone. One ghost who remembers.
+### 10 Scenes. One treasure. One green stone. One ghost who remembers.
 
 ---
 
@@ -92,22 +92,93 @@ He leans closer:
 
 **STAVROS:** Αλλά πρόσεξε. Ο Βισβίκης δεν ήταν απλός καπετάνιος. Ήταν ο τελευταίος που πίστευε ότι το Γαλαξίδι μπορούσε να ξαναγίνει μεγάλο. Οι άλλοι τα παράτησαν. Αυτός όχι. Ό,τι κι αν έκρυψε... το έκρυψε για κάποιον λόγο.
 
-**CLIO** *(to the cat following her)*: Ξέρεις εσύ πού είναι η σπηλιά;
+**STAVROS:** Πηγαίνετε πρώτα στο Μουσείο. Εκεί θα μάθετε ποιος ήταν πραγματικά ο Βισβίκης.
 
-The cat walks toward Plateia Mama. Clio follows.
+**CLIO** *(to the cat following her)*: Ξέρεις εσύ πού είναι το μουσείο;
+
+The cat walks toward the museum. Clio follows.
 
 **Gameplay:**
 - Talk to 2-3 NPCs who don't know (comic responses)
 - Find Stavros — main dialog tree
-- Stavros tells about Visvikis + points to cave
-- Cat leads to exit toward Plateia Mama
+- Stavros tells about Visvikis + mentions the cave + directs them to the museum first
+- Cat leads to exit toward the museum
 - Exit to Scene 4
 
 **Music:** Harbor bouzouki, lively. Shifts subtler when Stavros speaks about Visvikis.
 
 ---
 
-## SCENE 4: ΤΟ ΣΠΗΛΑΙΟ — "The Cave of Karkaros"
+## SCENE 4: ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ — "The Ships That Built a Town"
+
+The Nautical Museum of Galaxidi. Small but dense with history. Model sailing ships in glass cases — beautiful, detailed, lovingly made. Captain portraits on the walls. Photographs. Instruments. And in one corner, almost apologetic: a single model steamship. Smaller. Less polished. The room's afterthought.
+
+The **Επιμελητής / Curator** — a thin man with reading glasses and passion that could fill the harbor — lights up when they mention Visvikis.
+
+**CURATOR:** Βισβίκης! Ένας από τους τελευταίους μεγάλους. Κοιτάξτε — εδώ.
+
+He leads them to a portrait. Captain Loukas Visvikis. The same face as the photograph in the house — but younger, prouder, with the sea behind him.
+
+**CURATOR:** Τριακόσια καράβια. Έξι χιλιάδες κάτοικοι. Το Γαλαξίδι ήταν η ναυτική πρωτεύουσα της Ελλάδας. Και μετά...
+
+He walks them to the corner. The steamship model.
+
+**CURATOR:** ...ήρθε ο ατμός. Κι αυτοί που ήξεραν τα πάντα για τα πανιά, αρνήθηκαν να μάθουν κάτι καινούριο. Η Χίος προσαρμόστηκε. Οι Οινούσσες προσαρμόστηκαν. Η Άνδρος προσαρμόστηκε. Το Γαλαξίδι δεν άλλαξε. Κι όταν οι τελευταίοι καπεταναίοι κατάλαβαν το λάθος τους, ήταν αργά.
+
+**AJAX** *(quietly)*: Δηλαδή... ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;
+
+**CURATOR:** Ακριβώς, μικρέ μου. Ακριβώς αυτό.
+
+Clio stares at a display case. Inside: a fragment of the αλληλασφάλεια ledger — a copy. *104 captains signed a mutual insurance pact in 1860. They protected each other. That was their real treasure.*
+
+**CLIO:** Μπαμπά, ο Βισβίκης υπέγραψε κι αυτός;
+**NTEMIS:** Ας ρωτήσουμε... κάποιον που ξέρει περισσότερα. Μήπως στο Λιοτρίβι;
+
+**Gameplay:**
+- Explore museum — click on model ships, portraits, instruments for history
+- Curator dialog tree: the golden age, the 300 ships, the decline
+- The steamship corner — pivotal narrative turn
+- Ajax's key question: "Being the best made them worse?"
+- Clio finds the αλληλασφάλεια display
+- Exit to Scene 5 (Liotrivi)
+
+**Music:** Reflective piano and strings. Warm and grand for the golden age. Shifts to minor key at the steamship corner — the sound of something ending. Quiet, thoughtful.
+
+---
+
+## SCENE 5: ΛΙΟΤΡΙΒΙ — "Stories That Aren't Just Stories"
+
+Evening. The Liotrivi — half bar, half living history. Stone walls, amber lanterns, the old olive press preserved as decor. **Φωτεινή / Fotini** runs the place. She has her great-grandmother's face and her great-grandfather's stubbornness.
+
+**NTEMIS:** Ψάχνουμε κάτι που έκρυψε ο Καπετάν Βισβίκης. Ξέρεις τίποτα;
+
+Fotini freezes. Then she laughs — but her eyes don't.
+
+**FOTINI:** Βισβίκης. Ο παππούς του παππού μου ήταν στο πλήρωμά του. Λέγανε ότι ο Βισβίκης γύρισε από ένα ταξίδι στην Ανατολή αλλαγμένος. Κουβαλούσε κάτι μαζί του. Κάτι πράσινο. Κανείς δεν ξέρει πού το έκρυψε.
+
+**AJAX:** Εμείς ξέρουμε! "Εκεί που η γη μιλάει."
+
+**FOTINI:** Ο Κάρκαρος. Το σπήλαιο πίσω από την πλατεία Μάμα. Μπαίνεις μέσα, φωνάζεις, κι η φωνή σου γυρίζει τρεις φορές. Η γη μιλάει.
+
+She pours Ntemis a tsipouro. The children get lemonade. She leans across the bar:
+
+**FOTINI:** Πρόσεξε. Ο Βισβίκης δεν ήταν τρελός. Ό,τι κι αν έκρυψε, το έκρυψε γιατί πίστευε ότι κάποιος αξίζει να το βρει. Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ' το.
+
+**CLIO** *(drawing Fotini in her notebook)*: Μοιάζεις με τον καπετάνιο στο μουσείο.
+**FOTINI** *(smiling)*: Ξέρω.
+
+**Gameplay:**
+- Talk to Fotini — she confirms the cave: Karkaros behind Plateia Mama
+- Examine the olive press, the bottles, old photos on walls
+- Clio draws Fotini (notebook moment)
+- Optional: listen to bar stories from other patrons
+- Exit to Scene 6 (Cave)
+
+**Music:** Rebetiko warmth. Bouzouki and guitar, amber and smoky. Quieter, conspiratorial when Fotini speaks about Visvikis.
+
+---
+
+## SCENE 6: ΤΟ ΣΠΗΛΑΙΟ — "The Cave of Karkaros"
 
 Plateia Mama. Small square, overlooked. Behind old crates and overgrown bushes: the cave entrance. A tunnel carved in 1940, leading deeper into the natural chamber.
 
@@ -134,13 +205,13 @@ They search. Clio finds it — not on the ground, but wedged into a crack in the
 - Search for stone — multiple wrong spots first
 - Clio finds it (only she looks up at the right angle)
 - Examine stone — jade description
-- Exit to Scene 5 (graveyard)
+- Exit to Scene 7 (graveyard)
 
 **Music:** Underground wonder. Echoing, dripping, mysterious but warm. Resonant tone when stone is found.
 
 ---
 
-## SCENE 5: ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ — "The Captain's Rest"
+## SCENE 7: ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ — "The Captain's Rest"
 
 Dusk. The old cemetery above town. Marble headstones with carved ships. Epitaphs about the sea. Wild thyme underfoot. The gulf visible between cypress trees.
 
@@ -179,13 +250,13 @@ The ghost nods. He fades. The green stone glows once, then goes dark.
 - Use green stone on headstone → triggers ghost sequence
 - Ghost animation: appears, gestures, points to church, fades
 - Ghost's pointing is the puzzle clue → church
-- Exit to Scene 6
+- Exit to Scene 8
 
 **Music:** Ghost's theme. Solo Greek lyra. Melancholy → warm → peaceful as he fades.
 
 ---
 
-## SCENE 6: ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ — "The Map in the Church"
+## SCENE 8: ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ — "The Map in the Church"
 
 The church, overlooking the harbor. Candlelight. Icons. The famous carved wooden iconostasis (τέμπλο) made by Anastasios Moschos from Metsovo.
 
@@ -218,13 +289,13 @@ A note in the margin, in Visvikis's hand:
 - Use/open floor tile → nautical chart found
 - Examine chart → X marks Agios Georgios
 - Map goes into inventory
-- Exit to Scene 7
+- Exit to Scene 9
 
 **Music:** Sacred warmth. Choral tones, reverb. Swells when map is discovered.
 
 ---
 
-## SCENE 7: ΤΟ ΚΑΡΑΒΙ — "The Crossing"
+## SCENE 9: ΤΟ ΚΑΡΑΒΙ — "The Crossing"
 
 Dawn. The harbor in first light. **Χρυσόστομος**, old family friend, waits with his boat *Ελπίδα*.
 
@@ -251,13 +322,13 @@ The shovel hits wood.
 - Find the southwest-facing rock
 - Find the cross
 - Count five steps (interactive)
-- Dig → transition to Scene 8
+- Dig → transition to Scene 10
 
 **Music:** THE MOST BEAUTIFUL MUSIC. Guitar + lyra. Sunrise on water. Aching, hopeful.
 
 ---
 
-## SCENE 8: Ο ΘΗΣΑΥΡΟΣ — "The Treasure"
+## SCENE 10: Ο ΘΗΣΑΥΡΟΣ — "The Treasure"
 
 A sea chest. Old, iron-bound, the lock rusted but the wood sound. Visvikis built things to last.
 
@@ -309,7 +380,7 @@ Ntemis looks at the harbor across the water. Galaxidi in the morning light. Smal
 
 Back at Galaxidi. The harbor. The whole town gathers. The treasure is donated to the museum. The ledger displayed next to the ship models. The gold funds a restoration.
 
-Every NPC is there — Stavros, the Papas, Chrysostomos. The cat sits on Clio's lap.
+Every NPC is there — Stavros, the Curator, Fotini, the Papas, Chrysostomos. The cat sits on Clio's lap.
 
 Final text over the harbor at sunset:
 
@@ -339,17 +410,19 @@ Final text over the harbor at sunset:
 
 1. **Γράμμα Βισβίκη** (Visvikis's Letter) — from desk drawer, Scene 2
 2. **Φωτογραφία Καπετάνιου** (Captain's Photo) — from wall, Scene 2
-3. **Πράσινη Πέτρα** (Green Stone / Jade) — from cave wall, Scene 4
-4. **Ναυτικός Χάρτης** (Nautical Chart) — from church floor, Scene 6
+3. **Πράσινη Πέτρα** (Green Stone / Jade) — from cave wall, Scene 6
+4. **Ναυτικός Χάρτης** (Nautical Chart) — from church floor, Scene 8
 
 ## NPC ROSTER
 
 | NPC | Scene | Role |
 |-----|-------|------|
-| **Σταύρος** | 3 (Port) | Old fisherman, knows the legend, points to cave |
-| **Παπάς** | 6 (Church) | Priest, lets them in, knows Visvikis was benefactor |
-| **Χρυσόστομος** | 7 (Boat) | Old sailor, takes them to island, tells Visvikis stories |
-| **Ghost of Visvikis** | 5 (Graveyard) | Points to church, finds peace |
+| **Σταύρος** | 3 (Port) | Old fisherman, knows the legend, points to museum and cave |
+| **Επιμελητής** | 4 (Museum) | Curator, the big history lesson — golden age and steamship decline |
+| **Φωτεινή** | 5 (Liotrivi) | Bartender, captain's descendant, confirms cave location |
+| **Παπάς** | 8 (Church) | Priest, lets them in, knows Visvikis was benefactor |
+| **Χρυσόστομος** | 9 (Boat) | Old sailor, takes them to island, tells Visvikis stories |
+| **Ghost of Visvikis** | 7 (Graveyard) | Points to church, finds peace |
 | **Various NPCs** | 3 (Port) | Comic responses when shown the letter |
 
 ## ART ASSETS NEEDED
@@ -359,13 +432,15 @@ Final text over the harbor at sunset:
 | 1. Harbor arrival | pixel-harbor.png | Golden hour, crescent harbor, warm |
 | 2. Grandfather's house | pixel-captain-house.png | Dark interior → light through shutters |
 | 3. Harbor (evening) | Same as 1 (evening palette swap) | Warmer, taverna lights |
-| 4. Cave | pixel-cave.png | Dark, echoing, wall markings, mysterious |
-| 5. Graveyard | pixel-graveyard.png | Dusk, marble headstones, cypress, gulf view |
-| 6. Church interior | pixel-church.png | Candles, icons, iconostasis, warm light |
-| 7. Boat on gulf | pixel-boat.png | Dawn, water, Galaxidi in distance |
-| 8. Island | pixel-island.png | Rocky islet, chapel, wild herbs, morning light |
+| 4. Museum | pixel-museum.png | Warm wood, model ships, captain portraits, steamship corner |
+| 5. Liotrivi | pixel-liotrivi.png | Stone walls, olive press, amber lanterns, bar |
+| 6. Cave | pixel-cave.png | Dark, echoing, wall markings, mysterious |
+| 7. Graveyard | pixel-graveyard.png | Dusk, marble headstones, cypress, gulf view |
+| 8. Church interior | pixel-church.png | Candles, icons, iconostasis, warm light |
+| 9. Boat on gulf | pixel-boat.png | Dawn, water, Galaxidi in distance |
+| 10. Island | pixel-island.png | Rocky islet, chapel, wild herbs, morning light |
 
-**Portraits needed:** Stavros, Papas, Chrysostomos, Ghost Visvikis
+**Portraits needed:** Stavros, Curator, Fotini, Papas, Chrysostomos, Ghost Visvikis
 
 ## MUSIC NEEDED
 
@@ -373,9 +448,11 @@ Final text over the harbor at sunset:
 |-------|-------|-------|
 | 1-2 | arrival-theme.mp3 | Warm acoustic guitar, cicadas, Mediterranean |
 | 3 | harbor-evening.mp3 | Bouzouki, lively, taverna warmth |
-| 4 | cave-theme.mp3 | Underground echo, dripping, mysterious warmth |
-| 5 | ghost-theme.mp3 | Solo lyra, melancholy → peaceful |
-| 6 | church-theme.mp3 | Sacred, choral tones, reverb |
-| 7 | boat-crossing.mp3 | Guitar + lyra, sunrise, THE MOST BEAUTIFUL |
-| 8 | treasure-reveal.mp3 | Building from silence, full theme climax |
+| 4 | museum-theme.mp3 | Reflective piano + strings, shifts to minor at steamship corner |
+| 5 | liotrivi-theme.mp3 | Rebetiko warmth, bouzouki + guitar, amber and smoky |
+| 6 | cave-theme.mp3 | Underground echo, dripping, mysterious warmth |
+| 7 | ghost-theme.mp3 | Solo lyra, melancholy → peaceful |
+| 8 | church-theme.mp3 | Sacred, choral tones, reverb |
+| 9 | boat-crossing.mp3 | Guitar + lyra, sunrise, THE MOST BEAUTIFUL |
+| 10 | treasure-reveal.mp3 | Building from silence, full theme climax |
 | End | ending-theme.mp3 | Full family theme, hopeful, resolved |
