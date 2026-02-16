@@ -2,108 +2,126 @@
 
 Priority: P0 = must have, P1 = important, P2 = nice to have, P3 = future
 
-## P0 — Story Implementation (Game Bible scenes)
+## P0 — Story Implementation (11 Scenes + Epilogue)
 
-### Scene 1: ΤΟ ΣΠΙΤΙ (The House) — PARTIALLY DONE
+### Scene 1: ΑΦΙΞΗ (Arrival / Harbor) — PARTIALLY DONE
 - [x] Exterior sub-scene with background, objects, exits
 - [x] Terrace sub-scene with harbor view, dolphin event
 - [x] Kitchen sub-scene with satchel puzzle
-- [ ] **Rework to match Game Bible**: old photograph discovery (harbor 1870 packed with ships)
-- [ ] **Token #1**: Clio finds loose terrace tile → captain's token (ΑΛΛΗΛΕΓΓΥΗ coin)
-- [ ] **Encyclopedia book**: Clio finds the Galaxidi book left by house owner
-- [ ] **Key dialog**: "Πού πήγαν όλα;" / "Τι σημαίνει αλληλεγγύη;"
-- [ ] **Clio's notebook**: first drawing (the coin) — inventory/journal system
+- [ ] **Rework to match Story Bible**: arrival at harbor, cat follows Clio, find the house
+- [ ] **Entry dialog**: "Φτάσαμε" / "Θα έχει φαντάσματα;" exchange
+- [ ] Tutorial: learn to click, walk, look
 
-### Scene 2: ΤΟ ΛΙΜΑΝΙ (The Port)
-- [ ] Background art: crescent harbor at golden hour, oversized bollards, warehouses
-- [ ] Stavros NPC: fisherman mending nets, quest hook, steamship story
-- [ ] Interactive harbor objects with micro-histories (bollards, dry dock, warehouses)
-- [ ] Ajax diving off wall → finds old ship timber
-- [ ] Clio befriends harbor cats
-- [ ] NPCs on benches and at cafés
-- [ ] Token #2 (from Stavros quest chain)
-- [ ] Music: harbor bouzouki, shifts to minor key for decline talk
+### Scene 2: ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ (The Grandfather's House)
+- [ ] Background art: captain's house interior, shutters, model ships, charts
+- [ ] **Open shutters puzzle**: light reveals room progressively
+- [ ] Faded photograph of Captain Visvikis on wall
+- [ ] **Locked drawer puzzle**: Ajax finds drawer → Clio finds key in copper pot → letter
+- [ ] Visvikis's letter (1887): quest hook — "find the green stone"
+- [ ] Captain's photograph → inventory
+- [ ] Dialog: "Ο Καπετάν Βισβίκης. Ο προπάππους μου."
+- [ ] Music: acoustic guitar → mysterious piano crossfade
 
-### Scene 3: ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ (The Nautical Museum)
-- [ ] Background art: museum interior, model ships in glass cases, steamship corner
-- [ ] Curator NPC: passionate, detailed, honest tour
-- [ ] Interactive exhibits: ships, photos, instruments (bilingual text)
-- [ ] Captain portrait gallery with real names/bios
-- [ ] The steamship corner — pivotal narrative turn
-- [ ] Model ship puzzle → find key → Token #3
-- [ ] Ajax's "Can being the best hurt you?" moment
-- [ ] Music: reflective piano/strings → minor key shift at steamship corner
+### Scene 3: Η ΠΑΡΕΑ (The Friends on the Harbor)
+- [ ] Background art: harbor at golden hour, blue bench, anchor monument, taverna lights
+- [ ] **Akis NPC**: φλογέρα player, tells Visvikis legend, points to cave + museum
+- [ ] **Stathis NPC**: guitar player, sailors' melody, points to Athos at Liotrivi
+- [ ] Reunion dialog: "Πόσα χρόνια, ρε παιδιά;"
+- [ ] Show letter to harbor NPCs (comic responses: old woman crosses herself, taverna owner laughs)
+- [ ] Clio draws the musicians (notebook moment)
+- [ ] Sailors' melody (motif — returns in epilogue)
+- [ ] Music: live φλογέρα + guitar
 
-### Scene 4: ΛΙΟΤΡΙΒΙ (Liotrivi Bar)
-- [ ] Background art: stone walls, olive press, amber lighting
-- [ ] Fotini NPC: captain's descendant, history test dialogue puzzle
-- [ ] Eirini NPC (outside): tech entrepreneur, future voice
-- [ ] Clio hiding — fact-vs-fiction mini-game
-- [ ] Token #4 from Fotini
-- [ ] Comedy beat: "Πόση ώρα είσαι εδώ;" / "Από το τσίπουρο."
-- [ ] Music: rebetiko warmth, electronic shift for Eirini
+### Scene 4: ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ (The Maritime Museum)
+- [ ] Background art: museum interior, model ships in glass cases, captain portraits
+- [ ] **Curator NPC**: passionate tour — golden age, 300 ships, αλληλασφάλεια
+- [ ] **Steamship corner**: small iron model next to schooners — pivotal narrative turn
+- [ ] Ajax's phone moment (Googles "Galaxidi ships" → autocorrected to "Galaxy ships")
+- [ ] Ajax's question: "ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;"
+- [ ] Clio finds αλληλασφάλεια display — 104 captains signed
+- [ ] Ajax: "Σαν ομάδα"
+- [ ] Music: piano/strings → minor key at steamship corner
 
-### Scene 5: ΤΟ ΣΠΗΛΑΙΟ (The Cave — Plateia Mama)
-- [ ] Background art: cave interior, stone door with 12 indentations
-- [ ] Captain's marks on walls (interactive)
-- [ ] Token door mechanism — place tokens, visual flash per captain
-- [ ] Vote inscription discovery: "Rejected 9 to 3"
-- [ ] Clio's devastating question: "Γιατί δεν τους άκουσαν;"
-- [ ] Music: underground wonder, silence at vote inscription
+### Scene 5: ΛΙΟΤΡΙΒΙ (The Old Olive Press)
+- [ ] Background art: stone walls, olive press, amber lanterns, bar
+- [ ] **Athos NPC**: 50, brown hair, sharp lawyer. Confirms cave, reveals will
+- [ ] Dialog: "Τα άφησε όλα 'στο Γαλαξίδι.' Όχι σε πρόσωπο. Στην πόλη."
+- [ ] Challenge: "Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ' το."
+- [ ] **The key question**: "Ποιο είναι το ατμόπλοιο σήμερα;"
+- [ ] Clio draws Athos: "Μοιάζεις με δικαστή" / "Χειρότερα. Δικηγόρος."
+- [ ] Music: rebetiko warmth, silence on the challenge line
 
-### Scene 6: ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ (Church)
-- [ ] Background art: church interior, icons, candles, light through windows
-- [ ] Papas NPC: warm, mischievous, church history
-- [ ] Architecture puzzle → Token #5
-- [ ] Clio lights a candle for the captains
-- [ ] Music: sacred warmth, choral tones
+### Scene 6: Ο ΜΥΛΟΣ (The Windmill)
+- [ ] Background art: windmill terrace, panoramic view of gulf/harbor/mountains
+- [ ] **Giannis NPC**: quiet, observant. Shows cave entrance from above
+- [ ] **Gives brass lantern** (inventory item, used in cave)
+- [ ] Ajax looks through telescope → spots island
+- [ ] Clio: "Αυτός ήθελε να μείνει κάτι."
+- [ ] Music: wind, sparse guitar, birdsong
 
-### Scene 7: Ο ΜΥΛΟΣ (The Windmill)
-- [ ] Background art: windmill terrace, panoramic view
-- [ ] Map puzzle: connect token locations → ship pattern eureka
-- [ ] Telescope mini-game (Clio spots harbor marking)
-- [ ] Ntemis's reflection: "It needs to become what it can be"
-- [ ] Music: soaring vista theme
+### Scene 7: ΤΟ ΣΠΗΛΑΙΟ (The Cave of Karkaros)
+- [ ] Background art: cave interior, captain's marks on walls, darkness + lantern light
+- [ ] **Lantern required**: dark → lit transition
+- [ ] Wall markings: "Λ.Β. 1887" and other ship names/dates
+- [ ] **Ajax climbs to discover vote inscription**: "Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3."
+- [ ] Ntemis explains the vote to the kids
+- [ ] Ajax's quiet moment: "Τρεις ήξεραν. Και κανείς δεν τους άκουσε."
+- [ ] **Clio finds GREEN STONE (jade)**: looks UP — angle only a 7-year-old would try
+- [ ] "Σας. Το. Είπα."
+- [ ] Music: underground wonder, silence at vote, crystalline tone for jade
 
-### Scene 8: ΤΟ ΚΑΡΑΒΙ (The Boat)
-- [ ] Background art: boat on gulf, sunset, coastal chapel
-- [ ] Chrysostomos NPC: old sailor, stories, wisdom about change
-- [ ] Scenic boat ride with clickable landmarks
-- [ ] Token at coastal chapel + logbook page
-- [ ] Return sequence: sunset, sleeping Clio, Ajax's realization
-- [ ] Music: THE most beautiful — guitar and lyra, sunset, aching nostalgia
+### Scene 8: ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ (The Captain's Rest)
+- [ ] Background art: old cemetery, marble headstones with carved ships, cypress, sea view, dusk
+- [ ] Interactive headstones with captain micro-biographies
+- [ ] Visvikis's grave: carved Ελπίδα, epitaph "Η θάλασσα θυμάται"
+- [ ] **Use jade on headstone → ghost sequence**
+- [ ] Ghost: not frightening — weathered, proud, tired. Looks at each family member
+- [ ] Ghost points to Agios Nikolaos church (cross + compass rose)
+- [ ] **Clio waves at ghost. Ghost waves back.** Then fades.
+- [ ] Ajax reaches for phone, then puts it away (growth moment)
+- [ ] Clio draws ghost: "Κουρασμένος αλλά χαρούμενος"
+- [ ] Music: solo Greek lyra — THE ghost's theme (most memorable in game)
 
-### Scene 9: ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ (The Graveyard)
-- [ ] Background art: old cemetery, marble headstones, sea views, dusk
-- [ ] Interactive headstones with captain biographies
-- [ ] Ghost encounter: gentle, proud, sad, NOT scary
-- [ ] Ghost's vision: golden age → decline (wordless)
-- [ ] Token from headstone base
-- [ ] Clio draws the ghost, waves goodbye
-- [ ] Music: solo lyra — ghost's theme, most memorable in game
+### Scene 9: ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ (The Map in the Church)
+- [ ] Background art: church interior, icons, candles, wooden iconostasis, beeswax light
+- [ ] **Papas NPC**: warm, mischievous. Visvikis was greatest benefactor
+- [ ] **Clio candle scene**: lights candle for the captains (emotional beat → unlocks Papas)
+- [ ] Ajax tries to climb iconostasis: "ΟΧΙ στις εικόνες!"
+- [ ] **Clio spots floor tile with "Λ.Β."** → loose → NAUTICAL CHART underneath
+- [ ] Chart: Corinthian Gulf, X marks Agios Georgios island
+- [ ] Margin note: "Κάτω από τον σταυρό, πέντε βήματα. Σκάψε."
+- [ ] Music: sacred warmth, choral tones → adventure theme swells at map discovery
 
-### Scene 10: ΤΟ ΣΠΗΛΑΙΟ — ΤΕΛΙΚΗ (Cave — Final Return)
-- [ ] 12-token placement cinematic sequence
-- [ ] Door opens → sea chest → ledger + letter
-- [ ] Captain's letter read aloud (bilingual)
-- [ ] Family reaction: Clio's final line, Ajax's "Τότε ας το κάνουμε"
-- [ ] Music: building from silence, each token adds instrument, new melody at end
+### Scene 10: ΤΟ ΚΑΡΑΒΙ (The Crossing)
+- [ ] Background art: Ελπίδα on the gulf, dawn, coastal chapel, island ahead
+- [ ] **Chrysostomos NPC**: sails Visvikis's own ship (Ελπίδα). Stories during crossing
+- [ ] Dialog: "Δεν πίστευα ότι θα ζούσα να το δω."
+- [ ] Chrysostomos's wisdom: "Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της, αλλιώς πνίγεσαι."
+- [ ] Click landmarks during crossing for stories
+- [ ] Arrive at island → find southwest rock → cross → 5 steps → Ajax digs
+- [ ] Music: THE most beautiful — guitar + lyra, dawn on water
 
-### Epilogue: Η ΓΙΟΡΤΗ (The Festival)
-- [ ] Festival scene: harbor with lights, all NPCs gathered
-- [ ] Eirini's "New Pact" book
-- [ ] Clio's drawing hung in museum
-- [ ] Final text: "Η θάλασσα θυμάται. Εμείς επίσης."
-- [ ] Post-credits: real Galaxidi acknowledgment, Chapter 2 tease
+### Scene 11: Ο ΘΗΣΑΥΡΟΣ (The Treasure)
+- [ ] Background art: sea chest emerging from earth, morning light, Galaxidi across water
+- [ ] Open chest: gold coins, jade necklace, αλληλασφάλεια ledger, final letter
+- [ ] **Visvikis's letter read aloud** (bilingual)
+- [ ] "Κράτα την αλληλεγγύη. Άλλαξε το πλοίο."
+- [ ] Family reaction: Clio's question, Ajax reads 104 signatures, Ntemis's decision
+- [ ] **The return**: Clio falls asleep on Ntemis's lap. Ajax watches from bow. Chrysostomos hums the ghost's theme.
+- [ ] Music: silence → each item adds instrument → full theme → ghost's theme on return
+
+### Epilogue
+- [ ] Final text: "Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης."
+- [ ] Credits
+- [ ] Post-credits: real Galaxidi acknowledgment
 
 ## P0 — Systems
 
 - [ ] **Bilingual system**: Greek/English toggle, parallel text for all content
-- [ ] **Token counter**: UI showing collected/12 tokens
 - [ ] **Clio's notebook**: journal/inventory hybrid — she draws items and clues
 - [ ] **NPC dialog trees**: branching conversation system (not just linear)
 - [ ] **Save/load**: localStorage, at least 1 save slot
-- [ ] **Encyclopedia**: historical reference accessible from menu
+- [ ] **NPC portraits**: Akis, Stathis, Curator, Athos, Giannis, Papas, Chrysostomos, Ghost
 
 ## P1 — Polish
 
@@ -118,9 +136,7 @@ Priority: P0 = must have, P1 = important, P2 = nice to have, P3 = future
 
 - [ ] Character-specific actions: Ajax reaches small spaces, Clio reads ancient Greek
 - [ ] Combine items in inventory
-- [ ] Flashback scenes (sepia tone, captain era)
 - [ ] Map screen for fast-travel
-- [ ] Multiple endings based on choices
 - [ ] Historical accuracy tags (VERIFIED / BASED ON / DRAMATIZED)
 
 ## P3 — Future / Saga
@@ -145,38 +161,33 @@ Priority: P0 = must have, P1 = important, P2 = nice to have, P3 = future
 
 | Scene | Background | Style Notes |
 |-------|-----------|-------------|
-| house (exterior) | pixel-exterior.png | Done |
-| house (terrace) | pixel-terrace.png | Done |
-| house (kitchen) | pixel-kitchen.png | Done |
-| port | — | Golden hour, crescent harbor, oversized infrastructure |
-| museum | — | Interior, model ships in glass, steamship corner |
-| liotrivi | — | Stone walls, olive press, amber lighting, bar |
-| cave | — | Natural chamber, stone door, captain marks on walls |
-| church | — | Icons, candles, light through windows, dust motes |
-| windmill | — | Panoramic terrace, town/harbor/gulf/mountains below |
-| boat | — | Gulf at sunset, Elpida boat, coastal chapel |
-| graveyard | — | Marble headstones, sea views, wild thyme, dusk |
-| cave_final | — | Same cave, door open, revealed chamber |
-| epilogue | — | Harbor with lights, festival, fireworks |
+| harbor (Scene 1) | pixel-exterior.png | Done |
+| house terrace | pixel-terrace.png | Done |
+| house kitchen | pixel-kitchen.png | Done |
+| house interior (Scene 2) | — | Captain's house, shutters, model ships, charts, dust |
+| harbor/friends (Scene 3) | — | Golden hour, blue bench, anchor monument, taverna lights |
+| museum (Scene 4) | — | Interior, model ships in glass, steamship corner |
+| liotrivi (Scene 5) | — | Stone walls, olive press, amber lighting, bar |
+| windmill (Scene 6) | — | Panoramic terrace, town/harbor/gulf/mountains below |
+| cave (Scene 7) | — | Natural chamber, captain marks on walls, lantern light |
+| graveyard (Scene 8) | — | Marble headstones, sea views, wild thyme, dusk |
+| church (Scene 9) | — | Icons, candles, wooden iconostasis, light through windows |
+| boat (Scene 10) | — | Gulf at dawn, Ελπίδα boat, coastal chapel |
+| treasure (Scene 11) | — | Sea chest, morning light, Galaxidi across water |
+| epilogue | — | Text only (or harbor with lights) |
 
 ## Music Needed
 
 | Scene | Style | Existing? |
 |-------|-------|-----------|
-| House | Warm acoustic guitar, main theme simple, cicadas | scene1-music.mp3 (partial) |
-| Port | Harbor bouzouki, shifts to minor for decline | — |
+| Harbor/Arrival | Warm acoustic guitar, main theme, cicadas | scene1-music.mp3 (partial) |
+| Harbor/Friends | φλογέρα + guitar, sailors' melody | — |
 | Museum | Piano/strings → minor key at steamship | — |
-| Liotrivi | Rebetiko warmth, electronic shift for Eirini | — |
-| Cave | Underground wonder, resonant tokens, silence at vote | — |
-| Church | Sacred warmth, choral, warm reverb | — |
-| Windmill | Soaring vista, strings + guitar, full theme | — |
-| Boat | Guitar + lyra, sunset, aching nostalgia — MOST BEAUTIFUL | — |
+| Liotrivi | Rebetiko warmth, bouzouki + guitar | — |
+| Windmill | Wind, sparse guitar, birdsong | — |
+| Cave | Underground wonder, silence at vote, crystalline jade | — |
 | Graveyard | Solo lyra, ghost's theme — MOST MEMORABLE | — |
-| Cave Final | Building from silence, each token = instrument | — |
-| Epilogue | Celebration, all themes converging | — |
+| Church | Sacred warmth, choral, warm reverb | — |
+| Boat | Guitar + lyra, dawn on water — MOST BEAUTIFUL | — |
+| Treasure | Building from silence, each item = instrument | — |
 | Title | Title theme | the-sea-remembers-title-theme-1/2.mp3 |
-
-## Reference Links
-
-- https://galaxidi.eu/ — Official Galaxidi info
-- https://syngalax.gr/ — Σύνδεσμος Γαλαξειδιωτών history timeline

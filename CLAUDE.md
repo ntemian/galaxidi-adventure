@@ -71,7 +71,7 @@ The game is one `<script>` block with these sections (in order):
 | **Game Loop** | `requestAnimationFrame` loop with delta time |
 | **Title/Intro** | Title screen, intro sequence, game start |
 
-## Game Scenes (12 + epilogue, 3 implemented)
+## Game Scenes (11 + epilogue, 3 implemented)
 
 See `storyboard.html` (open in browser) and `STORY.md` for full scene details.
 
@@ -79,46 +79,43 @@ See `storyboard.html` (open in browser) and `STORY.md` for full scene details.
 |---|-------|-------|--------|
 | 1 | **harbor** | ΑΦΙΞΗ | Done (exterior) |
 | 2 | **house** | ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ | Done (kitchen/interior) |
-| 3 | **port** | ΤΟ ΛΙΜΑΝΙ | TODO |
-| 4 | **waterfront** | Η ΠΑΡΕΑ | TODO |
-| 5 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | TODO |
-| 6 | **liotrivi** | ΛΙΟΤΡΙΒΙ | TODO |
-| 7 | **windmill** | Ο ΜΥΛΟΣ | TODO |
-| 8 | **cave** | ΤΟ ΣΠΗΛΑΙΟ (ΚΑΡΚΑΡΟΣ) | TODO |
-| 9 | **graveyard** | ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ | TODO |
-| 10 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
-| 11 | **boat** | ΤΟ ΚΑΡΑΒΙ (ΕΛΠΙΔΑ) | TODO |
-| 12 | **treasure** | Ο ΘΗΣΑΥΡΟΣ | TODO |
+| 3 | **harbor_friends** | Η ΠΑΡΕΑ | TODO |
+| 4 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | TODO |
+| 5 | **liotrivi** | ΛΙΟΤΡΙΒΙ | TODO |
+| 6 | **windmill** | Ο ΜΥΛΟΣ | TODO |
+| 7 | **cave** | ΤΟ ΣΠΗΛΑΙΟ (ΚΑΡΚΑΡΟΣ) | TODO |
+| 8 | **graveyard** | ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ | TODO |
+| 9 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
+| 10 | **boat** | ΤΟ ΚΑΡΑΒΙ (ΕΛΠΙΔΑ) | TODO |
+| 11 | **treasure** | Ο ΘΗΣΑΥΡΟΣ | TODO |
 | E | **epilogue** | ΕΠΙΛΟΓΟΣ | TODO |
 
 ## Puzzle Chain (Visvikis treasure hunt)
 
 ```
 Scene 2 (house): open shutters → find locked drawer → key in pot → Visvikis's letter (quest hook)
-Scene 3 (port): show letter to NPCs → Stavros points to Karkaros cave
-Scene 4 (waterfront): reunion with Akis & Stathis → Akis points to museum, Stathis points to Athos
-Scene 5 (museum): curator explains golden age + decline → learn αλληλασφάλεια history
-Scene 6 (liotrivi): Athos confirms cave → "prove you're worthy" → mentions Visvikis's will
-Scene 7 (windmill): Giannis shows cave entrance from above → gives LANTERN
-Scene 8 (cave): explore cave → find "Λ.Β. 1887" → Clio finds GREEN STONE (jade)
-Scene 9 (graveyard): place stone on Visvikis's grave → GHOST appears → points to church
-Scene 10 (church): Clio finds floor tile "Λ.Β." → NAUTICAL CHART (X marks Agios Georgios)
-Scene 11 (boat): Chrysostomos crosses to island → find rock → cross → 5 steps → dig
-Scene 12 (treasure): open chest → gold + jade necklace + αλληλασφάλεια ledger + final letter
+Scene 3 (harbor): reunion with Akis & Stathis → Akis tells Visvikis legend + points to museum, Stathis points to Athos
+Scene 4 (museum): curator explains golden age + decline → learn αλληλασφάλεια history
+Scene 5 (liotrivi): Athos confirms cave, reveals will → challenges family ("ατμόπλοιο σήμερα;")
+Scene 6 (windmill): Giannis shows cave entrance from above → gives brass LANTERN
+Scene 7 (cave): Ajax climbs, discovers "9 to 3" VOTE inscription → Clio finds GREEN STONE (jade)
+Scene 8 (graveyard): place stone on Visvikis's grave → GHOST appears → points to church
+Scene 9 (church): candle scene → Clio finds floor tile "Λ.Β." → NAUTICAL CHART (X marks Agios Georgios)
+Scene 10 (boat): Chrysostomos on the Ελπίδα crosses to island → find rock → cross → 5 steps → dig
+Scene 11 (treasure): open chest → gold + jade necklace + αλληλασφάλεια ledger + final letter
 ```
 
 ## NPCs
 
 | NPC | Scene | Role |
 |-----|-------|------|
-| **Σταύρος / Stavros** | Port | Fisherman, mends nets. Grandfather knew Visvikis. Points to cave |
-| **Άκης / Akis** | Waterfront | Flute player (φλογέρα), friend of Ntemis. Knows history. Points to museum |
-| **Στάθης / Stathis** | Waterfront | Guitar player, friend of Ntemis. Points to Athos at Liotrivi |
-| **Επιμελητής / Curator** | Museum | Passionate educator. Golden age, 300 ships, fatal refusal of steam |
-| **Άθος / Athos** | Liotrivi | Lawyer and owner. Knows every old family. Read Visvikis's will |
+| **Άκης / Akis** | Harbor | Flute player (φλογέρα), friend of Ntemis. Knows Galaxidi history. Tells Visvikis legend. Points to museum |
+| **Στάθης / Stathis** | Harbor | Guitar player, friend of Ntemis. Sailors' melody. Points to Athos at Liotrivi |
+| **Επιμελητής / Curator** | Museum | ~55, passionate educator. Golden age, 300 ships, fatal refusal of steam |
+| **Άθος / Athos** | Liotrivi | 50, brown hair, lawyer and owner. Read Visvikis's will. Challenges family |
 | **Γιάννης / Giannis** | Windmill | Owner of old windmill. Quiet, sees everything from above. Gives lantern |
-| **Παπάς / Papas** | Church | Warm, mischievous. Visvikis was greatest benefactor |
-| **Χρυσόστομος / Chrysostomos** | Boat | Old sailor. Knew Ntemis's father. Boats family to island |
+| **Παπάς / Papas** | Church | ~65, warm, mischievous. Visvikis was greatest benefactor |
+| **Χρυσόστομος / Chrysostomos** | Boat | ~70, old sailor. Sails the Ελπίδα (Visvikis's ship). Knew Ntemis's father |
 | **Ghost of Visvikis** | Graveyard | Silent, weathered, proud. Waited 120 years. Points to church |
 
 ## Historical Research
