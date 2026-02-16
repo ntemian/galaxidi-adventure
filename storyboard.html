@@ -401,10 +401,80 @@
     color: var(--jade-glow);
   }
 
+  /* Scene background images */
+  .scene-bg {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    image-rendering: pixelated;
+    border: 2px solid rgba(212,160,60,0.2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  /* Characters row in hero */
+  .characters-row {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-end;
+    margin: 40px 0 30px;
+  }
+
+  .char-card {
+    text-align: center;
+  }
+
+  .char-card img.char-sprite {
+    height: 120px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+  }
+
+  .char-card img.char-portrait {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-dim);
+    margin-top: 8px;
+    image-rendering: pixelated;
+  }
+
+  .char-card .char-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+
+  /* Inline portrait next to speaker */
+  .dialog-line-with-portrait {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .dialog-line-with-portrait .portrait-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,160,60,0.3);
+    image-rendering: pixelated;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .dialog-line-with-portrait .dialog-content {
+    flex: 1;
+  }
+
   /* Responsive */
   @media (max-width: 600px) {
     .scene { padding: 50px 20px; }
     body { font-size: 16px; }
+    .characters-row { gap: 15px; }
+    .char-card img.char-sprite { height: 80px; }
   }
 </style>
 </head>
@@ -418,6 +488,23 @@
     8 σκηνές. Ένας θησαυρός. Μια πράσινη πέτρα. Ένα φάντασμα που θυμάται.<br>
     <em>8 scenes. One treasure. One green stone. One ghost who remembers.</em>
   </div>
+  <div class="characters-row">
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-ntemis-final.png" alt="Ntemis">
+      <img class="char-portrait" src="assets/portrait-ntemis.png" alt="Ntemis portrait">
+      <div class="char-name">ΝΤΕΜΗΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-ajax-final.png" alt="Ajax">
+      <img class="char-portrait" src="assets/portrait-ajax.png" alt="Ajax portrait">
+      <div class="char-name">ΑΙΑΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-clio-final.png" alt="Clio">
+      <img class="char-portrait" src="assets/portrait-clio.png" alt="Clio portrait">
+      <div class="char-name">ΚΛΕΙΩ</div>
+    </div>
+  </div>
   <div class="scroll-hint">↓ Scroll to begin ↓</div>
 </div>
 
@@ -429,6 +516,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-exterior.png" alt="Galaxidi exterior — golden hour arrival">
     <p>The crescent harbor at golden hour. Stone houses climbing the hill, blue shutters, bougainvillea. Oversized bollards holding tiny fishing boats. A cat watches from a doorstep. The family walks in from the left.</p>
   </div>
 
@@ -487,6 +575,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-kitchen-v2.png" alt="Grandfather's house interior">
     <p>Dark interior, shutters closed. As each shutter opens, golden light floods in to reveal: model ships on shelves, nautical instruments on walls, a faded photograph of Captain Visvikis. A captain's house frozen in 1903.</p>
   </div>
 
@@ -563,6 +652,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-port.jpg" alt="Galaxidi harbor — evening">
     <p>The harbor in early evening warmth. Taverna lights coming on. Fishermen pulling nets. Cats on bollards. Stavros, old and weathered, sits by the quay mending nets.</p>
   </div>
 
@@ -628,6 +718,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-cave.png" alt="Karkaros cave interior">
     <p>Dark cave interior. Phone flashlight casting long shadows. Dripping water. Ancient markings scratched into stone walls — ship names, captain initials, dates. Deep in the chamber, a crack in the wall glows faintly green.</p>
   </div>
 
@@ -702,6 +793,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-graveyard.png" alt="Galaxidi cemetery at dusk">
     <p>Dusk. The old cemetery above town. Marble headstones with carved ships. Cypress trees. Wild thyme. The gulf visible between the trees, catching the last light. Visvikis's grave: a marble captain's headstone with a carved schooner.</p>
   </div>
 
@@ -769,6 +861,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-church.jpg" alt="Agios Nikolaos church interior">
     <p>Church interior at candlelight. Icons gleaming gold. The famous wooden iconostasis. Light through windows making dust motes glow. The Papas in black robes, slightly amused.</p>
   </div>
 
@@ -853,6 +946,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-boat.png" alt="The boat Elpida crossing to Agios Georgios">
     <p>Dawn. The boat Ελπίδα on the gulf. Galaxidi receding behind them, glowing in first light. Mountains rising. The tiny island of Agios Georgios ahead — rocky, a small white chapel, wild herbs. Chrysostomos at the helm, effortless.</p>
   </div>
 
@@ -905,6 +999,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-exterior.png" alt="The island — morning light, Galaxidi across the water">
     <p>Close-up: an old sea chest, iron-bound, emerging from the earth. The family gathered around it. Morning light. The gulf behind them. Galaxidi across the water, small and beautiful and waiting.</p>
   </div>
 
