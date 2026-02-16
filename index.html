@@ -1184,12 +1184,8 @@ function startSceneAmbience(sceneId) {
       if (!ambientSounds.wavesNode) {
         ambientSounds.wavesNode = createWavesLoop();
       }
-      if (!ambientSounds.cicadasNode) {
-        ambientSounds.cicadasNode = createCicadasLoop();
-        const cg = ambientSounds.cicadasNode.merger;
-        cg.gain.setValueAtTime(0, getAudioCtx().currentTime);
-        cg.gain.linearRampToValueAtTime(1, getAudioCtx().currentTime + 3);
-      }
+      // Cicadas disabled
+
       if (!ambientSounds.bellPlayed && sceneId === 'exterior') {
         ambientSounds.bellPlayed = true;
         setTimeout(() => playChurchBell(), 2500);
@@ -1226,7 +1222,7 @@ function updateAmbientSound(dt) {
   if (ambientSounds.gullTimer >= ambientSounds.gullInterval) {
     ambientSounds.gullTimer = 0;
     ambientSounds.gullInterval = 8 + Math.random() * 7;
-    try { playSeagullCry(); } catch (e) {}
+    // Seagull cries disabled — too synthetic
   }
 }
 
