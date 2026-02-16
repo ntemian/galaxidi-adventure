@@ -2381,16 +2381,104 @@ function startScene(id) {
   startSceneAmbience(id);
   changeSceneMusic(id);
 
-  // Entry dialogue
+  // Entry dialogue (first visit only)
   if (!state.visited.has(id) && sc.entry) {
     state.visited.add(id);
     setTimeout(() => showDlg(sc.entry), 600);
   } else {
     state.visited.add(id);
+    // Clio auto-comment on revisit (after a short delay)
+    scheduleClio(id);
   }
 }
 
+// ── Clio Auto-Comments — spontaneous observations on scene entry ──
+const clioComments = {
+  exterior: [
+    'Μπαμπά, η μπουκαμβίλια μεγάλωσε από χθες!',
+    'Ακούω τζιτζίκια. Πόσο αγαπώ αυτόν τον ήχο.',
+    'Κοίτα πώς λάμπει η θάλασσα.',
+    'Μυρίζει πεύκο και αλάτι.',
+  ],
+  terrace: [
+    'Θα μπορούσα να μείνω εδώ για πάντα.',
+    'Κοίτα τα βουνά, μπαμπά!',
+    'Βλέπω ένα καράβι στο βάθος.',
+    'Ο αέρας εδώ πάνω είναι μαγικός.',
+  ],
+  kitchen: [
+    'Η κουζίνα μυρίζει σαν το σπίτι του παππού.',
+    'Μπαμπά, πεινάω...',
+    'Κοίτα πόσα σκεύη! Κάποτε μαγείρευαν για πολλούς.',
+    'Φαντάζομαι τον παππού να κάθεται εδώ.',
+  ],
+  port: [
+    'Τα καΐκια κουνιούνται σαν να χορεύουν.',
+    'Μπαμπά, μπορώ να πατήσω πάνω στα σχοινιά;',
+    'Μυρίζει ψάρι και θαλασσινό αλάτι.',
+    'Φαντάζομαι πώς ήταν γεμάτο καράβια κάποτε.',
+  ],
+  museum: [
+    'Σσσ... πρέπει να είμαστε ήσυχοι εδώ μέσα;',
+    'Πόσα μυστικά κρύβουν αυτά τα πλοία...',
+    'Κοίτα τη χάρτα! Πόσα ταξίδια!',
+  ],
+  liotrivi: [
+    'Μυρίζει ελιά. Λατρεύω αυτή τη μυρωδιά.',
+    'Φαντάσου πόσα χέρια γύρισαν αυτή την πέτρα.',
+  ],
+  cave: [
+    'Είναι σκοτεινά εδώ μέσα...',
+    'Μπαμπά, κρατήσε με σφιχτά.',
+    'Ακούω σταγόνες. Σαν να χτυπάει ρολόι.',
+  ],
+  windmill: [
+    'Βλέπω ολόκληρο το Γαλαξίδι από εδώ πάνω!',
+    'Ο αέρας θέλει να με πάρει!',
+  ],
+  graveyard: [
+    'Κάθε πέτρα κι ένα ταξίδι...',
+    'Είναι ήσυχα εδώ. Σαν να ακούω τη θάλασσα να τους νανουρίζει.',
+  ],
+  church: [
+    'Τι ωραία εκκλησία...',
+    'Μπαμπά, να ρίξω νόμισμα στο σιντριβάνι;',
+  ],
+  boat: [
+    'Κουνιέται! Κρατήσου καλά, Αίαντα!',
+    'Βλέπω το Γαλαξίδι από εδώ. Είναι τόσο μικρό...',
+  ],
+  treasure: [
+    'Νιώθω ότι είμαστε κοντά...',
+  ],
+};
+
+// Track which comments Clio has already said per scene
+const clioSaid = {};
+let clioTimer = null;
+
+function scheduleClio(sceneId) {
+  if (clioTimer) { clearTimeout(clioTimer); clioTimer = null; }
+  const pool = clioComments[sceneId];
+  if (!pool || pool.length === 0) return;
+  if (!clioSaid[sceneId]) clioSaid[sceneId] = new Set();
+  // Find unsaid comments
+  const unsaid = pool.filter((_, i) => !clioSaid[sceneId].has(i));
+  if (unsaid.length === 0) return; // all said, stay quiet
+  // Pick a random unsaid comment
+  const idx = pool.indexOf(unsaid[Math.floor(Math.random() * unsaid.length)]);
+  clioSaid[sceneId].add(idx);
+  // Delay: 3-5 seconds after scene loads, only if no dialog active
+  const delay = 3000 + Math.random() * 2000;
+  clioTimer = setTimeout(() => {
+    clioTimer = null;
+    if (state.dlg.active || state.scene !== sceneId) return;
+    showDlg([{ s: 'ΚΛΕΙΩ', t: pool[idx] }]);
+  }, delay);
+}
+
 function changeScene(id) {
+  if (clioTimer) { clearTimeout(clioTimer); clioTimer = null; }
   // Iris wipe centered on Ntemis
   state.fade.active = true;
   state.fade.alpha = 0;
