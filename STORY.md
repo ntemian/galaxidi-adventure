@@ -41,7 +41,7 @@ A father and his two children arrive in Galaxidi to settle their great-grandfath
 
 | NPC | Scene | Role |
 |-----|-------|------|
-| **Άκης / Akis** | Harbor | Flute player (φλογέρα), old friend of Ntemis. Knows Galaxidi history deeply. Tells the Visvikis legend. Points to museum |
+| **Άκης / Akis** | Harbor + New Era | Flute player (φλογέρα) AND documentarist, old friend of Ntemis. Has filmed documentaries across Greece (Amfissa, mountain villages, olive groves). Knows Galaxidi history deeply. Tells the Visvikis legend. Points to museum. In Scene 12: directs the Galaxidi documentary funded by the treasure |
 | **Στάθης / Stathis** | Harbor | Guitar player, old friend of Ntemis. Plays the sailors' melody. Points to Athos at Liotrivi |
 | **Επιμελητής / Curator** | Museum | ~55, thin, reading glasses always crooked. Passionate educator. Teaches the golden age, the 300 ships, and the fatal refusal of steam |
 | **Άθος / Athos** | Liotrivi | 50, brown hair, sharp features. Lawyer and Liotrivi owner. Knows every old family's history. Read Visvikis's will. Challenges the family |
@@ -69,7 +69,7 @@ The player encounters them in this order, and each one adds a layer until the fu
 
 ## The Quest
 
-Captain Loukas Visvikis (1841–1903), the last great captain of Galaxidi, traveled to the East and returned with a jade stone and a fortune. He hid his treasure for someone who would love Galaxidi enough to find it. He left a letter in his house with instructions. The family must follow the trail: house → harbor (friends) → museum → liotrivi → windmill → cave → graveyard → church → boat → island → treasure.
+Captain Loukas Visvikis (1841–1903), the last great captain of Galaxidi, traveled to the East and returned with a jade stone and a fortune. He hid his treasure for someone who would love Galaxidi enough to find it. He left a letter in his house with instructions. The family must follow the trail: house → harbor (friends) → museum → liotrivi → windmill → cave → graveyard → church → boat → island → treasure → and then do what Visvikis dreamed: use it to make Galaxidi great again.
 
 ### Key Items
 - **Visvikis's Letter** (Scene 2) — The quest hook. "Find the green stone."
@@ -93,7 +93,7 @@ His marks **Λ.Β.** are found: in the cave (1887 + vote record), on a floor til
 
 ---
 
-## Scene Structure (11 Scenes + Epilogue)
+## Scene Structure (12 Scenes + Epilogue)
 
 ### SCENE 1 — ΑΦΙΞΗ (Arrival)
 
@@ -330,17 +330,52 @@ His marks **Λ.Β.** are found: in the cave (1887 + vote record), on a floor til
 
 ---
 
+### SCENE 12 — Η ΝΕΑ ΕΠΟΧΗ (The New Era)
+
+*Weeks later. The harbor of Galaxidi at sunset. The whole town gathered — fishermen, taverna owners, old women in black, children. Chairs and benches form an amphitheater facing the water. Akis stands with a camera on a tripod. A projection screen flickers to life against the old harbor wall.*
+
+**Story beats**:
+1. Ntemis stands before the gathered Galaxidians. The treasure chest sits open on a table — the gold coins gleam, the αλληλασφάλεια ledger open beside them. The jade necklace around Clio's neck.
+2. Ntemis: "Ο Βισβίκης δεν μας άφησε θησαυρό. Μας άφησε ερώτηση. Τι κάνεις όταν ο κόσμος αλλάζει κι εσύ αγαπάς αυτό που ήταν;"
+3. He turns to Akis: "Ο Άκης ξέρει να κρατάει ιστορίες ζωντανές. Το έκανε στην Άμφισσα. Θα το κάνει και για το Γαλαξίδι."
+4. Akis steps forward. He's not just a musician — he's a documentarist. His camera has told the stories of dying towns and living traditions. Amfissa, the mountain villages, the olive groves. Now, Galaxidi.
+5. Akis: "Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Το Γαλαξίδι δεν θα σβήσει. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή."
+6. He plays a clip on the screen — test footage he's already shot. The harbor at dawn. Chrysostomos on the Ελπίδα. The cave mouth. Old hands mending nets. The carved ships on gravestones. The town gasps at its own beauty seen through fresh eyes.
+7. Athos stands. The lawyer in him has been working: "Ο χρυσός θα χρηματοδοτήσει τρία πράγματα. Το ντοκιμαντέρ. Την αποκατάσταση του μουσείου. Και κάτι καινούριο."
+8. Ntemis takes over — the vision. He speaks carefully, the way he always does, but with fire underneath:
+9. Ntemis: "Οι καπεταναίοι αρνήθηκαν τον ατμό. Δεν θα κάνουμε το ίδιο λάθος. Το ατμόπλοιο σήμερα λέγεται τεχνητή νοημοσύνη. Αλλάζει τα πάντα — τη δουλειά, τις πόλεις, τον τρόπο ζωής."
+10. Ajax, from the crowd: "Και τι γίνεται με μέρη σαν εδώ;" — He's asking Athos's question back. Full circle.
+11. Ntemis: "Αυτό είναι το μυστικό. Σε έναν κόσμο που τρέχει, τα μέρη που αναπνέουν γίνονται ο νέος παράδεισος. Το Γαλαξίδι δεν χρειάζεται να γίνει σαν την Αθήνα. Χρειάζεται να γίνει περισσότερο Γαλαξίδι."
+12. Murmur in the crowd. Chrysostomos nods from his chair. The Curator's eyes are wet.
+13. Ntemis: "Η αλληλασφάλεια ήταν 104 υπογραφές. Σήμερα ζητάω τις δικές σας. Όχι για καράβια. Για κάτι μεγαλύτερο — να κάνουμε αυτό τον τόπο ζωντανό ξανά. Με τον δικό μας τρόπο."
+14. Silence. Then the old woman in black — the same one who nodded at them on arrival in Scene 1 — stands first. She walks to the ledger and signs. One by one, the Galaxidians follow. Akis films it all.
+15. Stathis picks up his guitar. Akis puts down his camera and picks up his φλογέρα. The sailors' melody from Scene 3 — but now the whole harbor hums along. Not a lament anymore. A beginning.
+16. Clio draws in her notebook: the harbor, the crowd, the screen, the signatures. She writes one word underneath: **ΕΛΠΙΔΑ**.
+17. Ajax: "Μπαμπά, πόσες υπογραφές;" Ntemis counts. "Εκατόν τρεις. Λείπει μία." Ajax grabs the pen and signs. "Εκατόν τέσσερις." The same number as the original pact.
+
+**Gameplay**: Walk through crowd (talk to familiar NPCs — each has a reaction line). Approach podium → Ntemis speech sequence. Watch documentary clip (cinematic). Athos presents the plan. Ntemis delivers the vision. Interactive signing sequence — watch townspeople approach the ledger one by one. Ajax signs last (104th). Clio notebook moment. Sailors' melody plays. Credits tease.
+
+**Music**: Builds from silence. Ntemis's speech is unscored — just the crowd, the sea, the wind. Documentary clip has its own underscore (Akis's footage theme — warm, cinematic). When the old woman signs: a single guitar note. Each signature adds a layer. By the time Ajax signs the 104th: the full sailors' melody with φλογέρα, guitar, lyra, strings — the richest arrangement in the game. The theme of Galaxidi reborn.
+
+---
+
 ### EPILOGUE
 
 *Ο Καπετάν Βισβίκης ταξίδεψε στην Ανατολή, γύρισε πλούσιος, κι έκρυψε τον θησαυρό του για κάποιον που θα αγαπούσε το Γαλαξίδι αρκετά για να τον βρει.*
 
 *Εκατόν είκοσι χρόνια αργότερα, τρεις ταξιδιώτες τον βρήκαν.*
 
-*Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.*
+*Οι παλιοί καπεταναίοι αρνήθηκαν τον ατμό. Οι νέοι δεν θα κάνουν το ίδιο λάθος.*
+
+*Σε έναν κόσμο που αλλάζει πιο γρήγορα απ' ό,τι μπορεί κανείς να φανταστεί, τα μέρη που θυμούνται ποιοι είναι γίνονται ο νέος παράδεισος.*
+
+*Εκατόν τέσσερις υπογραφές. Τότε και τώρα.*
+
+*Η θάλασσα θυμάται. Κι εμείς τώρα, αλλάζουμε μαζί της.*
 
 **ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ**
 
-*Κρατήστε το σύμφωνο. Αλλάξτε το πλοίο.*
+*Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.*
 
 ---
 
@@ -395,6 +430,7 @@ Scene 8 (graveyard): place stone on Visvikis's grave → GHOST appears → point
 Scene 9 (church): candle scene → Clio finds floor tile "Λ.Β." → NAUTICAL CHART (X marks Agios Georgios)
 Scene 10 (boat): Chrysostomos on the Ελπίδα crosses to island → find rock → cross → 5 steps → dig
 Scene 11 (treasure): open chest → gold + jade necklace + αλληλασφάλεια ledger + final letter
+Scene 12 (harbor): Ntemis's speech → Akis's documentary → new αλληλασφάλεια signing → 104 signatures again
 ```
 
 ## Emotional Arc
@@ -411,6 +447,7 @@ Scene 8:  Reverence (the graveyard) → Supernatural wonder (the ghost) → Tend
 Scene 9:  Sacred discovery (the church, the candle) → Anticipation (the map!)
 Scene 10: Beauty (dawn crossing on the Ελπίδα) → Tension (digging) → Acceptance (Chrysostomos's wisdom)
 Scene 11: Revelation (the treasure) → Emotion (Visvikis's letter) → Peace (giving it back, Clio asleep on the return)
+Scene 12: Vision (the speech) → Pride (the documentary) → Unity (the signing) → Hope (104 again, ΕΛΠΙΔΑ)
 ```
 
 ## Key Locations Reference
@@ -428,6 +465,7 @@ Scene 11: Revelation (the treasure) → Emotion (Visvikis's letter) → Peace (g
 | Church (Scene 9) | Candlelit sacred | Gold icons, candlelight, beeswax | Silence, distant chant |
 | Boat (Scene 10) | Dawn hope | Sunrise pink, sea azure | Waves, gulls, lyra |
 | Island/Treasure (Scene 11) | Morning revelation | Morning gold, earth brown | Digging, then silence, then music |
+| Harbor/New Era (Scene 12) | Communal hope | Sunset gold, projection white, crowd warmth | Speech silence → documentary underscore → building melody → full orchestra |
 
 ## Character Puzzle Contributions
 

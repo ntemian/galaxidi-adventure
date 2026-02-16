@@ -71,7 +71,7 @@ The game is one `<script>` block with these sections (in order):
 | **Game Loop** | `requestAnimationFrame` loop with delta time |
 | **Title/Intro** | Title screen, intro sequence, game start |
 
-## Game Scenes (11 + epilogue, 3 implemented)
+## Game Scenes (12 + epilogue, 3 implemented)
 
 See `storyboard.html` (open in browser) and `STORY.md` for full scene details.
 
@@ -88,6 +88,7 @@ See `storyboard.html` (open in browser) and `STORY.md` for full scene details.
 | 9 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
 | 10 | **boat** | ΤΟ ΚΑΡΑΒΙ (ΕΛΠΙΔΑ) | TODO |
 | 11 | **treasure** | Ο ΘΗΣΑΥΡΟΣ | TODO |
+| 12 | **new_era** | Η ΝΕΑ ΕΠΟΧΗ | TODO |
 | E | **epilogue** | ΕΠΙΛΟΓΟΣ | TODO |
 
 ## Puzzle Chain (Visvikis treasure hunt)
@@ -103,13 +104,14 @@ Scene 8 (graveyard): place stone on Visvikis's grave → GHOST appears → point
 Scene 9 (church): candle scene → Clio finds floor tile "Λ.Β." → NAUTICAL CHART (X marks Agios Georgios)
 Scene 10 (boat): Chrysostomos on the Ελπίδα crosses to island → find rock → cross → 5 steps → dig
 Scene 11 (treasure): open chest → gold + jade necklace + αλληλασφάλεια ledger + final letter
+Scene 12 (harbor): Ntemis's speech → Akis's documentary → new αλληλασφάλεια signing → 104 signatures again
 ```
 
 ## NPCs
 
 | NPC | Scene | Role |
 |-----|-------|------|
-| **Άκης / Akis** | Harbor | Flute player (φλογέρα), friend of Ntemis. Knows Galaxidi history. Tells Visvikis legend. Points to museum |
+| **Άκης / Akis** | Harbor + New Era | Flute player (φλογέρα) AND documentarist (filmed Amfissa, mountain villages, etc.), friend of Ntemis. Tells Visvikis legend. Points to museum. Scene 12: directs Galaxidi documentary |
 | **Στάθης / Stathis** | Harbor | Guitar player, friend of Ntemis. Sailors' melody. Points to Athos at Liotrivi |
 | **Επιμελητής / Curator** | Museum | ~55, passionate educator. Golden age, 300 ships, fatal refusal of steam |
 | **Άθος / Athos** | Liotrivi | 50, brown hair, lawyer and owner. Read Visvikis's will. Challenges family |
