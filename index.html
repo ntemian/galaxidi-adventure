@@ -199,6 +199,11 @@
 
 <audio id="title-music" loop preload="auto"><source src="music/galaxidi-title-theme-1.mp3" type="audio/mpeg"></audio>
 <audio id="bgm" loop preload="auto"><source src="music/scene1-music.mp3" type="audio/mpeg"></audio>
+<audio id="sfx-waves" loop preload="auto"><source src="music/sfx/waves-loop.mp3" type="audio/mpeg"></audio>
+<audio id="sfx-cicadas" loop preload="auto"><source src="music/sfx/cicadas-loop.mp3" type="audio/mpeg"></audio>
+<audio id="sfx-gull1" preload="auto"><source src="music/sfx/seagull-1.mp3" type="audio/mpeg"></audio>
+<audio id="sfx-gull2" preload="auto"><source src="music/sfx/seagull-2.mp3" type="audio/mpeg"></audio>
+<audio id="sfx-bell" preload="auto"><source src="music/sfx/church-bell.mp3" type="audio/mpeg"></audio>
 
 <script>
 // ════════════════════════════════════════════════════════════
@@ -659,18 +664,37 @@ function screenToGame(sx, sy) {
 const particles = [];
 function initParticles() {
   particles.length = 0;
-  for (let i = 0; i < 20; i++) {
-    particles.push({
-      x: Math.random() * GW,
-      y: 60 + Math.random() * 240,
-      vx: 0.1 + Math.random() * 0.25,
-      vy: -0.05 - Math.random() * 0.12,
-      size: 0.8 + Math.random() * 1.8,
-      alpha: 0,
-      maxAlpha: 0.12 + Math.random() * 0.18,
-      life: Math.random() * 700,
-      maxLife: 500 + Math.random() * 400,
-    });
+  const isExterior = (state.scene === 'exterior' || state.scene === 'terrace');
+  const count = isExterior ? 30 : 20;
+  for (let i = 0; i < count; i++) {
+    if (isExterior) {
+      // Golden motes drifting in the light shaft (upper-right to lower-left)
+      const startX = GW * 0.4 + Math.random() * GW * 0.6;
+      particles.push({
+        x: startX,
+        y: Math.random() * GH * 0.7,
+        vx: -0.05 - Math.random() * 0.15,
+        vy: 0.03 + Math.random() * 0.08,
+        size: 0.6 + Math.random() * 1.5,
+        alpha: 0,
+        maxAlpha: 0.15 + Math.random() * 0.25,
+        life: Math.random() * 700,
+        maxLife: 600 + Math.random() * 500,
+        glow: Math.random() < 0.3,
+      });
+    } else {
+      particles.push({
+        x: Math.random() * GW,
+        y: 60 + Math.random() * 240,
+        vx: 0.1 + Math.random() * 0.25,
+        vy: -0.05 - Math.random() * 0.12,
+        size: 0.8 + Math.random() * 1.8,
+        alpha: 0,
+        maxAlpha: 0.12 + Math.random() * 0.18,
+        life: Math.random() * 700,
+        maxLife: 500 + Math.random() * 400,
+      });
+    }
   }
 }
 
@@ -683,9 +707,15 @@ function updateParticles() {
     if (prog < 0.3) p.alpha = p.maxAlpha * (prog / 0.3) * (prog / 0.3); // quadratic fade-in
     else if (prog > 0.7) { const f = (prog - 0.7) / 0.3; p.alpha = p.maxAlpha * (1 - f * f); } // quadratic fade-out
     else p.alpha = p.maxAlpha;
-    if (p.life >= p.maxLife || p.x > GW + 10 || p.y < -10) {
-      p.x = -5 + Math.random() * 20;
-      p.y = 80 + Math.random() * 200;
+    if (p.life >= p.maxLife || p.x > GW + 10 || p.x < -10 || p.y < -10 || p.y > GH + 10) {
+      const isExterior = (state.scene === 'exterior' || state.scene === 'terrace');
+      if (isExterior) {
+        p.x = GW * 0.4 + Math.random() * GW * 0.6;
+        p.y = -5 + Math.random() * 30;
+      } else {
+        p.x = -5 + Math.random() * 20;
+        p.y = 80 + Math.random() * 200;
+      }
       p.life = 0;
       p.alpha = 0;
     }
@@ -697,11 +727,389 @@ function drawParticles() {
     if (p.alpha <= 0) continue;
     ctx.save();
     ctx.globalAlpha = p.alpha;
-    ctx.fillStyle = '#D4A03C';
+    if (p.glow) {
+      // Glowing golden mote
+      ctx.shadowColor = 'rgba(255,200,60,0.6)';
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = '#FFD860';
+    } else {
+      ctx.fillStyle = '#D4A03C';
+    }
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// SCENE AMBIENCE — per-scene visual & audio layers
+// ════════════════════════════════════════════════════════════
+
+// ── Seagulls ──
+const seagulls = [];
+function initSeagulls() {
+  seagulls.length = 0;
+  for (let i = 0; i < 3; i++) {
+    seagulls.push({
+      x: -30 - Math.random() * 200,
+      y: 25 + Math.random() * 50,
+      vx: 0.3 + Math.random() * 0.4,
+      wingPhase: Math.random() * Math.PI * 2,
+      wingSpeed: 0.06 + Math.random() * 0.03,
+      size: 3 + Math.random() * 2,
+      swoopAmp: 8 + Math.random() * 12,
+      swoopFreq: 0.008 + Math.random() * 0.006,
+      baseY: 25 + Math.random() * 50,
+      circling: Math.random() < 0.3,
+      circlePhase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+function updateSeagulls(dt) {
+  for (const g of seagulls) {
+    if (g.circling) {
+      g.circlePhase += dt * 0.5;
+      g.x += Math.cos(g.circlePhase) * 0.4;
+      g.y = g.baseY + Math.sin(g.circlePhase) * 15;
+      if (g.circlePhase > Math.PI * 6) { g.circling = false; }
+    } else {
+      g.x += g.vx;
+      g.y = g.baseY + Math.sin(g.x * g.swoopFreq) * g.swoopAmp;
+    }
+    g.wingPhase += g.wingSpeed;
+    if (g.x > GW + 40) {
+      g.x = -30 - Math.random() * 100;
+      g.baseY = 20 + Math.random() * 55;
+      g.y = g.baseY;
+      g.vx = 0.3 + Math.random() * 0.4;
+      g.circling = Math.random() < 0.25;
+      g.circlePhase = 0;
+    }
+  }
+}
+
+function drawSeagulls() {
+  for (const g of seagulls) {
+    if (g.x < -30 || g.x > GW + 30) continue;
+    const wing = Math.sin(g.wingPhase) * g.size;
+    ctx.save();
+    ctx.translate(g.x, g.y);
+    ctx.strokeStyle = '#f8f0e0';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    // Left wing
+    ctx.moveTo(-g.size * 1.5, wing * 0.6);
+    ctx.quadraticCurveTo(-g.size * 0.6, wing, 0, 0);
+    // Right wing
+    ctx.quadraticCurveTo(g.size * 0.6, wing, g.size * 1.5, wing * 0.6);
+    ctx.stroke();
+    // Body dot
+    ctx.fillStyle = '#e8e0d0';
+    ctx.fillRect(-1, -1, 2, 2);
+    ctx.restore();
+  }
+}
+
+// ── Sea Shimmer ──
+function drawSeaShimmer(tick) {
+  const t = tick * 0.02;
+  ctx.save();
+  // Water area on exterior scene (right side, harbor)
+  for (let ry = 75; ry < 140; ry += 2) {
+    const d = (ry - 75) / 65;
+    // Golden reflections
+    ctx.fillStyle = `rgba(230,180,60,${0.04 + d * 0.03})`;
+    for (let rx = 360; rx < 580; rx += 4) {
+      const shimmer = Math.sin(rx * 0.05 + ry * 0.08 + t * 1.8) * 0.5 + 0.5;
+      if (shimmer > 0.55) {
+        ctx.fillRect(rx, ry, 2 + Math.floor(shimmer * 3), 1);
+      }
+    }
+    // Dark wave troughs
+    ctx.fillStyle = `rgba(0,20,40,${0.03 + d * 0.02})`;
+    for (let rx = 360; rx < 580; rx += 6) {
+      if (Math.sin(rx * 0.07 + ry * 0.12 - t * 1.1) > 0.4) {
+        ctx.fillRect(rx, ry + 1, 3, 1);
+      }
+    }
+  }
+  ctx.restore();
+}
+
+// ── Bougainvillea Petals ──
+const petals = [];
+function initPetals() {
+  petals.length = 0;
+  for (let i = 0; i < 12; i++) {
+    petals.push(newPetal());
+  }
+}
+function newPetal() {
+  return {
+    x: 175 + Math.random() * 150,
+    y: 20 + Math.random() * 40,
+    vx: 0.1 + Math.random() * 0.3,
+    vy: 0.2 + Math.random() * 0.4,
+    rot: Math.random() * Math.PI * 2,
+    rotV: (Math.random() - 0.5) * 0.05,
+    size: 1.5 + Math.random() * 1.5,
+    wobble: Math.random() * Math.PI * 2,
+    wobbleSpeed: 0.02 + Math.random() * 0.02,
+    alpha: 0.5 + Math.random() * 0.4,
+    color: Math.random() < 0.7 ? '#E0489A' : (Math.random() < 0.5 ? '#D03878' : '#C83068'),
+  };
+}
+function updatePetals() {
+  for (const p of petals) {
+    p.wobble += p.wobbleSpeed;
+    p.x += p.vx + Math.sin(p.wobble) * 0.3;
+    p.y += p.vy;
+    p.rot += p.rotV;
+    if (p.y > 380 || p.x > GW + 10) {
+      Object.assign(p, newPetal());
+    }
+  }
+}
+function drawPetals() {
+  for (const p of petals) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ── Boat Bobbing ──
+function drawBoatBob(tick) {
+  // Subtle overlay shimmer on the boat area to suggest bobbing
+  const bob = Math.sin(tick * 0.015) * 1.5;
+  const bob2 = Math.sin(tick * 0.022 + 1.5) * 1;
+  ctx.save();
+  // Boat reflection distortion
+  ctx.globalAlpha = 0.08;
+  ctx.fillStyle = '#D4A03C';
+  for (let rx = 390; rx < 520; rx += 3) {
+    const wave = Math.sin(rx * 0.06 + tick * 0.02) * 2 + bob;
+    ctx.fillRect(rx, 195 + wave, 2, 1);
+  }
+  ctx.restore();
+}
+
+// ── Orange Cat ──
+const cat = { x: 95, y: 243, phase: 0, blinkTimer: 0, blinking: false, tailPhase: 0 };
+function updateCat(dt) {
+  cat.phase += dt;
+  cat.tailPhase += dt * 2.5;
+  cat.blinkTimer += dt;
+  if (!cat.blinking && cat.blinkTimer > 3 + Math.random() * 4) {
+    cat.blinking = true;
+    cat.blinkTimer = 0;
+  }
+  if (cat.blinking && cat.blinkTimer > 0.15) {
+    cat.blinking = false;
+    cat.blinkTimer = 0;
+  }
+}
+function drawCat() {
+  const cx = cat.x, cy = cat.y;
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  // Body (sitting loaf shape)
+  ctx.fillStyle = '#D08030';
+  ctx.fillRect(cx, cy, 10, 6);       // body
+  ctx.fillRect(cx + 1, cy - 1, 8, 1); // back curve
+  // Head
+  ctx.fillRect(cx + 8, cy - 4, 6, 5); // head
+  ctx.fillStyle = '#E09040';
+  ctx.fillRect(cx + 9, cy - 3, 4, 3); // face highlight
+  // Ears
+  ctx.fillStyle = '#D08030';
+  ctx.fillRect(cx + 8, cy - 6, 2, 2);  // left ear
+  ctx.fillRect(cx + 12, cy - 6, 2, 2); // right ear
+  ctx.fillStyle = '#E8A060';
+  ctx.fillRect(cx + 9, cy - 5, 1, 1);  // inner ear
+  ctx.fillRect(cx + 12, cy - 5, 1, 1);
+  // Eyes
+  if (!cat.blinking) {
+    ctx.fillStyle = '#40A040';
+    ctx.fillRect(cx + 9, cy - 2, 1, 1);
+    ctx.fillRect(cx + 12, cy - 2, 1, 1);
+  } else {
+    ctx.fillStyle = '#D08030';
+    ctx.fillRect(cx + 9, cy - 2, 1, 1);
+    ctx.fillRect(cx + 12, cy - 2, 1, 1);
+  }
+  // Nose
+  ctx.fillStyle = '#E07890';
+  ctx.fillRect(cx + 11, cy - 1, 1, 1);
+  // Stripes
+  ctx.fillStyle = '#B06820';
+  ctx.fillRect(cx + 2, cy, 1, 5);
+  ctx.fillRect(cx + 5, cy, 1, 5);
+  ctx.fillRect(cx + 10, cy - 4, 1, 2);
+  // Tail (swishing)
+  const tailSwing = Math.sin(cat.tailPhase) * 4;
+  ctx.fillStyle = '#D08030';
+  ctx.fillRect(cx - 1, cy + 3, 1, 1);
+  ctx.fillRect(cx - 2, cy + 2 + tailSwing * 0.2, 1, 1);
+  ctx.fillRect(cx - 3, cy + 1 + tailSwing * 0.4, 1, 1);
+  ctx.fillRect(cx - 4, cy + tailSwing * 0.5, 1, 1);
+  // Tip darker
+  ctx.fillStyle = '#B06820';
+  ctx.fillRect(cx - 4, cy + tailSwing * 0.5, 1, 1);
+  // Paws
+  ctx.fillStyle = '#E0A060';
+  ctx.fillRect(cx + 1, cy + 5, 2, 1);
+  ctx.fillRect(cx + 7, cy + 5, 2, 1);
+  ctx.restore();
+}
+
+// ── Golden Hour Light Shaft ──
+function drawLightShaft(tick) {
+  ctx.save();
+  const t = tick * 0.005;
+  // Diagonal warm light from upper-right
+  const lg = ctx.createLinearGradient(GW, 0, GW * 0.3, GH * 0.6);
+  lg.addColorStop(0, `rgba(255,200,80,${0.04 + Math.sin(t) * 0.01})`);
+  lg.addColorStop(0.4, `rgba(255,180,60,${0.02 + Math.sin(t + 1) * 0.005})`);
+  lg.addColorStop(1, 'rgba(255,180,60,0)');
+  ctx.fillStyle = lg;
+  ctx.fillRect(0, 0, GW, GH);
+  // Light beam rays (subtle streaks)
+  ctx.globalAlpha = 0.015 + Math.sin(t * 0.7) * 0.005;
+  ctx.fillStyle = '#FFD060';
+  ctx.beginPath();
+  ctx.moveTo(GW, 0);
+  ctx.lineTo(GW * 0.55, GH * 0.7);
+  ctx.lineTo(GW * 0.65, GH * 0.7);
+  ctx.lineTo(GW, 20);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(GW - 40, 0);
+  ctx.lineTo(GW * 0.4, GH * 0.5);
+  ctx.lineTo(GW * 0.48, GH * 0.5);
+  ctx.lineTo(GW - 10, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// ── Heat Haze ──
+function drawHeatHaze(tick) {
+  ctx.save();
+  const t = tick * 0.03;
+  ctx.globalAlpha = 0.02;
+  for (let x = 50; x < GW - 50; x += 8) {
+    const shift = Math.sin(x * 0.05 + t) * 1.5;
+    ctx.fillStyle = '#FFD090';
+    ctx.fillRect(x, 360 + shift, 4, 1);
+  }
+  ctx.restore();
+}
+
+// ── Ambient Sound Manager ──
+const ambientSounds = {
+  waves: null, cicadas: null, gullTimer: 0, gullInterval: 10, bellPlayed: false,
+};
+
+function initAmbientSound() {
+  ambientSounds.waves = document.getElementById('sfx-waves');
+  ambientSounds.cicadas = document.getElementById('sfx-cicadas');
+  ambientSounds.gullTimer = 0;
+  ambientSounds.gullInterval = 8 + Math.random() * 7;
+  ambientSounds.bellPlayed = false;
+}
+
+function startSceneAmbience(sceneId) {
+  if (sceneId === 'exterior' || sceneId === 'terrace') {
+    // Start ambient loops
+    if (ambientSounds.waves) {
+      ambientSounds.waves.volume = 0.08;
+      ambientSounds.waves.play().catch(() => {});
+    }
+    if (ambientSounds.cicadas) {
+      ambientSounds.cicadas.volume = 0;
+      ambientSounds.cicadas.play().catch(() => {});
+      // Fade cicadas in over 3 seconds
+      const fadeIn = setInterval(() => {
+        if (ambientSounds.cicadas.volume < 0.12) {
+          ambientSounds.cicadas.volume = Math.min(0.12, ambientSounds.cicadas.volume + 0.005);
+        } else clearInterval(fadeIn);
+      }, 100);
+    }
+    // Church bell on first visit
+    if (!ambientSounds.bellPlayed && sceneId === 'exterior') {
+      ambientSounds.bellPlayed = true;
+      const bell = document.getElementById('sfx-bell');
+      if (bell) {
+        setTimeout(() => { bell.volume = 0.15; bell.play().catch(() => {}); }, 2000);
+      }
+    }
+    // Init visual elements
+    initSeagulls();
+    initPetals();
+  } else {
+    stopSceneAmbience();
+  }
+}
+
+function stopSceneAmbience() {
+  if (ambientSounds.waves) { ambientSounds.waves.pause(); ambientSounds.waves.currentTime = 0; }
+  if (ambientSounds.cicadas) { ambientSounds.cicadas.pause(); ambientSounds.cicadas.currentTime = 0; }
+  seagulls.length = 0;
+  petals.length = 0;
+}
+
+function updateAmbientSound(dt) {
+  if (state.scene !== 'exterior' && state.scene !== 'terrace') return;
+  // Random seagull cries
+  ambientSounds.gullTimer += dt;
+  if (ambientSounds.gullTimer >= ambientSounds.gullInterval) {
+    ambientSounds.gullTimer = 0;
+    ambientSounds.gullInterval = 8 + Math.random() * 7;
+    const gull = document.getElementById(Math.random() < 0.5 ? 'sfx-gull1' : 'sfx-gull2');
+    if (gull) {
+      gull.currentTime = 0;
+      gull.volume = 0.1 + Math.random() * 0.1;
+      gull.play().catch(() => {});
+    }
+  }
+}
+
+// ── Master draw/update for scene ambience ──
+function updateSceneAmbience(dt) {
+  if (state.scene === 'exterior') {
+    updateSeagulls(dt);
+    updatePetals();
+    updateCat(dt);
+    updateAmbientSound(dt);
+  } else if (state.scene === 'terrace') {
+    updateSeagulls(dt);
+    updateAmbientSound(dt);
+  }
+}
+
+function drawSceneAmbience(tick) {
+  if (state.scene === 'exterior') {
+    drawSeaShimmer(tick);
+    drawBoatBob(tick);
+    drawLightShaft(tick);
+    drawSeagulls();
+    drawPetals();
+    drawCat();
+    drawHeatHaze(tick);
+  } else if (state.scene === 'terrace') {
+    drawSeaShimmer(tick);
+    drawLightShaft(tick);
+    drawSeagulls();
   }
 }
 
@@ -1355,6 +1763,8 @@ function startScene(id) {
   }
 
   initParticles();
+  initAmbientSound();
+  startSceneAmbience(id);
 
   // Entry dialogue
   if (!state.visited.has(id) && sc.entry) {
@@ -1425,6 +1835,9 @@ function render() {
   grad.addColorStop(1, 'rgba(0,0,0,0.15)');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, GW, GH);
+
+  // Scene-specific ambience (behind characters)
+  drawSceneAmbience(state.tick);
 
   // Dust particles
   drawParticles();
@@ -1538,6 +1951,9 @@ function update(dt) {
 
   // Particles
   updateParticles();
+
+  // Scene ambience (seagulls, petals, cat, sounds)
+  updateSceneAmbience(dt);
 
   // Fade transition
   if (state.fade.active) {
