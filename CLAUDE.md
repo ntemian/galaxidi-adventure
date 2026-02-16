@@ -180,6 +180,7 @@ Scene 10 (cave): place all 12 → open door → ledger + letter
 ## Key Documents
 
 - **`storyboard.html`** — **Living pilot storyboard** — the visual script, refine continuously. Open in browser to review
+- **`ROADMAP.md`** — **Development roadmap** — 8-phase plan from prototype to release (LOSC: `thought:2026-02-16-galaxidi-adventure-game-develo`)
 - `PILOT-STORY.md` — Pilot story text (8-scene Visvikis treasure hunt)
 - `GAME-BIBLE.md` — Definitive game bible (v3, 10 scenes + epilogue, full story — MAIN version)
 - `CHARACTER-LORE.md` — Deep character profiles (Ntemis, Ajax, Clio) — personality, voice, relationships, arcs
