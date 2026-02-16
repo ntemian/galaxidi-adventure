@@ -20,129 +20,202 @@
     min-height: 0;
   }
 
-  /* ── ACTION LINE ── */
+  /* ── ACTION LINE — Brass scroll bar ── */
   #action-line {
-    height: 32px; display: none; align-items: center; justify-content: center;
+    height: 36px; display: none; align-items: center; justify-content: center;
     font-family: 'Press Start 2P', monospace;
-    font-size: .65rem; color: #F0C860; letter-spacing: 1px;
-    background: linear-gradient(180deg, #1a1610 0%, #0e0c08 100%);
-    border-top: 3px solid #3a3020;
-    border-bottom: 1px solid #1a1408;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 0 0 8px rgba(212,160,60,0.15);
+    font-size: .65rem; color: #FFE8A0; letter-spacing: 1px;
+    background:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px),
+      linear-gradient(180deg, #5a4228 0%, #4a3520 30%, #3e2c18 70%, #2e1e0e 100%);
+    border-top: 3px solid #8a6e42;
+    border-bottom: 2px solid #1a0e04;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9), 0 0 10px rgba(255,220,120,0.25);
+    box-shadow: inset 0 1px 0 rgba(255,220,160,0.15), inset 0 -1px 0 rgba(0,0,0,0.3);
   }
   #action-line.on { display: flex; }
 
-  /* ── UI PANEL — Classic SCUMM layout ── */
+  /* ── UI PANEL — MI2 Wooden SCUMM Panel ── */
   #ui-panel {
-    background: linear-gradient(180deg, #14120e 0%, #0c0a06 40%, #080604 100%);
-    border-top: 3px solid #3a3020;
+    background:
+      /* Wood grain texture */
+      repeating-linear-gradient(90deg,
+        transparent 0px, transparent 8px,
+        rgba(0,0,0,0.06) 8px, rgba(0,0,0,0.06) 9px,
+        transparent 9px, transparent 14px,
+        rgba(0,0,0,0.04) 14px, rgba(0,0,0,0.04) 15px
+      ),
+      repeating-linear-gradient(90deg,
+        transparent 0px, transparent 40px,
+        rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px
+      ),
+      /* Base wood gradient */
+      linear-gradient(180deg,
+        #6b5030 0%, #5a4228 8%, #4e3820 20%,
+        #443018 40%, #3e2c16 60%, #382814 80%,
+        #2e2010 95%, #241a0c 100%
+      );
+    border-top: 4px solid #8a6e42;
     display: none; flex-direction: column;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+    box-shadow:
+      inset 0 2px 0 rgba(255,220,160,0.12),
+      inset 0 -2px 4px rgba(0,0,0,0.4),
+      0 -2px 8px rgba(0,0,0,0.5);
+    position: relative;
   }
   #ui-panel.on { display: flex; }
+  /* Brass nail decorations */
+  #ui-panel::before {
+    content: '';
+    position: absolute; top: 6px; left: 0; right: 0; height: 1px;
+    background: repeating-linear-gradient(90deg,
+      transparent 0px, transparent 28px,
+      #8a7040 28px, #8a7040 32px,
+      transparent 32px, transparent 60px
+    );
+    opacity: 0.4;
+    pointer-events: none;
+  }
 
   /* Bottom row: verbs LEFT, inventory RIGHT */
   #ui-bottom {
-    display: flex; height: 150px; padding: 6px 8px;
+    display: flex; height: 150px; padding: 8px 10px;
   }
 
-  /* ── VERB GRID (left side, 2x2) ── */
+  /* ── VERB GRID — Carved wooden plaques ── */
   #verb-panel {
     display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
-    gap: 4px; width: 300px; flex-shrink: 0;
+    gap: 6px; width: 300px; flex-shrink: 0;
   }
   .vb {
-    font-family: 'Press Start 2P', monospace; font-size: .6rem; color: #9a8a68;
-    background: linear-gradient(180deg, #201c14 0%, #181410 50%, #141008 100%);
-    border: 2px solid #2e2618;
-    border-top-color: #3a3228; border-left-color: #3a3228;
-    border-bottom-color: #1a1408; border-right-color: #1a1408;
+    font-family: 'Press Start 2P', monospace; font-size: .6rem; color: #c8a868;
+    background:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px),
+      linear-gradient(180deg, #4a3822 0%, #3e2e18 35%, #352814 65%, #2e2010 100%);
+    border: 3px solid #5a4428;
+    border-top-color: #7a6040; border-left-color: #6a5438;
+    border-bottom-color: #2a1c0c; border-right-color: #2a1c0c;
     cursor: pointer; transition: all .15s;
     display: flex; align-items: center; justify-content: center;
     padding: 4px 8px; text-align: center;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.7), 0 1px 0 rgba(0,0,0,0.4);
+    box-shadow:
+      inset 0 1px 0 rgba(255,220,160,0.1),
+      inset 0 -1px 0 rgba(0,0,0,0.2),
+      1px 2px 3px rgba(0,0,0,0.4);
+    border-radius: 2px;
   }
   .vb:hover {
-    color: #F0C860; border-color: #D4A03C;
-    background: linear-gradient(180deg, #2a2418 0%, #221e14 50%, #1a1610 100%);
-    text-shadow: 0 0 6px rgba(240,200,96,0.3);
+    color: #FFE090;
+    background:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px),
+      linear-gradient(180deg, #5a4828 0%, #4e3e20 35%, #443418 65%, #3a2c14 100%);
+    border-top-color: #9a7848; border-left-color: #8a6840;
+    text-shadow: 0 0 8px rgba(255,224,144,0.35), 1px 1px 1px rgba(0,0,0,0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255,220,160,0.15),
+      inset 0 -1px 0 rgba(0,0,0,0.2),
+      1px 2px 4px rgba(0,0,0,0.3),
+      0 0 8px rgba(180,140,60,0.1);
   }
   .vb:active { transform: scale(.97); }
   .vb.on {
-    color: #F0C860;
-    background: linear-gradient(180deg, #2e2818 0%, #261e10 50%, #201a0c 100%);
-    border: 2px solid #D4A03C;
-    border-top-color: #e0b050; border-left-color: #e0b050;
-    border-bottom-color: #a08030; border-right-color: #a08030;
-    text-shadow: 0 0 8px rgba(240,200,96,0.4);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 6px rgba(212,160,60,0.15);
+    color: #FFE8A0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(255,200,80,0.03) 6px, rgba(255,200,80,0.03) 7px),
+      linear-gradient(180deg, #5e4828 0%, #503c1e 35%, #483416 65%, #3e2c12 100%);
+    border: 3px solid #B8903C;
+    border-top-color: #D4A848; border-left-color: #C49840;
+    border-bottom-color: #705020; border-right-color: #705020;
+    text-shadow: 0 0 10px rgba(255,232,160,0.45), 1px 1px 1px rgba(0,0,0,0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255,220,160,0.18),
+      inset 0 -1px 0 rgba(0,0,0,0.15),
+      0 0 10px rgba(212,168,72,0.2),
+      1px 2px 3px rgba(0,0,0,0.3);
   }
 
-  /* ── INVENTORY GRID (right side) ── */
+  /* ── INVENTORY — Recessed wooden chest compartment ── */
   #inv-panel {
     flex: 1; display: flex; align-items: stretch;
-    margin-left: 8px;
-    border: 2px solid #2e2618;
-    border-top-color: #1a1408; border-left-color: #1a1408;
-    border-bottom-color: #3a3228; border-right-color: #3a3228;
-    background: linear-gradient(180deg, #0e0c08 0%, #121010 50%, #0e0c08 100%);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
-    border-radius: 2px;
+    margin-left: 10px;
+    border: 3px solid #3a2a16;
+    border-top-color: #2a1c0c; border-left-color: #2a1c0c;
+    border-bottom-color: #6a5438; border-right-color: #5a4428;
+    background:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 11px),
+      linear-gradient(180deg, #1e1608 0%, #28200e 30%, #241c0c 70%, #1a1408 100%);
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,0.5),
+      inset 0 -1px 0 rgba(255,220,160,0.05),
+      inset 3px 0 6px rgba(0,0,0,0.3),
+      inset -3px 0 6px rgba(0,0,0,0.3);
+    border-radius: 3px;
     padding: 0;
   }
   #inv-label { display: none; }
   #inv-arrows {
     display: flex; flex-direction: column; justify-content: center;
-    gap: 6px; padding: 4px 6px; flex-shrink: 0;
-    border-right: 1px solid #2a2218;
+    gap: 8px; padding: 6px 8px; flex-shrink: 0;
+    border-right: 2px solid #2a1c0c;
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
   }
   #inv-arrows button {
-    font-size: .8rem; color: #7a6a48; background: linear-gradient(180deg, #1e1a12 0%, #161208 100%);
-    border: 2px solid #2e2618;
-    border-top-color: #3a3228; border-left-color: #3a3228;
-    border-bottom-color: #1a1408; border-right-color: #1a1408;
+    font-size: .8rem; color: #B89858;
+    background:
+      linear-gradient(180deg, #4a3822 0%, #3a2c18 50%, #302410 100%);
+    border: 2px solid #5a4428;
+    border-top-color: #7a6040; border-left-color: #6a5438;
+    border-bottom-color: #2a1c0c; border-right-color: #2a1c0c;
     cursor: pointer; padding: 8px 10px; line-height: 1;
     transition: all .15s;
+    border-radius: 2px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
   }
   #inv-arrows button:hover {
-    color: #F0C860; border-color: #D4A03C;
-    text-shadow: 0 0 6px rgba(240,200,96,0.3);
+    color: #FFE090; border-top-color: #9a7848;
+    background: linear-gradient(180deg, #5a4828 0%, #4a3820 50%, #3a2c16 100%);
+    text-shadow: 0 0 6px rgba(255,224,144,0.3);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2), 0 0 6px rgba(180,140,60,0.1);
   }
   #inv-grid {
     flex: 1; display: grid;
     grid-template-columns: repeat(auto-fill, 60px);
     grid-template-rows: repeat(2, 60px);
     grid-auto-flow: column;
-    gap: 4px; padding: 6px;
+    gap: 5px; padding: 6px;
     overflow: hidden;
     align-content: center;
   }
   .inv-slot {
     width: 60px; height: 60px;
-    background: linear-gradient(180deg, #181410 0%, #121008 100%);
-    border: 2px solid #2a2218;
-    border-top-color: #1a1408; border-left-color: #1a1408;
-    border-bottom-color: #322a1c; border-right-color: #322a1c;
+    background:
+      linear-gradient(180deg, #161008 0%, #1e180c 50%, #161008 100%);
+    border: 2px solid #3a2c18;
+    border-top-color: #221808; border-left-color: #221808;
+    border-bottom-color: #4a3822; border-right-color: #4a3822;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all .15s;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,220,160,0.04);
+    border-radius: 2px;
   }
   .inv-slot:hover {
-    border-color: #D4A03C;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 0 4px rgba(212,160,60,0.15);
+    border-color: #8a6e42;
+    border-bottom-color: #B89858; border-right-color: #9a7848;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 0 6px rgba(180,140,60,0.15);
   }
   .inv-slot.on {
-    border: 2px solid #D4A03C;
-    border-top-color: #e0b050; border-left-color: #e0b050;
-    border-bottom-color: #a08030; border-right-color: #a08030;
-    background: linear-gradient(180deg, #221e14 0%, #1a1610 100%);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 8px rgba(212,160,60,0.2);
+    border: 2px solid #B8903C;
+    border-top-color: #D4A848; border-left-color: #C49840;
+    border-bottom-color: #705020; border-right-color: #705020;
+    background: linear-gradient(180deg, #2a2010 0%, #322810 50%, #2a2010 100%);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 10px rgba(212,168,72,0.25);
   }
   .inv-slot .inv-text {
-    font-family: 'Press Start 2P', monospace; font-size: .35rem; color: #9a8a68;
+    font-family: 'Press Start 2P', monospace; font-size: .35rem; color: #c8a868;
     text-align: center; line-height: 1.3;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
   }
 
   /* ── TITLE (canvas-rendered, no HTML overlay) ── */
@@ -2354,126 +2427,15 @@ const PROMPT_DELAY = 70;
 function drawTitleScreen(tick) {
   if (titleStartTick < 0) titleStartTick = tick;
   const elapsed = tick - titleStartTick;
-  const t = tick * 0.02;
 
   // ═══════════════════════════════════════
-  // BACKGROUND — pixel art with animated water
-  // Classic scanline displacement (Monkey Island / SNES technique)
-  // The actual image pixels move — no overlays
+  // BACKGROUND — static pixel art
   // ═══════════════════════════════════════
   const bg = images['title-bg'];
-  const waterLine = Math.floor(GH * 0.76);
 
   if (bg && bg.complete) {
     ctx.imageSmoothingEnabled = false;
-
-    // Sky + land + dock: draw static (above waterline)
-    const srcWaterY = bg.naturalHeight * (waterLine / GH);
-    ctx.drawImage(bg,
-      0, 0, bg.naturalWidth, srcWaterY,
-      0, 0, GW, waterLine);
-
-    // Water only: per-scanline horizontal displacement
-    for (let y = waterLine; y < GH; y++) {
-      const depth = (y - waterLine) / (GH - waterLine);
-      const amp = 0.8 + depth * 2.0;
-      const dx = Math.sin(y * 0.08 + t * 1.6) * amp
-               + Math.sin(y * 0.13 - t * 1.0) * (amp * 0.4);
-      const srcY = bg.naturalHeight * (y / GH);
-      ctx.drawImage(bg,
-        0, srcY, bg.naturalWidth, 1,
-        dx, y, GW, 1);
-    }
-
-    // Sun sparkles on the water
-    for (let i = 0; i < 18; i++) {
-      const sx = ((tick * 0.35 + i * 43) % GW);
-      const sy = waterLine + 4 + ((i * 29) % (GH - waterLine - 8));
-      const glint = Math.sin(tick * 0.09 + i * 2.3);
-      if (glint > 0.55) {
-        const a = (glint - 0.55) * 2.2;
-        ctx.fillStyle = `rgba(255,255,240,${a * 0.45})`;
-        ctx.fillRect(sx, sy, 2, 1);
-        if (glint > 0.8) {
-          ctx.fillRect(sx + 1, sy - 1, 1, 1);
-          ctx.fillRect(sx + 1, sy + 1, 1, 1);
-        }
-      }
-    }
-
-    // Seagulls — pixel birds flying across the sky
-    const gulls = [
-      { speed: 0.35, y0: 30, amp: 5, phase: 0 },
-      { speed: 0.25, y0: 50, amp: 8, phase: 150 },
-      { speed: 0.45, y0: 18, amp: 4, phase: 300 },
-      { speed: 0.30, y0: 65, amp: 6, phase: 220 },
-      { speed: 0.20, y0: 40, amp: 10, phase: 400 },
-    ];
-    for (const gull of gulls) {
-      const cycle = GW + 100;
-      const gx = ((tick * gull.speed + gull.phase * 2) % cycle) - 50;
-      const gy = gull.y0 + Math.sin(t * 1.2 + gull.phase) * gull.amp;
-      const wingFlap = Math.sin(tick * 0.15 + gull.phase) * 5;
-      const gSize = 0.8 + gull.speed * 0.5;
-      ctx.save();
-      ctx.translate(gx, gy);
-      ctx.scale(gSize, gSize);
-      // White body
-      ctx.fillStyle = '#FFF';
-      ctx.fillRect(-1, 0, 3, 2);
-      // Dark wing strokes
-      ctx.strokeStyle = '#2A2A30';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(-8, wingFlap); ctx.lineTo(-3, -1);
-      ctx.lineTo(0, 1); ctx.lineTo(3, -1); ctx.lineTo(8, wingFlap);
-      ctx.stroke();
-      // White wing highlights
-      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(-7, wingFlap - 1); ctx.lineTo(-3, -2);
-      ctx.moveTo(3, -2); ctx.lineTo(7, wingFlap - 1);
-      ctx.stroke();
-      ctx.restore();
-    }
-    // Tiny people strolling along the dock
-    const walkers = [
-      { x0: 140, range: 40, speed: 0.06, y: 262, phase: 0,   shirt: '#9A3030', pants: '#4A4A56' },
-      { x0: 280, range: 35, speed: -0.05, y: 263, phase: 80,  shirt: '#2858A0', pants: '#3A3A48' },
-      { x0: 380, range: 30, speed: 0.07, y: 261, phase: 200, shirt: '#D09040', pants: '#484854' },
-    ];
-    ctx.globalAlpha = 0.7;
-    for (const p of walkers) {
-      const cycle = p.range * 2;
-      const raw = ((tick * Math.abs(p.speed) + p.phase) % cycle);
-      const wx = p.x0 + (raw < p.range ? raw : cycle - raw);
-      const dir = p.speed > 0 ? (raw < p.range ? 1 : -1) : (raw < p.range ? -1 : 1);
-      const step = Math.floor(tick * Math.abs(p.speed) * 0.4 + p.phase) % 2;
-
-      ctx.save();
-      ctx.translate(Math.floor(wx), p.y);
-      if (dir < 0) ctx.scale(-1, 1);
-
-      // Head (2x1)
-      ctx.fillStyle = '#D4AC80';
-      ctx.fillRect(0, 0, 2, 1);
-      // Torso (2x2)
-      ctx.fillStyle = p.shirt;
-      ctx.fillRect(0, 1, 2, 2);
-      // Legs (2-frame)
-      ctx.fillStyle = p.pants;
-      if (step === 0) {
-        ctx.fillRect(0, 3, 1, 2);
-        ctx.fillRect(1, 3, 1, 1);
-      } else {
-        ctx.fillRect(0, 3, 1, 1);
-        ctx.fillRect(1, 3, 1, 2);
-      }
-
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
+    ctx.drawImage(bg, 0, 0, GW, GH);
   } else {
     ctx.fillStyle = '#4A9FD8';
     ctx.fillRect(0, 0, GW, GH);
@@ -2517,7 +2479,7 @@ function drawTitleScreen(tick) {
     const shd = [['#060200',5],['#1A0804',4],['#2E1508',3],['#4A2010',2],['#7A5018',1]];
     for (const [c,d] of shd) { ctx.fillStyle = c; ctx.fillText(ch, d, d); }
     // Gold with glow
-    const g = 0.3 + Math.sin(t*1.2 + cx*0.01)*0.15;
+    const g = 0.3 + Math.sin(tick*0.024 + cx*0.01)*0.15;
     ctx.shadowColor = `rgba(255,180,40,${g*alpha})`;
     ctx.shadowBlur = 20;
     ctx.fillStyle = '#D4A03C';
