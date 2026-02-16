@@ -505,6 +505,12 @@ async function loadAllAssets() {
     // Cutscene backgrounds
     loadImg('cutscene-road', 'assets/cutscene-road.png'),
     loadImg('cutscene-descent', 'assets/cutscene-descent.png'),
+    loadImg('cutscene-letter', 'assets/cutscene-letter.png'),
+    loadImg('cutscene-cave', 'assets/cutscene-cave.png'),
+    loadImg('cutscene-ghost', 'assets/cutscene-ghost.png'),
+    loadImg('cutscene-crossing', 'assets/cutscene-crossing.png'),
+    loadImg('cutscene-treasure', 'assets/cutscene-treasure.png'),
+    loadImg('cutscene-epilogue', 'assets/cutscene-epilogue.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -995,6 +1001,157 @@ const cutscenes = {
       startScene('exterior');
     },
   },
+
+  // ── THE LETTER — Quest hook (triggered after finding the letter in Scene 2)
+  letter: {
+    frames: [
+      {
+        duration: 7,
+        draw: drawLetterClose,
+        dialogue: [
+          { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα...»', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Τι πράσινο πέτρωμα;', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Ο Καπετάν Βισβίκης. Ο προπάππους μου.', at: 5.0 },
+        ],
+      },
+      {
+        duration: 6,
+        draw: drawLetterRoom,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά, αυτός μας ζητάει να βρούμε κάτι!', at: 1.0 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Μας ζητάει να βρούμε την αλήθεια.', at: 3.2 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
+  // ── THE CAVE — Entering Karkaros (triggered at cave entrance)
+  cave_enter: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawCaveEntrance,
+        dialogue: [
+          { s: 'ΑΙΑΣ', t: 'Σκοτεινά... Μπαμπά, κράτα ψηλά το φανάρι!', at: 1.0 },
+          { s: 'ΚΛΕΙΩ', t: 'Κοίτα στον τοίχο! Ονόματα πλοίων!', at: 3.2 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Οι καπεταναίοι σημάδευαν το πέρασμά τους εδώ.', at: 5.5 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
+  // ── THE GHOST — Captain Visvikis appears (triggered after jade placement)
+  ghost: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawGhostAppear,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί.', at: 1.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη...', at: 3.5 },
+          { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι.', at: 5.5 },
+        ],
+      },
+      {
+        duration: 6,
+        draw: drawGhostFade,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε!', at: 1.0 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
+  // ── THE CROSSING — Dawn on the Ελπίδα (triggered when boarding the boat)
+  crossing: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawCrossingWide,
+        dialogue: [
+          { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω.', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη;', at: 4.0 },
+          { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η Ελπίδα. Το τελευταίο του ταξίδι.', at: 5.5 },
+        ],
+      },
+      {
+        duration: 7,
+        draw: drawCrossingClose,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Βλέπω το νησάκι!', at: 1.5 },
+          { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της.', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Αλλιώς πνίγεσαι.', at: 5.8 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
+  // ── THE TREASURE — The chest opens (triggered when digging on the island)
+  treasure: {
+    frames: [
+      {
+        duration: 7,
+        draw: drawTreasureReveal,
+        dialogue: [
+          { s: 'ΑΙΑΣ', t: 'Χρυσάφι... Κοίτα, μπαμπά!', at: 1.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Και ένα κολιέ. Πράσινο σαν το πέτρωμα!', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Το βιβλίο... Η αλληλασφάλεια. 104 υπογραφές.', at: 5.2 },
+        ],
+      },
+      {
+        duration: 8,
+        draw: drawTreasureFamily,
+        dialogue: [
+          { s: 'ΝΤΕΜΗΣ', t: '«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Τι εννοεί "άλλαξε το πλοίο";', at: 4.0 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 5.8 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
+  // ── EPILOGUE — The new αλληλασφάλεια (triggered at the end)
+  epilogue: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawEpilogueHarbor,
+        dialogue: [
+          { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι.', at: 1.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Μας άφησε μια ιδέα. Την αλληλεγγύη.', at: 4.0 },
+        ],
+      },
+      {
+        duration: 8,
+        draw: drawEpilogueClose,
+        dialogue: [
+          { s: 'ΑΚΗΣ', t: 'Γυρνάω την κάμερα. Αυτό πρέπει να το δει ο κόσμος.', at: 1.0 },
+          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... η θάλασσα θυμάται;', at: 4.0 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.', at: 5.8 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+      // Game complete — could show credits
+    },
+  },
 };
 
 function startCutscene(id) {
@@ -1346,6 +1503,164 @@ function drawArrivalHarbor(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.04;
   ctx.fillStyle = '#D4A03C';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE LETTER — Quest begins
+// ═══════════════════════════════════════════════════════════
+
+function drawLetterClose(t, p, tick) {
+  // Slow zoom into the letter, candlelight flicker
+  drawKenBurns('cutscene-letter', 1.05 + p * 0.15, 0, p * -20);
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.08) * 0.02;
+  ctx.fillStyle = '#FFB040';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawLetterRoom(t, p, tick) {
+  // Pull back to reveal the captain's study
+  drawKenBurns('cutscene-letter', 1.20 - p * 0.15, p * 10, -20 + p * 20);
+  ctx.save();
+  ctx.globalAlpha = 0.03;
+  ctx.fillStyle = '#D4A03C';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE CAVE — Into darkness
+// ═══════════════════════════════════════════════════════════
+
+function drawCaveEntrance(t, p, tick) {
+  // Pan forward into the cave, lantern light flickers
+  drawKenBurns('cutscene-cave', 1.10 + p * 0.10, 0, p * -15);
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.06) * 0.03;
+  ctx.fillStyle = '#FFa040';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+  // Darken edges for cave atmosphere
+  ctx.save();
+  const caveVig = ctx.createRadialGradient(GW / 2, GH / 2, GW * 0.15, GW / 2, GH / 2, GW * 0.55);
+  caveVig.addColorStop(0, 'rgba(0,0,0,0)');
+  caveVig.addColorStop(1, 'rgba(0,0,0,0.45)');
+  ctx.fillStyle = caveVig;
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE GHOST — Captain Visvikis appears
+// ═══════════════════════════════════════════════════════════
+
+function drawGhostAppear(t, p, tick) {
+  // Slow zoom, jade-green ethereal pulse
+  drawKenBurns('cutscene-ghost', 1.08 + p * 0.08, 0, p * -10);
+  // Jade green ethereal glow
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.04) * 0.03;
+  ctx.fillStyle = '#40D8A0';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+  // Dusk vignette
+  ctx.save();
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = '#1a0a2e';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawGhostFade(t, p, tick) {
+  // Slow pull back as ghost fades
+  drawKenBurns('cutscene-ghost', 1.16 - p * 0.08, 0, -10 + p * 10);
+  // Fading jade light
+  ctx.save();
+  ctx.globalAlpha = (1 - p) * 0.06;
+  ctx.fillStyle = '#40D8A0';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+  ctx.save();
+  ctx.globalAlpha = 0.12 + p * 0.08;
+  ctx.fillStyle = '#1a0a2e';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE CROSSING — Dawn on the Ελπίδα
+// ═══════════════════════════════════════════════════════════
+
+function drawCrossingWide(t, p, tick) {
+  // Majestic wide shot, gentle drift right following the boat
+  drawKenBurns('cutscene-crossing', 1.12 - p * 0.06, -10 + p * 20, 0);
+  // Dawn pink-gold overlay
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.015) * 0.02;
+  ctx.fillStyle = '#FFB8A0';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawCrossingClose(t, p, tick) {
+  // Zoom toward the bow and the island ahead
+  drawKenBurns('cutscene-crossing', 1.06 + p * 0.14, p * 15, p * -20);
+  ctx.save();
+  ctx.globalAlpha = 0.03;
+  ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE TREASURE — The chest opens
+// ═══════════════════════════════════════════════════════════
+
+function drawTreasureReveal(t, p, tick) {
+  // Zoom into the open chest, gold light builds
+  drawKenBurns('cutscene-treasure', 1.08 + p * 0.12, 0, p * -25);
+  // Building golden glow
+  ctx.save();
+  ctx.globalAlpha = p * 0.08;
+  ctx.fillStyle = '#FFD040';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawTreasureFamily(t, p, tick) {
+  // Pull back to show the family together
+  drawKenBurns('cutscene-treasure', 1.20 - p * 0.12, 0, -25 + p * 25);
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: EPILOGUE — The new αλληλασφάλεια
+// ═══════════════════════════════════════════════════════════
+
+function drawEpilogueHarbor(t, p, tick) {
+  // Wide establishing shot, festive lights twinkle
+  drawKenBurns('cutscene-epilogue', 1.12 - p * 0.06, p * 8, 0);
+  // Warm night glow
+  ctx.save();
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.03) * 0.02;
+  ctx.fillStyle = '#FFB860';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawEpilogueClose(t, p, tick) {
+  // Zoom to the signing table and family
+  drawKenBurns('cutscene-epilogue', 1.06 + p * 0.14, -p * 10, p * -15);
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  ctx.fillStyle = '#FFD880';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
