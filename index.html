@@ -27,47 +27,72 @@
   }
   #action-line.on { display: flex; }
 
-  /* ── UI PANEL ── */
+  /* ── UI PANEL — Classic SCUMM layout ── */
   #ui-panel {
-    height: 130px; min-height: 130px; background: #12100e; border-top: 2px solid #2a2218;
-    display: none; grid-template-columns: 220px 1fr;
+    background: #0a0806;
+    border-top: 2px solid #2a2218;
+    display: none; flex-direction: column;
   }
-  #ui-panel.on { display: grid; }
-  #verb-panel { display: grid; grid-template-columns: repeat(2,1fr); grid-template-rows: repeat(4,1fr); gap: 2px; padding: 6px; }
+  #ui-panel.on { display: flex; }
+
+  /* Bottom row: verbs LEFT, inventory RIGHT */
+  #ui-bottom {
+    display: flex; height: 100px;
+  }
+
+  /* ── VERB GRID (left side, 2x2) ── */
+  #verb-panel {
+    display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
+    gap: 2px; padding: 4px; width: 240px; flex-shrink: 0;
+  }
   .vb {
-    font-family: 'Press Start 2P', monospace; font-size: .5rem; color: #6B6252;
-    background: #1a1714; border: 1px solid #2a2218; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; padding: 0 4px; transition: all .1s;
+    font-family: 'Press Start 2P', monospace; font-size: .5rem; color: #8a7a60;
+    background: #1a1610; border: 1px solid #2a2418;
+    cursor: pointer; transition: all .1s;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2px 4px; text-align: center;
   }
   .vb:hover { color: #D4A03C; border-color: #D4A03C; }
-  .vb:active { transform: scale(.93); }
+  .vb:active { transform: scale(.95); }
   .vb.on { color: #D4A03C; background: #221e18; border-color: #D4A03C; }
-  #inv-panel { display: flex; flex-direction: column; padding: 6px 10px; gap: 4px; }
-  #inv-label { font-size: .4rem; color: #4a4a4a; letter-spacing: .1em; }
-  #inv-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, 70px); gap: 3px; align-content: start; }
-  .inv-slot {
-    height: 32px; background: #1a1714; border: 1px solid #2a2218;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Press Start 2P', monospace; font-size: .4rem; color: #6B6252;
-    cursor: pointer; transition: all .1s; padding: 2px 4px;
-  }
-  .inv-slot:hover { border-color: #D4A03C; color: #D4A03C; }
-  .inv-slot.on { border-color: #D4A03C; background: #221e18; color: #D4A03C; }
 
-  /* ── TITLE OVERLAY ── */
-  #title-screen {
-    position: fixed; inset: 0; background: #0a0812;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 2000; cursor: pointer; transition: opacity 2s;
+  /* ── INVENTORY GRID (right side) ── */
+  #inv-panel {
+    flex: 1; display: flex; align-items: center; padding: 4px;
+    border-left: 2px solid #2a2218; gap: 0;
   }
+  #inv-label { display: none; }
+  #inv-arrows {
+    display: flex; flex-direction: column; gap: 2px; padding: 0 2px; flex-shrink: 0;
+  }
+  #inv-arrows button {
+    font-size: .7rem; color: #6a5a40; background: #1a1610; border: 1px solid #2a2418;
+    cursor: pointer; padding: 4px 6px; line-height: 1;
+  }
+  #inv-arrows button:hover { color: #D4A03C; border-color: #D4A03C; }
+  #inv-grid {
+    flex: 1; display: grid;
+    grid-template-columns: repeat(auto-fill, 46px);
+    grid-template-rows: repeat(2, 46px);
+    grid-auto-flow: column;
+    gap: 2px; padding: 0 4px;
+    overflow: hidden;
+  }
+  .inv-slot {
+    width: 46px; height: 46px;
+    background: #1a1610; border: 1px solid #2a2418;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all .1s;
+  }
+  .inv-slot:hover { border-color: #D4A03C; }
+  .inv-slot.on { border-color: #D4A03C; background: #221e18; }
+  .inv-slot .inv-text {
+    font-family: 'Press Start 2P', monospace; font-size: .3rem; color: #8a7a60;
+    text-align: center; line-height: 1.2;
+  }
+
+  /* ── TITLE (canvas-rendered, no HTML overlay) ── */
   @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:.9} }
-  @keyframes glow {
-    0%,100% { text-shadow: 0 0 40px rgba(212,160,60,.3), 3px 3px 0 #1B3A5C; }
-    50% { text-shadow: 0 0 60px rgba(212,160,60,.5), 0 0 100px rgba(212,160,60,.15), 3px 3px 0 #1B3A5C; }
-  }
-  .t-main { font-size: clamp(1rem,3vw,2rem); color:#D4A03C; letter-spacing:.08em; text-align:center; line-height:1.8; animation: glow 3s ease-in-out infinite; }
-  .t-sub { font-size: clamp(.5rem,1vw,.7rem); color:#5C6B3C; letter-spacing:.15em; margin-top:2rem; }
-  .t-go { font-size:.6rem; color:#4a4a4a; margin-top:3rem; animation: blink 2s infinite; }
 
   /* ── INTRO OVERLAY ── */
   #intro-screen {
@@ -89,11 +114,7 @@
 
 <div id="fade"></div>
 
-<div id="title-screen">
-  <div class="t-main">Η ΘΑΛΑΣΣΑ<br>ΘΥΜΑΤΑΙ</div>
-  <div class="t-sub">ΣΚΗΝΗ ΠΡΩΤΗ — Η ΑΦΙΞΗ</div>
-  <div class="t-go">ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ</div>
-</div>
+<!-- Title screen is canvas-rendered -->
 
 <div id="intro-screen">
   <div id="intro-text"></div>
@@ -105,22 +126,24 @@
 <div id="action-line"></div>
 
 <div id="ui-panel">
-  <div id="verb-panel">
-    <button class="vb on" data-v="look" onclick="setVerb('look')">Κοίτα</button>
-    <button class="vb" data-v="use" onclick="setVerb('use')">Χρησιμοποίησε</button>
-    <button class="vb" data-v="talk" onclick="setVerb('talk')">Μίλα</button>
-    <button class="vb" data-v="open" onclick="setVerb('open')">Άνοιξε</button>
-    <button class="vb" data-v="pick" onclick="setVerb('pick')">Πάρε</button>
-    <button class="vb" data-v="push" onclick="setVerb('push')">Σπρώξε</button>
-    <button class="vb" data-v="close" onclick="setVerb('close')">Κλείσε</button>
-    <button class="vb" data-v="walk" onclick="setVerb('walk')">Πήγαινε</button>
-  </div>
-  <div id="inv-panel">
-    <div id="inv-label">ΑΝΤΙΚΕΙΜΕΝΑ</div>
-    <div id="inv-grid"></div>
+  <div id="ui-bottom">
+    <div id="verb-panel">
+      <button class="vb on" data-v="look" onclick="setVerb('look')">Κοίταξε</button>
+      <button class="vb" data-v="talk" onclick="setVerb('talk')">Μίλησε</button>
+      <button class="vb" data-v="open" onclick="setVerb('open')">Άνοιξε</button>
+      <button class="vb" data-v="use" onclick="setVerb('use')">Χρησιμοποίησε</button>
+    </div>
+    <div id="inv-panel">
+      <div id="inv-arrows">
+        <button onclick="scrollInv(-1)">▲</button>
+        <button onclick="scrollInv(1)">▼</button>
+      </div>
+      <div id="inv-grid"></div>
+    </div>
   </div>
 </div>
 
+<audio id="title-music" loop preload="auto"><source src="music/the-sea-remembers-title-theme-1.mp3" type="audio/mpeg"></audio>
 <audio id="bgm" loop preload="auto"><source src="music/scene1-music.mp3" type="audio/mpeg"></audio>
 
 <script>
@@ -689,40 +712,45 @@ function drawDialogue() {
   ctx.fillStyle = '#D4A03C';
   ctx.fillRect(0, boxY, GW, 2);
 
-  // Portrait
+  // Portrait — only show for named speakers
   const portSize = 56;
   const portX = 12;
   const portY = boxY + 8;
-  ctx.strokeStyle = '#D4A03C';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(portX, portY, portSize, portSize);
-  ctx.fillStyle = '#1a1714';
-  ctx.fillRect(portX + 1, portY + 1, portSize - 2, portSize - 2);
+  const hasSpeaker = !!state.dlg.speaker;
 
-  const portImg = PORTRAITS[state.dlg.speaker];
-  if (portImg && portImg.complete) {
-    ctx.drawImage(portImg, portX + 2, portY + 2, portSize - 4, portSize - 4);
-  } else {
-    // Symbol for narrator
-    ctx.fillStyle = '#4a4a4a';
-    ctx.font = '16px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(state.dlg.speaker ? '?' : '✦', portX + portSize/2, portY + portSize/2);
-  }
+  let textX;
+  if (hasSpeaker) {
+    ctx.strokeStyle = '#D4A03C';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(portX, portY, portSize, portSize);
+    ctx.fillStyle = '#1a1714';
+    ctx.fillRect(portX + 1, portY + 1, portSize - 2, portSize - 2);
 
-  // Speaker name
-  const textX = portX + portSize + 12;
-  if (state.dlg.speaker) {
+    const portImg = PORTRAITS[state.dlg.speaker];
+    if (portImg && portImg.complete) {
+      ctx.drawImage(portImg, portX + 2, portY + 2, portSize - 4, portSize - 4);
+    } else {
+      ctx.fillStyle = '#4a4a4a';
+      ctx.font = '16px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('?', portX + portSize/2, portY + portSize/2);
+    }
+
+    textX = portX + portSize + 12;
+
     ctx.fillStyle = '#D4A03C';
     ctx.font = '9px "Press Start 2P", monospace';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     ctx.fillText(state.dlg.speaker, textX, portY + 2);
+  } else {
+    // Narration — no portrait box, full width
+    textX = 16;
   }
 
   // Dialogue text with word wrapping
-  ctx.fillStyle = '#e8dcc8';
+  ctx.fillStyle = hasSpeaker ? '#e8dcc8' : '#D4A03C';
   ctx.font = '8px "Press Start 2P", monospace';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
@@ -764,7 +792,9 @@ function wrapText(text, x, y, maxW, lineH) {
 // ════════════════════════════════════════════════════════════
 // VERB SYSTEM
 // ════════════════════════════════════════════════════════════
-const verbLabels = { look:'Κοίτα', talk:'Μίλα σε', pick:'Πάρε', use:'Χρησιμοποίησε', open:'Άνοιξε', close:'Κλείσε', push:'Σπρώξε', walk:'Πήγαινε σε' };
+const verbLabels = { look:'Κοίταξε', talk:'Μίλησε', open:'Άνοιξε', use:'Χρησιμοποίησε' };
+// Verb fallbacks: "use" tries pick/push/close; "open" tries use
+const verbFallbacks = { use: ['pick','push','close','open'], open: ['use'] };
 
 function setVerb(v) {
   state.verb = v;
@@ -786,16 +816,18 @@ function objClick(obj) {
   // Walk Ntemis to object, then execute verb
   startWalk('ntemis', objCenterX, () => {
     let d = obj.verbs[state.verb];
+    // Verb fallback: "use" tries open/push/close if no direct match
+    if (!d && verbFallbacks[state.verb]) {
+      for (const fb of verbFallbacks[state.verb]) {
+        if (obj.verbs[fb]) { d = obj.verbs[fb]; break; }
+      }
+    }
     if (!d) {
       const defs = {
-        talk:[{s:'ΝΤΕΜΗΣ',t:'Δεν μπορώ να μιλήσω σε αυτό.'}],
-        pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν χρειάζεται να το πάρω.'}],
-        push:[{s:'ΝΤΕΜΗΣ',t:'Δεν κουνιέται.'}],
-        close:[{s:'ΝΤΕΜΗΣ',t:'Δεν κλείνει.'}],
-        use:[{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρω πώς.'}],
-        open:[{s:'ΝΤΕΜΗΣ',t:'Δεν ανοίγει.'}],
         look:[{s:'',t:'Τίποτα ιδιαίτερο.'}],
-        walk:[],
+        talk:[{s:'ΝΤΕΜΗΣ',t:'Δεν μπορώ να μιλήσω σε αυτό.'}],
+        open:[{s:'ΝΤΕΜΗΣ',t:'Δεν ανοίγει.'}],
+        use:[{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρω πώς.'}],
       };
       if (defs[state.verb]?.length) showDlg(defs[state.verb]);
       return;
@@ -816,10 +848,110 @@ function addInv(item) {
   renderInvUI();
 }
 
+// Inventory item icons — pixel art drawn on mini canvases (52x52)
+const INV_ICONS = {
+  note: (c) => {
+    // Rolled scroll with wax seal
+    c.fillStyle='#c4a870'; c.fillRect(12,4,28,40);
+    c.fillStyle='#d8c490'; c.fillRect(14,6,24,36);
+    // Roll top
+    c.fillStyle='#b09058'; c.fillRect(10,4,32,5);
+    c.fillStyle='#c4a870';
+    c.beginPath(); c.ellipse(10,7,3,4,0,0,Math.PI*2); c.fill();
+    c.beginPath(); c.ellipse(42,7,3,4,0,0,Math.PI*2); c.fill();
+    // Text lines
+    c.fillStyle='#8a7a58';
+    for(let y=14;y<38;y+=5) c.fillRect(18,y,18,2);
+    // Wax seal
+    c.fillStyle='#b03030'; c.beginPath(); c.arc(36,38,5,0,Math.PI*2); c.fill();
+    c.fillStyle='#d04040'; c.beginPath(); c.arc(35,37,3,0,Math.PI*2); c.fill();
+    // "Γ" on seal
+    c.fillStyle='#e8c8c8'; c.font='bold 5px sans-serif'; c.textAlign='center'; c.textBaseline='middle';
+    c.fillText('Γ',36,38);
+  },
+  compass: (c) => {
+    // Brass compass body
+    c.fillStyle='#8a6a30'; c.beginPath(); c.arc(26,26,18,0,Math.PI*2); c.fill();
+    c.fillStyle='#b08838'; c.beginPath(); c.arc(26,26,16,0,Math.PI*2); c.fill();
+    c.fillStyle='#1a1810'; c.beginPath(); c.arc(26,26,14,0,Math.PI*2); c.fill();
+    // Compass rose
+    c.fillStyle='#c03030'; c.beginPath(); c.moveTo(26,12); c.lineTo(28,26); c.lineTo(24,26); c.fill();
+    c.fillStyle='#e0d0c0'; c.beginPath(); c.moveTo(26,40); c.lineTo(28,26); c.lineTo(24,26); c.fill();
+    c.fillStyle='#607090'; c.beginPath(); c.moveTo(12,26); c.lineTo(26,24); c.lineTo(26,28); c.fill();
+    c.fillStyle='#607090'; c.beginPath(); c.moveTo(40,26); c.lineTo(26,24); c.lineTo(26,28); c.fill();
+    // Center pin
+    c.fillStyle='#d4a03c'; c.beginPath(); c.arc(26,26,2,0,Math.PI*2); c.fill();
+    // N marker
+    c.fillStyle='#c03030'; c.font='bold 5px sans-serif'; c.textAlign='center'; c.fillText('N',26,11);
+  },
+  shell: (c) => {
+    // Scallop shell
+    c.fillStyle='#e8d0b0'; c.beginPath(); c.ellipse(26,28,16,12,0,0,Math.PI*2); c.fill();
+    c.fillStyle='#d4b89c'; c.beginPath(); c.ellipse(26,30,14,10,0,0,Math.PI); c.fill();
+    // Ridges
+    c.strokeStyle='#a08060'; c.lineWidth=1.5;
+    for(let i=0;i<7;i++){c.beginPath();c.moveTo(26,16);c.lineTo(12+i*5,40);c.stroke();}
+    // Highlight
+    c.fillStyle='rgba(255,255,255,0.2)'; c.beginPath(); c.ellipse(22,24,6,4,-.3,0,Math.PI*2); c.fill();
+  },
+  candle: (c) => {
+    // Candlestick with flame
+    c.fillStyle='#8a6a30'; c.fillRect(20,36,12,8); // base
+    c.fillStyle='#a08038'; c.fillRect(22,34,8,4); // holder
+    c.fillStyle='#e8dcc0'; c.fillRect(24,16,4,20); // wax body
+    c.fillStyle='#d4c8a0'; c.fillRect(23,16,6,3); // wax top
+    // Wick
+    c.fillStyle='#2a2a2a'; c.fillRect(25,12,2,5);
+    // Flame
+    c.fillStyle='#d4a03c'; c.beginPath(); c.ellipse(26,10,5,8,0,0,Math.PI*2); c.fill();
+    c.fillStyle='#f0d060'; c.beginPath(); c.ellipse(26,10,3,5,0,0,Math.PI*2); c.fill();
+    c.fillStyle='#fff8e0'; c.beginPath(); c.ellipse(26,11,1,3,0,0,Math.PI*2); c.fill();
+  },
+  key: (c) => {
+    // Ornate brass key
+    c.fillStyle='#c49030'; c.strokeStyle='#8a6020'; c.lineWidth=1;
+    // Bow (head)
+    c.beginPath(); c.arc(16,20,8,0,Math.PI*2); c.fill(); c.stroke();
+    c.fillStyle='#1a1208'; c.beginPath(); c.arc(16,20,4,0,Math.PI*2); c.fill();
+    // Shaft
+    c.fillStyle='#c49030'; c.fillRect(23,18,20,4);
+    c.strokeStyle='#8a6020'; c.strokeRect(23,18,20,4);
+    // Teeth
+    c.fillStyle='#c49030';
+    c.fillRect(38,22,3,6); c.fillRect(34,22,2,4); c.fillRect(42,18,2,4);
+    c.strokeStyle='#8a6020';
+    c.strokeRect(38,22,3,6); c.strokeRect(34,22,2,4);
+  },
+};
+
 function renderInvUI() {
-  document.getElementById('inv-grid').innerHTML = state.inv.map(i =>
-    `<div class="inv-slot" data-id="${i.id}" onclick="invClick('${i.id}')">${i.label}</div>`
-  ).join('');
+  const grid = document.getElementById('inv-grid');
+  grid.innerHTML = '';
+  for (const item of state.inv) {
+    const slot = document.createElement('div');
+    slot.className = 'inv-slot';
+    slot.dataset.id = item.id;
+    slot.onclick = () => invClick(item.id);
+    if (INV_ICONS[item.id]) {
+      const cvs = document.createElement('canvas');
+      cvs.width = 42; cvs.height = 42;
+      cvs.style.cssText = 'width:42px;height:42px;image-rendering:pixelated';
+      INV_ICONS[item.id](cvs.getContext('2d'));
+      slot.appendChild(cvs);
+    } else {
+      const txt = document.createElement('span');
+      txt.className = 'inv-text';
+      txt.textContent = item.label;
+      slot.appendChild(txt);
+    }
+    slot.title = item.label;
+    grid.appendChild(slot);
+  }
+}
+
+function scrollInv(dir) {
+  const grid = document.getElementById('inv-grid');
+  grid.scrollLeft += dir * 50;
 }
 
 function invClick(id) {
@@ -892,6 +1024,12 @@ function checkEnd() {
 // ════════════════════════════════════════════════════════════
 function render() {
   ctx.clearRect(0, 0, GW, GH);
+
+  // Canvas-rendered title screen
+  if (state.phase === 'title') {
+    drawTitleScreen(state.tick);
+    return;
+  }
 
   if (state.phase !== 'playing') return;
   if (!state.scene) return;
@@ -1006,6 +1144,9 @@ function render() {
 function update(dt) {
   state.tick++;
 
+  // Title screen — start music on first interaction (handled by click)
+  if (state.phase === 'title') return;
+
   if (state.phase !== 'playing') return;
 
   // Walking
@@ -1068,6 +1209,11 @@ CVS.addEventListener('mousemove', (e) => {
   state.mouseGX = g.x;
   state.mouseGY = g.y;
 
+  if (state.phase === 'title') {
+    CVS.style.cursor = 'pointer';
+    return;
+  }
+
   if (state.phase !== 'playing' || state.dlg.active) {
     state.hoverObj = null;
     updateActionLine();
@@ -1094,6 +1240,7 @@ CVS.addEventListener('mousemove', (e) => {
 CVS.addEventListener('click', (e) => {
   const g = screenToGame(e.clientX, e.clientY);
 
+  // Title clicks handled by dedicated handler
   if (state.phase !== 'playing') return;
 
   // Dialogue advance
@@ -1123,7 +1270,7 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     if (state.dlg.active) advanceDlg();
   }
-  const vk = {'1':'look','2':'use','3':'talk','4':'open','5':'pick','6':'push','7':'close','8':'walk'};
+  const vk = {'1':'look','2':'talk','3':'open','4':'use'};
   if (vk[e.key] && state.phase === 'playing') setVerb(vk[e.key]);
 });
 
@@ -1142,19 +1289,493 @@ function toggleMusic() {
 }
 
 // ════════════════════════════════════════════════════════════
+// TITLE SCREEN — LucasArts-style cinematic canvas title
+// ════════════════════════════════════════════════════════════
+const titleMusic = document.getElementById('title-music');
+titleMusic.volume = 0.35;
+let titleFadeOut = 0;
+
+// Pre-generate starfield (fixed positions)
+const stars = [];
+for (let i = 0; i < 40; i++) {
+  stars.push({ x: Math.random() * GW, y: Math.random() * 55, s: 0.5 + Math.random() * 1.5, b: Math.random() });
+}
+
+function drawTitleScreen(tick) {
+  const t = tick * 0.02;
+
+  // ── SUNSET SKY — dramatic gradient like a movie poster ──
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 100);
+  skyGrad.addColorStop(0, '#0B0E2A');
+  skyGrad.addColorStop(0.25, '#1B2854');
+  skyGrad.addColorStop(0.5, '#2A4A7A');
+  skyGrad.addColorStop(0.7, '#4A6A90');
+  skyGrad.addColorStop(0.85, '#7A6848');
+  skyGrad.addColorStop(1, '#C47020');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, GW, 100);
+
+  // Stars twinkling in the deep blue portion
+  ctx.save();
+  for (const star of stars) {
+    const twinkle = 0.3 + Math.sin(t * 2 + star.b * 10) * 0.7;
+    ctx.globalAlpha = twinkle * 0.6;
+    ctx.fillStyle = '#C0D0FF';
+    ctx.fillRect(Math.floor(star.x), Math.floor(star.y), star.s > 1 ? 2 : 1, star.s > 1 ? 2 : 1);
+  }
+  ctx.restore();
+
+  // Sunset glow on horizon
+  ctx.save();
+  const glowGrad = ctx.createRadialGradient(GW/2, 95, 10, GW/2, 95, 280);
+  glowGrad.addColorStop(0, 'rgba(220,140,40,0.4)');
+  glowGrad.addColorStop(0.4, 'rgba(180,80,20,0.15)');
+  glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, 20, GW, 80);
+  ctx.restore();
+
+  // ── SHIP HULL — fills the screen like the Indy boxcar ──
+  const hullTop = 62;
+  const hullBot = 345;
+  const hullL = -5;  // bleeds off edges for more impact
+  const hullR = GW + 5;
+
+  // Hull path
+  function hullPath() {
+    ctx.beginPath();
+    ctx.moveTo(hullL + 25, hullTop);
+    ctx.lineTo(hullR - 15, hullTop);
+    ctx.lineTo(hullR, hullTop + 25);
+    ctx.lineTo(hullR + 8, hullBot - 25);
+    ctx.quadraticCurveTo(hullR - 30, hullBot + 15, GW * 0.6, hullBot + 8);
+    ctx.quadraticCurveTo(GW * 0.3, hullBot + 5, hullL - 8, hullBot - 45);
+    ctx.lineTo(hullL, hullTop + 35);
+    ctx.closePath();
+  }
+
+  // Hull base fill with rich wood tones
+  ctx.save();
+  hullPath();
+  const woodGrad = ctx.createLinearGradient(0, hullTop, 0, hullBot);
+  woodGrad.addColorStop(0, '#7A4422');
+  woodGrad.addColorStop(0.08, '#8B5530');
+  woodGrad.addColorStop(0.2, '#7A4825');
+  woodGrad.addColorStop(0.4, '#6B3B1C');
+  woodGrad.addColorStop(0.55, '#7A4422');
+  woodGrad.addColorStop(0.7, '#5E3018');
+  woodGrad.addColorStop(0.85, '#4A2410');
+  woodGrad.addColorStop(1, '#3A1A0C');
+  ctx.fillStyle = woodGrad;
+  ctx.fill();
+
+  // Clip to hull for all details
+  ctx.clip();
+
+  // Horizontal plank lines
+  ctx.lineWidth = 1;
+  for (let y = hullTop + 8; y < hullBot; y += 14) {
+    // Dark groove
+    ctx.strokeStyle = `rgba(30,14,5,${0.35 + Math.sin(y*0.3)*0.1})`;
+    ctx.beginPath();
+    ctx.moveTo(hullL - 10, y);
+    ctx.lineTo(hullR + 10, y);
+    ctx.stroke();
+    // Subtle highlight below groove
+    ctx.strokeStyle = 'rgba(160,110,60,0.07)';
+    ctx.beginPath();
+    ctx.moveTo(hullL - 10, y + 1);
+    ctx.lineTo(hullR + 10, y + 1);
+    ctx.stroke();
+  }
+
+  // Vertical plank joints (staggered)
+  ctx.strokeStyle = 'rgba(30,14,5,0.2)';
+  for (let y = hullTop; y < hullBot; y += 14) {
+    const off = ((Math.floor(y / 14)) % 3) * 55;
+    for (let x = hullL + off; x < hullR; x += 160) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x, y + 14);
+      ctx.stroke();
+    }
+  }
+
+  // ── Heavy iron bands (like the Indy train rails) ──
+  // Top band
+  const band1Y = hullTop + 18;
+  ctx.fillStyle = '#2A1408';
+  ctx.fillRect(hullL, band1Y, hullR - hullL, 10);
+  ctx.fillStyle = 'rgba(120,80,40,0.15)';
+  ctx.fillRect(hullL, band1Y, hullR - hullL, 2);
+  // Rivets on top band
+  for (let x = 30; x < GW; x += 45) {
+    ctx.beginPath();
+    ctx.arc(x, band1Y + 5, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#3A2010';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x - 0.5, band1Y + 4, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(140,100,50,0.3)';
+    ctx.fill();
+  }
+
+  // Middle band (thinner)
+  const band2Y = hullTop + 32;
+  ctx.fillStyle = '#221008';
+  ctx.fillRect(hullL, band2Y, hullR - hullL, 4);
+
+  // Lower band
+  const band3Y = hullBot - 55;
+  ctx.fillStyle = '#2A1408';
+  ctx.fillRect(hullL, band3Y, hullR - hullL, 8);
+  ctx.fillStyle = 'rgba(120,80,40,0.12)';
+  ctx.fillRect(hullL, band3Y, hullR - hullL, 2);
+  // Rivets on lower band
+  for (let x = 15; x < GW; x += 45) {
+    ctx.beginPath();
+    ctx.arc(x, band3Y + 4, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#3A2010';
+    ctx.fill();
+  }
+
+  // ── Portholes with glass reflection ──
+  for (let i = 0; i < 7; i++) {
+    const px = 55 + i * 82;
+    const py = hullBot - 32;
+    // Shadow
+    ctx.beginPath();
+    ctx.arc(px + 1, py + 1, 10, 0, Math.PI * 2);
+    ctx.fillStyle = '#1A0A04';
+    ctx.fill();
+    // Outer brass ring
+    ctx.beginPath();
+    ctx.arc(px, py, 10, 0, Math.PI * 2);
+    ctx.fillStyle = '#4A2810';
+    ctx.fill();
+    // Inner ring
+    ctx.beginPath();
+    ctx.arc(px, py, 7, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a0e05';
+    ctx.fill();
+    // Glass with subtle sea reflection
+    ctx.beginPath();
+    ctx.arc(px, py, 5, 0, Math.PI * 2);
+    const glassGrad = ctx.createRadialGradient(px - 2, py - 2, 0, px, py, 5);
+    glassGrad.addColorStop(0, 'rgba(80,120,160,0.3)');
+    glassGrad.addColorStop(1, 'rgba(10,20,40,0.5)');
+    ctx.fillStyle = glassGrad;
+    ctx.fill();
+    // Specular highlight
+    ctx.beginPath();
+    ctx.arc(px - 2, py - 2, 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200,220,255,0.15)';
+    ctx.fill();
+  }
+
+  // Warm light patch (like sunset hitting the hull)
+  const lightGrad = ctx.createRadialGradient(GW * 0.4, hullTop + 80, 20, GW * 0.4, hullTop + 80, 250);
+  lightGrad.addColorStop(0, 'rgba(220,160,60,0.08)');
+  lightGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = lightGrad;
+  ctx.fillRect(hullL, hullTop, hullR - hullL, hullBot - hullTop);
+
+  ctx.restore(); // un-clip
+
+  // Hull outline — thick dark edge
+  ctx.save();
+  hullPath();
+  ctx.strokeStyle = '#1A0C04';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  ctx.restore();
+
+  // ── Deck railing with detail ──
+  ctx.save();
+  ctx.strokeStyle = '#5A3018';
+  ctx.lineWidth = 3;
+  // Bottom rail
+  ctx.beginPath();
+  ctx.moveTo(30, hullTop - 1);
+  ctx.lineTo(GW - 20, hullTop - 1);
+  ctx.stroke();
+  // Posts
+  ctx.lineWidth = 2;
+  for (let x = 45; x < GW - 10; x += 32) {
+    ctx.beginPath();
+    ctx.moveTo(x, hullTop - 1);
+    ctx.lineTo(x, hullTop - 16);
+    ctx.stroke();
+    // Post cap
+    ctx.fillStyle = '#6A3820';
+    ctx.fillRect(x - 2, hullTop - 17, 4, 3);
+  }
+  // Top rail
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(40, hullTop - 15);
+  ctx.lineTo(GW - 15, hullTop - 15);
+  ctx.stroke();
+  ctx.restore();
+
+  // ── MASTS — two for a proper brig ──
+  ctx.save();
+  // Foremast (left)
+  const m1x = GW * 0.3;
+  ctx.fillStyle = '#4A2812';
+  ctx.fillRect(m1x - 3, hullTop - 52, 6, 55);
+  ctx.fillStyle = '#3A1E0E';
+  ctx.fillRect(m1x - 35, hullTop - 40, 70, 4);
+  // Mainmast (right)
+  const m2x = GW * 0.7;
+  ctx.fillStyle = '#4A2812';
+  ctx.fillRect(m2x - 3, hullTop - 58, 6, 60);
+  ctx.fillStyle = '#3A1E0E';
+  ctx.fillRect(m2x - 40, hullTop - 45, 80, 4);
+  // Rigging
+  ctx.strokeStyle = 'rgba(90,60,25,0.4)';
+  ctx.lineWidth = 1;
+  const rigging = [
+    [m1x, hullTop-50, 35, hullTop], [m1x, hullTop-50, m1x+120, hullTop],
+    [m2x, hullTop-56, m2x-130, hullTop], [m2x, hullTop-56, GW-20, hullTop],
+    [m1x, hullTop-50, m2x, hullTop-56], // connects masts
+  ];
+  for (const [x1,y1,x2,y2] of rigging) {
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  }
+  // Crow's nests
+  ctx.fillStyle = '#3A1E0E';
+  ctx.fillRect(m1x - 8, hullTop - 54, 16, 4);
+  ctx.fillRect(m2x - 9, hullTop - 60, 18, 4);
+  // Greek flag on mainmast
+  const flagY = hullTop - 56;
+  const fw = 18, fh = 11;
+  ctx.fillStyle = '#1A4A8A';
+  ctx.fillRect(m2x + 4, flagY - fh, fw, fh);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(m2x + 4, flagY - fh + 2, fw, 2);
+  ctx.fillRect(m2x + 4, flagY - fh + 6, fw, 2);
+  ctx.fillRect(m2x + 4, flagY - fh, 6, fh);
+  ctx.fillRect(m2x + 6, flagY - fh, 2, 6);
+  ctx.restore();
+
+  // ══════════════════════════════════════════
+  // TITLE TEXT — massive, embossed on the hull
+  // ══════════════════════════════════════════
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  const glowPulse = 0.35 + Math.sin(t * 1.2) * 0.15;
+
+  // Helper: draw embossed text with multi-layer shadows
+  function embossedText(text, cx, cy, size) {
+    ctx.font = `bold ${size}px "Press Start 2P", monospace`;
+    // Layer 1: deep black shadow (furthest)
+    ctx.fillStyle = '#0A0402';
+    ctx.fillText(text, cx + 5, cy + 5);
+    // Layer 2: dark brown
+    ctx.fillStyle = '#1A0A04';
+    ctx.fillText(text, cx + 4, cy + 4);
+    // Layer 3: medium shadow
+    ctx.fillStyle = '#2E1508';
+    ctx.fillText(text, cx + 3, cy + 3);
+    // Layer 4: warm shadow
+    ctx.fillStyle = '#4A2010';
+    ctx.fillText(text, cx + 2, cy + 2);
+    // Layer 5: edge highlight (dark gold)
+    ctx.fillStyle = '#8B6020';
+    ctx.fillText(text, cx + 1, cy + 1);
+    // Main text — bright gold with glow
+    ctx.shadowColor = `rgba(255,180,40,${glowPulse})`;
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillStyle = '#D4A03C';
+    ctx.fillText(text, cx, cy);
+    // Top-edge specular highlight
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(255,230,160,0.3)';
+    ctx.fillText(text, cx, cy - 1);
+    ctx.fillStyle = 'rgba(255,240,200,0.12)';
+    ctx.fillText(text, cx - 1, cy - 1);
+  }
+
+  // "Η ΘΑΛΑΣΣΑ" — HUGE top line
+  embossedText('Η ΘΑΛΑΣΣΑ', GW / 2, hullTop + 95, 48);
+
+  // "ΘΥΜΑΤΑΙ" — HUGE second line
+  embossedText('ΘΥΜΑΤΑΙ', GW / 2, hullTop + 160, 48);
+
+  // Decorative line between title and subtitle
+  ctx.shadowBlur = 0;
+  const lineW = 200;
+  const lineY = hullTop + 200;
+  ctx.strokeStyle = '#8B6020';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(GW/2 - lineW, lineY);
+  ctx.lineTo(GW/2 - 20, lineY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(GW/2 + 20, lineY);
+  ctx.lineTo(GW/2 + lineW, lineY);
+  ctx.stroke();
+  // Center diamond ornament
+  ctx.fillStyle = '#D4A03C';
+  ctx.save();
+  ctx.translate(GW/2, lineY);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillRect(-4, -4, 8, 8);
+  ctx.restore();
+
+  // "ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ" — subtitle
+  ctx.font = '11px "Press Start 2P", monospace';
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = '#1A0A04';
+  ctx.fillText('ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2 + 2, hullTop + 225 + 2);
+  ctx.fillStyle = '#B8842C';
+  ctx.fillText('ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, hullTop + 225);
+
+  ctx.restore();
+
+  // ── SEA — rich animated waves ──
+  const seaTop = 340;
+  const seaGrad = ctx.createLinearGradient(0, seaTop, 0, GH);
+  seaGrad.addColorStop(0, '#1B3A5C');
+  seaGrad.addColorStop(0.2, '#15304D');
+  seaGrad.addColorStop(0.5, '#102540');
+  seaGrad.addColorStop(1, '#081828');
+  ctx.fillStyle = seaGrad;
+  ctx.fillRect(0, seaTop - 5, GW, GH - seaTop + 5);
+
+  // Multi-layer animated waves
+  ctx.save();
+  for (let layer = 0; layer < 4; layer++) {
+    const waveY = seaTop + layer * 12;
+    const speed = 0.6 + layer * 0.25;
+    const amp = 3 + layer * 1.5;
+    const alpha = 0.35 - layer * 0.07;
+    ctx.beginPath();
+    for (let x = 0; x <= GW; x += 3) {
+      const y = waveY + Math.sin(x * 0.012 + t * speed) * amp
+                       + Math.sin(x * 0.006 - t * speed * 0.6) * (amp * 0.6)
+                       + Math.sin(x * 0.025 + t * speed * 1.4) * (amp * 0.2);
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.lineTo(GW, GH);
+    ctx.lineTo(0, GH);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(20,55,90,${alpha})`;
+    ctx.fill();
+  }
+  // Foam crests
+  ctx.strokeStyle = 'rgba(180,210,240,0.12)';
+  ctx.lineWidth = 1;
+  for (let layer = 0; layer < 3; layer++) {
+    ctx.beginPath();
+    for (let x = 0; x <= GW; x += 3) {
+      const y = seaTop + layer * 12 + Math.sin(x * 0.012 + t * (0.6 + layer * 0.25)) * (3 + layer * 1.5);
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  // Moonlight reflection on water
+  const moonGrad = ctx.createRadialGradient(GW*0.5, seaTop + 10, 5, GW*0.5, seaTop + 20, 120);
+  moonGrad.addColorStop(0, 'rgba(180,160,100,0.08)');
+  moonGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = moonGrad;
+  ctx.fillRect(0, seaTop, GW, GH - seaTop);
+  ctx.restore();
+
+  // ── Bottom bar — dark ground/dock ──
+  ctx.fillStyle = '#1A100A';
+  ctx.fillRect(0, GH - 28, GW, 28);
+  ctx.fillStyle = '#2A1A0E';
+  ctx.fillRect(0, GH - 28, GW, 2);
+
+  // ── Credits line ──
+  ctx.save();
+  ctx.font = '7px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillStyle = '#4A3A28';
+  ctx.fillText('ΜΙΑ ΠΕΡΙΠΕΤΕΙΑ ΤΗΣ ΟΙΚΟΓΕΝΕΙΑΣ ΛΑΤΣΟΥΔΗ', GW / 2, GH - 6);
+  ctx.restore();
+
+  // ── "CLICK TO START" ──
+  const blinkAlpha = 0.25 + Math.sin(tick * 0.06) * 0.4;
+  ctx.save();
+  ctx.font = '8px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.globalAlpha = Math.max(0, blinkAlpha);
+  ctx.fillStyle = '#D4A03C';
+  ctx.shadowColor = 'rgba(212,160,60,0.4)';
+  ctx.shadowBlur = 8;
+  ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW / 2, GH - 32);
+  ctx.restore();
+
+  // ── Fade out overlay ──
+  if (titleFadeOut > 0) {
+    ctx.save();
+    ctx.globalAlpha = titleFadeOut;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
 // TITLE & INTRO FLOW
 // ════════════════════════════════════════════════════════════
-document.getElementById('title-screen').onclick = () => {
-  const ts = document.getElementById('title-screen');
-  ts.style.opacity = '0';
-  bgm.play().catch(() => {}); state.musicOn = true;
-  setTimeout(() => {
-    ts.style.display = 'none';
-    const intro = document.getElementById('intro-screen');
-    intro.classList.add('show');
-    showIntroPage();
-  }, 2000);
-};
+let titleClicked = false;
+let titleMusicStarted = false;
+
+// Start title music on any user gesture (needed for autoplay policy)
+function ensureTitleMusic() {
+  if (!titleMusicStarted && state.phase === 'title') {
+    titleMusic.play().catch(() => {});
+    titleMusicStarted = true;
+  }
+}
+document.addEventListener('click', ensureTitleMusic, { once: true });
+document.addEventListener('keydown', ensureTitleMusic, { once: true });
+
+CVS.addEventListener('click', function titleClickHandler(e) {
+  if (state.phase !== 'title' || titleClicked) return;
+  titleClicked = true;
+
+  // Crossfade title music out
+  const fadeInterval = setInterval(() => {
+    if (titleMusic.volume > 0.02) {
+      titleMusic.volume = Math.max(0, titleMusic.volume - 0.01);
+    } else {
+      titleMusic.pause();
+      titleMusic.volume = 0.3;
+      clearInterval(fadeInterval);
+    }
+  }, 50);
+
+  // Animate fade to black
+  const fadeStep = () => {
+    titleFadeOut += 0.02;
+    if (titleFadeOut < 1) {
+      requestAnimationFrame(fadeStep);
+    } else {
+      titleFadeOut = 1;
+      // Switch to intro
+      state.phase = 'intro';
+      bgm.play().catch(() => {}); state.musicOn = true;
+      const intro = document.getElementById('intro-screen');
+      intro.classList.add('show');
+      showIntroPage();
+    }
+  };
+  requestAnimationFrame(fadeStep);
+}, { once: false });
 
 function showIntroPage() {
   const t = document.getElementById('intro-text');
