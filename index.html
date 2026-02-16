@@ -257,7 +257,6 @@ const PORTRAITS = {};
 async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
-    loadImg('title-bg', 'assets/title-bg.jpg'),
     loadImg('bg-exterior', 'assets/pixel-exterior.png'),
     loadImg('bg-terrace', 'assets/pixel-terrace.png'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
@@ -405,6 +404,7 @@ const scenes = {
       {s:'ΑΙΑΣ',t:'Και κάτι πάνω στην καρέκλα... μια τσάντα;'},
     ],
   },
+
 
   // ── SCENE 2: THE PORT ──
   port: {
@@ -625,6 +625,7 @@ const scenes = {
       {s:'ΑΙΑΣ',t:'Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.'},
     ],
   },
+
 };
 
 // ════════════════════════════════════════════════════════════
@@ -1428,16 +1429,244 @@ function render() {
   drawParticles();
 
   // Hotspot highlight on hover
+  if (state.hoverObj) {
+    const obj = state.hoverObj;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(212,160,60,0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  // Exit zone highlights
+  if (sc.exits) {
+    for (const exit of sc.exits) {
+      const isHover = (exit.side === 'left' && state.mouseGX < 25) ||
+                      (exit.side === 'right' && state.mouseGX > GW - 25);
+      if (isHover) {
+        ctx.save();
+        const exGrad = exit.side === 'left'
+          ? ctx.createLinearGradient(0, 0, 25, 0)
+          : ctx.createLinearGradient(GW, 0, GW - 25, 0);
+        exGrad.addColorStop(0, 'rgba(212,160,60,0.15)');
+        exGrad.addColorStop(1, 'rgba(212,160,60,0)');
+        ctx.fillStyle = exGrad;
+        if (exit.side === 'left') ctx.fillRect(0, 0, 25, GH);
+        else ctx.fillRect(GW - 25, 0, 25, GH);
+        // Arrow
+        ctx.fillStyle = '#D4A03C';
+        ctx.font = '16px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if (exit.side === 'left') ctx.fillText('◀', 12, GH / 2);
+        else ctx.fillText('▶', GW - 12, GH / 2);
+        ctx.restore();
+      }
+    }
+  }
+
+  // Characters — back to front for depth
+  drawCharacter('clio', state.tick);
+  drawCharacter('ajax', state.tick);
+  drawCharacter('ntemis', state.tick);
+
+  // Scene label
+  ctx.save();
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '8px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.shadowColor = '#000';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetX = 2;
+  ctx.shadowOffsetY = 2;
+  ctx.fillText(sc.label, GW / 2, 8);
+  ctx.restore();
+
+  // Music toggle icon
+  ctx.save();
+  ctx.globalAlpha = state.musicOn ? 0.5 : 0.2;
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  ctx.fillText('♪', GW - 8, 8);
+  ctx.restore();
+
+  // Dialogue overlay
+  drawDialogue();
+
+  // Fade overlay
+  if (state.fade.active && state.fade.alpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.fade.alpha;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
 
 // ════════════════════════════════════════════════════════════
-// TITLE SCREEN — Pixel art background + animated title overlay
+// UPDATE — Main logic update
+// ════════════════════════════════════════════════════════════
+function update(dt) {
+  state.tick++;
+
+  // Title screen — start music on first interaction (handled by click)
+  if (state.phase === 'title') return;
+
+  if (state.phase !== 'playing') return;
+
+  // Walking
+  updateWalking(dt);
+
+  // Character fade-in
+  for (const who of ['ntemis','ajax','clio']) {
+    if (chars[who].fadeIn < 1) {
+      const delays = { ntemis: 0.1, ajax: 0.3, clio: 0.5 };
+      if (state.tick > delays[who] * 60) {
+        chars[who].fadeIn = Math.min(1, chars[who].fadeIn + dt * 1.5);
+      }
+    }
+  }
+
+  // Dialogue typewriter
+  updateDlg(dt);
+
+  // Particles
+  updateParticles();
+
+  // Fade transition
+  if (state.fade.active) {
+    const speed = 2.0; // fade speed (slower = smoother)
+    state.fade.alpha += state.fade.dir * dt * speed;
+    if (state.fade.dir > 0 && state.fade.alpha >= 1) {
+      state.fade.alpha = 1;
+      if (state.fade.cb) { const cb = state.fade.cb; state.fade.cb = null; cb(); }
+    }
+    if (state.fade.dir < 0 && state.fade.alpha <= 0) {
+      state.fade.alpha = 0;
+      if (state.fade.cb) { const cb = state.fade.cb; state.fade.cb = null; cb(); }
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// GAME LOOP
+// ════════════════════════════════════════════════════════════
+let lastTime = 0;
+
+function gameLoop(timestamp) {
+  const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.05) : 0.016;
+  lastTime = timestamp;
+
+  // Resize canvas to fill available space
+  const rect = CVS.getBoundingClientRect();
+  // Keep internal resolution fixed, CSS handles scaling
+
+  update(dt);
+  render();
+  requestAnimationFrame(gameLoop);
+}
+
+// ════════════════════════════════════════════════════════════
+// INPUT HANDLING
+// ════════════════════════════════════════════════════════════
+CVS.addEventListener('mousemove', (e) => {
+  const g = screenToGame(e.clientX, e.clientY);
+  state.mouseGX = g.x;
+  state.mouseGY = g.y;
+
+  if (state.phase === 'title') {
+    CVS.style.cursor = 'pointer';
+    return;
+  }
+
+  if (state.phase !== 'playing' || state.dlg.active) {
+    state.hoverObj = null;
+    updateActionLine();
+    return;
+  }
+
+  // Check hotspots
+  const obj = hitTestObj(g.x, g.y);
+  state.hoverObj = obj;
+
+  // Check exits for cursor change
+  const exit = hitTestExit(g.x, g.y);
+  if (exit) {
+    CVS.style.cursor = exit.side === 'left' ? 'w-resize' : 'e-resize';
+    state.hoverObj = { label: exit.label }; // fake obj for action line
+  } else if (obj) {
+    CVS.style.cursor = 'pointer';
+  } else {
+    CVS.style.cursor = 'crosshair';
+  }
+  updateActionLine();
+});
+
+CVS.addEventListener('click', (e) => {
+  const g = screenToGame(e.clientX, e.clientY);
+
+  // Title clicks handled by dedicated handler
+  if (state.phase !== 'playing') return;
+
+  // Dialogue advance
+  if (state.dlg.active) { advanceDlg(); return; }
+
+  // Music toggle (top-right corner)
+  if (g.x > GW - 30 && g.y < 25) { toggleMusic(); return; }
+
+  // Check exit zones
+  const exit = hitTestExit(g.x, g.y);
+  if (exit) { changeScene(exit.target); return; }
+
+  // Check hotspots
+  const obj = hitTestObj(g.x, g.y);
+  if (obj) { objClick(obj); return; }
+
+  // Click ground — walk Ntemis
+  if (g.y > 200) { // Only walk on ground area
+    startWalk('ntemis', g.x);
+    familyFollow(g.x);
+  }
+});
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    if (state.dlg.active) advanceDlg();
+  }
+  const vk = {'1':'look','2':'talk','3':'open','4':'use'};
+  if (vk[e.key] && state.phase === 'playing') setVerb(vk[e.key]);
+});
+
+// ════════════════════════════════════════════════════════════
+// MUSIC
+// ════════════════════════════════════════════════════════════
+const bgm = document.getElementById('bgm');
+bgm.volume = 0.25;
+
+function toggleMusic() {
+  if (state.musicOn) {
+    bgm.pause(); state.musicOn = false;
+  } else {
+    bgm.play().catch(() => {}); state.musicOn = true;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// TITLE SCREEN — Cinematic sunset harbor with animated title
 // ════════════════════════════════════════════════════════════
 const titleMusic = document.getElementById('title-music');
 titleMusic.volume = 0.4;
 let titleFadeOut = 0;
 let titleStartTick = -1;
 
-// Title text
+// Title text animation config
 const titleLine1 = 'ΤΟ ΜΥΣΤΗΡΙΟ';
 const titleLine2 = 'του';
 const titleLine3 = 'ΓΑΛΑΞΕΙΔΙΟΥ';
@@ -1452,39 +1681,187 @@ function drawTitleScreen(tick) {
   const t = tick * 0.02;
 
   // ═══════════════════════════════════════
-  // BACKGROUND — pixel art harbor scene
+  // SKY — dramatic sunset purple → orange → gold
   // ═══════════════════════════════════════
-  const bg = images['title-bg'];
-  if (bg && bg.complete) {
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(bg, 0, 0, GW, GH);
-  } else {
-    // Fallback if image not loaded
-    ctx.fillStyle = '#1A0A2E';
-    ctx.fillRect(0, 0, GW, GH);
-  }
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 200);
+  skyGrad.addColorStop(0, '#1A0A2E');
+  skyGrad.addColorStop(0.12, '#2E1040');
+  skyGrad.addColorStop(0.25, '#5A1838');
+  skyGrad.addColorStop(0.38, '#8A2828');
+  skyGrad.addColorStop(0.5, '#C04820');
+  skyGrad.addColorStop(0.62, '#D87018');
+  skyGrad.addColorStop(0.72, '#E89818');
+  skyGrad.addColorStop(0.82, '#F0B020');
+  skyGrad.addColorStop(0.92, '#E8A828');
+  skyGrad.addColorStop(1, '#C88020');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, GW, 200);
 
-  // Subtle vignette overlay
+  // ── Chunky pixel clouds (sunset) ──
   ctx.save();
-  const vigL = ctx.createLinearGradient(0, 0, 60, 0);
-  vigL.addColorStop(0, 'rgba(0,0,0,0.4)');
-  vigL.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = vigL;
-  ctx.fillRect(0, 0, 60, GH);
-  const vigR = ctx.createLinearGradient(GW, 0, GW - 60, 0);
-  vigR.addColorStop(0, 'rgba(0,0,0,0.4)');
-  vigR.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = vigR;
-  ctx.fillRect(GW - 60, 0, 60, GH);
-  const vigT = ctx.createLinearGradient(0, 0, 0, 40);
-  vigT.addColorStop(0, 'rgba(0,0,0,0.3)');
-  vigT.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = vigT;
-  ctx.fillRect(0, 0, GW, 40);
+  const cloudRows = [
+    // [y, colors[]] — each row is a band of cloud chunks
+    [5, ['#1A0A2E','#2E1040','#1A0A2E','#2E1040','#1A0A2E']],
+    [18, ['#3A1030','#4A1838','#5A1838','#4A1838','#3A1030','#5A1838','#4A1838']],
+    [32, ['#8A3020','#A04820','#C05020','#A04020','#C06020','#B05020','#A04020']],
+    [45, ['#C06828','#D07828','#C06020','#D07020','#B05828','#C06828']],
+    [56, ['#D88020','#E89020','#D88820','#E8A020','#D89020','#E88820']],
+    [68, ['#E8A020','#F0B828','#E8A828','#F0B020','#E8A828','#F0B028']],
+    [80, ['#F0C030','#E8B828','#F0C030','#E8B020','#F0C030','#E8B828']],
+  ];
+  for (const [cy, colors] of cloudRows) {
+    const segW = GW / colors.length;
+    for (let i = 0; i < colors.length; i++) {
+      ctx.fillStyle = colors[i];
+      for (let bx = i * segW; bx < (i + 1) * segW; bx += 4) {
+        const vary = Math.sin(bx * 0.08 + cy * 0.1) * 5;
+        const h = 10 + Math.sin(bx * 0.12 + cy) * 4;
+        ctx.fillRect(Math.floor(bx), Math.floor(cy + vary), 4, Math.max(2, Math.floor(h)));
+      }
+    }
+  }
+  // Sun glow
+  const sunGlowGrad = ctx.createRadialGradient(GW * 0.4, 95, 5, GW * 0.4, 95, 160);
+  sunGlowGrad.addColorStop(0, 'rgba(255,210,70,0.4)');
+  sunGlowGrad.addColorStop(0.3, 'rgba(240,160,40,0.2)');
+  sunGlowGrad.addColorStop(1, 'rgba(200,80,20,0)');
+  ctx.fillStyle = sunGlowGrad;
+  ctx.fillRect(0, 20, GW, 160);
+  ctx.restore();
+
+  // ── Mountain silhouette ──
+  ctx.save();
+  ctx.fillStyle = '#2A1820';
+  ctx.beginPath();
+  ctx.moveTo(0, 200); ctx.lineTo(0, 145);
+  ctx.quadraticCurveTo(60, 120, 130, 138);
+  ctx.quadraticCurveTo(200, 148, 260, 128);
+  ctx.quadraticCurveTo(320, 112, 380, 130);
+  ctx.quadraticCurveTo(440, 140, 490, 122);
+  ctx.quadraticCurveTo(560, 110, 610, 132);
+  ctx.lineTo(GW, 140); ctx.lineTo(GW, 200);
+  ctx.closePath(); ctx.fill();
   ctx.restore();
 
   // ═══════════════════════════════════════
-  // TITLE TEXT — Gold metallic with deep shadows
+  // TOWN SILHOUETTE — buildings, domes, rooftops
+  // ═══════════════════════════════════════
+  const townY = 185;
+  ctx.save();
+  const blds = [
+    [15,155,35,'r'],[48,148,28,'r'],[74,152,32,'t'],[104,145,38,'d'],
+    [140,150,30,'r'],[168,142,35,'c'],[200,148,28,'r'],[226,144,34,'r'],
+    [258,140,30,'d'],[286,148,32,'r'],[316,143,36,'t'],[350,150,28,'r'],
+    [376,146,32,'d'],[406,152,26,'r'],[430,148,34,'r'],[462,144,30,'c'],
+    [490,150,28,'r'],
+  ];
+  for (const [bx, by, bw, bt] of blds) {
+    ctx.fillStyle = '#1A0C10';
+    ctx.fillRect(bx, by, bw, townY - by);
+    if (bt === 'd') { ctx.beginPath(); ctx.arc(bx+bw/2, by, bw/2.5, Math.PI, 0); ctx.fill(); }
+    if (bt === 'c') { ctx.fillRect(bx+bw/2-3, by-18, 6, 18); ctx.fillRect(bx+bw/2-1, by-24, 2, 8); ctx.fillRect(bx+bw/2-4, by-22, 8, 2); }
+    if (bt === 't') { ctx.fillRect(bx+4, by-10, bw-8, 10); }
+    // Lit windows
+    const wr = Math.floor((townY - by - 8) / 12);
+    for (let r = 0; r < wr; r++) {
+      const wy = by + 6 + r * 12;
+      const wc = Math.floor((bw - 8) / 10);
+      for (let c = 0; c < wc; c++) {
+        if (Math.sin(bx*3.7 + r*7.1 + c*13.3) > 0.2) {
+          ctx.fillStyle = Math.sin(bx+r+c) > 0 ? '#D89030' : '#E8A838';
+          ctx.fillRect(bx + 5 + c*10, wy, 4, 4);
+        }
+      }
+    }
+  }
+  ctx.restore();
+
+  // ═══════════════════════════════════════
+  // SHIP SILHOUETTE — right side
+  // ═══════════════════════════════════════
+  ctx.save();
+  ctx.fillStyle = '#100608';
+  const sx = 520;
+  // Hull
+  ctx.beginPath();
+  ctx.moveTo(sx-40,townY); ctx.lineTo(sx-55,townY-10); ctx.lineTo(sx-50,townY-30);
+  ctx.lineTo(sx-30,townY-35); ctx.lineTo(sx+60,townY-35);
+  ctx.lineTo(sx+70,townY-28); ctx.lineTo(sx+75,townY-15);
+  ctx.lineTo(sx+65,townY); ctx.closePath(); ctx.fill();
+  // Masts
+  ctx.fillRect(sx+10, townY-120, 4, 90);
+  ctx.fillRect(sx-25, townY-110, 70, 3); ctx.fillRect(sx-18, townY-95, 56, 3); ctx.fillRect(sx-12, townY-78, 44, 3);
+  ctx.fillRect(sx-25, townY-100, 3, 68);
+  ctx.fillRect(sx-45, townY-92, 50, 3); ctx.fillRect(sx-38, townY-78, 36, 3);
+  ctx.fillRect(sx+50, townY-90, 3, 58);
+  ctx.fillRect(sx+35, townY-82, 35, 3);
+  // Rigging
+  ctx.strokeStyle = '#100608'; ctx.lineWidth = 1;
+  [[sx+12,townY-118, sx-40,townY-35],[sx+12,townY-118, sx+68,townY-35],
+   [sx-24,townY-98, sx-50,townY-35],[sx-24,townY-98, sx+5,townY-35],
+   [sx+51,townY-88, sx+30,townY-35],[sx+51,townY-88, sx+72,townY-30],
+   [sx+12,townY-118, sx-24,townY-98],[sx+12,townY-118, sx+51,townY-88],
+  ].forEach(([x1,y1,x2,y2]) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+  // Bowsprit
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(sx-50,townY-32); ctx.lineTo(sx-80,townY-50); ctx.stroke();
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx+12,townY-118); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx-24,townY-98); ctx.stroke();
+  ctx.restore();
+
+  // ═══════════════════════════════════════
+  // WATER — sunset reflections
+  // ═══════════════════════════════════════
+  const waterGrad = ctx.createLinearGradient(0, townY, 0, GH);
+  waterGrad.addColorStop(0, '#C07818');
+  waterGrad.addColorStop(0.1, '#A06018');
+  waterGrad.addColorStop(0.25, '#704010');
+  waterGrad.addColorStop(0.45, '#402008');
+  waterGrad.addColorStop(0.7, '#281008');
+  waterGrad.addColorStop(1, '#180808');
+  ctx.fillStyle = waterGrad;
+  ctx.fillRect(0, townY, GW, GH - townY);
+
+  // Reflection shimmer
+  ctx.save();
+  for (let ry = townY + 2; ry < GH - 5; ry += 3) {
+    const d = (ry - townY) / (GH - 5 - townY);
+    ctx.fillStyle = `rgba(230,160,40,${0.15*(1-d*0.7)})`;
+    for (let rx = 0; rx < GW; rx += 6) {
+      const sh = Math.sin(rx*0.04 + ry*0.08 + t*1.5)*0.5 + 0.5;
+      if (sh > 0.4) ctx.fillRect(rx, ry, 2+Math.floor(sh*4), 1);
+    }
+    ctx.fillStyle = `rgba(10,5,2,${0.06+d*0.1})`;
+    for (let rx = 0; rx < GW; rx += 8) {
+      if (Math.sin(rx*0.06 + ry*0.12 - t*0.8) > 0.3) ctx.fillRect(rx, ry+1, 4, 1);
+    }
+  }
+  // Bright sun reflection path
+  const sunX = GW * 0.4;
+  for (let ry = townY; ry < GH - 5; ry += 2) {
+    const d = (ry - townY) / (GH - 5 - townY);
+    const spread = 20 + d*80;
+    ctx.fillStyle = `rgba(255,200,60,${0.25*(1-d*0.5)})`;
+    const wobble = Math.sin(ry*0.15 + t*2) * spread*0.3;
+    const w = 3 + Math.floor(Math.sin(ry*0.2 + t*1.8)*3 + 3);
+    ctx.fillRect(sunX + wobble - w/2, ry, w, 1);
+    if (Math.sin(ry*0.3 + t*1.2) > 0.2) {
+      ctx.fillRect(sunX + wobble + spread*0.3, ry, 2, 1);
+      ctx.fillRect(sunX + wobble - spread*0.3, ry, 2, 1);
+    }
+  }
+  // Town reflections
+  ctx.fillStyle = 'rgba(10,5,5,0.15)';
+  for (const [bx,,bw] of blds) {
+    for (let r = 0; r < 20; r += 2) {
+      ctx.fillRect(bx + Math.sin(r*0.2+t)*2, townY+r, bw, 1);
+    }
+  }
+  ctx.restore();
+
+  // ═══════════════════════════════════════
+  // ANIMATED TITLE — letters unfold cinematically
   // ═══════════════════════════════════════
   const l1N = titleLine1.length;
   const l1End = l1N * LETTER_DELAY;
@@ -1498,46 +1875,35 @@ function drawTitleScreen(tick) {
   ctx.save();
   ctx.textBaseline = 'middle';
 
-  // Metallic letter renderer — warm gold with strong bevel
-  function drawMetalLetter(ch, cx, cy, size, progress) {
+  // Single letter renderer with scale-in animation
+  function drawLetter(ch, cx, cy, size, progress) {
     if (progress <= 0) return;
     const p = Math.min(1, progress);
-    const scale = p < 0.5 ? 1.4 - p * 0.8 : 1.0;
-    const alpha = Math.min(1, p * 2.5);
+    const scale = p < 0.5 ? 1.5 - p : 1.0 + Math.sin((p-0.5)*Math.PI)*0.05;
+    const alpha = Math.min(1, p * 2);
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
     ctx.globalAlpha = alpha;
     ctx.font = `bold ${size}px "Press Start 2P", monospace`;
     ctx.textAlign = 'center';
-    // Deep shadow
-    ctx.fillStyle = '#000000';
-    ctx.fillText(ch, 4, 5);
-    ctx.fillStyle = '#0A0400';
-    ctx.fillText(ch, 3, 4);
-    // Dark outline
-    ctx.fillStyle = '#2A1000';
-    ctx.fillText(ch, 2, 3);
-    // Mid tone
-    ctx.fillStyle = '#6A3810';
-    ctx.fillText(ch, 1, 2);
-    // Main body — rich gold
-    ctx.fillStyle = '#C07820';
+    // Shadow layers
+    const shd = [['#060200',5],['#1A0804',4],['#2E1508',3],['#4A2010',2],['#7A5018',1]];
+    for (const [c,d] of shd) { ctx.fillStyle = c; ctx.fillText(ch, d, d); }
+    // Gold with glow
+    const g = 0.3 + Math.sin(t*1.2 + cx*0.01)*0.15;
+    ctx.shadowColor = `rgba(255,180,40,${g*alpha})`;
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#D4A03C';
     ctx.fillText(ch, 0, 0);
-    // Upper highlight — bright gold
-    ctx.fillStyle = '#E0A030';
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = `rgba(255,235,170,${0.35*alpha})`;
     ctx.fillText(ch, 0, -1);
-    // Top edge — hot highlight
-    ctx.fillStyle = `rgba(255,200,80,${0.6 * alpha})`;
-    ctx.fillText(ch, -1, -2);
-    // Gleam
-    ctx.fillStyle = `rgba(255,230,140,${0.3 * alpha})`;
-    ctx.fillText(ch, -1, -3);
     ctx.restore();
   }
 
   // Line 1: "ΤΟ ΜΥΣΤΗΡΙΟ"
-  const l1Size = 36, l1Y = 75;
+  const l1Size = 36, l1Y = 100;
   ctx.font = `bold ${l1Size}px "Press Start 2P", monospace`;
   ctx.textAlign = 'left';
   const l1W = ctx.measureText(titleLine1).width;
@@ -1545,7 +1911,7 @@ function drawTitleScreen(tick) {
   for (let i = 0; i < l1N; i++) {
     const ch = titleLine1[i];
     const chW = ctx.measureText(ch).width;
-    drawMetalLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
+    drawLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
     l1X += chW;
   }
 
@@ -1554,26 +1920,24 @@ function drawTitleScreen(tick) {
     const p2 = Math.min(1, (elapsed - l2Start) / 25);
     ctx.save();
     ctx.globalAlpha = p2;
-    ctx.translate(GW/2, l1Y + 48);
-    ctx.scale(1.2 - p2*0.2, 1.2 - p2*0.2);
+    ctx.translate(GW/2, l1Y + 50);
+    ctx.scale(1.3 - p2*0.3, 1.3 - p2*0.3);
     ctx.font = 'bold 14px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#000'; ctx.fillText(titleLine2, 2, 2);
-    ctx.fillStyle = '#6A3810'; ctx.fillText(titleLine2, 1, 1);
-    ctx.fillStyle = '#C08828'; ctx.fillText(titleLine2, 0, 0);
-    ctx.fillStyle = `rgba(240,190,90,${0.5*p2})`; ctx.fillText(titleLine2, 0, -1);
+    ctx.fillStyle = '#1A0804'; ctx.fillText(titleLine2, 2, 2);
+    ctx.fillStyle = '#B8842C'; ctx.fillText(titleLine2, 0, 0);
     ctx.restore();
   }
 
   // Line 3: "ΓΑΛΑΞΕΙΔΙΟΥ"
-  const l3Size = 38, l3Y = l1Y + 100;
+  const l3Size = 38, l3Y = l1Y + 102;
   ctx.font = `bold ${l3Size}px "Press Start 2P", monospace`;
   const l3W = ctx.measureText(titleLine3).width;
   let l3X = (GW - l3W) / 2;
   for (let i = 0; i < l3N; i++) {
     const ch = titleLine3[i];
     const chW = ctx.measureText(ch).width;
-    drawMetalLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
+    drawLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
     l3X += chW;
   }
   ctx.restore();
@@ -1584,245 +1948,22 @@ function drawTitleScreen(tick) {
     ctx.save(); ctx.globalAlpha = ca;
     ctx.font = '7px "Press Start 2P", monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#000'; ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2 + 1, GH - 9);
-    ctx.fillStyle = '#C08828';
-    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 10);
+    ctx.fillStyle = '#8A6828';
+    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 12);
     ctx.restore();
   }
 
   // Blinking start prompt
   if (elapsed > promptAt) {
-    const blink = Math.sin(tick*0.06) > 0;
-    if (blink) {
-      ctx.save();
-      ctx.font = '8px "Press Start 2P", monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#000';
-      ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2 + 1, GH - 29);
-      ctx.fillStyle = '#E0A030';
-      ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 30);
-      ctx.restore();
-    }
-  }
-
-  // Fade overlay
-  if (titleFadeOut > 0) {
+    const blink = 0.2 + Math.sin(tick*0.06)*0.45;
     ctx.save();
-    ctx.globalAlpha = titleFadeOut;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, GW, GH);
-    ctx.restore();
-  }
-}
-  ctx.fillStyle = '#0A0E28';
-  ctx.fillRect(0, townY, GW, GH - townY);
-
-  // Scanline water reflections
-  for (let ry = townY + 1; ry < GH - 25; ry += 2) {
-    const d = (ry - townY) / (GH - 25 - townY);
-    // Blue shimmer lines
-    const shift = Math.sin(ry * 0.1 + t * 1.2) * 3;
-    ctx.fillStyle = d < 0.3 ? '#101838' : '#0C1230';
-    for (let rx = 0; rx < GW; rx += 8) {
-      if (Math.sin(rx * 0.05 + ry * 0.08 + t * 1.5) > 0.3) {
-        ctx.fillRect(rx + shift, ry, 3 + Math.floor(Math.sin(rx*0.1+ry*0.2)*2), 1);
-      }
-    }
-  }
-  // Moon reflection
-  const moonRX = 540;
-  for (let ry = townY + 2; ry < townY + 60; ry += 2) {
-    const d = (ry - townY) / 60;
-    const wobble = Math.sin(ry * 0.2 + t * 2) * (3 + d * 8);
-    ctx.fillStyle = d < 0.3 ? '#283860' : '#1A2848';
-    const w = 2 + Math.floor(d * 3);
-    ctx.fillRect(moonRX + wobble - w/2, ry, w, 1);
-  }
-  // Town reflections (vertical streaks)
-  for (const [bx,,bw] of blds) {
-    for (let r = 0; r < 15; r += 2) {
-      const wobble = Math.sin(r * 0.3 + t * 1.5) * 2;
-      ctx.fillStyle = '#0E1430';
-      ctx.fillRect(bx + wobble, townY + r, bw, 1);
-    }
-  }
-
-  // ═══════════════════════════════════════
-  // FOREGROUND — harbor edge silhouette
-  // ═══════════════════════════════════════
-  // Stone quay edge
-  ctx.fillStyle = '#080C20';
-  ctx.fillRect(0, GH - 22, GW, 22);
-  ctx.fillStyle = '#101838';
-  ctx.fillRect(0, GH - 22, GW, 1);
-  // Bollard left
-  ctx.fillStyle = '#0E1230';
-  ctx.fillRect(28, GH - 30, 6, 10);
-  ctx.fillRect(26, GH - 32, 10, 3);
-  ctx.fillStyle = '#182050';
-  ctx.fillRect(26, GH - 32, 10, 1);
-  // Barrel
-  ctx.fillStyle = '#0C1028';
-  ctx.fillRect(60, GH - 32, 14, 12);
-  ctx.fillStyle = '#182050';
-  ctx.fillRect(60, GH - 32, 14, 1);
-  ctx.fillRect(60, GH - 26, 14, 1);
-  // Rope coil
-  ctx.strokeStyle = '#141838';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(90, GH - 24, 5, 0, Math.PI * 1.5); ctx.stroke();
-  // Bollard right
-  ctx.fillStyle = '#0E1230';
-  ctx.fillRect(560, GH - 30, 6, 10);
-  ctx.fillRect(558, GH - 32, 10, 3);
-  ctx.fillStyle = '#182050';
-  ctx.fillRect(558, GH - 32, 10, 1);
-  // Anchor
-  ctx.fillStyle = '#0E1230';
-  ctx.fillRect(590, GH - 34, 2, 12);
-  ctx.fillRect(585, GH - 26, 12, 2);
-
-  // ═══════════════════════════════════════
-  // DECORATIVE COLUMNS (framing, like Fate of Atlantis)
-  // ═══════════════════════════════════════
-  // Left column
-  for (let y = 0; y < GH; y += 2) {
-    const shade = y < GH/2 ? '#0E1238' : '#0A0E30';
-    ctx.fillStyle = shade;
-    ctx.fillRect(0, y, 8, 2);
-    ctx.fillStyle = '#182058';
-    ctx.fillRect(8, y, 1, 2);
-  }
-  ctx.fillStyle = '#141848';
-  ctx.fillRect(0, 0, 10, 4); // capital
-  ctx.fillRect(0, GH-4, 10, 4); // base
-  // Right column
-  for (let y = 0; y < GH; y += 2) {
-    const shade = y < GH/2 ? '#0E1238' : '#0A0E30';
-    ctx.fillStyle = shade;
-    ctx.fillRect(GW - 8, y, 8, 2);
-    ctx.fillStyle = '#182058';
-    ctx.fillRect(GW - 9, y, 1, 2);
-  }
-  ctx.fillStyle = '#141848';
-  ctx.fillRect(GW - 10, 0, 10, 4);
-  ctx.fillRect(GW - 10, GH-4, 10, 4);
-
-  // ═══════════════════════════════════════
-  // TITLE TEXT — Red/Orange metallic (Indiana Jones style)
-  // ═══════════════════════════════════════
-  const l1N = titleLine1.length;
-  const l1End = l1N * LETTER_DELAY;
-  const l2Start = l1End + LINE2_DELAY;
-  const l2End = l2Start + 15;
-  const l3Start = l2End + LINE3_DELAY;
-  const l3N = titleLine3.length;
-  const l3End = l3Start + l3N * LETTER_DELAY;
-  const promptAt = l3End + PROMPT_DELAY;
-
-  ctx.save();
-  ctx.textBaseline = 'middle';
-
-  // Metallic letter renderer — bold red/orange with bevel
-  function drawMetalLetter(ch, cx, cy, size, progress) {
-    if (progress <= 0) return;
-    const p = Math.min(1, progress);
-    const scale = p < 0.5 ? 1.4 - p * 0.8 : 1.0;
-    const alpha = Math.min(1, p * 2.5);
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.scale(scale, scale);
-    ctx.globalAlpha = alpha;
-    ctx.font = `bold ${size}px "Press Start 2P", monospace`;
-    ctx.textAlign = 'center';
-    // Layer 1: Deep shadow (bottom-right)
-    ctx.fillStyle = '#100000';
-    ctx.fillText(ch, 4, 4);
-    // Layer 2: Dark outline
-    ctx.fillStyle = '#300800';
-    ctx.fillText(ch, 3, 3);
-    // Layer 3: Mid shadow
-    ctx.fillStyle = '#601808';
-    ctx.fillText(ch, 2, 2);
-    // Layer 4: Main body (red-orange)
-    ctx.fillStyle = '#C03010';
-    ctx.fillText(ch, 0, 0);
-    // Layer 5: Upper gradient (brighter orange)
-    ctx.fillStyle = '#E06020';
-    ctx.fillText(ch, 0, -1);
-    // Layer 6: Top highlight (bright orange-yellow)
-    ctx.fillStyle = `rgba(255,160,40,${0.7 * alpha})`;
-    ctx.fillText(ch, -1, -2);
-    // Layer 7: Hot edge (very top)
-    ctx.fillStyle = `rgba(255,200,80,${0.4 * alpha})`;
-    ctx.fillText(ch, -1, -3);
-    ctx.restore();
-  }
-
-  // Line 1: "ΤΟ ΜΥΣΤΗΡΙΟ"
-  const l1Size = 36, l1Y = 80;
-  ctx.font = `bold ${l1Size}px "Press Start 2P", monospace`;
-  ctx.textAlign = 'left';
-  const l1W = ctx.measureText(titleLine1).width;
-  let l1X = (GW - l1W) / 2;
-  for (let i = 0; i < l1N; i++) {
-    const ch = titleLine1[i];
-    const chW = ctx.measureText(ch).width;
-    drawMetalLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
-    l1X += chW;
-  }
-
-  // Line 2: "του" — blue-toned, smaller
-  if (elapsed > l2Start) {
-    const p2 = Math.min(1, (elapsed - l2Start) / 25);
-    ctx.save();
-    ctx.globalAlpha = p2;
-    ctx.translate(GW/2, l1Y + 48);
-    ctx.scale(1.2 - p2*0.2, 1.2 - p2*0.2);
-    ctx.font = 'bold 14px "Press Start 2P", monospace';
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#0A0820'; ctx.fillText(titleLine2, 2, 2);
-    ctx.fillStyle = '#384880'; ctx.fillText(titleLine2, 1, 1);
-    ctx.fillStyle = '#6080C0'; ctx.fillText(titleLine2, 0, 0);
-    ctx.fillStyle = `rgba(140,170,220,${0.5*p2})`; ctx.fillText(titleLine2, 0, -1);
-    ctx.restore();
-  }
-
-  // Line 3: "ΓΑΛΑΞΕΙΔΙΟΥ"
-  const l3Size = 38, l3Y = l1Y + 100;
-  ctx.font = `bold ${l3Size}px "Press Start 2P", monospace`;
-  const l3W = ctx.measureText(titleLine3).width;
-  let l3X = (GW - l3W) / 2;
-  for (let i = 0; i < l3N; i++) {
-    const ch = titleLine3[i];
-    const chW = ctx.measureText(ch).width;
-    drawMetalLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
-    l3X += chW;
-  }
-  ctx.restore();
-
-  // Credits — light blue
-  if (elapsed > l3End) {
-    const ca = Math.min(1, (elapsed - l3End) / 40);
-    ctx.save(); ctx.globalAlpha = ca;
-    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.font = '8px "Press Start 2P", monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#384878';
-    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 10);
+    ctx.globalAlpha = Math.max(0, blink);
+    ctx.fillStyle = '#D4A03C';
+    ctx.shadowColor = 'rgba(212,160,60,0.5)'; ctx.shadowBlur = 10;
+    ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 35);
     ctx.restore();
-  }
-
-  // Blinking start prompt — light blue
-  if (elapsed > promptAt) {
-    const blink = Math.sin(tick*0.06) > 0;
-    if (blink) {
-      ctx.save();
-      ctx.font = '8px "Press Start 2P", monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#5070A0';
-      ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 30);
-      ctx.restore();
-    }
   }
 
   // Fade overlay
@@ -1834,7 +1975,6 @@ function drawTitleScreen(tick) {
     ctx.restore();
   }
 }
-
 
 
 
