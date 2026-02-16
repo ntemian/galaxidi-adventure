@@ -699,6 +699,87 @@ function hitTestExit(gx, gy) {
 }
 
 // ════════════════════════════════════════════════════════════
+// VOICE SYSTEM
+// ════════════════════════════════════════════════════════════
+const voiceAudio = new Audio();
+voiceAudio.volume = 0.8;
+
+const VOICE_MAP = {
+  // ── Ntemis (Eric) ──
+  'Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.': 'music/voices/ntemis/01-ftasame.mp3',
+  'Ας μπούμε μέσα.': 'music/voices/ntemis/02-as-mpoume.mp3',
+  'Καλωσορίσατε στο Γαλαξίδι.': 'music/voices/ntemis/03-kalosorisate.mp3',
+  'Δεν μπορώ να μιλήσω σε αυτό.': 'music/voices/ntemis/04-den-mporo.mp3',
+  'Δεν ανοίγει.': 'music/voices/ntemis/05-den-anoigei.mp3',
+  'Δεν ξέρω πώς.': 'music/voices/ntemis/06-den-xero.mp3',
+  'Φυσικά.': 'music/voices/ntemis/07-fysika.mp3',
+  'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.': 'music/voices/ntemis/08-den-einai-diki.mp3',
+  '«Σας περιμέναμε»... Ποιος μας περιμένει;': 'music/voices/ntemis/09-sas-perimenavame.mp3',
+  // ── Ajax (Charlie) ──
+  'Τέλειο! Πάμε κατευθείαν στο λιμάνι;': 'music/voices/ajax/01-teleio-pame.mp3',
+  'Μπαμπά, θα πάμε βόλτα με βάρκα;': 'music/voices/ajax/02-volta-varka.mp3',
+  'Άδειο. Κρίμα!': 'music/voices/ajax/03-adeio-krima.mp3',
+  'Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...': 'music/voices/ajax/04-delfinia.mp3',
+  'Μπαμπά, μπορώ να φάω ένα;': 'music/voices/ajax/05-fao-ena.mp3',
+  'Και κάτι πάνω στην καρέκλα... μια τσάντα;': 'music/voices/ajax/06-tsanta.mp3',
+  'Πάμε στο λιμάνι!': 'music/voices/ajax/07-pame-limani.mp3',
+  // ── Clio (Jessica) ──
+  'Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.': 'music/voices/clio/01-valitses.mp3',
+  'Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.': 'music/voices/clio/02-min-tis-koveis.mp3',
+  'Μπαμπά, κοίτα! Δελφίνια!': 'music/voices/clio/03-delfinia.mp3',
+  'Αυτό είναι το πιο όμορφο μέρος στον κόσμο.': 'music/voices/clio/04-pio-omorfo.mp3',
+  'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.': 'music/voices/clio/05-kati-mesa.mp3',
+  'Κοιτάξτε — κάποιος μας άφησε σύκα!': 'music/voices/clio/06-syka.mp3',
+  'Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.': 'music/voices/clio/07-gamma-xerei.mp3',
+  'Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.': 'music/voices/clio/08-amfiktiones.mp3',
+  'Μπαμπά, μην ακουμπάς, φαίνεται παλιό!': 'music/voices/clio/09-min-akoumpas.mp3',
+  // ── Narrator (George) ──
+  'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.': 'music/voices/narrator/01-porta-mple.mp3',
+  'Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.': 'music/voices/narrator/02-boukamvilies.mp3',
+  'Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.': 'music/voices/narrator/03-vasiliko.mp3',
+  'Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.': 'music/voices/narrator/04-vareli.mp3',
+  'Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.': 'music/voices/narrator/05-korinthiakos.mp3',
+  'Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.': 'music/voices/narrator/05-korinthiakos.mp3',
+  'Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.': 'music/voices/narrator/06-ilios-kalderimia.mp3',
+  'Τρία δελφίνια κόβουν βόλτες στο λιμάνι.': 'music/voices/narrator/07-delfinia.mp3',
+  'Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.': 'music/voices/narrator/08-delfinia-kyklous.mp3',
+  'Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.': 'music/voices/narrator/09-keramidia.mp3',
+  'Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.': 'music/voices/narrator/10-parnassos.mp3',
+  'Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.': 'music/voices/narrator/11-kagelo.mp3',
+  'Η θέα κόβει την ανάσα.': 'music/voices/narrator/12-thea-kovei.mp3',
+  'Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.': 'music/voices/narrator/13-syka.mp3',
+  'Τρως ένα σύκο. Γλυκό σαν μέλι.': 'music/voices/narrator/14-syko-meli.mp3',
+  'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.': 'music/voices/narrator/15-tsanta.mp3',
+  'Η τσάντα είναι άδεια τώρα.': 'music/voices/narrator/16-tsanta-adeia.mp3',
+  'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.': 'music/voices/narrator/17-patzouria.mp3',
+  'Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.': 'music/voices/narrator/18-anoigeis-patzouria.mp3',
+  'Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.': 'music/voices/narrator/19-halkina.mp3',
+  'Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.': 'music/voices/narrator/20-tzaki.mp3',
+  'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.': 'music/voices/narrator/21-kouzina.mp3',
+  'Τίποτα ιδιαίτερο.': 'music/voices/narrator/22-tipota.mp3',
+  '«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»': 'music/voices/narrator/23-sas-perimenavame.mp3',
+  'Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.': 'music/voices/narrator/24-harti-thalassa.mp3',
+  'Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.': 'music/voices/narrator/25-ilios-vythizetai.mp3',
+  'Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.': 'music/voices/narrator/26-gerania.mp3',
+  'Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.': 'music/voices/narrator/27-korinthiakos-hrysafi.mp3',
+};
+
+function playVoice(text) {
+  voiceAudio.pause();
+  voiceAudio.currentTime = 0;
+  const src = VOICE_MAP[text];
+  if (src) {
+    voiceAudio.src = src;
+    voiceAudio.play().catch(() => {});
+  }
+}
+
+function stopVoice() {
+  voiceAudio.pause();
+  voiceAudio.currentTime = 0;
+}
+
+// ════════════════════════════════════════════════════════════
 // DIALOGUE SYSTEM
 // ════════════════════════════════════════════════════════════
 function showDlg(lines, cb) {
@@ -718,6 +799,7 @@ function nextDlgLine() {
   state.dlg.displayed = '';
   state.dlg.charIdx = 0;
   state.dlg.timer = 0;
+  playVoice(l.t);
 }
 
 function updateDlg(dt) {
@@ -746,6 +828,7 @@ function advanceDlg() {
 function closeDlg() {
   state.dlg.active = false;
   state.dlg.queue = [];
+  stopVoice();
   if (state.dlg.cb) { const cb = state.dlg.cb; state.dlg.cb = null; cb(); }
   checkEnd();
 }
@@ -1343,471 +1426,314 @@ function toggleMusic() {
 }
 
 // ════════════════════════════════════════════════════════════
-// TITLE SCREEN — Indiana Jones / LucasArts style
+// TITLE SCREEN — Cinematic sunset harbor with animated title
 // ════════════════════════════════════════════════════════════
 const titleMusic = document.getElementById('title-music');
-titleMusic.volume = 0.35;
+titleMusic.volume = 0.4;
 let titleFadeOut = 0;
+let titleStartTick = -1;
+
+// Title text animation config
+const titleLine1 = 'ΤΟ ΜΥΣΤΗΡΙΟ';
+const titleLine2 = 'του';
+const titleLine3 = 'ΓΑΛΑΞΕΙΔΙΟΥ';
+const LETTER_DELAY = 4;
+const LINE2_DELAY = 55;
+const LINE3_DELAY = 25;
+const PROMPT_DELAY = 70;
 
 function drawTitleScreen(tick) {
+  if (titleStartTick < 0) titleStartTick = tick;
+  const elapsed = tick - titleStartTick;
   const t = tick * 0.02;
 
-  // ── SKY — clear blue gradient like Indy's desert sky ──
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, 85);
-  skyGrad.addColorStop(0, '#2848A0');
-  skyGrad.addColorStop(0.3, '#3868B8');
-  skyGrad.addColorStop(0.6, '#5088CC');
-  skyGrad.addColorStop(0.85, '#70A0D8');
-  skyGrad.addColorStop(1, '#88B4E0');
+  // ═══════════════════════════════════════
+  // SKY — dramatic sunset purple → orange → gold
+  // ═══════════════════════════════════════
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 200);
+  skyGrad.addColorStop(0, '#1A0A2E');
+  skyGrad.addColorStop(0.12, '#2E1040');
+  skyGrad.addColorStop(0.25, '#5A1838');
+  skyGrad.addColorStop(0.38, '#8A2828');
+  skyGrad.addColorStop(0.5, '#C04820');
+  skyGrad.addColorStop(0.62, '#D87018');
+  skyGrad.addColorStop(0.72, '#E89818');
+  skyGrad.addColorStop(0.82, '#F0B020');
+  skyGrad.addColorStop(0.92, '#E8A828');
+  skyGrad.addColorStop(1, '#C88020');
   ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, GW, 85);
+  ctx.fillRect(0, 0, GW, 200);
 
-  // Distant mountains / headland silhouette (like Indy's horizon)
+  // ── Chunky pixel clouds (sunset) ──
   ctx.save();
-  ctx.fillStyle = '#4A6888';
-  ctx.beginPath();
-  ctx.moveTo(0, 85);
-  ctx.lineTo(0, 72);
-  ctx.quadraticCurveTo(80, 55, 160, 68);
-  ctx.quadraticCurveTo(220, 75, 280, 62);
-  ctx.quadraticCurveTo(350, 50, 420, 65);
-  ctx.quadraticCurveTo(500, 72, 560, 58);
-  ctx.quadraticCurveTo(610, 68, GW, 70);
-  ctx.lineTo(GW, 85);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-
-  // ═══════════════════════════════════════════════════
-  // SHIP HULL — fills most of the screen (the "boxcar")
-  // Exact same role as the train car in Indy
-  // ═══════════════════════════════════════════════════
-  const hullTop = 75;
-  const hullBot = 350;
-  const hullL = -8;
-  const hullR = GW + 8;
-  const hullH = hullBot - hullTop;
-
-  function hullPath() {
-    ctx.beginPath();
-    // Flat top deck line — edge to edge
-    ctx.moveTo(hullL, hullTop + 8);
-    ctx.lineTo(hullR, hullTop + 8);
-    // Right side (stern) — slight inward curve at bottom
-    ctx.lineTo(hullR + 4, hullBot - 20);
-    ctx.quadraticCurveTo(hullR - 50, hullBot + 12, GW * 0.55, hullBot + 6);
-    // Bottom keel curve
-    ctx.quadraticCurveTo(GW * 0.25, hullBot + 2, hullL - 4, hullBot - 35);
-    // Left side (bow)
-    ctx.closePath();
-  }
-
-  // ── Hull fill ──
-  ctx.save();
-  hullPath();
-  const woodGrad = ctx.createLinearGradient(0, hullTop, 0, hullBot);
-  woodGrad.addColorStop(0, '#8B5A30');
-  woodGrad.addColorStop(0.05, '#7A4C28');
-  woodGrad.addColorStop(0.15, '#8B5530');
-  woodGrad.addColorStop(0.35, '#7A4422');
-  woodGrad.addColorStop(0.5, '#6E3C1E');
-  woodGrad.addColorStop(0.65, '#7A4422');
-  woodGrad.addColorStop(0.8, '#5E3018');
-  woodGrad.addColorStop(0.92, '#4A2410');
-  woodGrad.addColorStop(1, '#3A1A0C');
-  ctx.fillStyle = woodGrad;
-  ctx.fill();
-  ctx.clip();
-
-  // ── Wood planks — horizontal lines with varying darkness ──
-  for (let y = hullTop + 6; y < hullBot; y += 12) {
-    // Dark groove line
-    const groove = 0.3 + Math.sin(y * 0.2) * 0.12;
-    ctx.strokeStyle = `rgba(25,12,4,${groove})`;
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(hullL - 10, y);
-    ctx.lineTo(hullR + 10, y);
-    ctx.stroke();
-    // Light edge below (wood catch light)
-    ctx.strokeStyle = `rgba(180,130,75,${0.06 + Math.sin(y * 0.15) * 0.03})`;
-    ctx.beginPath();
-    ctx.moveTo(hullL - 10, y + 1);
-    ctx.lineTo(hullR + 10, y + 1);
-    ctx.stroke();
-  }
-
-  // Vertical plank seams — staggered like real planking
-  ctx.strokeStyle = 'rgba(25,12,4,0.18)';
-  for (let row = 0; row < Math.ceil(hullH / 12); row++) {
-    const y = hullTop + 6 + row * 12;
-    const offset = (row % 3) * 70 + 30;
-    for (let x = hullL + offset; x < hullR; x += 200) {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(x, y + 12);
-      ctx.stroke();
+  const cloudRows = [
+    // [y, colors[]] — each row is a band of cloud chunks
+    [5, ['#1A0A2E','#2E1040','#1A0A2E','#2E1040','#1A0A2E']],
+    [18, ['#3A1030','#4A1838','#5A1838','#4A1838','#3A1030','#5A1838','#4A1838']],
+    [32, ['#8A3020','#A04820','#C05020','#A04020','#C06020','#B05020','#A04020']],
+    [45, ['#C06828','#D07828','#C06020','#D07020','#B05828','#C06828']],
+    [56, ['#D88020','#E89020','#D88820','#E8A020','#D89020','#E88820']],
+    [68, ['#E8A020','#F0B828','#E8A828','#F0B020','#E8A828','#F0B028']],
+    [80, ['#F0C030','#E8B828','#F0C030','#E8B020','#F0C030','#E8B828']],
+  ];
+  for (const [cy, colors] of cloudRows) {
+    const segW = GW / colors.length;
+    for (let i = 0; i < colors.length; i++) {
+      ctx.fillStyle = colors[i];
+      for (let bx = i * segW; bx < (i + 1) * segW; bx += 4) {
+        const vary = Math.sin(bx * 0.08 + cy * 0.1) * 5;
+        const h = 10 + Math.sin(bx * 0.12 + cy) * 4;
+        ctx.fillRect(Math.floor(bx), Math.floor(cy + vary), 4, Math.max(2, Math.floor(h)));
+      }
     }
   }
-
-  // ── KNOT HOLES — random wood details ──
-  const knots = [[85, 140], [310, 200], [480, 165], [180, 280], [540, 310], [390, 120]];
-  for (const [kx, ky] of knots) {
-    ctx.beginPath();
-    ctx.ellipse(kx, ky, 4, 3, 0.3, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(50,25,10,0.25)';
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(kx, ky, 2, 1.5, 0.3, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(30,15,5,0.2)';
-    ctx.fill();
-  }
-
-  // ═══════════════════════════════════════
-  // IRON BANDS with rivets (like train rails)
-  // ═══════════════════════════════════════
-
-  // Top gunwale band (thick)
-  ctx.fillStyle = '#2E1408';
-  ctx.fillRect(hullL, hullTop + 8, hullR - hullL, 14);
-  // Highlight on top edge
-  ctx.fillStyle = 'rgba(140,90,45,0.2)';
-  ctx.fillRect(hullL, hullTop + 8, hullR - hullL, 2);
-  // Dark bottom edge
-  ctx.fillStyle = 'rgba(10,4,0,0.3)';
-  ctx.fillRect(hullL, hullTop + 20, hullR - hullL, 2);
-  // Rivets
-  for (let x = 20; x < GW; x += 38) {
-    ctx.beginPath();
-    ctx.arc(x, hullTop + 15, 4, 0, Math.PI * 2);
-    ctx.fillStyle = '#3A1E0C';
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x - 1, hullTop + 14, 2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(160,110,55,0.25)';
-    ctx.fill();
-  }
-
-  // Upper wale band
-  const wale1Y = hullTop + 38;
-  ctx.fillStyle = '#281008';
-  ctx.fillRect(hullL, wale1Y, hullR - hullL, 6);
-  ctx.fillStyle = 'rgba(130,85,40,0.12)';
-  ctx.fillRect(hullL, wale1Y, hullR - hullL, 1);
-
-  // Lower wale band
-  const wale2Y = hullBot - 68;
-  ctx.fillStyle = '#281008';
-  ctx.fillRect(hullL, wale2Y, hullR - hullL, 8);
-  ctx.fillStyle = 'rgba(130,85,40,0.1)';
-  ctx.fillRect(hullL, wale2Y, hullR - hullL, 1);
-  // Rivets on lower band
-  for (let x = 35; x < GW; x += 42) {
-    ctx.beginPath();
-    ctx.arc(x, wale2Y + 4, 3.5, 0, Math.PI * 2);
-    ctx.fillStyle = '#3A1E0C';
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x - 0.5, wale2Y + 3, 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(150,100,50,0.2)';
-    ctx.fill();
-  }
-
-  // Copper sheathing at bottom (greenish tint — authentic detail)
-  const copperY = hullBot - 30;
-  const copperGrad = ctx.createLinearGradient(0, copperY, 0, hullBot + 10);
-  copperGrad.addColorStop(0, 'rgba(60,75,55,0.3)');
-  copperGrad.addColorStop(1, 'rgba(45,60,45,0.5)');
-  ctx.fillStyle = copperGrad;
-  ctx.fillRect(hullL, copperY, hullR - hullL, hullBot - copperY + 15);
-
-  // ── PORTHOLES (7 across) ──
-  for (let i = 0; i < 7; i++) {
-    const px = 60 + i * 80;
-    const py = hullBot - 90;
-    // Cast shadow
-    ctx.beginPath();
-    ctx.arc(px + 2, py + 2, 11, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(10,4,0,0.3)';
-    ctx.fill();
-    // Brass ring
-    ctx.beginPath();
-    ctx.arc(px, py, 11, 0, Math.PI * 2);
-    ctx.fillStyle = '#4A2A10';
-    ctx.fill();
-    // Inner recess
-    ctx.beginPath();
-    ctx.arc(px, py, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#1a0e05';
-    ctx.fill();
-    // Glass
-    ctx.beginPath();
-    ctx.arc(px, py, 6, 0, Math.PI * 2);
-    const glassG = ctx.createRadialGradient(px - 2, py - 2, 0, px, py, 6);
-    glassG.addColorStop(0, 'rgba(80,120,170,0.25)');
-    glassG.addColorStop(1, 'rgba(15,25,45,0.4)');
-    ctx.fillStyle = glassG;
-    ctx.fill();
-    // Specular
-    ctx.beginPath();
-    ctx.arc(px - 2, py - 2, 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(200,220,255,0.2)';
-    ctx.fill();
-  }
-
-  // ── Warm sunlight patch on hull ──
-  const sunGrad = ctx.createRadialGradient(GW * 0.35, hullTop + 100, 30, GW * 0.35, hullTop + 100, 300);
-  sunGrad.addColorStop(0, 'rgba(240,180,70,0.06)');
-  sunGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = sunGrad;
-  ctx.fillRect(hullL, hullTop, hullR - hullL, hullH);
-
-  ctx.restore(); // un-clip
-
-  // ── Hull outline ──
-  ctx.save();
-  hullPath();
-  ctx.strokeStyle = '#140804';
-  ctx.lineWidth = 4;
-  ctx.stroke();
+  // Sun glow
+  const sunGlowGrad = ctx.createRadialGradient(GW * 0.4, 95, 5, GW * 0.4, 95, 160);
+  sunGlowGrad.addColorStop(0, 'rgba(255,210,70,0.4)');
+  sunGlowGrad.addColorStop(0.3, 'rgba(240,160,40,0.2)');
+  sunGlowGrad.addColorStop(1, 'rgba(200,80,20,0)');
+  ctx.fillStyle = sunGlowGrad;
+  ctx.fillRect(0, 20, GW, 160);
   ctx.restore();
 
-  // ── DECK RAILING ──
+  // ── Mountain silhouette ──
   ctx.save();
-  // Main rail
-  ctx.strokeStyle = '#5E3418';
-  ctx.lineWidth = 3;
+  ctx.fillStyle = '#2A1820';
   ctx.beginPath();
-  ctx.moveTo(0, hullTop + 6);
-  ctx.lineTo(GW, hullTop + 6);
-  ctx.stroke();
-  // Stanchions
-  ctx.lineWidth = 2;
-  for (let x = 18; x < GW; x += 28) {
-    ctx.beginPath();
-    ctx.moveTo(x, hullTop + 6);
-    ctx.lineTo(x, hullTop - 10);
-    ctx.stroke();
-    ctx.fillStyle = '#6A3820';
-    ctx.fillRect(x - 2, hullTop - 12, 4, 3);
-  }
-  // Top rail
-  ctx.strokeStyle = '#5E3418';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(0, hullTop - 10);
-  ctx.lineTo(GW, hullTop - 10);
-  ctx.stroke();
+  ctx.moveTo(0, 200); ctx.lineTo(0, 145);
+  ctx.quadraticCurveTo(60, 120, 130, 138);
+  ctx.quadraticCurveTo(200, 148, 260, 128);
+  ctx.quadraticCurveTo(320, 112, 380, 130);
+  ctx.quadraticCurveTo(440, 140, 490, 122);
+  ctx.quadraticCurveTo(560, 110, 610, 132);
+  ctx.lineTo(GW, 140); ctx.lineTo(GW, 200);
+  ctx.closePath(); ctx.fill();
   ctx.restore();
 
-  // ── MASTS with detailed rigging ──
+  // ═══════════════════════════════════════
+  // TOWN SILHOUETTE — buildings, domes, rooftops
+  // ═══════════════════════════════════════
+  const townY = 185;
   ctx.save();
-  const m1 = GW * 0.28, m2 = GW * 0.72;
-  // Mast poles
-  ctx.fillStyle = '#4E2A14';
-  ctx.fillRect(m1 - 4, hullTop - 60, 8, 68);
-  ctx.fillRect(m2 - 4, hullTop - 68, 8, 76);
-  // Yards (cross beams)
-  ctx.fillStyle = '#3E1E0E';
-  ctx.fillRect(m1 - 42, hullTop - 48, 84, 5);
-  ctx.fillRect(m1 - 30, hullTop - 35, 60, 4);
-  ctx.fillRect(m2 - 48, hullTop - 55, 96, 5);
-  ctx.fillRect(m2 - 36, hullTop - 40, 72, 4);
-  // Furled sails (rolled tubes on yards)
-  ctx.fillStyle = 'rgba(200,185,155,0.35)';
-  ctx.fillRect(m1 - 38, hullTop - 50, 76, 4);
-  ctx.fillRect(m2 - 44, hullTop - 57, 88, 4);
-  // Rigging lines
-  ctx.strokeStyle = 'rgba(80,55,25,0.35)';
+  const blds = [
+    [15,155,35,'r'],[48,148,28,'r'],[74,152,32,'t'],[104,145,38,'d'],
+    [140,150,30,'r'],[168,142,35,'c'],[200,148,28,'r'],[226,144,34,'r'],
+    [258,140,30,'d'],[286,148,32,'r'],[316,143,36,'t'],[350,150,28,'r'],
+    [376,146,32,'d'],[406,152,26,'r'],[430,148,34,'r'],[462,144,30,'c'],
+    [490,150,28,'r'],
+  ];
+  for (const [bx, by, bw, bt] of blds) {
+    ctx.fillStyle = '#1A0C10';
+    ctx.fillRect(bx, by, bw, townY - by);
+    if (bt === 'd') { ctx.beginPath(); ctx.arc(bx+bw/2, by, bw/2.5, Math.PI, 0); ctx.fill(); }
+    if (bt === 'c') { ctx.fillRect(bx+bw/2-3, by-18, 6, 18); ctx.fillRect(bx+bw/2-1, by-24, 2, 8); ctx.fillRect(bx+bw/2-4, by-22, 8, 2); }
+    if (bt === 't') { ctx.fillRect(bx+4, by-10, bw-8, 10); }
+    // Lit windows
+    const wr = Math.floor((townY - by - 8) / 12);
+    for (let r = 0; r < wr; r++) {
+      const wy = by + 6 + r * 12;
+      const wc = Math.floor((bw - 8) / 10);
+      for (let c = 0; c < wc; c++) {
+        if (Math.sin(bx*3.7 + r*7.1 + c*13.3) > 0.2) {
+          ctx.fillStyle = Math.sin(bx+r+c) > 0 ? '#D89030' : '#E8A838';
+          ctx.fillRect(bx + 5 + c*10, wy, 4, 4);
+        }
+      }
+    }
+  }
+  ctx.restore();
+
+  // ═══════════════════════════════════════
+  // SHIP SILHOUETTE — right side
+  // ═══════════════════════════════════════
+  ctx.save();
+  ctx.fillStyle = '#100608';
+  const sx = 520;
+  // Hull
+  ctx.beginPath();
+  ctx.moveTo(sx-40,townY); ctx.lineTo(sx-55,townY-10); ctx.lineTo(sx-50,townY-30);
+  ctx.lineTo(sx-30,townY-35); ctx.lineTo(sx+60,townY-35);
+  ctx.lineTo(sx+70,townY-28); ctx.lineTo(sx+75,townY-15);
+  ctx.lineTo(sx+65,townY); ctx.closePath(); ctx.fill();
+  // Masts
+  ctx.fillRect(sx+10, townY-120, 4, 90);
+  ctx.fillRect(sx-25, townY-110, 70, 3); ctx.fillRect(sx-18, townY-95, 56, 3); ctx.fillRect(sx-12, townY-78, 44, 3);
+  ctx.fillRect(sx-25, townY-100, 3, 68);
+  ctx.fillRect(sx-45, townY-92, 50, 3); ctx.fillRect(sx-38, townY-78, 36, 3);
+  ctx.fillRect(sx+50, townY-90, 3, 58);
+  ctx.fillRect(sx+35, townY-82, 35, 3);
+  // Rigging
+  ctx.strokeStyle = '#100608'; ctx.lineWidth = 1;
+  [[sx+12,townY-118, sx-40,townY-35],[sx+12,townY-118, sx+68,townY-35],
+   [sx-24,townY-98, sx-50,townY-35],[sx-24,townY-98, sx+5,townY-35],
+   [sx+51,townY-88, sx+30,townY-35],[sx+51,townY-88, sx+72,townY-30],
+   [sx+12,townY-118, sx-24,townY-98],[sx+12,townY-118, sx+51,townY-88],
+  ].forEach(([x1,y1,x2,y2]) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+  // Bowsprit
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(sx-50,townY-32); ctx.lineTo(sx-80,townY-50); ctx.stroke();
   ctx.lineWidth = 1;
-  [[m1,hullTop-58, 10,hullTop+6], [m1,hullTop-58, m1+110,hullTop+6],
-   [m2,hullTop-66, m2-120,hullTop+6], [m2,hullTop-66, GW-8,hullTop+6],
-   [m1,hullTop-58, m2,hullTop-66],
-   [m1-40,hullTop-48, m1-40,hullTop+6], [m1+40,hullTop-48, m1+40,hullTop+6],
-   [m2-46,hullTop-55, m2-46,hullTop+6], [m2+46,hullTop-55, m2+46,hullTop+6],
-  ].forEach(([x1,y1,x2,y2]) => {
-    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-  });
-  // Crow's nests
-  ctx.fillStyle = '#3A1E0E';
-  ctx.fillRect(m1 - 10, hullTop - 62, 20, 4);
-  ctx.fillRect(m2 - 11, hullTop - 70, 22, 4);
-  // Greek flag on mainmast
-  const fX = m2 + 5, fY = hullTop - 68;
-  // Flag waves gently
-  const flagWave = Math.sin(t * 2) * 2;
-  ctx.fillStyle = '#1848A0';
-  ctx.fillRect(fX, fY - 11, 20, 12);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(fX, fY - 9, 20, 2);
-  ctx.fillRect(fX, fY - 4, 20, 2);
-  ctx.fillRect(fX, fY - 11, 7, 7);
-  ctx.fillRect(fX + 2, fY - 11, 3, 7);
-  ctx.fillRect(fX, fY - 9, 7, 2);
+  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx+12,townY-118); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx-24,townY-98); ctx.stroke();
   ctx.restore();
 
-  // ── ANCHOR on bow side ──
-  ctx.save();
-  ctx.strokeStyle = '#3A2010';
-  ctx.lineWidth = 2;
-  const ax = 42, ay = hullBot - 55;
-  // Shank
-  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax, ay + 22); ctx.stroke();
-  // Crown
-  ctx.beginPath();
-  ctx.moveTo(ax - 10, ay + 18);
-  ctx.quadraticCurveTo(ax, ay + 28, ax + 10, ay + 18);
-  ctx.stroke();
-  // Ring
-  ctx.beginPath(); ctx.arc(ax, ay - 3, 4, 0, Math.PI * 2); ctx.stroke();
-  // Flukes
-  ctx.beginPath(); ctx.moveTo(ax - 10, ay + 18); ctx.lineTo(ax - 13, ay + 14); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(ax + 10, ay + 18); ctx.lineTo(ax + 13, ay + 14); ctx.stroke();
-  ctx.restore();
+  // ═══════════════════════════════════════
+  // WATER — sunset reflections
+  // ═══════════════════════════════════════
+  const waterGrad = ctx.createLinearGradient(0, townY, 0, GH);
+  waterGrad.addColorStop(0, '#C07818');
+  waterGrad.addColorStop(0.1, '#A06018');
+  waterGrad.addColorStop(0.25, '#704010');
+  waterGrad.addColorStop(0.45, '#402008');
+  waterGrad.addColorStop(0.7, '#281008');
+  waterGrad.addColorStop(1, '#180808');
+  ctx.fillStyle = waterGrad;
+  ctx.fillRect(0, townY, GW, GH - townY);
 
-  // ── ROPE LADDER (right side — like Indy's boxcar ladder!) ──
+  // Reflection shimmer
   ctx.save();
-  ctx.strokeStyle = '#5A3418';
-  ctx.lineWidth = 2;
-  const ladX = GW - 35;
-  // Verticals
-  ctx.beginPath(); ctx.moveTo(ladX, hullTop - 8); ctx.lineTo(ladX, hullBot - 50); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(ladX + 14, hullTop - 8); ctx.lineTo(ladX + 14, hullBot - 50); ctx.stroke();
-  // Rungs
-  ctx.lineWidth = 2;
-  for (let ry = hullTop + 10; ry < hullBot - 55; ry += 18) {
-    ctx.beginPath(); ctx.moveTo(ladX, ry); ctx.lineTo(ladX + 14, ry); ctx.stroke();
+  for (let ry = townY + 2; ry < GH - 5; ry += 3) {
+    const d = (ry - townY) / (GH - 5 - townY);
+    ctx.fillStyle = `rgba(230,160,40,${0.15*(1-d*0.7)})`;
+    for (let rx = 0; rx < GW; rx += 6) {
+      const sh = Math.sin(rx*0.04 + ry*0.08 + t*1.5)*0.5 + 0.5;
+      if (sh > 0.4) ctx.fillRect(rx, ry, 2+Math.floor(sh*4), 1);
+    }
+    ctx.fillStyle = `rgba(10,5,2,${0.06+d*0.1})`;
+    for (let rx = 0; rx < GW; rx += 8) {
+      if (Math.sin(rx*0.06 + ry*0.12 - t*0.8) > 0.3) ctx.fillRect(rx, ry+1, 4, 1);
+    }
+  }
+  // Bright sun reflection path
+  const sunX = GW * 0.4;
+  for (let ry = townY; ry < GH - 5; ry += 2) {
+    const d = (ry - townY) / (GH - 5 - townY);
+    const spread = 20 + d*80;
+    ctx.fillStyle = `rgba(255,200,60,${0.25*(1-d*0.5)})`;
+    const wobble = Math.sin(ry*0.15 + t*2) * spread*0.3;
+    const w = 3 + Math.floor(Math.sin(ry*0.2 + t*1.8)*3 + 3);
+    ctx.fillRect(sunX + wobble - w/2, ry, w, 1);
+    if (Math.sin(ry*0.3 + t*1.2) > 0.2) {
+      ctx.fillRect(sunX + wobble + spread*0.3, ry, 2, 1);
+      ctx.fillRect(sunX + wobble - spread*0.3, ry, 2, 1);
+    }
+  }
+  // Town reflections
+  ctx.fillStyle = 'rgba(10,5,5,0.15)';
+  for (const [bx,,bw] of blds) {
+    for (let r = 0; r < 20; r += 2) {
+      ctx.fillRect(bx + Math.sin(r*0.2+t)*2, townY+r, bw, 1);
+    }
   }
   ctx.restore();
 
-  // ══════════════════════════════════════════════════
-  // TITLE TEXT — "Το Μυστήριο του Γαλαξειδίου"
-  // Layout: big / small / HUGE (like Indy Jones style)
-  // ══════════════════════════════════════════════════
-  ctx.save();
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const glow = 0.3 + Math.sin(t * 1.2) * 0.15;
+  // ═══════════════════════════════════════
+  // ANIMATED TITLE — letters unfold cinematically
+  // ═══════════════════════════════════════
+  const l1N = titleLine1.length;
+  const l1End = l1N * LETTER_DELAY;
+  const l2Start = l1End + LINE2_DELAY;
+  const l2End = l2Start + 15;
+  const l3Start = l2End + LINE3_DELAY;
+  const l3N = titleLine3.length;
+  const l3End = l3Start + l3N * LETTER_DELAY;
+  const promptAt = l3End + PROMPT_DELAY;
 
-  // Multi-layer embossed text renderer
-  function paintText(text, cx, cy, size) {
+  ctx.save();
+  ctx.textBaseline = 'middle';
+
+  // Single letter renderer with scale-in animation
+  function drawLetter(ch, cx, cy, size, progress) {
+    if (progress <= 0) return;
+    const p = Math.min(1, progress);
+    const scale = p < 0.5 ? 1.5 - p : 1.0 + Math.sin((p-0.5)*Math.PI)*0.05;
+    const alpha = Math.min(1, p * 2);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    ctx.globalAlpha = alpha;
     ctx.font = `bold ${size}px "Press Start 2P", monospace`;
-    // 6-layer depth shadow
-    const shadows = [
-      ['#060200', 6, 6],
-      ['#0E0604', 5, 5],
-      ['#1A0A04', 4, 4],
-      ['#2E1508', 3, 3],
-      ['#4A2010', 2, 2],
-      ['#8B6020', 1, 1],
-    ];
-    for (const [col, dx, dy] of shadows) {
-      ctx.fillStyle = col;
-      ctx.fillText(text, cx + dx, cy + dy);
-    }
-    // Gold main fill with warm glow
-    ctx.shadowColor = `rgba(255,180,40,${glow})`;
-    ctx.shadowBlur = 25;
+    ctx.textAlign = 'center';
+    // Shadow layers
+    const shd = [['#060200',5],['#1A0804',4],['#2E1508',3],['#4A2010',2],['#7A5018',1]];
+    for (const [c,d] of shd) { ctx.fillStyle = c; ctx.fillText(ch, d, d); }
+    // Gold with glow
+    const g = 0.3 + Math.sin(t*1.2 + cx*0.01)*0.15;
+    ctx.shadowColor = `rgba(255,180,40,${g*alpha})`;
+    ctx.shadowBlur = 20;
     ctx.fillStyle = '#D4A03C';
-    ctx.fillText(text, cx, cy);
-    // Specular highlight (top-left edge catch)
+    ctx.fillText(ch, 0, 0);
     ctx.shadowBlur = 0;
-    ctx.fillStyle = 'rgba(255,235,170,0.35)';
-    ctx.fillText(text, cx, cy - 1);
-    ctx.fillStyle = 'rgba(255,245,200,0.15)';
-    ctx.fillText(text, cx - 1, cy - 2);
+    ctx.fillStyle = `rgba(255,235,170,${0.35*alpha})`;
+    ctx.fillText(ch, 0, -1);
+    ctx.restore();
   }
 
-  // ── "ΤΟ ΜΥΣΤΗΡΙΟ" — large first line ──
-  const y1 = hullTop + 80;
-  paintText('ΤΟ ΜΥΣΤΗΡΙΟ', GW / 2, y1, 36);
-
-  // ── "του" — small connector (like "and the") ──
-  const y2 = y1 + 48;
-  ctx.shadowBlur = 0;
-  ctx.font = 'bold 14px "Press Start 2P", monospace';
-  ctx.fillStyle = '#1A0A04';
-  ctx.fillText('του', GW / 2 + 2, y2 + 2);
-  ctx.fillStyle = '#9A7028';
-  ctx.fillText('του', GW / 2, y2);
-
-  // ── "ΓΑΛΑΞΕΙΔΙΟΥ" — MASSIVE bottom line ──
-  const y3 = y2 + 55;
-  paintText('ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, y3, 40);
-
-  ctx.restore();
-
-  // ── SEA with animated waves ──
-  const seaTop = 342;
-  const seaGrad = ctx.createLinearGradient(0, seaTop, 0, GH);
-  seaGrad.addColorStop(0, '#1B3A5C');
-  seaGrad.addColorStop(0.3, '#153050');
-  seaGrad.addColorStop(1, '#0A1A30');
-  ctx.fillStyle = seaGrad;
-  ctx.fillRect(0, seaTop - 3, GW, GH - seaTop + 3);
-
-  // Wave layers
-  ctx.save();
-  for (let l = 0; l < 4; l++) {
-    const wy = seaTop + 2 + l * 10;
-    const sp = 0.5 + l * 0.2;
-    const am = 2.5 + l * 1.2;
-    ctx.beginPath();
-    for (let x = 0; x <= GW; x += 3) {
-      const y = wy + Math.sin(x*0.013 + t*sp) * am + Math.sin(x*0.007 - t*sp*0.7) * am*0.5;
-      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.lineTo(GW, GH); ctx.lineTo(0, GH); ctx.closePath();
-    ctx.fillStyle = `rgba(18,50,85,${0.3 - l*0.06})`;
-    ctx.fill();
+  // Line 1: "ΤΟ ΜΥΣΤΗΡΙΟ"
+  const l1Size = 36, l1Y = 100;
+  ctx.font = `bold ${l1Size}px "Press Start 2P", monospace`;
+  ctx.textAlign = 'left';
+  const l1W = ctx.measureText(titleLine1).width;
+  let l1X = (GW - l1W) / 2;
+  for (let i = 0; i < l1N; i++) {
+    const ch = titleLine1[i];
+    const chW = ctx.measureText(ch).width;
+    drawLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
+    l1X += chW;
   }
-  // Foam
-  ctx.strokeStyle = 'rgba(160,200,230,0.1)';
-  ctx.lineWidth = 1;
-  for (let l = 0; l < 2; l++) {
-    ctx.beginPath();
-    for (let x = 0; x <= GW; x += 3) {
-      const y = seaTop + 2 + l*10 + Math.sin(x*0.013 + t*(0.5+l*0.2)) * (2.5+l*1.2);
-      if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-    }
-    ctx.stroke();
+
+  // Line 2: "του"
+  if (elapsed > l2Start) {
+    const p2 = Math.min(1, (elapsed - l2Start) / 25);
+    ctx.save();
+    ctx.globalAlpha = p2;
+    ctx.translate(GW/2, l1Y + 50);
+    ctx.scale(1.3 - p2*0.3, 1.3 - p2*0.3);
+    ctx.font = 'bold 14px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#1A0804'; ctx.fillText(titleLine2, 2, 2);
+    ctx.fillStyle = '#B8842C'; ctx.fillText(titleLine2, 0, 0);
+    ctx.restore();
+  }
+
+  // Line 3: "ΓΑΛΑΞΕΙΔΙΟΥ"
+  const l3Size = 38, l3Y = l1Y + 102;
+  ctx.font = `bold ${l3Size}px "Press Start 2P", monospace`;
+  const l3W = ctx.measureText(titleLine3).width;
+  let l3X = (GW - l3W) / 2;
+  for (let i = 0; i < l3N; i++) {
+    const ch = titleLine3[i];
+    const chW = ctx.measureText(ch).width;
+    drawLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
+    l3X += chW;
   }
   ctx.restore();
 
-  // ── Bottom ground strip (like Indy's brown earth) ──
-  const groundGrad = ctx.createLinearGradient(0, GH - 30, 0, GH);
-  groundGrad.addColorStop(0, '#3A2A18');
-  groundGrad.addColorStop(0.1, '#2E1E10');
-  groundGrad.addColorStop(1, '#1A100A');
-  ctx.fillStyle = groundGrad;
-  ctx.fillRect(0, GH - 30, GW, 30);
-  // Ground top edge
-  ctx.fillStyle = '#4A3420';
-  ctx.fillRect(0, GH - 30, GW, 2);
+  // Credits
+  if (elapsed > l3End) {
+    const ca = Math.min(1, (elapsed - l3End) / 40);
+    ctx.save(); ctx.globalAlpha = ca;
+    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#8A6828';
+    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 12);
+    ctx.restore();
+  }
 
-  // ── Credits (like "TM & © 1990 LucasArts") ──
-  ctx.save();
-  ctx.font = '7px "Press Start 2P", monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#584830';
-  ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW / 2, GH - 10);
-  ctx.restore();
+  // Blinking start prompt
+  if (elapsed > promptAt) {
+    const blink = 0.2 + Math.sin(tick*0.06)*0.45;
+    ctx.save();
+    ctx.font = '8px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.globalAlpha = Math.max(0, blink);
+    ctx.fillStyle = '#D4A03C';
+    ctx.shadowColor = 'rgba(212,160,60,0.5)'; ctx.shadowBlur = 10;
+    ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 35);
+    ctx.restore();
+  }
 
-  // ── Blinking start prompt ──
-  const blink = 0.2 + Math.sin(tick * 0.06) * 0.45;
-  ctx.save();
-  ctx.font = '8px "Press Start 2P", monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.globalAlpha = Math.max(0, blink);
-  ctx.fillStyle = '#D4A03C';
-  ctx.shadowColor = 'rgba(212,160,60,0.5)';
-  ctx.shadowBlur = 10;
-  ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW / 2, GH - 42);
-  ctx.restore();
-
-  // ── Fade overlay ──
+  // Fade overlay
   if (titleFadeOut > 0) {
     ctx.save();
     ctx.globalAlpha = titleFadeOut;
@@ -1816,6 +1742,8 @@ function drawTitleScreen(tick) {
     ctx.restore();
   }
 }
+
+
 
 // ════════════════════════════════════════════════════════════
 // TITLE & INTRO FLOW
