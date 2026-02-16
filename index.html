@@ -435,6 +435,19 @@ const state = {
   dlg: { active: false, queue: [], text: '', displayed: '', charIdx: 0, timer: 0, speaker: '', cb: null },
   fade: { active: false, alpha: 0, dir: 0, cb: null },
   introPage: 0,
+  cutscene: {
+    active: false, id: null, frameIdx: 0, frameTime: 0, totalTime: 0,
+    transitioning: false, fadeAlpha: 0,
+    dlgText: '', dlgDisplayed: '', dlgSpeaker: '', dlgCharIdx: 0, dlgTimer: 0,
+    dlgTriggered: new Set(),
+  },
+  seq: {
+    active: false, steps: [], stepIdx: 0, stepTimer: 0,
+    ghostMat: { progress: 0, alpha: 0, glowBlur: 30, active: false },
+    env: { darken: 0, vignette: 0, spectral: 0 },
+    swirlParticles: [],
+    stoneGlow: { active: false, progress: 0 },
+  },
 };
 
 // Characters
@@ -446,7 +459,7 @@ const chars = {
 
 // NPC characters — static, scene-specific
 const npcChars = {
-  ghost:   { scene: 'graveyard', x: 480, y: 300, dir: -1, visible: true },
+  ghost:   { scene: 'graveyard', x: 460, y: 280, dir: -1, visible: false, tilt: 0, wave: 0 },
   athos:   { scene: 'liotrivi', x: 120, y: 335, dir: 1, visible: true },
   stathis: { scene: 'port', x: 80, y: 340, dir: 1, visible: true },
   akis:    { scene: 'port', x: 150, y: 342, dir: 1, visible: true },
@@ -489,6 +502,9 @@ async function loadAllAssets() {
     loadImg('bg-windmill', 'assets/pixel-windmill.webp'),
     loadImg('bg-boat', 'assets/pixel-boat.webp'),
     loadImg('bg-graveyard', 'assets/pixel-graveyard.webp'),
+    // Cutscene backgrounds
+    loadImg('cutscene-road', 'assets/cutscene-road.png'),
+    loadImg('cutscene-descent', 'assets/cutscene-descent.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -533,10 +549,11 @@ async function loadAllAssets() {
 const scenes = {
   exterior: {
     label: 'ΤΟ ΣΠΙΤΙ — ΓΑΛΑΞΙΔΙ', bg: 'bg-exterior',
+    walkLine: [[30, 378], [200, 375], [400, 378], [610, 380]],
     charPos: {
-      ntemis: { x: 290, y: 340 },
-      ajax:   { x: 370, y: 348 },
-      clio:   { x: 210, y: 348 },
+      ntemis: { x: 290, y: 375 },
+      ajax:   { x: 370, y: 378 },
+      clio:   { x: 210, y: 378 },
     },
     objects: [
       { id:'door', x:115, y:100, w:70, h:120, label:'Πόρτα',
@@ -568,10 +585,11 @@ const scenes = {
   },
   terrace: {
     label: 'Η ΒΕΡΑΝΤΑ', bg: 'bg-terrace',
+    walkLine: [[30, 385], [200, 380], [400, 382], [610, 387]],
     charPos: {
-      ntemis: { x: 320, y: 345 },
-      ajax:   { x: 420, y: 350 },
-      clio:   { x: 225, y: 350 },
+      ntemis: { x: 320, y: 382 },
+      ajax:   { x: 420, y: 384 },
+      clio:   { x: 225, y: 381 },
     },
     objects: [
       { id:'harbor', x:140, y:120, w:280, h:100, label:'Το λιμάνι',
@@ -592,7 +610,7 @@ const scenes = {
       { id:'flowerpot', x:10, y:220, w:65, h:60, label:'Γλάστρα',
         verbs: { look:[{s:'',t:'Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.'}] }},
     ],
-    exits: [{ side:'left', target:'exterior', label:'← Σπίτι' }],
+    exits: [{ side:'left', target:'exterior', label:'← Σπίτι' }, { side:'right', target:'graveyard', label:'Νεκροταφείο →' }],
     entry: [
       {s:'',t:'Η θέα κόβει την ανάσα.'},
       {s:'ΚΛΕΙΩ',t:'Αυτό είναι το πιο όμορφο μέρος στον κόσμο.'},
@@ -601,10 +619,11 @@ const scenes = {
   },
   kitchen: {
     label: 'Η ΚΟΥΖΙΝΑ', bg: 'bg-kitchen',
+    walkLine: [[30, 378], [320, 375], [610, 378]],
     charPos: {
-      ntemis: { x: 350, y: 340 },
-      ajax:   { x: 450, y: 345 },
-      clio:   { x: 100, y: 345 },
+      ntemis: { x: 350, y: 375 },
+      ajax:   { x: 450, y: 377 },
+      clio:   { x: 100, y: 377 },
     },
     objects: [
       { id:'figs', x:180, y:175, w:100, h:55, label:'Σύκα',
@@ -636,7 +655,8 @@ const scenes = {
   // ── SCENE 2: THE PORT ──
   port: {
     label: 'ΤΟ ΛΙΜΑΝΙ', bg: 'bg-port',
-    charPos: { ntemis: { x: 320, y: 340 }, ajax: { x: 400, y: 345 }, clio: { x: 240, y: 345 } },
+    walkLine: [[30, 378], [320, 375], [500, 378], [610, 380]],
+    charPos: { ntemis: { x: 320, y: 375 }, ajax: { x: 400, y: 378 }, clio: { x: 240, y: 377 } },
     objects: [
       { id:'boats_port', x:120, y:80, w:200, h:100, label:'Ψαρόβαρκες',
         verbs: { look:[{s:'',t:'Χρωματιστά καΐκια δεμένα στα μπαλόνια. Η μπογιά ξεφλουδίζει — αλμύρα και χρόνια.'},{s:'ΑΙΑΣ',t:'Μπαμπά, μπορώ να πηδήξω σε κάποιο;'},{s:'ΝΤΕΜΗΣ',t:'Μπορείς να κοιτάξεις. Από εδώ.'}] }},
@@ -670,7 +690,8 @@ const scenes = {
   // ── SCENE 3: THE NAUTICAL MUSEUM ──
   museum: {
     label: 'ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ', bg: 'bg-museum',
-    charPos: { ntemis: { x: 320, y: 345 }, ajax: { x: 420, y: 348 }, clio: { x: 200, y: 348 } },
+    walkLine: [[30, 380], [320, 377], [610, 380]],
+    charPos: { ntemis: { x: 320, y: 377 }, ajax: { x: 420, y: 380 }, clio: { x: 200, y: 379 } },
     objects: [
       { id:'model_ship', x:20, y:100, w:180, h:150, label:'Μοντέλο ιστιοφόρου',
         verbs: { look:[{s:'',t:'Ένα πανέμορφο μοντέλο τρικάταρτου μέσα σε γυάλινη βιτρίνα. Κάθε λεπτομέρεια τέλεια.'},{s:'ΚΛΕΙΩ',t:'Κοιτάξτε τα πανιά! Ένα-ένα ραμμένα.'},{s:'',t:'Η πινακίδα γράφει: «Σκούνα Χρυσούλα, 1904 — το τελευταίο ιστιοφόρο του Γαλαξειδίου.»'}] }},
@@ -700,7 +721,8 @@ const scenes = {
   // ── SCENE 4: LIOTRIVI BAR ──
   liotrivi: {
     label: 'ΛΙΟΤΡΙΒΙ', bg: 'bg-liotrivi',
-    charPos: { ntemis: { x: 320, y: 340 }, ajax: { x: 400, y: 345 }, clio: { x: 240, y: 345 } },
+    walkLine: [[30, 378], [320, 375], [610, 378]],
+    charPos: { ntemis: { x: 320, y: 375 }, ajax: { x: 400, y: 377 }, clio: { x: 240, y: 377 } },
     objects: [
       { id:'olive_press', x:10, y:80, w:140, h:180, label:'Ελαιοτριβείο',
         verbs: { look:[{s:'',t:'Το παλιό ελαιοτριβείο — πέτρα και ξύλο. Κάποτε έβγαζε λάδι, τώρα βγάζει ιστορίες.'},{s:'ΚΛΕΙΩ',t:'Φανταστείτε πόσα χέρια το γύρισαν.'}] }},
@@ -731,7 +753,8 @@ const scenes = {
   // ── SCENE 5: THE CAVE OF KARKAROS ──
   cave: {
     label: 'ΤΟ ΣΠΗΛΑΙΟ ΤΟΥ ΚΑΡΚΑΡΟΥ', bg: 'bg-cave',
-    charPos: { ntemis: { x: 310, y: 345 }, ajax: { x: 390, y: 350 }, clio: { x: 230, y: 350 } },
+    walkLine: [[30, 383], [310, 380], [610, 383]],
+    charPos: { ntemis: { x: 310, y: 380 }, ajax: { x: 390, y: 382 }, clio: { x: 230, y: 381 } },
     objects: [
       { id:'stone_door', x:190, y:85, w:170, h:130, label:'Πέτρινη πόρτα',
         verbs: { look:[{s:'',t:'Μια τεράστια πέτρινη πόρτα με δώδεκα κυκλικές εσοχές. Σχήμα τιμονιού.'},{s:'ΚΛΕΙΩ',t:'Δώδεκα θέσεις. Σαν ρολόι.'},{s:'ΑΙΑΣ',t:'Ή σαν τιμόνι καραβιού!'},{s:'ΝΤΕΜΗΣ',t:'Κάτι πρέπει να μπει σε κάθε εσοχή. Αλλά τι;'}],
@@ -761,7 +784,8 @@ const scenes = {
   // ── SCENE 6: CHURCH OF AGIOS NIKOLAOS ──
   church: {
     label: 'ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ', bg: 'bg-church',
-    charPos: { ntemis: { x: 300, y: 340 }, ajax: { x: 390, y: 345 }, clio: { x: 210, y: 345 } },
+    walkLine: [[30, 378], [300, 375], [610, 378]],
+    charPos: { ntemis: { x: 300, y: 375 }, ajax: { x: 390, y: 377 }, clio: { x: 210, y: 377 } },
     objects: [
       { id:'fountain', x:200, y:180, w:130, h:140, label:'Σιντριβάνι',
         verbs: { look:[{s:'',t:'Πέτρινο σιντριβάνι στην πλατεία. Το νερό τρέχει αθόρυβα.'},{s:'ΚΛΕΙΩ',t:'Ρίχνω ένα νόμισμα;'},{s:'ΝΤΕΜΗΣ',t:'Γιατί όχι; Κάνε μια ευχή.'}] }},
@@ -789,7 +813,8 @@ const scenes = {
   // ── SCENE 7: THE WINDMILL ──
   windmill: {
     label: 'Ο ΜΥΛΟΣ', bg: 'bg-windmill',
-    charPos: { ntemis: { x: 350, y: 345 }, ajax: { x: 440, y: 348 }, clio: { x: 260, y: 348 } },
+    walkLine: [[30, 380], [350, 377], [610, 380]],
+    charPos: { ntemis: { x: 350, y: 377 }, ajax: { x: 440, y: 379 }, clio: { x: 260, y: 378 } },
     objects: [
       { id:'telescope', x:60, y:140, w:80, h:120, label:'Τηλεσκόπιο',
         verbs: { look:[{s:'',t:'Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;'},{s:'ΚΛΕΙΩ',t:'Αφήστε με να κοιτάξω!'}],
@@ -818,7 +843,8 @@ const scenes = {
   // ── SCENE 8: THE BOAT (ELPIDA) ──
   boat: {
     label: 'ΤΟ ΚΑΡΑΒΙ — ΕΛΠΙΔΑ', bg: 'bg-boat',
-    charPos: { ntemis: { x: 350, y: 340 }, ajax: { x: 430, y: 345 }, clio: { x: 270, y: 345 } },
+    walkLine: [[30, 378], [350, 375], [610, 378]],
+    charPos: { ntemis: { x: 350, y: 375 }, ajax: { x: 430, y: 377 }, clio: { x: 270, y: 377 } },
     objects: [
       { id:'nameplate', x:50, y:310, w:120, h:40, label:'ΕΛΠΙΔΑ',
         verbs: { look:[{s:'',t:'«ΕΛΠΙΔΑ» — χρυσά γράμματα σε ξεφλουδισμένο μπλε ξύλο.'},{s:'ΝΤΕΜΗΣ',t:'Ελπίδα. Πάντα υπάρχει ελπίδα.'}] }},
@@ -846,28 +872,53 @@ const scenes = {
   // ── SCENE 9: THE GRAVEYARD ──
   graveyard: {
     label: 'ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ', bg: 'bg-graveyard',
-    charPos: { ntemis: { x: 300, y: 345 }, ajax: { x: 390, y: 348 }, clio: { x: 210, y: 348 } },
+    walkLine: [[30, 380], [300, 377], [610, 380]],
+    charPos: { ntemis: { x: 250, y: 377 }, ajax: { x: 340, y: 379 }, clio: { x: 160, y: 378 } },
     objects: [
-      { id:'headstones', x:100, y:100, w:200, h:150, label:'Ταφόπλακες',
-        verbs: { look:[{s:'',t:'Μαρμάρινοι σταυροί και πλάκες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς, Χρυσοβαλάντου.'},{s:'ΚΛΕΙΩ',t:'Κάθε πέτρα και ένα ταξίδι.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε πέτρα και μια οικογένεια που περίμενε.'}] }},
-      { id:'cypress', x:0, y:20, w:60, h:300, label:'Κυπαρίσσια',
-        verbs: { look:[{s:'',t:'Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι.'}] }},
-      { id:'poppies_gr', x:300, y:200, w:150, h:100, label:'Παπαρούνες',
-        verbs: { look:[{s:'',t:'Κόκκινες παπαρούνες ανάμεσα στους τάφους. Η ζωή εκεί που αναπαύεται ο θάνατος.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, δεν είναι τρομακτικό. Είναι... ωραίο.'}] }},
-      { id:'sea_view_gr', x:350, y:30, w:250, h:100, label:'Θέα στη θάλασσα',
-        verbs: { look:[{s:'',t:'Η θάλασσα λάμπει χρυσή από το ηλιοβασίλεμα. Ακόμα και μετά θάνατον, οι καπετάνιοι βλέπουν τη θάλασσα.'},{s:'ΑΙΑΣ',t:'Τους έβαλαν εδώ επίτηδες. Να βλέπουν.'}] }},
-      { id:'sailboat_dist', x:500, y:80, w:60, h:40, label:'Ιστιοφόρο στο βάθος',
-        verbs: { look:[{s:'',t:'Ένα ιστιοφόρο στον ορίζοντα. Σαν φάντασμα του παρελθόντος.'}] }},
-      { id:'path_stones_gr', x:150, y:280, w:200, h:60, label:'Πέτρινο μονοπάτι',
+      { id:'visvikis_grave', x:390, y:230, w:150, h:90, label:'Τάφος Βισβίκη',
+        verbs: {
+          look:[{s:'',t:'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίκης».'},{s:'ΚΛΕΙΩ',t:'Κοίτα κάτω — «Η θάλασσα θυμάται».'},{s:'ΑΙΑΣ',t:'Αυτός είναι ο καπετάνιος από το γράμμα!'}],
+          use: () => {
+            if (state.flags.ghost_summoned) return [{s:'',t:'Η πέτρα ήδη τοποθετήθηκε. Η πλάκα λάμπει αχνά.'}];
+            if (!state.inv.find(i => i.id === 'green_stone')) return [{s:'ΝΤΕΜΗΣ',t:'Λείπει κάτι. Η εσοχή στην πλάκα... σαν να περιμένει κάτι.'}];
+            removeInv('green_stone');
+            state.flags.ghost_summoned = true;
+            showDlg([{s:'',t:'Ο Ντέμης τοποθετεί την πράσινη πέτρα τζέιντ στην εσοχή της πλάκας...'}], () => startGhostSequence());
+            return [];
+          },
+        }},
+      { id:'headstones', x:50, y:210, w:150, h:120, label:'Ταφόπλακες',
+        verbs: { look:[{s:'',t:'Μαρμάρινοι σταυροί και πλάκες. Χαραγμένα πλοία στις πέτρες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς.'},{s:'ΚΛΕΙΩ',t:'Κάθε πέτρα και ένα ταξίδι.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε πέτρα και μια οικογένεια που περίμενε.'}] }},
+      { id:'cypress', x:0, y:20, w:70, h:320, label:'Κυπαρίσσια',
+        verbs: { look:[{s:'',t:'Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι στο φεγγαρόφωτο.'}] }},
+      { id:'angel_statue', x:560, y:170, w:70, h:150, label:'Άγγελος',
+        verbs: { look:[{s:'',t:'Μαρμάρινος άγγελος με σκυμμένο κεφάλι. Προσεύχεται πάνω από τον τάφο του Βισβίκη.'},{s:'ΚΛΕΙΩ',t:'Σαν να τον φυλάει ακόμα.'}] }},
+      { id:'poppies_gr', x:200, y:300, w:180, h:60, label:'Παπαρούνες',
+        verbs: { look:[{s:'',t:'Κόκκινες παπαρούνες ανάμεσα στους τάφους, ζωντανές ακόμα και στο σκοτάδι.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, δεν είναι τρομακτικό. Είναι... ωραίο.'}] }},
+      { id:'sea_view_gr', x:220, y:40, w:220, h:130, label:'Θέα στη θάλασσα',
+        verbs: { look:[{s:'',t:'Το φεγγάρι ρίχνει ασημένιο δρόμο στη θάλασσα. Τα φώτα του Γαλαξειδίου αντανακλούν στο νερό.'},{s:'ΑΙΑΣ',t:'Τους έβαλαν εδώ επίτηδες. Να βλέπουν τη θάλασσα για πάντα.'}] }},
+      { id:'moon', x:170, y:20, w:100, h:100, label:'Φεγγάρι',
+        verbs: { look:[{s:'',t:'Ολόγιομο φεγγάρι πάνω από τον Κορινθιακό. Φωτίζει τους τάφους σαν ασημένιος φανός.'},{s:'ΚΛΕΙΩ',t:'Σαν να ξέρει ότι ήρθαμε.'}] }},
+      { id:'candles', x:350, y:290, w:80, h:40, label:'Κεριά',
+        verbs: { look:[{s:'',t:'Αναμμένα κεριά μπροστά στον τάφο. Κάποιος τα φροντίζει ακόμα.'},{s:'ΝΤΕΜΗΣ',t:'120 χρόνια και κάποιος ανάβει ακόμα κεριά. Αυτό είναι αφοσίωση.'}] }},
+      { id:'path_stones_gr', x:150, y:310, w:200, h:50, label:'Πέτρινο μονοπάτι',
         verbs: { look:[{s:'',t:'Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.'}] }},
-      { id:'ghost_npc', x:455, y:290, w:55, h:110, label:'Σκιά',
-        verbs: { look:[{s:'',t:'Μια αχνή, ψηλή σιλουέτα κοντά στα κυπαρίσσια. Τρεμοπαίζει σαν φως σε νερό.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά... βλέπω κάτι εκεί.'},{s:'ΑΙΑΣ',t:'Φάντασμα; Σοβαρά τώρα;'}],
-                 talk:[{s:'ΦΑΝΤΑΣΜΑ',t:'...'},{s:'',t:'Το φάντασμα δεν μιλάει. Δείχνει προς την εκκλησία.'},{s:'ΚΛΕΙΩ',t:'Θέλει να πάμε στον Άγιο Νικόλαο!'},{s:'ΝΤΕΜΗΣ',t:'Μόλις μας έδωσε οδηγίες ένα φάντασμα.'}] }},
+      { id:'ghost_npc', x:430, y:220, w:65, h:120, label: 'Σκιά',
+        verbs: {
+          look: () => {
+            if (!state.flags.ghost_summoned) return [{s:'',t:'Σκιές τρεμοπαίζουν ανάμεσα στα κυπαρίσσια. Σαν να κινείται κάτι...'},{s:'ΚΛΕΙΩ',t:'Μπαμπά... νιώθω κάτι εδώ.'}];
+            return [{s:'',t:'Μια αχνή, ψηλή σιλουέτα πάνω από τον τάφο. Τρεμοπαίζει σαν φως σε νερό.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά... βλέπω κάτι εκεί.'},{s:'ΑΙΑΣ',t:'Φάντασμα; Σοβαρά τώρα;'}];
+          },
+          talk: () => {
+            if (!state.flags.ghost_summoned) return [{s:'',t:'Δεν υπάρχει κανείς εδώ... ακόμα.'}];
+            return [{s:'ΦΑΝΤΑΣΜΑ',t:'...'},{s:'',t:'Το φάντασμα δεν μιλάει. Δείχνει προς την εκκλησία.'},{s:'ΚΛΕΙΩ',t:'Θέλει να πάμε στον Άγιο Νικόλαο!'},{s:'ΝΤΕΜΗΣ',t:'Μόλις μας έδωσε οδηγίες ένα φάντασμα.'}];
+          },
+        }},
     ],
-    exits: [{ side:'left', target:'windmill', label:'← Μύλος' }],
+    exits: [{ side:'left', target:'terrace', label:'← Βεράντα' }],
     entry: [
-      {s:'',t:'Το παλιό νεκροταφείο. Θέα στη θάλασσα, μυρωδιά θυμαριού, ησυχία.'},
-      {s:'ΚΛΕΙΩ',t:'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία.'},
+      {s:'',t:'Το παλιό νεκροταφείο. Το φεγγάρι φωτίζει τους τάφους, μυρωδιά θυμαριού, ησυχία.'},
+      {s:'ΚΛΕΙΩ',t:'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία τη νύχτα.'},
       {s:'ΝΤΕΜΗΣ',t:'Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.'},
       {s:'ΑΙΑΣ',t:'Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.'},
     ],
@@ -883,6 +934,421 @@ const introPages = [
   'Ένα μικρό λιμάνι\nστον Κορινθιακό κόλπο.\n\nΕκεί που κάποτε ξεκινούσαν\nτα πιο τολμηρά καράβια\nτης Ελλάδας.',
   'Ο Ντέμης έφτασε\nμε τα δυο του παιδιά\nγια ένα ήσυχο\nΣαββατοκύριακο.\n\nΤουλάχιστον,\nαυτό νόμιζε.',
 ];
+
+// ════════════════════════════════════════════════════════════
+// CUTSCENE ENGINE
+// ════════════════════════════════════════════════════════════
+
+const cutscenes = {
+  arrival: {
+    frames: [
+      {
+        duration: 7,
+        draw: drawArrivalRoad,
+        dialogue: [
+          { s: 'ΑΙΑΣ', t: 'Πόσο ακόμα, μπαμπά;', at: 1.2 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Λίγο ακόμα. Σχεδόν φτάσαμε.', at: 3.0 },
+        ],
+      },
+      {
+        duration: 6,
+        draw: drawArrivalDescent,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Βλέπω τη θάλασσα! Κοίτα, καράβια!', at: 0.8 },
+          { s: 'ΑΙΑΣ', t: 'Θα κολυμπήσουμε;', at: 2.8 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Πρώτα θα βρούμε το σπίτι του παππού.', at: 4.2 },
+        ],
+      },
+      {
+        duration: 5,
+        draw: drawArrivalHarbor,
+        dialogue: [
+          { s: 'ΝΤΕΜΗΣ', t: 'Φτάσαμε. Γαλαξίδι.', at: 1.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Μυρίζει αλάτι και πεύκο!', at: 3.2 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      document.getElementById('ui-panel').classList.add('on');
+      document.getElementById('action-line').classList.add('on');
+      state.phase = 'playing';
+      // Crossfade title music out, scene music in
+      currentMusicSrc = sceneMusic['exterior'];
+      bgm.src = currentMusicSrc;
+      bgm.volume = 0;
+      bgm.play().catch(() => {});
+      const fadeDur = 2000;
+      const fadeStart = performance.now();
+      const fadeStep = () => {
+        const t = Math.min(1, (performance.now() - fadeStart) / fadeDur);
+        const ease = t < 0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+        titleMusic.volume = Math.max(0, 0.4 * (1 - ease));
+        bgm.volume = 0.25 * ease;
+        if (t < 1) {
+          requestAnimationFrame(fadeStep);
+        } else {
+          titleMusic.pause();
+          titleMusic.volume = 0.7;
+        }
+      };
+      requestAnimationFrame(fadeStep);
+      startScene('exterior');
+    },
+  },
+};
+
+function startCutscene(id) {
+  const cs = cutscenes[id];
+  if (!cs) { state.phase = 'playing'; startScene('exterior'); return; }
+  state.cutscene.active = true;
+  state.cutscene.id = id;
+  state.cutscene.frameIdx = 0;
+  state.cutscene.frameTime = 0;
+  state.cutscene.totalTime = 0;
+  state.cutscene.fadeAlpha = 1;
+  state.cutscene.transitioning = false;
+  state.cutscene.dlgText = '';
+  state.cutscene.dlgDisplayed = '';
+  state.cutscene.dlgSpeaker = '';
+  state.cutscene.dlgCharIdx = 0;
+  state.cutscene.dlgTimer = 0;
+  state.cutscene.dlgTriggered = new Set();
+  state.phase = 'cutscene';
+  document.getElementById('ui-panel').classList.remove('on');
+  document.getElementById('action-line').classList.remove('on');
+}
+
+function updateCutscene(dt) {
+  if (!state.cutscene.active) return;
+  const cs = cutscenes[state.cutscene.id];
+  if (!cs) return;
+
+  // Handle fade transitions between frames
+  if (state.cutscene.transitioning) {
+    state.cutscene.fadeAlpha = Math.min(1, state.cutscene.fadeAlpha + dt * 2.0);
+    if (state.cutscene.fadeAlpha >= 1) {
+      if (state.cutscene.frameIdx >= cs.frames.length - 1) {
+        state.cutscene.active = false;
+        cs.onComplete();
+        return;
+      }
+      state.cutscene.frameIdx++;
+      state.cutscene.frameTime = 0;
+      state.cutscene.dlgText = '';
+      state.cutscene.dlgDisplayed = '';
+      state.cutscene.dlgSpeaker = '';
+      state.cutscene.transitioning = false;
+    }
+    return;
+  }
+
+  const frame = cs.frames[state.cutscene.frameIdx];
+  if (!frame) return;
+
+  state.cutscene.frameTime += dt;
+  state.cutscene.totalTime += dt;
+
+  // Fade in at start of each frame
+  if (state.cutscene.fadeAlpha > 0) {
+    state.cutscene.fadeAlpha = Math.max(0, state.cutscene.fadeAlpha - dt * 1.5);
+  }
+
+  // Trigger dialogue at timestamps
+  if (frame.dialogue) {
+    for (let i = 0; i < frame.dialogue.length; i++) {
+      const key = `${state.cutscene.frameIdx}-${i}`;
+      if (!state.cutscene.dlgTriggered.has(key) && state.cutscene.frameTime >= frame.dialogue[i].at) {
+        state.cutscene.dlgTriggered.add(key);
+        state.cutscene.dlgSpeaker = frame.dialogue[i].s;
+        state.cutscene.dlgText = frame.dialogue[i].t;
+        state.cutscene.dlgDisplayed = '';
+        state.cutscene.dlgCharIdx = 0;
+        state.cutscene.dlgTimer = 0;
+      }
+    }
+  }
+
+  // Typewriter
+  if (state.cutscene.dlgCharIdx < state.cutscene.dlgText.length) {
+    state.cutscene.dlgTimer += dt;
+    while (state.cutscene.dlgTimer >= 0.03 && state.cutscene.dlgCharIdx < state.cutscene.dlgText.length) {
+      state.cutscene.dlgDisplayed += state.cutscene.dlgText[state.cutscene.dlgCharIdx];
+      state.cutscene.dlgCharIdx++;
+      state.cutscene.dlgTimer -= 0.03;
+    }
+  }
+
+  // Auto-advance when frame duration reached
+  if (state.cutscene.frameTime >= frame.duration) {
+    advanceCutsceneFrame();
+  }
+}
+
+function advanceCutsceneFrame() {
+  if (state.cutscene.transitioning) return;
+  state.cutscene.transitioning = true;
+}
+
+function skipCutscene() {
+  if (!state.cutscene.active) return;
+  const cs = cutscenes[state.cutscene.id];
+  state.cutscene.active = false;
+  state.cutscene.fadeAlpha = 0;
+  cs.onComplete();
+}
+
+function renderCutscene() {
+  if (!state.cutscene.active) return;
+  const cs = cutscenes[state.cutscene.id];
+  if (!cs) return;
+  const frame = cs.frames[state.cutscene.frameIdx];
+  if (!frame) return;
+
+  const t = state.cutscene.frameTime;
+  const p = Math.min(1, t / frame.duration);
+
+  ctx.fillStyle = '#0a0812';
+  ctx.fillRect(0, 0, GW, GH);
+
+  // Draw scene content
+  ctx.save();
+  frame.draw(t, p, state.tick);
+  ctx.restore();
+
+  // Cinematic vignette
+  ctx.save();
+  const vig = ctx.createRadialGradient(GW / 2, GH / 2, GW * 0.28, GW / 2, GH / 2, GW * 0.72);
+  vig.addColorStop(0, 'rgba(0,0,0,0)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.35)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+
+  // Letterbox bars
+  const barH = 38;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, GW, barH);
+  ctx.fillRect(0, GH - barH, GW, barH);
+
+  // Film grain
+  ctx.save();
+  ctx.globalAlpha = 0.02;
+  for (let i = 0; i < 40; i++) {
+    ctx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
+    ctx.fillRect(Math.random() * GW | 0, Math.random() * GH | 0, 1, 1);
+  }
+  ctx.restore();
+
+  // Dialogue subtitles
+  if (state.cutscene.dlgDisplayed) {
+    const dlgY = GH - barH;
+    ctx.save();
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, dlgY - 42, GW, 42);
+    ctx.globalAlpha = 1;
+    if (state.cutscene.dlgSpeaker) {
+      ctx.font = '6px "Press Start 2P", monospace';
+      ctx.fillStyle = '#D4A03C';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.shadowColor = '#000';
+      ctx.shadowBlur = 3;
+      ctx.fillText(state.cutscene.dlgSpeaker, GW / 2, dlgY - 26);
+    }
+    ctx.font = '8px "Press Start 2P", monospace';
+    ctx.fillStyle = '#e8dcc8';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 4;
+    ctx.fillText(state.cutscene.dlgDisplayed, GW / 2, dlgY - 6);
+    ctx.restore();
+  }
+
+  // Skip hint
+  ctx.save();
+  ctx.globalAlpha = 0.25;
+  ctx.font = '5px "Press Start 2P", monospace';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('ESC: Παράλειψη', GW - 8, GH - 4);
+  ctx.restore();
+
+  // Fade overlay
+  if (state.cutscene.fadeAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.cutscene.fadeAlpha;
+    ctx.fillStyle = '#0a0812';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE DRAWING HELPERS
+// ═══════════════════════════════════════════════════════════
+
+function drawPixelCar(x, y, scale, dir) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale * dir, scale);
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.beginPath();
+  ctx.ellipse(0, 6, 26, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Lower body (dark blue Peugeot hatchback)
+  ctx.fillStyle = '#2a3a5a';
+  ctx.fillRect(-28, -8, 56, 14);
+  // Cabin
+  ctx.fillStyle = '#2e3e62';
+  ctx.fillRect(-18, -20, 36, 14);
+  // Roof
+  ctx.fillStyle = '#2a3a5a';
+  ctx.fillRect(-14, -22, 28, 4);
+
+  // Window frame
+  ctx.fillStyle = '#1e2e4a';
+  ctx.fillRect(-17, -19, 34, 12);
+  // Glass
+  ctx.fillStyle = '#7aa8c8';
+  ctx.fillRect(-15, -18, 12, 10); // rear
+  ctx.fillRect(-1, -18, 14, 10);  // front
+  ctx.fillStyle = '#8ab8d8';
+  ctx.fillRect(13, -16, 3, 7);    // windshield angle
+
+  // Character silhouettes
+  ctx.fillStyle = '#1a2838';
+  ctx.fillRect(4, -17, 6, 5);   // driver (Ntemis)
+  ctx.fillRect(2, -12, 9, 3);
+  ctx.fillRect(-13, -17, 5, 5); // Ajax
+  ctx.fillRect(-14, -12, 7, 3);
+  ctx.fillRect(-6, -17, 4, 4);  // Clio
+  ctx.fillRect(-7, -13, 6, 2);
+
+  // Headlights
+  ctx.fillStyle = '#FFE8A0';
+  ctx.fillRect(27, -5, 2, 3);
+  ctx.fillRect(27, -2, 2, 2);
+  // Taillights
+  ctx.fillStyle = '#cc2222';
+  ctx.fillRect(-29, -5, 2, 3);
+  // Bumpers
+  ctx.fillStyle = '#3a3a3a';
+  ctx.fillRect(-29, -2, 2, 4);
+  ctx.fillRect(27, -2, 2, 4);
+
+  // Wheels
+  ctx.fillStyle = '#111';
+  ctx.beginPath(); ctx.arc(-15, 5, 5.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(17, 5, 5.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#555';
+  ctx.beginPath(); ctx.arc(-15, 5, 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(17, 5, 2.5, 0, Math.PI * 2); ctx.fill();
+
+  ctx.restore();
+}
+
+function drawCutsceneMountains(scrollOffset, baseY, amplitudes, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(-5, GH);
+  for (let x = -5; x <= GW + 5; x += 2) {
+    const sx = x + scrollOffset;
+    const h = Math.abs(Math.sin(sx * 0.008) * amplitudes[0])
+            + Math.abs(Math.sin(sx * 0.02 + 1.5) * amplitudes[1])
+            + Math.abs(Math.sin(sx * 0.004 + 3) * amplitudes[2]);
+    ctx.lineTo(x, baseY - h);
+  }
+  ctx.lineTo(GW + 5, GH);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawOliveTree(x, y, scale) {
+  const s = scale || 1;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(s, s);
+  ctx.fillStyle = '#5a4428';
+  ctx.fillRect(-2, -18, 4, 20);
+  ctx.fillStyle = '#4a6a30';
+  ctx.beginPath(); ctx.arc(0, -22, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#5a7a38';
+  ctx.beginPath(); ctx.arc(-5, -18, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(6, -20, 8, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#6a8a42';
+  ctx.beginPath(); ctx.arc(2, -25, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE ARRIVAL — Ken Burns Image Frames
+// ═══════════════════════════════════════════════════════════
+
+// Render an image with Ken Burns (pan + zoom) to fill the canvas
+function drawKenBurns(imgKey, zoom, panX, panY) {
+  const img = images[imgKey];
+  if (!img) { ctx.fillStyle = '#0a0812'; ctx.fillRect(0, 0, GW, GH); return; }
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  const baseScale = Math.max(GW / img.naturalWidth, GH / img.naturalHeight);
+  const scale = baseScale * zoom;
+  const dw = img.naturalWidth * scale;
+  const dh = img.naturalHeight * scale;
+  const dx = (GW - dw) / 2 + panX;
+  const dy = (GH - dh) / 2 + panY;
+  ctx.drawImage(img, dx, dy, dw, dh);
+  ctx.imageSmoothingEnabled = false;
+  ctx.restore();
+}
+
+function drawArrivalRoad(t, p, tick) {
+  // Slow zoom out + slight leftward drift following the car
+  drawKenBurns('cutscene-road', 1.18 - p * 0.12, -p * 15, -20 + p * 15);
+  // Warm golden light pulse
+  ctx.save();
+  ctx.globalAlpha = 0.03 + Math.sin(tick * 0.02) * 0.01;
+  ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawArrivalDescent(t, p, tick) {
+  // Pan down toward the town as we descend
+  drawKenBurns('cutscene-descent', 1.15 - p * 0.08, p * 10, -30 + p * 45);
+  // Location label fades in
+  if (p > 0.3) {
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, (p - 0.3) / 0.2) * 0.8;
+    ctx.font = '10px "Press Start 2P", monospace';
+    ctx.fillStyle = '#FFE8A0';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.fillText('ΓΑΛΑΞΙΔΙ', GW / 2, 60);
+    ctx.restore();
+  }
+}
+
+function drawArrivalHarbor(t, p, tick) {
+  // Existing exterior bg with gentle zoom in — visual continuity with gameplay
+  drawKenBurns('bg-exterior', 1.08 + p * 0.06, 0, p * -10);
+  // Warm overlay
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  ctx.fillStyle = '#D4A03C';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
 
 // ════════════════════════════════════════════════════════════
 // EASING
@@ -964,12 +1430,20 @@ function updateParticles() {
 }
 
 function drawParticles() {
+  const sp = state.seq.env.spectral;
   for (const p of particles) {
     if (p.alpha <= 0) continue;
     ctx.save();
     ctx.globalAlpha = p.alpha;
-    if (p.glow) {
-      // Glowing golden mote
+    if (sp > 0) {
+      // Lerp particle colors from gold to blue-white based on spectral
+      const gr = Math.round(255 * (1 - sp) + 130 * sp);
+      const gg = Math.round(200 * (1 - sp) + 180 * sp);
+      const gb = Math.round(60 * (1 - sp) + 255 * sp);
+      ctx.shadowColor = `rgba(${gr},${gg},${gb},0.6)`;
+      ctx.shadowBlur = 4;
+      ctx.fillStyle = `rgb(${gr},${gg},${gb})`;
+    } else if (p.glow) {
       ctx.shadowColor = 'rgba(255,200,60,0.6)';
       ctx.shadowBlur = 4;
       ctx.fillStyle = '#FFD860';
@@ -1841,7 +2315,10 @@ function drawCharacter(who, tick) {
 
 function drawNPC(who, tick) {
   const npc = npcChars[who];
-  if (!npc || !npc.visible || npc.scene !== state.scene) return;
+  if (!npc || npc.scene !== state.scene) return;
+  // Allow ghost rendering during materialization even when not yet visible
+  const isMaterializing = who === 'ghost' && state.seq.active && state.seq.ghostMat.active;
+  if (!npc.visible && !isMaterializing) return;
   const img = CHAR_IMGS[who];
   if (!img || !img.complete || !img.naturalWidth) return;
 
@@ -1874,19 +2351,48 @@ function drawNPC(who, tick) {
 
   // Ghost special effects
   if (who === 'ghost') {
-    ctx.globalAlpha = 0.45 + Math.sin(tick * 0.02) * 0.1;
-    // Blue glow aura
-    ctx.shadowColor = 'rgba(100,180,255,0.5)';
-    ctx.shadowBlur = 12;
+    if (state.seq.active && state.seq.ghostMat.active) {
+      // During sequence: use materialization alpha/glow
+      ctx.globalAlpha = state.seq.ghostMat.alpha;
+      ctx.shadowColor = 'rgba(100,180,255,0.5)';
+      ctx.shadowBlur = state.seq.ghostMat.glowBlur;
+    } else {
+      ctx.globalAlpha = 0.45 + Math.sin(tick * 0.02) * 0.1;
+      ctx.shadowColor = 'rgba(100,180,255,0.5)';
+      ctx.shadowBlur = 12;
+    }
   }
 
-  ctx.translate(gx, gy + breathe);
+  // Wave vertical oscillation
+  const waveOffset = (npc.wave || 0) > 0 ? Math.sin(tick * 0.1) * npc.wave : 0;
+
+  ctx.translate(gx, gy + breathe + waveOffset);
   if (npc.dir < 0) ctx.scale(-S, S);
   else ctx.scale(S, S);
-  ctx.rotate(sway);
+  ctx.rotate(sway + (npc.tilt || 0));
   ctx.scale(squashX, squashY);
   ctx.drawImage(img, -sprW / 2, -sprH);
   ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════════
+// WALKABLE AREA SYSTEM
+// ════════════════════════════════════════════════════════════
+// Each scene defines a walkLine: array of [x, y] points that define
+// the ground level across the scene. Characters snap to this line.
+function getGroundY(sceneId, x) {
+  const sc = scenes[sceneId];
+  if (!sc || !sc.walkLine) return 378; // fallback
+  const pts = sc.walkLine;
+  if (x <= pts[0][0]) return pts[0][1];
+  if (x >= pts[pts.length - 1][0]) return pts[pts.length - 1][1];
+  for (let i = 0; i < pts.length - 1; i++) {
+    if (x >= pts[i][0] && x <= pts[i + 1][0]) {
+      const t = (x - pts[i][0]) / (pts[i + 1][0] - pts[i][0]);
+      return pts[i][1] + t * (pts[i + 1][1] - pts[i][1]);
+    }
+  }
+  return pts[0][1];
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1900,7 +2406,9 @@ function startWalk(who, targetX, cb) {
   c.dir = targetX > c.x ? 1 : -1;
   c.walking = true;
   c.startX = c.x;
+  c.startY = c.y;
   c.targetX = targetX;
+  c.targetY = getGroundY(state.scene, targetX);
   c.walkT = 0;
   c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0));
   c.frame = 0;
@@ -1915,14 +2423,18 @@ function updateWalking(dt) {
     const p = Math.min(1, c.walkT / c.walkDur);
     const ep = easeInOutCubic(p);
     c.x = c.startX + (c.targetX - c.startX) * ep;
+    // Interpolate Y along the ground line for proper grounding
+    c.y = c.startY + (c.targetY - c.startY) * ep;
 
     // Store raw walk time for smooth interpolation in drawSprite
     c.frame = c.walkT;
 
     if (p >= 1) {
       c.x = c.targetX;
+      c.y = c.targetY;
       c.walking = false;
       c.targetX = null;
+      c.targetY = null;
       c.dir = 1;
       if (who === 'ntemis' && walkDoneCallback) {
         const cb = walkDoneCallback;
@@ -1975,63 +2487,242 @@ const voiceAudio = new Audio();
 voiceAudio.volume = 0.8;
 
 const VOICE_MAP = {
-  // ── Ntemis (Eric) ──
-  'Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.': 'music/voices/ntemis/01-ftasame.mp3',
-  'Ας μπούμε μέσα.': 'music/voices/ntemis/02-as-mpoume.mp3',
-  'Καλωσορίσατε στο Γαλαξίδι.': 'music/voices/ntemis/03-kalosorisate.mp3',
-  'Δεν μπορώ να μιλήσω σε αυτό.': 'music/voices/ntemis/04-den-mporo.mp3',
-  'Δεν ανοίγει.': 'music/voices/ntemis/05-den-anoigei.mp3',
-  'Δεν ξέρω πώς.': 'music/voices/ntemis/06-den-xero.mp3',
-  'Φυσικά.': 'music/voices/ntemis/07-fysika.mp3',
-  'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.': 'music/voices/ntemis/08-den-einai-diki.mp3',
-  '«Σας περιμέναμε»... Ποιος μας περιμένει;': 'music/voices/ntemis/09-sas-perimenavame.mp3',
-  // ── Ajax (Charlie) ──
-  'Τέλειο! Πάμε κατευθείαν στο λιμάνι;': 'music/voices/ajax/01-teleio-pame.mp3',
-  'Μπαμπά, θα πάμε βόλτα με βάρκα;': 'music/voices/ajax/02-volta-varka.mp3',
-  'Άδειο. Κρίμα!': 'music/voices/ajax/03-adeio-krima.mp3',
-  'Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...': 'music/voices/ajax/04-delfinia.mp3',
-  'Μπαμπά, μπορώ να φάω ένα;': 'music/voices/ajax/05-fao-ena.mp3',
-  'Και κάτι πάνω στην καρέκλα... μια τσάντα;': 'music/voices/ajax/06-tsanta.mp3',
-  'Πάμε στο λιμάνι!': 'music/voices/ajax/07-pame-limani.mp3',
-  // ── Clio (Jessica) ──
-  'Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.': 'music/voices/clio/01-valitses.mp3',
-  'Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.': 'music/voices/clio/02-min-tis-koveis.mp3',
-  'Μπαμπά, κοίτα! Δελφίνια!': 'music/voices/clio/03-delfinia.mp3',
-  'Αυτό είναι το πιο όμορφο μέρος στον κόσμο.': 'music/voices/clio/04-pio-omorfo.mp3',
-  'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.': 'music/voices/clio/05-kati-mesa.mp3',
-  'Κοιτάξτε — κάποιος μας άφησε σύκα!': 'music/voices/clio/06-syka.mp3',
-  'Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.': 'music/voices/clio/07-gamma-xerei.mp3',
-  'Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.': 'music/voices/clio/08-amfiktiones.mp3',
-  'Μπαμπά, μην ακουμπάς, φαίνεται παλιό!': 'music/voices/clio/09-min-akoumpas.mp3',
-  // ── Narrator (George) ──
-  'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.': 'music/voices/narrator/01-porta-mple.mp3',
-  'Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.': 'music/voices/narrator/02-boukamvilies.mp3',
-  'Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.': 'music/voices/narrator/03-vasiliko.mp3',
-  'Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.': 'music/voices/narrator/04-vareli.mp3',
-  'Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.': 'music/voices/narrator/05-korinthiakos.mp3',
-  'Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.': 'music/voices/narrator/05-korinthiakos.mp3',
-  'Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.': 'music/voices/narrator/06-ilios-kalderimia.mp3',
-  'Τρία δελφίνια κόβουν βόλτες στο λιμάνι.': 'music/voices/narrator/07-delfinia.mp3',
-  'Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.': 'music/voices/narrator/08-delfinia-kyklous.mp3',
-  'Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.': 'music/voices/narrator/09-keramidia.mp3',
-  'Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.': 'music/voices/narrator/10-parnassos.mp3',
-  'Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.': 'music/voices/narrator/11-kagelo.mp3',
-  'Η θέα κόβει την ανάσα.': 'music/voices/narrator/12-thea-kovei.mp3',
-  'Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.': 'music/voices/narrator/13-syka.mp3',
-  'Τρως ένα σύκο. Γλυκό σαν μέλι.': 'music/voices/narrator/14-syko-meli.mp3',
-  'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.': 'music/voices/narrator/15-tsanta.mp3',
-  'Η τσάντα είναι άδεια τώρα.': 'music/voices/narrator/16-tsanta-adeia.mp3',
-  'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.': 'music/voices/narrator/17-patzouria.mp3',
-  'Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.': 'music/voices/narrator/18-anoigeis-patzouria.mp3',
-  'Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.': 'music/voices/narrator/19-halkina.mp3',
-  'Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.': 'music/voices/narrator/20-tzaki.mp3',
-  'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.': 'music/voices/narrator/21-kouzina.mp3',
-  'Τίποτα ιδιαίτερο.': 'music/voices/narrator/22-tipota.mp3',
-  '«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»': 'music/voices/narrator/23-sas-perimenavame.mp3',
-  'Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.': 'music/voices/narrator/24-harti-thalassa.mp3',
-  'Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.': 'music/voices/narrator/25-ilios-vythizetai.mp3',
-  'Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.': 'music/voices/narrator/26-gerania.mp3',
-  'Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.': 'music/voices/narrator/27-korinthiakos-hrysafi.mp3',
+  'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.': 'voice/narrator/001.mp3',
+  'Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.': 'voice/narrator/002.mp3',
+  'Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.': 'voice/narrator/003.mp3',
+  'Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.': 'voice/narrator/004.mp3',
+  'Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.': 'voice/narrator/005.mp3',
+  'Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.': 'voice/narrator/006.mp3',
+  'Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.': 'voice/narrator/007.mp3',
+  'Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.': 'voice/narrator/008.mp3',
+  'Τρία δελφίνια κόβουν βόλτες στο λιμάνι.': 'voice/narrator/009.mp3',
+  'Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.': 'voice/narrator/010.mp3',
+  'Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.': 'voice/narrator/011.mp3',
+  'Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.': 'voice/narrator/012.mp3',
+  'Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.': 'voice/narrator/013.mp3',
+  'Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.': 'voice/narrator/014.mp3',
+  'Η θέα κόβει την ανάσα.': 'voice/narrator/015.mp3',
+  'Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.': 'voice/narrator/016.mp3',
+  'Τρως ένα σύκο. Γλυκό σαν μέλι.': 'voice/narrator/017.mp3',
+  'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.': 'voice/narrator/018.mp3',
+  'Η τσάντα είναι άδεια τώρα.': 'voice/narrator/019.mp3',
+  'Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.': 'voice/narrator/020.mp3',
+  '«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»': 'voice/narrator/021.mp3',
+  'Η τσάντα είναι πλέον άδεια.': 'voice/narrator/022.mp3',
+  'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.': 'voice/narrator/023.mp3',
+  'Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.': 'voice/narrator/024.mp3',
+  'Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.': 'voice/narrator/025.mp3',
+  'Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.': 'voice/narrator/026.mp3',
+  'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.': 'voice/narrator/027.mp3',
+  'Χρωματιστά καΐκια δεμένα στα μπαλόνια. Η μπογιά ξεφλουδίζει — αλμύρα και χρόνια.': 'voice/narrator/028.mp3',
+  'Μεταλλικές δέστρες ψηλότερες από την Κλειώ. Φτιαγμένες για τρικάταρτα, όχι για βαρκούλες.': 'voice/narrator/029.mp3',
+  'Ένας ψαράς μπαλώνει τα δίχτυα του. Τα χέρια του κινούνται αυτόματα — πενήντα χρόνια πρακτική.': 'voice/narrator/030.mp3',
+  'Ο ψαράς σηκώνει το βλέμμα. Τα μάτια του είναι γαλάζια σαν τον κόλπο.': 'voice/narrator/031.mp3',
+  '«Ψάρι λίγο. Ιστορίες πολλές. Κάτσε να σου πω.»': 'voice/narrator/032.mp3',
+  'Πέτρινες αποθήκες με σιδερένιες πόρτες. Κάποτε γεμάτες σταφίδα και λάδι για εξαγωγή. Τώρα σιωπή.': 'voice/narrator/033.mp3',
+  'Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.': 'voice/narrator/034.mp3',
+  'Τρεις γάτες ξαπλωμένες στον ήλιο. Σε κοιτάνε με αδιαφορία.': 'voice/narrator/035.mp3',
+  'Ο Στάθης με την κιθάρα του. Φίλος από τα παλιά.': 'voice/narrator/036.mp3',
+  'Ο Άκης παίζει φλογέρα στο λιμάνι. Η μελωδία ταξιδεύει στο νερό.': 'voice/narrator/037.mp3',
+  'Το λιμάνι του Γαλαξειδίου. Μισοφέγγαρο από πέτρα, κυμαρισμένο φως, μυρωδιά αλμύρας.': 'voice/narrator/038.mp3',
+  'Ένα πανέμορφο μοντέλο τρικάταρτου μέσα σε γυάλινη βιτρίνα. Κάθε λεπτομέρεια τέλεια.': 'voice/narrator/039.mp3',
+  'Η πινακίδα γράφει: «Σκούνα Χρυσούλα, 1904 — το τελευταίο ιστιοφόρο του Γαλαξειδίου.»': 'voice/narrator/040.mp3',
+  'Μια γωνιά αφιερωμένη στα ατμόπλοια. Ένα σιδερένιο μοντέλο, μικρότερο, λιγότερο εντυπωσιακό.': 'voice/narrator/041.mp3',
+  'Πορτρέτα σε χρυσές κορνίζες. Σοβαρά πρόσωπα, κομψά μουστάκια, μάτια που έχουν δει θάλασσα.': 'voice/narrator/042.mp3',
+  'Πυξίδες, εξάντες, χάρτες. Τα εργαλεία που οδηγούσαν τα πλοία σε κάθε γωνιά της Μεσογείου.': 'voice/narrator/043.mp3',
+  'Ναυτικές σημαίες κρέμονται από το ταβάνι. Ελληνική, γαλλική, ρωσική — τα λιμάνια που γνώριζαν.': 'voice/narrator/044.mp3',
+  'Ένας παλιός χάρτης του Κορινθιακού ξαπλωμένος σε τραπέζι. Σημειώσεις με μελάνι — δρόμοι ναυσιπλοΐας.': 'voice/narrator/045.mp3',
+  'Ο επιμελητής του μουσείου. Τα μάτια του λάμπουν πίσω από τα στρογγυλά γυαλιά.': 'voice/narrator/046.mp3',
+  'Το Ναυτικό Μουσείο του Γαλαξειδίου. Μυρωδιά ξύλου και παλιού χαρτιού.': 'voice/narrator/047.mp3',
+  'Το παλιό ελαιοτριβείο — πέτρα και ξύλο. Κάποτε έβγαζε λάδι, τώρα βγάζει ιστορίες.': 'voice/narrator/048.mp3',
+  'Ξύλινο μπαρ γεμάτο μπουκάλια. Τσίπουρο, ρακή, κρασιά ντόπια. Φανάρια ρίχνουν ζεστό φως.': 'voice/narrator/049.mp3',
+  'Γαλάζια πατζούρια ανοιχτά στο φεγγαρόφωτο. Το λιμάνι λάμπει ασημί.': 'voice/narrator/050.mp3',
+  'Ασπρόμαυρες φωτογραφίες στον τοίχο. Ψαράδες, καπετάνιοι, γυναίκες που περίμεναν.': 'voice/narrator/051.mp3',
+  'Ξύλινα σκαμπό τριγμένα από χρόνια. Πόσες κουβέντες έχουν ακούσει.': 'voice/narrator/052.mp3',
+  'Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.': 'voice/narrator/053.mp3',
+  'Ο Άθος. Δικηγόρος και ιδιοκτήτης του Λιοτριβιού. Τα μάτια του κρύβουν χίλια μυστικά.': 'voice/narrator/054.mp3',
+  'Το Λιοτρίβι. Πέτρα, ξύλο, ζεστό φως. Μυρωδιά τσίπουρου και ελιάς.': 'voice/narrator/055.mp3',
+  'Μια τεράστια πέτρινη πόρτα με δώδεκα κυκλικές εσοχές. Σχήμα τιμονιού.': 'voice/narrator/056.mp3',
+  'Χαραγμένα σύμβολα στον βράχο. Νεκροκεφαλή, ψάρι, άγκυρα, μάτι.': 'voice/narrator/057.mp3',
+  'Τυρκουάζ νερό λάμπει από το φως της εισόδου. Κρυστάλλινο.': 'voice/narrator/058.mp3',
+  'Σταλακτίτες κρέμονται σαν δάχτυλα γίγαντα. Χιλιάδες χρόνια σε κάθε σταγόνα.': 'voice/narrator/059.mp3',
+  'Ένα σάπιο βαρέλι. Μυρίζει θάλασσα και χρόνο.': 'voice/narrator/060.mp3',
+  'Άδειο, εκτός από αλμύρα και σκόνη.': 'voice/narrator/061.mp3',
+  'Χρυσό φως χύνεται μέσα από τη φυσική αψίδα. Σκόνη χορεύει στις ακτίνες.': 'voice/narrator/062.mp3',
+  'Ο Κάρκαρος. Ο θόλος υψώνεται σαν καθεδρικός. Χρυσό φως χύνεται από την είσοδο.': 'voice/narrator/063.mp3',
+  'Πέτρινο σιντριβάνι στην πλατεία. Το νερό τρέχει αθόρυβα.': 'voice/narrator/064.mp3',
+  'Ο Άγιος Νικόλαος — προστάτης των ναυτικών. Ο τρούλος λάμπει κόκκινος στον ήλιο.': 'voice/narrator/065.mp3',
+  'Φούξια μπουκαμβίλιες σκεπάζουν τον τοίχο. Χρώμα που αψηφά τον χρόνο.': 'voice/narrator/066.mp3',
+  'Μια πορτοκαλί γάτα κοιμάται αράχτη στα πλακάκια.': 'voice/narrator/067.mp3',
+  'Η γάτα νιαουρίζει απαλά.': 'voice/narrator/068.mp3',
+  'Πέτρινα παγκάκια στη σκιά. Γέροι κάθονταν εδώ κάθε απόγευμα, εδώ και δεκαετίες.': 'voice/narrator/069.mp3',
+  'Γλάστρες με γεράνια και λουλούδια. Κάποιος φροντίζει αυτή την πλατεία με αγάπη.': 'voice/narrator/070.mp3',
+  'Η πλατεία του Αγίου Νικολάου. Ησυχία, λουλούδια, και ήχος νερού.': 'voice/narrator/071.mp3',
+  'Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;': 'voice/narrator/072.mp3',
+  'Η θέα κόβει την ανάσα. Ολόκληρο το Γαλαξίδι, ο κόλπος, τα βουνά. Από εδώ βλέπεις τα πάντα.': 'voice/narrator/073.mp3',
+  'Πέτρινα ερείπια — ίσως ο παλιός μύλος. Αψίδα ακόμα όρθια, αψηφώντας τον χρόνο.': 'voice/narrator/074.mp3',
+  'Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.': 'voice/narrator/075.mp3',
+  'Πέτρινο καλντερίμι ανεβαίνει τον λόφο. Λειασμένο από πόδια αιώνων.': 'voice/narrator/076.mp3',
+  'Ο Γιάννης Βελανής. Ιδιοκτήτης του παλιού μύλου. Ήσυχος, βλέπει τα πάντα από ψηλά.': 'voice/narrator/077.mp3',
+  'Ο Γιάννης σου δίνει ένα φανάρι.': 'voice/narrator/078.mp3',
+  'Η κορυφή του λόφου. Αέρας, φως, και θέα που δεν τελειώνει.': 'voice/narrator/079.mp3',
+  '«ΕΛΠΙΔΑ» — χρυσά γράμματα σε ξεφλουδισμένο μπλε ξύλο.': 'voice/narrator/080.mp3',
+  'Ένα μικρό λευκό παρεκκλήσι πάνω στον βράχο. Ελληνική σημαία κυματίζει.': 'voice/narrator/081.mp3',
+  'Ο ήλιος βυθίζεται στον Κορινθιακό. Χρυσό, πορτοκαλί, ροζ. Τα βουνά γίνονται σκιές.': 'voice/narrator/082.mp3',
+  'Κανείς δεν μιλάει. Δεν χρειάζεται.': 'voice/narrator/083.mp3',
+  'Σχοινιά τυλιγμένα στο κατάστρωμα. Μυρίζουν θάλασσα και πεύκο.': 'voice/narrator/084.mp3',
+  'Πορτοκαλί σωσίβιο. Λευκά γράμματα: ΕΛΠΙΔΑ — ΓΑΛΑΞΙΔΙ.': 'voice/narrator/085.mp3',
+  'Το Γαλαξίδι λάμπει στον ήλιο του δειλινού. Σπίτια, εκκλησίες, το λιμάνι — σαν μακέτα.': 'voice/narrator/086.mp3',
+  'Η Ελπίδα πλέει αργά στον Κορινθιακό. Ο κόσμος σταμάτησε.': 'voice/narrator/087.mp3',
+  'Μαρμάρινοι σταυροί και πλάκες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς, Χρυσοβαλάντου.': 'voice/narrator/088.mp3',
+  'Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι.': 'voice/narrator/089.mp3',
+  'Κόκκινες παπαρούνες ανάμεσα στους τάφους. Η ζωή εκεί που αναπαύεται ο θάνατος.': 'voice/narrator/090.mp3',
+  'Η θάλασσα λάμπει χρυσή από το ηλιοβασίλεμα. Ακόμα και μετά θάνατον, οι καπετάνιοι βλέπουν τη θάλασσα.': 'voice/narrator/091.mp3',
+  'Ένα ιστιοφόρο στον ορίζοντα. Σαν φάντασμα του παρελθόντος.': 'voice/narrator/092.mp3',
+  'Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.': 'voice/narrator/093.mp3',
+  'Μια αχνή, ψηλή σιλουέτα κοντά στα κυπαρίσσια. Τρεμοπαίζει σαν φως σε νερό.': 'voice/narrator/094.mp3',
+  'Το φάντασμα δεν μιλάει. Δείχνει προς την εκκλησία.': 'voice/narrator/095.mp3',
+  'Το παλιό νεκροταφείο. Θέα στη θάλασσα, μυρωδιά θυμαριού, ησυχία.': 'voice/narrator/096.mp3',
+  'Τίποτα ιδιαίτερο.': 'voice/narrator/097.mp3',
+  'Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.': 'voice/narrator/098.mp3',
+  'Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.': 'voice/narrator/099.mp3',
+  '— Τέλος Σκηνής 1 —': 'voice/narrator/100.mp3',
+  'Συνέχεια στη Σκηνή 2: Το Γράμμα...': 'voice/narrator/101.mp3',
+  'Λατσούδη! Περίμενα πότε θα φτάσεις.': 'voice/athos/001.mp3',
+  'Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.': 'voice/athos/002.mp3',
+  'Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.': 'voice/athos/003.mp3',
+  'Άδειο. Κρίμα!': 'voice/ajax/001.mp3',
+  'Μπαμπά, θα πάμε βόλτα με βάρκα;': 'voice/ajax/002.mp3',
+  'Τέλειο! Πάμε κατευθείαν στο λιμάνι;': 'voice/ajax/003.mp3',
+  'Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...': 'voice/ajax/004.mp3',
+  'Μπαμπά, μπορώ να φάω ένα;': 'voice/ajax/005.mp3',
+  'Ποιος είναι ο «Γ.»;': 'voice/ajax/006.mp3',
+  'Και κάτι πάνω στην καρέκλα... μια τσάντα;': 'voice/ajax/007.mp3',
+  'Μπαμπά, μπορώ να πηδήξω σε κάποιο;': 'voice/ajax/008.mp3',
+  'Αυτό το λιμάνι φαίνεται τεράστιο για τόσο μικρό χωριό.': 'voice/ajax/009.mp3',
+  'Γιατί; Ήταν χαζοί;': 'voice/ajax/010.mp3',
+  'Ε, λίγο μόνο.': 'voice/ajax/011.mp3',
+  'Εγώ θέλω να δω αν έχει κανόνια.': 'voice/ajax/012.mp3',
+  'Εγώ μπορώ να πάρω λεμονάδα;': 'voice/ajax/013.mp3',
+  'Αυτό μοιάζει σαν πειρατικό καπηλειό!': 'voice/ajax/014.mp3',
+  'Ή σαν τιμόνι καραβιού!': 'voice/ajax/015.mp3',
+  'Μπορώ να κολυμπήσω;': 'voice/ajax/016.mp3',
+  'Μήπως είχε ρούμι;': 'voice/ajax/017.mp3',
+  'Σαν εκκλησία!': 'voice/ajax/018.mp3',
+  'Η πόρτα! Κοιτάξτε αυτή την τεράστια πόρτα!': 'voice/ajax/019.mp3',
+  'Πάλι γάτα;': 'voice/ajax/020.mp3',
+  'Τι; Τι βλέπεις;': 'voice/ajax/021.mp3',
+  'Μπαμπά, βλέπω μέχρι την Ιτέα!': 'voice/ajax/022.mp3',
+  'ΤΕΛΕΙΟ! Βλέπω τα πάντα από εδώ!': 'voice/ajax/023.mp3',
+  'Ξέρω κόμπους! Ο παππούς μου έμαθε.': 'voice/ajax/024.mp3',
+  'Μπαμπά, μπορούμε να μείνουμε για πάντα εδώ;': 'voice/ajax/025.mp3',
+  'Τους έβαλαν εδώ επίτηδες. Να βλέπουν.': 'voice/ajax/026.mp3',
+  'Φάντασμα; Σοβαρά τώρα;': 'voice/ajax/027.mp3',
+  'Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.': 'voice/ajax/028.mp3',
+  'Πάμε στο λιμάνι!': 'voice/ajax/029.mp3',
+  'Ε, Ντέμη! Τα παιδιά μεγάλωσαν!': 'voice/akis/001.mp3',
+  'Ένα παλιό τραγούδι ναυτικό. Πήγαινε στο μουσείο — θα καταλάβεις.': 'voice/akis/002.mp3',
+  '...': 'voice/giannis/001.mp3',
+  'Το ξέρω. Σε βλέπω από εδώ πάνω.': 'voice/giannis/002.mp3',
+  'Πάρε αυτό. Θα το χρειαστείς.': 'voice/giannis/003.mp3',
+  'Καλώς ήρθατε! Βλέπω ξέρετε να εκτιμάτε την ιστορία.': 'voice/curator/001.mp3',
+  'Τριακόσια πλοία! Η Χρυσούλα ήταν το τελευταίο. Τα ατμόπλοια τα σκότωσαν όλα.': 'voice/curator/002.mp3',
+  'Ωραία ερώτηση, μικρή. Ήταν τόσο καλοί στα πανιά, που δεν φαντάζονταν κόσμο χωρίς αυτά.': 'voice/curator/003.mp3',
+  'Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.': 'voice/clio/001.mp3',
+  'Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.': 'voice/clio/002.mp3',
+  'Μπαμπά, κοίτα! Δελφίνια!': 'voice/clio/003.mp3',
+  'Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.': 'voice/clio/004.mp3',
+  'Μπαμπά, μην ακουμπάς, φαίνεται παλιό!': 'voice/clio/005.mp3',
+  'Αυτό είναι το πιο όμορφο μέρος στον κόσμο.': 'voice/clio/006.mp3',
+  'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.': 'voice/clio/007.mp3',
+  'Διάβασέ το!': 'voice/clio/008.mp3',
+  'Κοιτάξτε — κάποιος μας άφησε σύκα!': 'voice/clio/009.mp3',
+  'Γιατί είναι τόσο μεγάλες;': 'voice/clio/010.mp3',
+  'Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...': 'voice/clio/011.mp3',
+  'Πόσο τέλεια! Αυτή η πορτοκαλί μου αρέσει πολύ.': 'voice/clio/012.mp3',
+  'Θείε Άκη, τι παίζεις;': 'voice/clio/013.mp3',
+  'Τριακόσια καράβια, μπαμπά. Το διάβασα.': 'voice/clio/014.mp3',
+  'Κοιτάξτε τα πανιά! Ένα-ένα ραμμένα.': 'voice/clio/015.mp3',
+  'Αυτός μοιάζει λίγο με τον μπαμπά.': 'voice/clio/016.mp3',
+  'Χωρίς GPS; Πώς;': 'voice/clio/017.mp3',
+  'Μπαμπά, σημείωσε αυτό. Μπορεί να μας χρειαστεί.': 'voice/clio/018.mp3',
+  'Γιατί δεν έφτιαξαν κι αυτοί ατμόπλοια;': 'voice/clio/019.mp3',
+  'Πόσα μοντέλα! Θέλω να τα δω ΟΛΑ.': 'voice/clio/020.mp3',
+  'Φανταστείτε πόσα χέρια το γύρισαν.': 'voice/clio/021.mp3',
+  'Μαγικό. Σαν πίνακας ζωγραφικής.': 'voice/clio/022.mp3',
+  'Σπήλαιο; Θα πάμε σε σπήλαιο;!': 'voice/clio/023.mp3',
+  'Μυρίζει ωραία. Σαν τη γιαγιά.': 'voice/clio/024.mp3',
+  'Δώδεκα θέσεις. Σαν ρολόι.': 'voice/clio/025.mp3',
+  'Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!': 'voice/clio/026.mp3',
+  'Ο Κάρκαρος. Λέγανε ότι η φωνή σου γυρίζει πίσω τρεις φορές.': 'voice/clio/027.mp3',
+  'Σαν να σε καλεί μέσα.': 'voice/clio/028.mp3',
+  'Μπαμπά... αυτό δεν μοιάζει σπήλαιο. Μοιάζει σαν κάποιος να το έφτιαξε.': 'voice/clio/029.mp3',
+  'Ρίχνω ένα νόμισμα;': 'voice/clio/030.mp3',
+  'Την ξαναβρήκα! Αυτή είναι η ίδια από το λιμάνι.': 'voice/clio/031.mp3',
+  'Γεια σου, μικρούλα. Με ακολουθείς;': 'voice/clio/032.mp3',
+  'Τι ωραία πλατεία! Και γάτα!': 'voice/clio/033.mp3',
+  'Αφήστε με να κοιτάξω!': 'voice/clio/034.mp3',
+  'Βλέπω... το λιμάνι! Και κάτι στο νερό...': 'voice/clio/035.mp3',
+  'Ένα σημάδι στην προβλήτα. Σαν αστέρι.': 'voice/clio/036.mp3',
+  'Και τους Δελφούς! Εκεί πάνω!': 'voice/clio/037.mp3',
+  'Θέλω να ζωγραφίσω αυτά.': 'voice/clio/038.mp3',
+  'Μπαμπά, κοίτα — ένα τηλεσκόπιο!': 'voice/clio/039.mp3',
+  'Ποιος πάει εκεί πάνω για λειτουργία;': 'voice/clio/040.mp3',
+  'Από εδώ φαίνεται σαν παραμύθι.': 'voice/clio/041.mp3',
+  'Αυτό... αυτό είναι τέλειο.': 'voice/clio/042.mp3',
+  'Κάθε πέτρα και ένα ταξίδι.': 'voice/clio/043.mp3',
+  'Μπαμπά, δεν είναι τρομακτικό. Είναι... ωραίο.': 'voice/clio/044.mp3',
+  'Μπαμπά... βλέπω κάτι εκεί.': 'voice/clio/045.mp3',
+  'Θέλει να πάμε στον Άγιο Νικόλαο!': 'voice/clio/046.mp3',
+  'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία.': 'voice/clio/047.mp3',
+  'Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.': 'voice/clio/048.mp3',
+  'Ας μπούμε μέσα.': 'voice/ntemis/001.mp3',
+  'Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.': 'voice/ntemis/002.mp3',
+  'Καλωσορίσατε στο Γαλαξίδι.': 'voice/ntemis/003.mp3',
+  'Φυσικά.': 'voice/ntemis/004.mp3',
+  'Και πώς ξέρει ότι είμαστε τρεις;': 'voice/ntemis/005.mp3',
+  'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.': 'voice/ntemis/006.mp3',
+  'Μπορείς να κοιτάξεις. Από εδώ.': 'voice/ntemis/007.mp3',
+  'Γιατί κάποτε εδώ δένανε ιστιοφόρα πενήντα μέτρων.': 'voice/ntemis/008.mp3',
+  'Καλησπέρα! Πολύ ψάρι σήμερα;': 'voice/ntemis/009.mp3',
+  'Στάθη! Πόσο καιρό!': 'voice/ntemis/010.mp3',
+  'Γιατί κάποτε δεν ήταν μικρό χωριό. Ήταν ναυτική δύναμη.': 'voice/ntemis/011.mp3',
+  'Αυτό ήταν το μέλλον. Και το Γαλαξίδι δεν το είδε.': 'voice/ntemis/012.mp3',
+  'Όχι. Ήταν οι καλύτεροι στα πανιά. Γι\u0027 αυτό ακριβώς δεν άλλαξαν.': 'voice/ntemis/013.mp3',
+  'Ευχαριστώ, νομίζω.': 'voice/ntemis/014.mp3',
+  'Αστέρια, εμπειρία, και θάρρος.': 'voice/ntemis/015.mp3',
+  'Τα παιδιά μου ήθελαν να δουν τα καράβια.': 'voice/ntemis/016.mp3',
+  'Σσσ. Μουσείο, παιδιά. Ησυχία.': 'voice/ntemis/017.mp3',
+  'Κάθε φωτογραφία και μια ιστορία. Κάθε πρόσωπο και μια ζωή.': 'voice/ntemis/018.mp3',
+  'Κάτσε. Ξεκουράσου. Η νύχτα είναι μακριά.': 'voice/ntemis/019.mp3',
+  'Με ξέρεις;': 'voice/ntemis/020.mp3',
+  'Ελάτε, ας δούμε ποιος είναι εδώ.': 'voice/ntemis/021.mp3',
+  'Κάτι πρέπει να μπει σε κάθε εσοχή. Αλλά τι;': 'voice/ntemis/022.mp3',
+  'Δεν κουνιέται. Χρειαζόμαστε κάτι για τις εσοχές.': 'voice/ntemis/023.mp3',
+  'Δεν έχουμε αρκετά ακόμα. Πρέπει να ψάξουμε περισσότερο.': 'voice/ntemis/024.mp3',
+  'Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα. Αυτοί οι τοίχοι θυμούνται.': 'voice/ntemis/025.mp3',
+  'Όχι τώρα, Αία. Ποιος ξέρει πόσο βαθιά είναι.': 'voice/ntemis/026.mp3',
+  'Πιθανόν, κάποτε.': 'voice/ntemis/027.mp3',
+  'Δώδεκα εσοχές. Σαν τιμόνι πλοίου. Κάτι μας λείπει.': 'voice/ntemis/028.mp3',
+  'Γιατί όχι; Κάνε μια ευχή.': 'voice/ntemis/029.mp3',
+  'Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.': 'voice/ntemis/030.mp3',
+  'Ο Άγιος Νικόλαος. Προστάτης των ναυτικών. Κατάλληλος για το Γαλαξίδι.': 'voice/ntemis/031.mp3',
+  'Σημείωσέ το, Κλειώ.': 'voice/ntemis/032.mp3',
+  'Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.': 'voice/ntemis/033.mp3',
+  'Ένα σημείο παρατήρησης. Κάποιος παρακολουθούσε τα πλοία από εδώ.': 'voice/ntemis/034.mp3',
+  'Ελπίδα. Πάντα υπάρχει ελπίδα.': 'voice/ntemis/035.mp3',
+  'Οι ψαράδες. Πριν και μετά το ταξίδι.': 'voice/ntemis/036.mp3',
+  'Δείξε μας.': 'voice/ntemis/037.mp3',
+  'Για λίγο ακόμα. Κοιτάξτε τον ήλιο.': 'voice/ntemis/038.mp3',
+  'Κάθε πέτρα και μια οικογένεια που περίμενε.': 'voice/ntemis/039.mp3',
+  'Μόλις μας έδωσε οδηγίες ένα φάντασμα.': 'voice/ntemis/040.mp3',
+  'Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.': 'voice/ntemis/041.mp3',
+  'Δεν μπορώ να μιλήσω σε αυτό.': 'voice/ntemis/042.mp3',
+  'Δεν ανοίγει.': 'voice/ntemis/043.mp3',
+  'Δεν ξέρω πώς.': 'voice/ntemis/044.mp3',
+  '«Σας περιμέναμε»... Ποιος μας περιμένει;': 'voice/ntemis/045.mp3',
+  'Ντέμη! Τι κάνεις εδώ; Πάρε μια καρέκλα!': 'voice/stathis/001.mp3',
+  'Ψάχνεις κάτι; Ρώτα τον Άθο στο Λιοτρίβι. Ξέρει τα πάντα για τις παλιές οικογένειες.': 'voice/stathis/002.mp3'
 };
 
 function playVoice(text) {
@@ -2101,6 +2792,363 @@ function closeDlg() {
   stopVoice();
   if (state.dlg.cb) { const cb = state.dlg.cb; state.dlg.cb = null; cb(); }
   checkEnd();
+}
+
+// ════════════════════════════════════════════════════════════
+// SCRIPTED SEQUENCE ENGINE
+// ════════════════════════════════════════════════════════════
+function startSequence(steps) {
+  state.seq.active = true;
+  state.seq.steps = steps;
+  state.seq.stepIdx = 0;
+  state.seq.stepTimer = 0;
+  executeStep();
+}
+
+function executeStep() {
+  const seq = state.seq;
+  if (seq.stepIdx >= seq.steps.length) { endSequence(); return; }
+  const step = seq.steps[seq.stepIdx];
+  seq.stepTimer = 0;
+
+  switch (step.type) {
+    case 'wait':
+      break;
+    case 'dialog':
+      showDlg(step.lines, () => advanceSeqStep());
+      break;
+    case 'env':
+      step._start = { darken: seq.env.darken, vignette: seq.env.vignette, spectral: seq.env.spectral };
+      break;
+    case 'move': {
+      const target = npcChars[step.who] || chars[step.who];
+      if (target) {
+        step._startX = target.x;
+        step._targetX = target.x + step.dx;
+      }
+      break;
+    }
+    case 'npc': {
+      const npc = npcChars[step.who];
+      if (npc) {
+        if (step.dir !== undefined) npc.dir = step.dir;
+        if (step.tilt !== undefined) npc.tilt = step.tilt;
+        if (step.wave !== undefined) npc.wave = step.wave;
+        if (step.visible !== undefined) npc.visible = step.visible;
+      }
+      advanceSeqStep();
+      break;
+    }
+    case 'effect':
+      if (step.effect === 'materialize') {
+        seq.ghostMat.active = true;
+        seq.ghostMat.progress = 0;
+        seq.ghostMat.alpha = 0;
+        seq.ghostMat.glowBlur = 30;
+        initSwirlParticles();
+      } else if (step.effect === 'fade_out') {
+        seq.ghostMat.active = true;
+        step._startAlpha = seq.ghostMat.alpha;
+      } else if (step.effect === 'stone_glow') {
+        seq.stoneGlow.active = true;
+        seq.stoneGlow.progress = 0;
+      } else if (step.effect === 'arm_raise') {
+        // Arm raise is timer-based, handled in updateGhostEffect
+      }
+      break;
+    case 'callback':
+      if (step.fn) step.fn();
+      advanceSeqStep();
+      break;
+  }
+}
+
+function advanceSeqStep() {
+  state.seq.stepIdx++;
+  if (state.seq.stepIdx < state.seq.steps.length) {
+    executeStep();
+  } else {
+    endSequence();
+  }
+}
+
+function endSequence() {
+  state.seq.active = false;
+  state.seq.steps = [];
+  state.seq.stepIdx = 0;
+  state.seq.ghostMat.active = false;
+  state.seq.stoneGlow.active = false;
+}
+
+function updateSequence(dt) {
+  if (!state.seq.active) return;
+  const seq = state.seq;
+  if (seq.stepIdx >= seq.steps.length) return;
+  const step = seq.steps[seq.stepIdx];
+  seq.stepTimer += dt;
+
+  switch (step.type) {
+    case 'wait':
+      if (seq.stepTimer >= step.duration) advanceSeqStep();
+      break;
+    case 'env': {
+      const t = Math.min(1, seq.stepTimer / step.duration);
+      const e = easeInOutCubic(t);
+      seq.env.darken = step._start.darken + (step.darken - step._start.darken) * e;
+      seq.env.vignette = step._start.vignette + (step.vignette - step._start.vignette) * e;
+      seq.env.spectral = step._start.spectral + (step.spectral - step._start.spectral) * e;
+      if (t >= 1) advanceSeqStep();
+      break;
+    }
+    case 'move': {
+      const target = npcChars[step.who] || chars[step.who];
+      if (target && step._startX !== undefined) {
+        const t = Math.min(1, seq.stepTimer / step.duration);
+        target.x = step._startX + (step._targetX - step._startX) * easeInOutCubic(t);
+        if (step.dx > 0) target.dir = 1;
+        else if (step.dx < 0) target.dir = -1;
+        if (t >= 1) advanceSeqStep();
+      } else {
+        advanceSeqStep();
+      }
+      break;
+    }
+    case 'effect':
+      updateGhostEffect(dt, step);
+      break;
+  }
+
+  // Keep swirl particles animating between steps
+  if (seq.ghostMat.active && step.type !== 'effect') {
+    updateSwirlParticles(dt);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// GHOST MATERIALIZATION EFFECTS
+// ════════════════════════════════════════════════════════════
+function initSwirlParticles() {
+  const sp = state.seq.swirlParticles;
+  sp.length = 0;
+  const ghost = npcChars.ghost;
+  for (let i = 0; i < 40; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 80 + Math.random() * 120;
+    sp.push({
+      angle, dist, startDist: dist,
+      x: ghost.x + Math.cos(angle) * dist,
+      y: ghost.y - 50 + Math.sin(angle) * dist * 0.5,
+      size: 1 + Math.random() * 2.5,
+      alpha: 0, maxAlpha: 0.4 + Math.random() * 0.4,
+      speed: 0.5 + Math.random() * 1.5,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+}
+
+function updateSwirlParticles(dt) {
+  const sp = state.seq.swirlParticles;
+  const ghost = npcChars.ghost;
+  for (const p of sp) {
+    p.angle += dt * p.speed;
+    p.x = ghost.x + Math.cos(p.angle) * p.dist;
+    p.y = (ghost.y - 50) + Math.sin(p.angle) * p.dist * 0.5;
+  }
+}
+
+function updateGhostEffect(dt, step) {
+  const seq = state.seq;
+  const t = Math.min(1, seq.stepTimer / step.duration);
+
+  if (step.effect === 'materialize') {
+    seq.ghostMat.progress = t;
+    if (t < 0.6) {
+      const ct = t / 0.6;
+      for (const p of seq.swirlParticles) {
+        p.dist = p.startDist * (1 - easeInOutCubic(ct) * 0.85);
+        p.alpha = p.maxAlpha * Math.min(1, ct * 2);
+      }
+    }
+    if (t >= 0.4) {
+      const ft = (t - 0.4) / 0.6;
+      seq.ghostMat.alpha = easeInOutCubic(ft) * 0.55;
+      seq.ghostMat.glowBlur = 30 - easeInOutCubic(ft) * 18;
+    }
+    if (t >= 0.5) {
+      const ft = (t - 0.5) / 0.5;
+      for (const p of seq.swirlParticles) {
+        p.alpha = p.maxAlpha * (1 - ft);
+      }
+    }
+    updateSwirlParticles(dt);
+    if (t >= 1) advanceSeqStep();
+  } else if (step.effect === 'fade_out') {
+    const startA = step._startAlpha || 0.55;
+    seq.ghostMat.alpha = startA * (1 - easeInOutCubic(t));
+    seq.ghostMat.glowBlur = 12 + easeInOutCubic(t) * 18;
+    for (const p of seq.swirlParticles) {
+      const fadeT = t < 0.3 ? t / 0.3 : 1 - (t - 0.3) / 0.7;
+      p.alpha = p.maxAlpha * 0.5 * Math.max(0, fadeT);
+    }
+    updateSwirlParticles(dt);
+    if (t >= 1) {
+      seq.ghostMat.active = false;
+      seq.ghostMat.alpha = 0;
+      advanceSeqStep();
+    }
+  } else if (step.effect === 'stone_glow') {
+    seq.stoneGlow.progress = t;
+    if (t >= 1) {
+      seq.stoneGlow.active = false;
+      advanceSeqStep();
+    }
+  } else if (step.effect === 'arm_raise') {
+    // Lerp ghost arm from 0 (down) to 1 (raised and pointing)
+    npcChars.ghost.arm = easeInOutCubic(t);
+    if (t >= 1) advanceSeqStep();
+  }
+}
+
+function drawSwirlParticles() {
+  const sp = state.seq.swirlParticles;
+  for (const p of sp) {
+    if (p.alpha <= 0) continue;
+    ctx.save();
+    ctx.globalAlpha = p.alpha;
+    ctx.shadowColor = 'rgba(100,180,255,0.6)';
+    ctx.shadowBlur = 4;
+    const r = 150 + Math.sin(p.phase) * 50;
+    ctx.fillStyle = `rgb(${r},${180 + Math.sin(p.phase + 1) * 40},255)`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function drawStoneGlow() {
+  if (!state.seq.stoneGlow.active) return;
+  const t = state.seq.stoneGlow.progress;
+  const pulse = Math.sin(t * Math.PI * 3) * 0.3 + 0.7;
+  const alpha = Math.sin(t * Math.PI) * 0.5 * pulse;
+  if (alpha <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const grad = ctx.createRadialGradient(460, 270, 0, 460, 270, 60);
+  grad.addColorStop(0, 'rgba(80,220,100,0.6)');
+  grad.addColorStop(0.5, 'rgba(50,180,80,0.3)');
+  grad.addColorStop(1, 'rgba(30,100,50,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(400, 210, 120, 120);
+  ctx.restore();
+}
+
+function drawGhostArm() {
+  const ghost = npcChars.ghost;
+  if (ghost.arm === undefined || ghost.arm < 0) return;
+  if (ghost.scene !== state.scene) return;
+  const arm = ghost.arm; // 0 = down, 1 = raised pointing
+  const gx = ghost.x;
+  const gy = ghost.y;
+
+  const shoulderX = gx + ghost.dir * 10;
+  const shoulderY = gy - 60;
+  // Canvas: PI/2 = down, -PI/3 = up-right ~60°
+  const elbowAngle = Math.PI * 0.5 - arm * (Math.PI * 0.5 + Math.PI / 3);
+  const elbowX = shoulderX + Math.cos(elbowAngle) * 22 * ghost.dir;
+  const elbowY = shoulderY + Math.sin(elbowAngle) * 22;
+  const handAngle = elbowAngle - arm * 0.3;
+  const handX = elbowX + Math.cos(handAngle) * 24 * ghost.dir;
+  const handY = elbowY + Math.sin(handAngle) * 24;
+
+  const alpha = state.seq.ghostMat.alpha || (ghost.visible ? 0.5 : 0);
+  if (alpha <= 0) return;
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.7;
+  ctx.strokeStyle = 'rgba(170,210,240,0.8)';
+  ctx.shadowColor = 'rgba(100,180,255,0.5)';
+  ctx.shadowBlur = 10;
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  // Arm as smooth curve
+  ctx.beginPath();
+  ctx.moveTo(shoulderX, shoulderY);
+  ctx.quadraticCurveTo(elbowX, elbowY, handX, handY);
+  ctx.stroke();
+
+  // Subtle fingertip glow when mostly raised
+  if (arm > 0.7) {
+    const glowT = (arm - 0.7) / 0.3;
+    ctx.globalAlpha = alpha * glowT * 0.5;
+    const fg = ctx.createRadialGradient(handX, handY, 0, handX, handY, 10);
+    fg.addColorStop(0, 'rgba(150,200,255,0.7)');
+    fg.addColorStop(1, 'rgba(100,160,255,0)');
+    ctx.fillStyle = fg;
+    ctx.fillRect(handX - 10, handY - 10, 20, 20);
+  }
+  ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════════
+// GHOST SUMMONING SEQUENCE
+// ════════════════════════════════════════════════════════════
+function startGhostSequence() {
+  startSequence([
+    // Crossfade to eerie ghost music
+    { type: 'callback', fn: () => {
+      changeSceneMusic('_ghost');
+    }},
+    { type: 'env', duration: 1.5, darken: 0.35, vignette: 0.6, spectral: 0.8 },
+    { type: 'dialog', lines: [{s:'',t:'Ο αέρας αλλάζει. Η θερμοκρασία πέφτει. Τα κυπαρίσσια σταματούν να κουνιούνται.'}] },
+    { type: 'move', who: 'clio', dx: 25, duration: 0.8 },
+    { type: 'move', who: 'ajax', dx: 20, duration: 0.8 },
+    { type: 'dialog', lines: [{s:'ΚΛΕΙΩ',t:'Μπαμπά... η πέτρα λάμπει!'},{s:'ΑΙΑΣ',t:'Τι γίνεται; Γιατί σκοτείνιασε;'}] },
+    { type: 'wait', duration: 1.0 },
+    { type: 'effect', effect: 'materialize', duration: 3.0 },
+    { type: 'npc', who: 'ghost', visible: true },
+    { type: 'dialog', lines: [
+      {s:'',t:'Μια φιγούρα υψώνεται πάνω από τον τάφο. Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
+      {s:'ΚΛΕΙΩ',t:'Ο... ο Καπετάν Βισβίκης;'},
+      {s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέσα από αυτόν!'},
+    ]},
+    { type: 'npc', who: 'ghost', dir: -1 },
+    { type: 'wait', duration: 0.8 },
+    { type: 'npc', who: 'ghost', dir: 1 },
+    { type: 'wait', duration: 0.6 },
+    // Ghost raises arm and points to church
+    { type: 'callback', fn: () => { npcChars.ghost.arm = 0; }},
+    { type: 'npc', who: 'ghost', dir: 1, tilt: -0.1 },
+    { type: 'effect', effect: 'arm_raise', duration: 1.2 },
+    { type: 'dialog', lines: [{s:'',t:'Το φάντασμα σηκώνει αργά το χέρι. Δείχνει... προς τον Άγιο Νικόλαο.'}] },
+    { type: 'dialog', lines: [
+      {s:'ΚΛΕΙΩ',t:'Ο χάρτης. Θέλει να βρούμε τον χάρτη.'},
+      {s:'ΝΤΕΜΗΣ',t:'Στην εκκλησία; Τι κρύβεται εκεί;'},
+    ]},
+    { type: 'npc', who: 'ghost', tilt: 0, wave: 3 },
+    { type: 'wait', duration: 1.0 },
+    { type: 'npc', who: 'ghost', wave: 0 },
+    { type: 'callback', fn: () => { npcChars.ghost.arm = -1; }},
+    { type: 'effect', effect: 'fade_out', duration: 2.5 },
+    { type: 'effect', effect: 'stone_glow', duration: 1.5 },
+    { type: 'env', duration: 2.0, darken: 0, vignette: 0, spectral: 0 },
+    // Crossfade back to graveyard music
+    { type: 'callback', fn: () => {
+      changeSceneMusic('graveyard');
+    }},
+    { type: 'dialog', lines: [
+      {s:'ΑΙΑΣ',t:'Αυτό... αυτό μόλις έγινε. Δεν ονειρεύομαι.'},
+      {s:'ΚΛΕΙΩ',t:'Περίμενε 120 χρόνια. Για κάποιον σαν εμάς.'},
+      {s:'ΝΤΕΜΗΣ',t:'Στον Άγιο Νικόλαο. Τώρα.'},
+    ]},
+    { type: 'callback', fn: () => {
+      const sc = scenes.graveyard;
+      if (!sc.exits.find(e => e.target === 'church')) {
+        sc.exits.push({ side: 'right', target: 'church', label: 'Αγ. Νικόλαος →' });
+      }
+      npcChars.ghost.visible = true;
+    }},
+  ]);
 }
 
 function drawDialogue() {
@@ -2258,6 +3306,11 @@ function addInv(item) {
   renderInvUI();
 }
 
+function removeInv(id) {
+  state.inv = state.inv.filter(i => i.id !== id);
+  renderInvUI();
+}
+
 // Inventory item icons — pixel art drawn on mini canvases (52x52)
 const INV_ICONS = {
   note: (c) => {
@@ -2316,6 +3369,24 @@ const INV_ICONS = {
     c.fillStyle='#d4a03c'; c.beginPath(); c.ellipse(26,10,5,8,0,0,Math.PI*2); c.fill();
     c.fillStyle='#f0d060'; c.beginPath(); c.ellipse(26,10,3,5,0,0,Math.PI*2); c.fill();
     c.fillStyle='#fff8e0'; c.beginPath(); c.ellipse(26,11,1,3,0,0,Math.PI*2); c.fill();
+  },
+  green_stone: (c) => {
+    // Jade stone — smooth green gem with veins
+    c.fillStyle='#1a4a2a'; c.beginPath(); c.moveTo(26,8); c.lineTo(40,20); c.lineTo(38,36);
+    c.lineTo(14,36); c.lineTo(12,20); c.closePath(); c.fill();
+    c.fillStyle='#2a7a3a'; c.beginPath(); c.moveTo(26,10); c.lineTo(38,21); c.lineTo(36,34);
+    c.lineTo(16,34); c.lineTo(14,21); c.closePath(); c.fill();
+    // Lighter face
+    c.fillStyle='#3a9a4a'; c.beginPath(); c.moveTo(26,14); c.lineTo(34,22); c.lineTo(32,30);
+    c.lineTo(20,30); c.lineTo(18,22); c.closePath(); c.fill();
+    // Highlight
+    c.fillStyle='rgba(180,255,200,0.4)'; c.beginPath(); c.ellipse(24,20,5,3,-0.3,0,Math.PI*2); c.fill();
+    // Veins
+    c.strokeStyle='rgba(20,80,30,0.3)'; c.lineWidth=0.8;
+    c.beginPath(); c.moveTo(20,18); c.quadraticCurveTo(26,24,32,20); c.stroke();
+    c.beginPath(); c.moveTo(22,28); c.quadraticCurveTo(28,25,34,28); c.stroke();
+    // Inner glow
+    c.fillStyle='rgba(100,255,150,0.15)'; c.beginPath(); c.ellipse(26,24,8,6,0,0,Math.PI*2); c.fill();
   },
   key: (c) => {
     // Ornate brass key
@@ -2381,13 +3452,21 @@ function startScene(id) {
   state.hoverObj = null;
   bgCachedScene = null; // invalidate background cache
 
+  // Reset sequence environment (prevent bleed between scenes)
+  state.seq.env.darken = 0;
+  state.seq.env.vignette = 0;
+  state.seq.env.spectral = 0;
+  state.seq.swirlParticles.length = 0;
+  state.seq.stoneGlow.active = false;
+
   document.getElementById('ui-panel').classList.add('on');
   document.getElementById('action-line').classList.add('on');
 
-  // Position characters
+  // Position characters — snap to walkLine ground level
   for (const [who, pos] of Object.entries(sc.charPos)) {
     chars[who].x = pos.x;
-    chars[who].y = pos.y;
+    // Use walkLine ground Y if available, otherwise fallback to charPos.y
+    chars[who].y = sc.walkLine ? getGroundY(id, pos.x) : pos.y;
     chars[who].walking = false;
     chars[who].visible = true;
     chars[who].fadeIn = 0; // start fade-in
@@ -2539,6 +3618,11 @@ function render() {
     return;
   }
 
+  if (state.phase === 'cutscene') {
+    renderCutscene();
+    return;
+  }
+
   if (state.phase !== 'playing') return;
   if (!state.scene) return;
 
@@ -2654,6 +3738,7 @@ function render() {
   for (const npcId of Object.keys(npcChars)) {
     drawNPC(npcId, state.tick);
   }
+  drawGhostArm();
 
   // Characters — back to front for depth
   drawCharacter('clio', state.tick);
@@ -2682,6 +3767,27 @@ function render() {
   ctx.textBaseline = 'top';
   ctx.fillText('♪', GW - 8, 8);
   ctx.restore();
+
+  // ── Sequence overlays (between scene and dialogue) ──
+  if (state.seq.env.darken > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.seq.env.darken;
+    ctx.fillStyle = '#0a0820'; // deep blue-black
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+  if (state.seq.env.vignette > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.seq.env.vignette;
+    const vig = ctx.createRadialGradient(GW / 2, GH / 2, GW * 0.25, GW / 2, GH / 2, GW * 0.6);
+    vig.addColorStop(0, 'rgba(0,0,0,0)');
+    vig.addColorStop(1, 'rgba(5,5,20,0.8)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+  drawSwirlParticles();
+  drawStoneGlow();
 
   // Dialogue overlay
   drawDialogue();
@@ -2718,7 +3824,7 @@ function update(dt) {
 
   // Title screen — start music on first interaction (handled by click)
   if (state.phase === 'title') return;
-
+  if (state.phase === 'cutscene') { updateCutscene(dt); return; }
   if (state.phase !== 'playing') return;
 
   // Walking
@@ -2736,6 +3842,9 @@ function update(dt) {
 
   // Dialogue typewriter
   updateDlg(dt);
+
+  // Scripted sequences
+  updateSequence(dt);
 
   // Particles
   updateParticles();
@@ -2789,8 +3898,8 @@ CVS.addEventListener('mousemove', (e) => {
     return;
   }
 
-  if (state.phase !== 'playing' || state.dlg.active) {
-    CVS.style.cursor = state.dlg.active ? 'pointer' : 'default';
+  if (state.phase !== 'playing' || state.dlg.active || state.seq.active) {
+    CVS.style.cursor = (state.dlg.active || state.seq.active) ? 'pointer' : 'default';
     state.hoverObj = null;
     updateActionLine();
     return;
@@ -2818,11 +3927,23 @@ CVS.addEventListener('mousemove', (e) => {
 CVS.addEventListener('click', (e) => {
   const g = screenToGame(e.clientX, e.clientY);
 
+  // Cutscene: click speeds up dialogue typewriter
+  if (state.phase === 'cutscene' && state.cutscene.active) {
+    if (state.cutscene.dlgCharIdx < state.cutscene.dlgText.length) {
+      state.cutscene.dlgDisplayed = state.cutscene.dlgText;
+      state.cutscene.dlgCharIdx = state.cutscene.dlgText.length;
+    }
+    return;
+  }
+
   // Title clicks handled by dedicated handler
   if (state.phase !== 'playing') return;
 
   // Dialogue advance
   if (state.dlg.active) { advanceDlg(); return; }
+
+  // Block all interaction during sequences (dialog already handled above)
+  if (state.seq.active) return;
 
   // Music toggle (top-right corner)
   if (g.x > GW - 30 && g.y < 25) { toggleMusic(); return; }
@@ -2835,8 +3956,12 @@ CVS.addEventListener('click', (e) => {
   const obj = hitTestObj(g.x, g.y);
   if (obj) { objClick(obj); return; }
 
-  // Click ground — walk Ntemis
-  if (g.y > 200) { // Only walk on ground area
+  // Click ground — walk Ntemis (walkLine defines valid ground area)
+  const sc = scenes[state.scene];
+  if (sc && sc.walkLine && g.y > 200) {
+    startWalk('ntemis', g.x);
+    familyFollow(g.x);
+  } else if (g.y > 200) {
     startWalk('ntemis', g.x);
     familyFollow(g.x);
   }
@@ -2844,12 +3969,24 @@ CVS.addEventListener('click', (e) => {
 
 // Keyboard
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && state.phase === 'cutscene') { skipCutscene(); return; }
   if (e.key === ' ' || e.key === 'Enter') {
     e.preventDefault();
     if (state.dlg.active) advanceDlg();
   }
   const vk = {'1':'look','2':'talk','3':'open','4':'use'};
   if (vk[e.key] && state.phase === 'playing') setVerb(vk[e.key]);
+  // DEBUG: Press G to warp to graveyard with green stone + Use verb active
+  if (e.key === 'g' && !state.dlg.active) {
+    if (state.phase !== 'playing') {
+      state.phase = 'playing';
+      document.getElementById('ui-panel').classList.add('on');
+      document.getElementById('action-line').classList.add('on');
+    }
+    addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα' });
+    setVerb('use');
+    startScene('graveyard');
+  }
 });
 
 // ════════════════════════════════════════════════════════════
@@ -2872,6 +4009,7 @@ const sceneMusic = {
   boat:     'music/the-crossing-1.mp3',
   cave_final:'music/the-treasure-1.mp3',
   epilogue:  'music/the-sea-remembers-1.mp3',
+  _ghost:    'music/the-ghost-of-captain-visvikis-1.mp3',
 };
 
 let currentMusicSrc = '';
@@ -2939,7 +4077,7 @@ function drawTitleScreen(tick) {
   // Scanline displacement (Monkey Island / SNES technique)
   // ═══════════════════════════════════════
   const bg = images['title-bg'];
-  const waterLine = Math.floor(GH * 0.78);
+  const waterLine = Math.floor(GH * 0.80);
 
   // Zoom: starts at 1.12x, eases to 1.0x over ~400 ticks (~7 sec)
   const zoomDuration = 400;
@@ -3055,12 +4193,15 @@ function drawTitleScreen(tick) {
 
     // ── Tiny people strolling along the dock ──
     const walkers = [
-      { x0: 140, range: 40, speed: 0.06, y: 232, phase: 0,   shirt: '#9A3030', pants: '#4A4A56' },
-      { x0: 280, range: 35, speed: -0.05, y: 233, phase: 80,  shirt: '#2858A0', pants: '#3A3A48' },
-      { x0: 380, range: 30, speed: 0.07, y: 231, phase: 200, shirt: '#D09040', pants: '#484854' },
-      { x0: 500, range: 25, speed: -0.04, y: 234, phase: 130, shirt: '#308050', pants: '#3A3A48' },
+      // Right dock / stone walkway
+      { x0: 400, range: 45, speed: 0.06, y: 350, phase: 0,   shirt: '#9A3030', pants: '#4A4A56' },
+      { x0: 480, range: 40, speed: -0.05, y: 353, phase: 80,  shirt: '#2858A0', pants: '#3A3A48' },
+      { x0: 540, range: 30, speed: 0.07, y: 347, phase: 200, shirt: '#D09040', pants: '#484854' },
+      // Harbor edge near boats (left side)
+      { x0: 120, range: 30, speed: 0.04, y: 285, phase: 50,  shirt: '#7A4020', pants: '#3A3A48' },
+      { x0: 220, range: 25, speed: -0.03, y: 288, phase: 160, shirt: '#308050', pants: '#484854' },
     ];
-    ctx.globalAlpha = 0.7;
+    ctx.globalAlpha = 0.8;
     for (const p of walkers) {
       const pcycle = p.range * 2;
       const raw = ((tick * Math.abs(p.speed) + p.phase) % pcycle);
@@ -3070,18 +4211,32 @@ function drawTitleScreen(tick) {
       ctx.save();
       ctx.translate(Math.floor(wx), p.y);
       if (dir < 0) ctx.scale(-1, 1);
+      // Head (3x2)
       ctx.fillStyle = '#D4AC80';
-      ctx.fillRect(0, 0, 2, 1);
+      ctx.fillRect(0, 0, 3, 2);
+      // Hair
+      ctx.fillStyle = '#5A3A20';
+      ctx.fillRect(0, 0, 3, 1);
+      // Torso (3x3)
       ctx.fillStyle = p.shirt;
-      ctx.fillRect(0, 1, 2, 2);
+      ctx.fillRect(0, 2, 3, 3);
+      // Arms swinging
+      const armSwing = step === 0 ? 1 : -1;
+      ctx.fillRect(-1, 2 + armSwing, 1, 2);
+      ctx.fillRect(3, 2 - armSwing, 1, 2);
+      // Legs (2-frame walk)
       ctx.fillStyle = p.pants;
       if (step === 0) {
-        ctx.fillRect(0, 3, 1, 2);
-        ctx.fillRect(1, 3, 1, 1);
+        ctx.fillRect(0, 5, 1, 3);
+        ctx.fillRect(2, 5, 1, 2);
       } else {
-        ctx.fillRect(0, 3, 1, 1);
-        ctx.fillRect(1, 3, 1, 2);
+        ctx.fillRect(0, 5, 1, 2);
+        ctx.fillRect(2, 5, 1, 3);
       }
+      // Shoes
+      ctx.fillStyle = '#2A1A10';
+      ctx.fillRect(0, step === 0 ? 8 : 7, 1, 1);
+      ctx.fillRect(2, step === 0 ? 7 : 8, 1, 1);
       ctx.restore();
     }
     ctx.globalAlpha = 1;
@@ -3285,34 +4440,21 @@ document.getElementById('intro-screen').onclick = () => {
     const is = document.getElementById('intro-screen');
     is.style.opacity = '0';
 
-    // Crossfade: title music out, scene music in (2 second overlap)
-    currentMusicSrc = sceneMusic['exterior'];
-    bgm.volume = 0;
-    bgm.play().catch(() => {});
-    const crossfadeDur = 2000; // 2 seconds
-    const crossfadeStart = performance.now();
-    const crossfadeStep = () => {
-      const elapsed = performance.now() - crossfadeStart;
-      const t = Math.min(1, elapsed / crossfadeDur);
-      // Ease: smooth cubic
+    // Keep title music playing through cutscene — dim slightly for cinematic feel
+    const dimDur = 1500;
+    const dimStart = performance.now();
+    const dimStep = () => {
+      const t = Math.min(1, (performance.now() - dimStart) / dimDur);
       const ease = t < 0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
-      titleMusic.volume = Math.max(0, 0.7 * (1 - ease));
-      bgm.volume = 0.25 * ease;
-      if (t < 1) {
-        requestAnimationFrame(crossfadeStep);
-      } else {
-        titleMusic.pause();
-        titleMusic.volume = 0.7;
-        bgm.volume = 0.25;
-      }
+      titleMusic.volume = 0.7 - ease * 0.3; // dim from 0.7 to 0.4
+      if (t < 1) requestAnimationFrame(dimStep);
     };
-    requestAnimationFrame(crossfadeStep);
+    requestAnimationFrame(dimStep);
 
     setTimeout(() => {
       is.style.display = 'none';
-      state.phase = 'playing';
       state.musicOn = true;
-      startScene('exterior');
+      startCutscene('arrival');
     }, 1500);
   } else {
     showIntroPage();
