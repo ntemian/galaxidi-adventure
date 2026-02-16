@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<title>Το Μυστικό του Γαλαξειδίου</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  user-select: none;
+}
+#game-wrapper { position: relative; }
+#game-container { background: #000; border: 3px solid #5A4020; border-radius: 2px; }
+canvas#scene {
+  display: block;
+  cursor: crosshair;
+  image-rendering: auto;
+}
+/* --- SCUMM-STYLE BOTTOM PANEL (Monkey Island 2 brown wooden) --- */
+#bottom-panel {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #4A3520 0%, #3A2810 50%, #2A1A08 100%);
+  border-top: 2px solid #6A5030;
+  height: 110px;
+}
+#sentence-line {
+  height: 20px;
+  background: linear-gradient(180deg, #3A2810 0%, #2A1A08 100%);
+  color: #FFCC66;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  text-align: center;
+  line-height: 20px;
+  border-bottom: 1px solid #5A4020;
+  text-shadow: 1px 1px 2px #000;
+}
+#panel-row {
+  display: flex;
+  flex: 1;
+}
+#verb-panel {
+  width: 280px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  padding: 4px 6px;
+}
+.verb-btn {
+  background: linear-gradient(180deg, #5A4228 0%, #3A2A18 100%);
+  color: #DDBB77;
+  border: 1px solid #6A5030;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+  text-align: center;
+  line-height: 1.5;
+  text-shadow: 1px 1px 1px #000;
+  margin: 1px;
+}
+.verb-btn:hover {
+  background: linear-gradient(180deg, #7A5A38 0%, #5A3A20 100%);
+  color: #FFDD88;
+  border-color: #8A7040;
+}
+.verb-btn.active {
+  background: linear-gradient(180deg, #8A6A40 0%, #6A4A28 100%);
+  color: #FFEE99;
+  border-color: #AA8850;
+  box-shadow: inset 0 0 4px rgba(255,200,100,0.3);
+}
+#inventory-panel {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding: 4px 8px;
+  gap: 4px;
+  overflow-y: auto;
+  border-left: 2px solid #5A4020;
+  background: linear-gradient(180deg, #3A2810 0%, #2A1808 100%);
+}
+.inv-slot {
+  min-width: 52px; height: 40px;
+  background: linear-gradient(180deg, #2A1A0A 0%, #1A1008 100%);
+  border: 1px solid #5A4020;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.inv-slot:hover { border-color: #AA8850; background: #3A2810; }
+.inv-slot.selected { border-color: #FFCC66; border-width: 2px; background: #4A3018; box-shadow: 0 0 6px rgba(255,200,100,0.3); }
+.inv-slot canvas { image-rendering: pixelated; }
+/* --- TEXT AREA (above scene, Monkey Island style) --- */
+#text-overlay {
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  transform: translateY(-50%);
+  text-align: center;
+  color: #FFCC00;
+  font-size: 20px;
+  font-family: 'Courier New', monospace;
+  text-shadow: 2px 2px 4px #000, -2px -2px 4px #000, 2px -2px 4px #000, -2px 2px 4px #000, 0 0 8px rgba(0,0,0,0.8);
+  pointer-events: none;
+  padding: 0 40px;
+  z-index: 5;
+  line-height: 1.6;
+  white-space: pre-line;
+  max-width: 700px;
+  margin: 0 auto;
+}
+#hover-label {
+  display: none; /* replaced by sentence line */
+}
+/* --- HELP BUTTON --- */
+#help-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px; height: 24px;
+  background: linear-gradient(180deg, #5A4228 0%, #3A2A18 100%);
+  color: #FFCC00;
+  border: 1px solid #6A5030;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 15;
+  font-family: serif;
+  line-height: 22px;
+  text-align: center;
+}
+#help-btn:hover { background: linear-gradient(180deg, #7A5A38 0%, #5A3A20 100%); }
+/* --- HELP OVERLAY --- */
+#help-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(30,20,8,0.95);
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 20px;
+}
+#help-overlay h2 { color: #FFCC00; font-size: 20px; margin-bottom: 16px; font-family: 'Courier New', monospace; }
+#help-overlay .help-section { max-width: 520px; width: 100%; margin-bottom: 14px; }
+#help-overlay .help-section h3 { color: #55DD55; font-size: 13px; margin-bottom: 5px; font-family: 'Courier New', monospace; }
+#help-overlay .help-section p, #help-overlay .help-section li {
+  color: #AABBCC; font-size: 12px; font-family: 'Courier New', monospace; line-height: 1.7;
+}
+#help-overlay .help-section ul { list-style: none; padding-left: 10px; }
+#help-overlay .help-section ul li::before { content: "> "; color: #FFCC00; }
+#help-overlay .hint-text { color: #FF8855; font-style: italic; white-space: pre-line; line-height: 1.8; }
+#help-overlay .close-hint { color: #666; font-size: 11px; margin-top: 18px; font-family: 'Courier New', monospace; }
+/* --- TITLE & WIN SCREENS --- */
+#title-screen {
+  position: absolute; top: 0; left: 0;
+  width: 800px; height: 510px;
+  background: #000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 10; cursor: pointer;
+  background-size: 800px 400px;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+#title-screen h1 {
+  color: #FFCC00; font-family: 'Courier New', monospace;
+  font-size: 28px; text-align: center;
+  text-shadow: 2px 2px 0 #885500, 0 0 20px rgba(255,200,0,0.4), 0 0 40px rgba(0,0,0,0.8);
+  margin-bottom: 8px;
+  position: relative; z-index: 1;
+}
+#title-screen h2 {
+  color: #55CCDD; font-family: 'Courier New', monospace;
+  font-size: 16px; text-align: center; margin-bottom: 30px;
+}
+#title-screen .subtitle {
+  color: #8899AA; font-family: 'Courier New', monospace;
+  font-size: 12px; text-align: center; margin-bottom: 6px;
+}
+#title-screen .blink {
+  color: #55FF55; font-family: 'Courier New', monospace;
+  font-size: 14px; animation: blink 1.2s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+#win-screen {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(30,20,8,0.95);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 20;
+}
+#win-screen h1 { color: #FFCC00; font-family: 'Courier New', monospace; font-size: 24px; text-shadow: 2px 2px 0 #885500; margin-bottom: 14px; }
+#win-screen p { color: #55CCDD; font-family: 'Courier New', monospace; font-size: 13px; text-align: center; max-width: 480px; line-height: 1.8; }
+/* --- FADE OVERLAY --- */
+#fade-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: #000; opacity: 0; pointer-events: none; z-index: 8;
+  transition: opacity 0.4s ease;
+}
+#fade-overlay.active { opacity: 1; }
+/* --- DIALOG OVERLAY --- */
+#dialog-overlay {
+  position: absolute; bottom: 92px; left: 0; right: 0;
+  display: none; flex-direction: column; align-items: center;
+  padding: 8px; z-index: 7; gap: 4px;
+}
+.dialog-option {
+  background: rgba(50,30,10,0.92); color: #FFCC66; border: 1px solid #6A5030;
+  font-family: 'Courier New', monospace; font-size: 14px; padding: 6px 16px;
+  cursor: pointer; width: 90%; max-width: 500px; text-align: left;
+}
+.dialog-option:hover { color: #FFEE99; border-color: #AA8850; background: rgba(70,40,15,0.95); }
+/* --- SAVE/LOAD BUTTONS --- */
+#save-load-panel {
+  position: absolute; top: 4px; left: 4px; display: flex; gap: 4px; z-index: 15;
+}
+#save-load-panel button {
+  background: linear-gradient(180deg, #5A4228 0%, #3A2A18 100%); color: #DDBB77; border: 1px solid #6A5030;
+  font-family: 'Courier New', monospace; font-size: 9px; padding: 2px 6px;
+  cursor: pointer; border-radius: 3px; text-shadow: 1px 1px 1px #000;
+}
+#save-load-panel button:hover { color: #FFDD88; border-color: #AA8850; background: linear-gradient(180deg, #7A5A38 0%, #5A3A20 100%); }
+/* --- MINI-MAP --- */
+#mini-map {
+  display: none;
+}
+/* --- MUSIC BUTTON --- */
+#music-btn {
+  position: absolute; top: 4px; right: 88px; width: 24px; height: 24px;
+  background: rgba(30,30,60,0.8); color: #55DD55; border: 1px solid #555;
+  border-radius: 50%; font-size: 11px; cursor: pointer; z-index: 15;
+  line-height: 22px; text-align: center; font-family: sans-serif;
+}
+/* --- DIALOG PORTRAIT --- */
+#portrait-box {
+  display: none;
+  display: none; image-rendering: pixelated;
+}
+/* --- IRIS WIPE OVERLAY --- */
+#iris-wipe {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 8; pointer-events: none; display: none;
+}
+/* --- VERB CURSORS --- */
+canvas#scene.cursor-walk { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='16'%3E🚶%3C/text%3E%3C/svg%3E") 12 12, crosshair; }
+canvas#scene.cursor-look { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='16'%3E👁%3C/text%3E%3C/svg%3E") 12 12, help; }
+canvas#scene.cursor-take { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='16'%3E✋%3C/text%3E%3C/svg%3E") 12 12, grab; }
+canvas#scene.cursor-use { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='16'%3E⚙%3C/text%3E%3C/svg%3E") 12 12, cell; }
+canvas#scene.cursor-talk { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='16'%3E💬%3C/text%3E%3C/svg%3E") 12 12, pointer; }
+canvas#scene.cursor-open { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='16'%3E🔓%3C/text%3E%3C/svg%3E") 12 12, pointer; }
+</style>
+</head>
+<body>
+
+<div id="game-wrapper">
+  <div id="game-container">
+    <canvas id="scene" width="640" height="320" style="width:800px;height:400px;"></canvas>
+    <div id="bottom-panel">
+      <div id="sentence-line"></div>
+      <div id="panel-row">
+        <div id="verb-panel">
+          <button class="verb-btn" data-verb="open">Άνοιξε</button>
+          <button class="verb-btn" data-verb="walk">Πήγαινε</button>
+          <button class="verb-btn" data-verb="use">Χρησιμ.</button>
+          <button class="verb-btn" data-verb="close">Κλείσε</button>
+          <button class="verb-btn" data-verb="take">Πάρε</button>
+          <button class="verb-btn" data-verb="look">Κοίτα</button>
+          <button class="verb-btn" data-verb="push">Σπρώξε</button>
+          <button class="verb-btn" data-verb="talk">Μίλα σε</button>
+          <button class="verb-btn" data-verb="pull">Τράβα</button>
+        </div>
+        <div id="inventory-panel"></div>
+      </div>
+    </div>
+  </div>
+  <div id="fade-overlay"></div>
+  <div id="text-overlay"></div>
+  <div id="hover-label"></div>
+  <div id="dialog-overlay"></div>
+  <div id="save-load-panel"><button onclick="saveGame()">Αποθ.</button><button onclick="loadGame()">Φόρτ.</button></div>
+  <div id="music-btn" title="Μουσική On/Off">M</div>
+  <canvas id="mini-map" width="100" height="70"></canvas>
+  <canvas id="portrait-box" width="72" height="72"></canvas>
+  <canvas id="iris-wipe" width="800" height="400"></canvas>
+  <div id="narrate-btn" title="Αφήγηση On/Off" style="position:absolute;top:4px;right:60px;width:24px;height:24px;background:rgba(30,30,60,0.8);color:#55DD55;border:1px solid #555;border-radius:50%;font-size:12px;cursor:pointer;z-index:15;line-height:22px;text-align:center;">🗣</div>
+  <div id="sound-btn" title="Ήχος On/Off" style="position:absolute;top:4px;right:32px;width:24px;height:24px;background:rgba(30,30,60,0.8);color:#55DD55;border:1px solid #555;border-radius:50%;font-size:14px;cursor:pointer;z-index:15;line-height:22px;text-align:center;">♪</div>
+  <div id="help-btn" title="Help">?</div>
+  <div id="help-overlay">
+    <h2>ΠΩΣ ΝΑ ΠΑΙΞΕΙΣ</h2>
+    <div class="help-section">
+      <h3>ΧΕΙΡΙΣΜΟΙ</h3>
+      <ul>
+        <li>Κάνε κλικ σε ένα ΡΗΜΑ αριστερά, μετά κλικ σε κάτι στη σκηνή</li>
+        <li>Κλικ απευθείας στη σκηνή = περπάτα εκεί</li>
+        <li>ΧΡΗΣΙΜΟΠΟΙΗΣΕ: κλικ στο ρήμα, κλικ στο αντικείμενο στο inventάρι, μετά κλικ στο στόχο</li>
+      </ul>
+    </div>
+    <div class="help-section">
+      <h3>ΡΗΜΑΤΑ</h3>
+      <ul>
+        <li><b>Πήγαινε</b> — Μετακίνηση, μπες σε πόρτες και μονοπάτια</li>
+        <li><b>Κοίτα</b> — Εξέτασε αντικείμενα και τοπία</li>
+        <li><b>Πάρε</b> — Πάρε αντικείμενα στο inventάρι σου</li>
+        <li><b>Χρησ.</b> — Χρησιμοποίησε ένα αντικείμενο σε κάτι</li>
+        <li><b>Μίλα</b> — Μίλα σε χαρακτήρες</li>
+        <li><b>Άνοιξε</b> — Άνοιξε πόρτες, συρτάρια, σεντούκια</li>
+      </ul>
+    </div>
+    <div class="help-section">
+      <h3>ΤΙ ΝΑ ΚΑΝΩ ΤΩΡΑ;</h3>
+      <p class="hint-text" id="dynamic-hint"></p>
+    </div>
+    <div class="help-section">
+      <h3>Η ΙΣΤΟΡΙΑ</h3>
+      <p>Η οικογένεια ανακαλύπτει στοιχεία για τον θρυλικό θησαυρό του Καπετάν Γαλαξειδιώτη, κρυμμένο κάπου στην ακτή του Γαλαξειδίου. Δουλέψτε μαζί — Ντέμης, Αίαντας και Κλειώ — για να λύσετε γρίφους και να βρείτε τον θησαυρό!</p>
+    </div>
+    <div class="close-hint">[ Κλικ οπουδήποτε για κλείσιμο ]</div>
+  </div>
+  <div id="title-screen">
+    <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,20,0.45);pointer-events:none;"></div>
+    <h1>ΤΟ ΜΥΣΤΙΚΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ</h1>
+    <h2>Οικογενειακό Κυνήγι Θησαυρού</h2>
+    <div class="subtitle">Με τους Ντέμη, Αίαντα & Κλειώ Λατσούδη</div>
+    <div class="subtitle" style="margin-bottom:40px;">Μια point-and-click περιπέτεια στο πνεύμα του Monkey Island</div>
+    <div class="blink">[ Κλικ για να ξεκινήσεις ]</div>
+  </div>
+  <div id="win-screen">
+    <h1>ΒΡΗΚΑΤΕ ΤΟΝ ΘΗΣΑΥΡΟ!</h1>
+    <p>Μαζί, ο Ντέμης, ο Αίαντας και η Κλειώ ανακάλυψαν τον θρυλικό θησαυρό του Καπετάν Γαλαξειδιώτη, κρυμμένο βαθιά στη θαλασσινή σπηλιά.</p>
+    <p style="margin-top:12px;">Μέσα στο σεντούκι: χρυσά νομίσματα, μια αρχαία πυξίδα, και ένα γράμμα που λέει:</p>
+    <p style="color:#FFCC00;margin-top:12px;font-size:15px;">"Ο αληθινός θησαυρός είναι η οικογένεια που τον αναζητά μαζί."</p>
+    <p style="margin-top:24px;color:#55FF55;">ΤΕΛΟΣ</p>
+    <p style="margin-top:16px;color:#666;font-size:11px;">Το Μυστικό του Γαλαξειδίου &copy; 2026 Οικογένεια Λατσούδη</p>
+  </div>
+</div>
+
+<!-- Module loading order (all global scope, no bundler needed) -->
+<script src="js/config.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/rendering.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/state.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/scenes/definitions.js"></script>
+<script src="js/scenes/house.js"></script>
+<script src="js/scenes/port.js"></script>
+<script src="js/scenes/beach.js"></script>
+<script src="js/scenes/town.js"></script>
+<script src="js/scenes/cave.js"></script>
+<script src="js/scenes/church.js"></script>
+<script src="js/scenes/hilltop.js"></script>
+<script src="js/scenes/boat.js"></script>
+<script src="js/character.js"></script>
+<script src="js/effects.js"></script>
+<script src="js/interaction.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

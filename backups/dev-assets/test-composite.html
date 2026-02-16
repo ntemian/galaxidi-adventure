@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sprite Test</title>
+<style>
+  * { margin: 0; padding: 0; }
+  body { background: #000; overflow: hidden; }
+  #scene {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: url('test-bg.png') center/cover no-repeat;
+  }
+  #character {
+    position: absolute;
+    bottom: 5%;
+    left: 35%;
+    height: 45%;
+    transition: left 1s ease-in-out;
+    cursor: pointer;
+  }
+  #character img {
+    height: 100%;
+    width: auto;
+    mix-blend-mode: lighten;
+    filter: brightness(1.1) contrast(1.05);
+  }
+  #scene:hover { cursor: crosshair; }
+  .hint {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #D4A03C;
+    font-family: sans-serif;
+    font-size: 14px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+</style>
+</head>
+<body>
+<div id="scene" onclick="moveChar(event)">
+  <div id="character">
+    <img src="test-sprite.png" alt="Ntemis">
+  </div>
+  <div class="hint">Κάνε κλικ για να περπατήσει</div>
+</div>
+<script>
+function moveChar(e) {
+  const rect = document.getElementById('scene').getBoundingClientRect();
+  const pct = ((e.clientX - rect.left) / rect.width) * 100;
+  const ch = document.getElementById('character');
+  ch.style.left = Math.max(5, Math.min(85, pct - 5)) + '%';
+
+  // Flip based on direction
+  const current = parseFloat(ch.style.left);
+  if (pct < current) {
+    ch.style.transform = 'scaleX(-1)';
+  } else {
+    ch.style.transform = 'scaleX(1)';
+  }
+}
+</script>
+</body>
+</html>

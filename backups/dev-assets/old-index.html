@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Η Θάλασσα Θυμάται</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+  body { background: #000; overflow: hidden; font-family: 'Press Start 2P', monospace; }
+
+  #game { width: 100vw; height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── TITLE ── */
+  #title-screen {
+    position: fixed; inset: 0; background: #0a0812;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 2000; cursor: pointer; transition: opacity 2s;
+  }
+  @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:.9} }
+  @keyframes glow {
+    0%,100% { text-shadow: 0 0 40px rgba(212,160,60,.3), 3px 3px 0 #1B3A5C; }
+    50% { text-shadow: 0 0 60px rgba(212,160,60,.5), 0 0 100px rgba(212,160,60,.15), 3px 3px 0 #1B3A5C; }
+  }
+  .t-main { font-size: clamp(1rem,3vw,2rem); color:#D4A03C; letter-spacing:.08em; text-align:center; line-height:1.8; animation: glow 3s ease-in-out infinite; }
+  .t-sub { font-size: clamp(.5rem,1vw,.7rem); color:#5C6B3C; letter-spacing:.15em; margin-top:2rem; }
+  .t-go { font-size:.6rem; color:#4a4a4a; margin-top:3rem; animation: blink 2s infinite; }
+
+  /* ── INTRO ── */
+  #intro-screen {
+    position: fixed; inset: 0; background: #0a0812;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 1500; padding: 2rem; cursor: pointer; transition: opacity 1.5s;
+  }
+  #intro-screen.on { display: flex; }
+  #intro-text { max-width:600px; font-size:clamp(.6rem,1.2vw,.8rem); color:#D4A03C; line-height:2.5; text-align:center; opacity:0; transition: opacity 1.5s; }
+  #intro-hint { font-size:.5rem; color:#4a4a4a; margin-top:2rem; opacity:0; transition: opacity .5s; }
+  #intro-hint.on { opacity:1; animation: blink 2s infinite; }
+
+  /* ── VIEWPORT ── */
+  #viewport { flex:1; position:relative; overflow:hidden; cursor:crosshair; min-height:0; background:#0a0812; }
+  #scene-bg {
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+    image-rendering: pixelated;
+    transition: opacity .3s;
+  }
+  #scene-label {
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    font-size:.55rem; color:#D4A03C; z-index:5; letter-spacing:.1em; pointer-events:none;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    opacity:0; transition: opacity .8s;
+  }
+  #music-btn {
+    position:absolute; top:8px; right:8px; font-size:.8rem; cursor:pointer; z-index:6;
+    opacity:.4; color:#D4A03C; text-shadow:1px 1px 0 #000;
+  }
+  #music-btn:hover { opacity:1; }
+
+  /* ── CHARACTERS ── */
+  .char {
+    position:absolute; z-index:10; pointer-events:none;
+    image-rendering: pixelated;
+    transform-origin: center bottom;
+    opacity: 0; /* fade in on scene entry */
+    transition: opacity .6s ease-out;
+  }
+  .char.visible { opacity: 1; }
+  .char canvas {
+    display:block; height:100%; width:auto;
+    image-rendering: pixelated;
+  }
+  .char-shadow {
+    position:absolute; bottom:-4px; left:50%; transform:translateX(-50%);
+    width:50%; height:8px; border-radius:50%;
+    background: radial-gradient(ellipse, rgba(0,0,0,.45) 0%, rgba(0,0,0,.15) 50%, transparent 75%);
+    pointer-events:none;
+    transition: width .3s, opacity .3s;
+  }
+  .char.walking .char-shadow { width:55%; opacity:.7; }
+
+  /* ── AMBIENT OVERLAY ── */
+  #ambient {
+    position:absolute; inset:0; z-index:2; pointer-events:none;
+    background: linear-gradient(180deg, rgba(212,160,60,.03) 0%, transparent 30%, transparent 70%, rgba(0,0,0,.15) 100%);
+  }
+  @keyframes dust {
+    0% { transform: translate(0,0) scale(1); opacity: 0; }
+    20% { opacity: .4; }
+    80% { opacity: .2; }
+    100% { transform: translate(80px, -40px) scale(.5); opacity: 0; }
+  }
+  .dust-mote {
+    position:absolute; width:3px; height:3px; border-radius:50%;
+    background: rgba(212,160,60,.3); pointer-events:none; z-index:3;
+    animation: dust 8s linear infinite;
+  }
+
+  /* ── HOTSPOTS ── */
+  .hotspot {
+    position:absolute; z-index:8; cursor:pointer;
+    border:2px solid transparent; transition: border-color .15s, box-shadow .15s;
+  }
+  .hotspot:hover { border-color: rgba(212,160,60,.5); box-shadow: 0 0 12px rgba(212,160,60,.2); }
+  .exit-zone { position:absolute; z-index:8; cursor:pointer; }
+
+  /* ── ACTION LINE ── */
+  #action-line {
+    height:22px; background:#12100e; display:none; align-items:center; justify-content:center;
+    font-size:.55rem; color:#D4A03C; border-top:2px solid #2a2218; z-index:20;
+  }
+  #action-line.on { display:flex; }
+
+  /* ── UI PANEL ── */
+  #ui-panel {
+    height:130px; min-height:130px; background:#12100e; border-top:2px solid #2a2218;
+    display:none; grid-template-columns:220px 1fr; z-index:20;
+  }
+  #ui-panel.on { display:grid; }
+  #verb-panel { display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(4,1fr); gap:2px; padding:6px; }
+  .vb {
+    font-family:'Press Start 2P',monospace; font-size:.5rem; color:#6B6252;
+    background:#1a1714; border:1px solid #2a2218; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0 4px; transition: all .1s;
+  }
+  .vb:hover { color:#D4A03C; border-color:#D4A03C; }
+  .vb:active { transform:scale(.93); }
+  .vb.on { color:#D4A03C; background:#221e18; border-color:#D4A03C; }
+  #inv-panel { display:flex; flex-direction:column; padding:6px 10px; gap:4px; }
+  #inv-label { font-size:.4rem; color:#4a4a4a; letter-spacing:.1em; }
+  #inv-grid { flex:1; display:grid; grid-template-columns:repeat(auto-fill,70px); gap:3px; align-content:start; }
+  .inv-slot {
+    height:32px; background:#1a1714; border:1px solid #2a2218;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Press Start 2P',monospace; font-size:.4rem; color:#6B6252;
+    cursor:pointer; transition: all .1s; padding:2px 4px;
+  }
+  .inv-slot:hover { border-color:#D4A03C; color:#D4A03C; }
+  .inv-slot.on { border-color:#D4A03C; background:#221e18; color:#D4A03C; }
+
+  /* ── DIALOGUE ── */
+  #dlg-wrap { position:absolute; bottom:0; left:0; right:0; z-index:50; display:none; transform:translateY(100%); transition: transform .3s cubic-bezier(.33,1,.68,1); }
+  #dlg-wrap.on { transform:translateY(0); }
+  #dlg-box {
+    width:100%; background:rgba(10,8,6,.95); border-top:2px solid #D4A03C;
+    padding:12px 16px; display:flex; gap:12px; align-items:flex-start; cursor:pointer; min-height:90px;
+  }
+  #port-frame {
+    width:64px; height:64px; min-width:64px; border:2px solid #D4A03C;
+    overflow:hidden; image-rendering:pixelated; background:#1a1714;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #port-frame img { width:100%; height:100%; object-fit:cover; image-rendering:pixelated; }
+  #dlg-speaker { font-size:.55rem; color:#D4A03C; margin-bottom:6px; }
+  #dlg-text { font-size:.5rem; color:#e8dcc8; line-height:2; }
+  #dlg-cont { font-size:.4rem; color:#4a4a4a; margin-top:6px; animation: blink 1.2s .8s infinite; }
+
+  /* ── TRANSITION ── */
+  #fade { position:fixed; inset:0; background:#000; z-index:3000; opacity:0; pointer-events:none; transition: opacity .5s; }
+  #fade.on { opacity:1; }
+</style>
+</head>
+<body>
+
+<div id="fade"></div>
+
+<div id="title-screen">
+  <div class="t-main">Η ΘΑΛΑΣΣΑ<br>ΘΥΜΑΤΑΙ</div>
+  <div class="t-sub">ΣΚΗΝΗ ΠΡΩΤΗ — Η ΑΦΙΞΗ</div>
+  <div class="t-go">ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ</div>
+</div>
+
+<div id="intro-screen">
+  <div id="intro-text"></div>
+  <div id="intro-hint">▶ ΚΛΙΚ</div>
+</div>
+
+<div id="game">
+  <div id="viewport">
+    <div id="scene-bg"></div>
+    <div id="ambient"></div>
+    <div id="scene-label"></div>
+    <div id="music-btn" onclick="toggleMusic(event)">♪</div>
+
+    <div id="dlg-wrap">
+      <div id="dlg-box" onclick="advDlg(event)">
+        <div id="port-frame"><img id="port-img" src="" alt=""></div>
+        <div style="flex:1">
+          <div id="dlg-speaker"></div>
+          <div id="dlg-text"></div>
+          <div id="dlg-cont">▶</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="action-line"></div>
+
+  <div id="ui-panel">
+    <div id="verb-panel">
+      <button class="vb on" data-v="look" onclick="setVerb('look')">Κοίτα</button>
+      <button class="vb" data-v="use" onclick="setVerb('use')">Χρησιμοποίησε</button>
+      <button class="vb" data-v="talk" onclick="setVerb('talk')">Μίλα</button>
+      <button class="vb" data-v="open" onclick="setVerb('open')">Άνοιξε</button>
+      <button class="vb" data-v="pick" onclick="setVerb('pick')">Πάρε</button>
+      <button class="vb" data-v="push" onclick="setVerb('push')">Σπρώξε</button>
+      <button class="vb" data-v="close" onclick="setVerb('close')">Κλείσε</button>
+      <button class="vb" data-v="walk" onclick="setVerb('walk')">Πήγαινε</button>
+    </div>
+    <div id="inv-panel">
+      <div id="inv-label">ΑΝΤΙΚΕΙΜΕΝΑ</div>
+      <div id="inv-grid"></div>
+    </div>
+  </div>
+</div>
+
+<audio id="bgm" loop preload="auto"><source src="scene1-music.mp3" type="audio/mpeg"></audio>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// ANIMATION ENGINE — requestAnimationFrame + easing
+// ════════════════════════════════════════════════════════════
+const anims = [];
+let lastT = 0;
+
+function animate(ts) {
+  const dt = lastT ? (ts - lastT) / 1000 : 0;
+  lastT = ts;
+  for (let i = anims.length - 1; i >= 0; i--) {
+    const a = anims[i];
+    if (!a.active) { anims.splice(i, 1); continue; }
+    if (a.delayLeft > 0) { a.delayLeft -= dt; continue; }
+    a.t += dt;
+    let p = Math.min(a.t / a.dur, 1);
+    let ep = a.fwd ? a.ease(p) : a.ease(1 - p);
+    for (const k in a.props) {
+      const { from, to } = a.props[k];
+      a.target[k] = from + (to - from) * ep;
+    }
+    if (a.apply) a.apply();
+    if (p >= 1) {
+      if (a.yoyo) {
+        a.fwd = !a.fwd; a.t = 0;
+        if (a.fwd && ++a.reps >= a.maxReps && a.maxReps > 0) {
+          a.active = false; if (a.done) a.done();
+        }
+      } else if (a.loop) {
+        a.t = 0; a.reps++;
+      } else {
+        a.active = false; if (a.done) a.done();
+      }
+    }
+  }
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+function tween(target, props, dur, opts = {}) {
+  const a = {
+    target, dur, t: 0, active: true, fwd: true, reps: 0,
+    ease: opts.ease || easeInOutSine,
+    yoyo: opts.yoyo || false,
+    loop: opts.loop || false,
+    maxReps: opts.maxReps || 0,
+    done: opts.done || null,
+    apply: opts.apply || null,
+    delayLeft: opts.delay || 0,
+    props: {},
+  };
+  for (const k in props) a.props[k] = { from: target[k], to: props[k] };
+  anims.push(a);
+  return a;
+}
+function killTweens(target) {
+  anims.forEach(a => { if (a.target === target) a.active = false; });
+}
+
+// Easing
+function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
+function easeInOutCubic(t) { return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; }
+function linear(t) { return t; }
+
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+let verb = 'look', scene = null, inv = [], flags = {}, dlgQ = [], dlgCb = null;
+let dlgActive = false, typing = false, typeTimer = null, fullText = '';
+let musicOn = false;
+const visited = new Set();
+const bgm = document.getElementById('bgm'); bgm.volume = .25;
+const portraits = { 'ΝΤΕΜΗΣ':'portrait-ntemis.png','ΑΙΑΣ':'portrait-ajax.png','ΚΛΕΙΩ':'portrait-clio.png' };
+
+// ════════════════════════════════════════════════════════════
+// CHARACTERS — canvas-based sprite rendering
+// ════════════════════════════════════════════════════════════
+const chars = {};
+['ntemis','ajax','clio'].forEach(id => {
+  chars[id] = {
+    el: null, idle: new Image(), walk: new Image(), canvas: null, ctx: null,
+    xPx: 0, yPx: 0, baseY: 0, hPx: 0, wPx: 0,
+    breatheY: 0, // offset from baseY
+    isWalking: false, walkFrame: 0, walkTimer: 0, facingLeft: false,
+    anim: { breatheY: 0 }, // animation target object
+  };
+  chars[id].idle.src = `sprite-${id}.png`;
+  chars[id].walk.src = `walk-${id}.png`;
+});
+
+function drawChar(id) {
+  const c = chars[id];
+  if (!c.canvas || !c.ctx) return;
+  const ctx = c.ctx;
+  const cvs = c.canvas;
+  const img = c.isWalking ? c.walk : c.idle;
+  if (!img.complete || !img.naturalWidth) return;
+
+  let sw, sh, sx = 0;
+  if (c.isWalking) {
+    sw = img.naturalWidth / 4;
+    sh = img.naturalHeight;
+    sx = c.walkFrame * sw;
+  } else {
+    sw = img.naturalWidth;
+    sh = img.naturalHeight;
+  }
+
+  // Canvas size = character display size
+  const aspect = sw / sh;
+  const dh = c.hPx;
+  const dw = Math.round(dh * aspect);
+  if (cvs.width !== dw || cvs.height !== dh) {
+    cvs.width = dw;
+    cvs.height = dh;
+  }
+
+  ctx.clearRect(0, 0, dw, dh);
+  ctx.save();
+  if (c.facingLeft) {
+    ctx.translate(dw, 0);
+    ctx.scale(-1, 1);
+  }
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(img, sx, 0, sw, sh, 0, 0, dw, dh);
+  ctx.restore();
+}
+
+function positionChar(id) {
+  const c = chars[id];
+  if (!c.el) return;
+  const yOff = c.anim.breatheY || 0;
+  c.el.style.left = c.xPx + 'px';
+  c.el.style.bottom = (c.baseY - yOff) + 'px';
+  c.el.style.height = c.hPx + 'px';
+}
+
+// Walk frame ticker (runs in rAF loop)
+anims.push({
+  active: true, target: {}, dur: 1, t: 0, props: {}, loop: true, yoyo: false, fwd: true, reps: 0, maxReps: 0,
+  ease: linear, delayLeft: 0, done: null,
+  apply: () => {
+    const dt = lastT ? 1/60 : 0; // approximate
+    for (const id in chars) {
+      const c = chars[id];
+      if (c.isWalking) {
+        c.walkTimer += dt;
+        if (c.walkTimer >= 0.12) {
+          c.walkTimer = 0;
+          c.walkFrame = (c.walkFrame + 1) % 4;
+          drawChar(id);
+        }
+      }
+    }
+  }
+});
+
+// ════════════════════════════════════════════════════════════
+// SCENES
+// ════════════════════════════════════════════════════════════
+const scenes = {
+  exterior: {
+    label: 'ΤΟ ΣΠΙΤΙ — ΓΑΛΑΞΙΔΙ', image: 'pixel-exterior.png',
+    chars: {
+      ntemis: { xPct:.45, bottomPct:.06, heightPct:.42 },
+      ajax:   { xPct:.58, bottomPct:.06, heightPct:.38 },
+      clio:   { xPct:.32, bottomPct:.06, heightPct:.35 },
+    },
+    objects: [
+      { id:'door', x:.22, y:.22, w:.10, h:.28, label:'Πόρτα',
+        verbs: { look:[{s:'',t:'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.'}],
+                 open:[{s:'ΝΤΕΜΗΣ',t:'Ας μπούμε μέσα.'}], walk:'kitchen', use:'kitchen' }},
+      { id:'bougainvillea', x:.30, y:.05, w:.22, h:.30, label:'Μπουκαμβίλιες',
+        verbs: { look:[{s:'',t:'Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.'}],
+                 pick:[{s:'ΚΛΕΙΩ',t:'Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.'}] }},
+      { id:'flowerpots', x:.14, y:.45, w:.10, h:.12, label:'Γλάστρες',
+        verbs: { look:[{s:'',t:'Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.'}] }},
+      { id:'barrel', x:.40, y:.42, w:.08, h:.14, label:'Βαρέλι',
+        verbs: { look:[{s:'',t:'Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.'}],
+                 open:[{s:'ΑΙΑΣ',t:'Άδειο. Κρίμα!'}] }},
+      { id:'boats', x:.60, y:.30, w:.20, h:.18, label:'Ψαροκάικα',
+        verbs: { look:[{s:'',t:'Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.'},{s:'ΑΙΑΣ',t:'Μπαμπά, θα πάμε βόλτα με βάρκα;'}] }},
+      { id:'sea', x:.55, y:.15, w:.35, h:.15, label:'Η θάλασσα',
+        verbs: { look:[{s:'',t:'Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.'}] }},
+    ],
+    exits: [{ side:'right', target:'terrace', label:'Βεράντα →' }],
+    entry: [
+      {s:'',t:'Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.'},
+      {s:'ΝΤΕΜΗΣ',t:'Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.'},
+      {s:'ΑΙΑΣ',t:'Τέλειο! Πάμε κατευθείαν στο λιμάνι;'},
+      {s:'ΚΛΕΙΩ',t:'Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.'},
+    ],
+  },
+  terrace: {
+    label: 'Η ΒΕΡΑΝΤΑ', image: 'pixel-terrace.png',
+    chars: {
+      ntemis: { xPct:.50, bottomPct:.05, heightPct:.40 },
+      ajax:   { xPct:.65, bottomPct:.05, heightPct:.36 },
+      clio:   { xPct:.35, bottomPct:.05, heightPct:.33 },
+    },
+    objects: [
+      { id:'harbor', x:.25, y:.30, w:.40, h:.25, label:'Το λιμάνι',
+        verbs: { look:()=>{
+          if(!flags.dolphins){flags.dolphins=1;return[
+            {s:'',t:'Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.'},
+            {s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα! Δελφίνια!'},
+            {s:'',t:'Τρία δελφίνια κόβουν βόλτες στο λιμάνι.'},
+            {s:'ΑΙΑΣ',t:'Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...'}];}
+          return[{s:'',t:'Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.'}];}}},
+      { id:'rooftops', x:.05, y:.20, w:.20, h:.25, label:'Σκεπές',
+        verbs: { look:[{s:'',t:'Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.'}] }},
+      { id:'mountains', x:.40, y:.03, w:.45, h:.20, label:'Παρνασσός',
+        verbs: { look:[{s:'',t:'Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.'},{s:'ΚΛΕΙΩ',t:'Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.'}] }},
+      { id:'balustrade', x:.15, y:.55, w:.55, h:.10, label:'Κάγκελο',
+        verbs: { look:[{s:'',t:'Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.'}],
+                 push:[{s:'ΚΛΕΙΩ',t:'Μπαμπά, μην ακουμπάς, φαίνεται παλιό!'}] }},
+      { id:'flowerpot', x:.02, y:.52, w:.10, h:.14, label:'Γλάστρα',
+        verbs: { look:[{s:'',t:'Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.'}] }},
+    ],
+    exits: [{ side:'left', target:'exterior', label:'← Σπίτι' }],
+    entry: [
+      {s:'',t:'Η θέα κόβει την ανάσα.'},
+      {s:'ΚΛΕΙΩ',t:'Αυτό είναι το πιο όμορφο μέρος στον κόσμο.'},
+      {s:'ΝΤΕΜΗΣ',t:'Καλωσορίσατε στο Γαλαξίδι.'},
+    ],
+  },
+  kitchen: {
+    label: 'Η ΚΟΥΖΙΝΑ', image: 'pixel-kitchen.png',
+    chars: {
+      ntemis: { xPct:.55, bottomPct:.04, heightPct:.52 },
+      ajax:   { xPct:.70, bottomPct:.04, heightPct:.47 },
+      clio:   { xPct:.15, bottomPct:.04, heightPct:.43 },
+    },
+    objects: [
+      { id:'figs', x:.30, y:.42, w:.15, h:.12, label:'Σύκα',
+        verbs: { look:[{s:'',t:'Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.'}],
+                 pick:[{s:'ΑΙΑΣ',t:'Μπαμπά, μπορώ να φάω ένα;'},{s:'ΝΤΕΜΗΣ',t:'Φυσικά.'}],
+                 use:[{s:'',t:'Τρως ένα σύκο. Γλυκό σαν μέλι.'}] }},
+      { id:'satchel', x:.55, y:.40, w:.12, h:.20, label:'Δερμάτινη τσάντα',
+        verbs: {
+          look:()=>{if(!flags.note)return[{s:'',t:'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.'}];return[{s:'',t:'Η τσάντα είναι άδεια τώρα.'}];},
+          open:()=>{if(!flags.note){flags.note=1;addInv({id:'note',label:'Σημείωμα'});return[{s:'',t:'Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.'},{s:'ΚΛΕΙΩ',t:'Διάβασέ το!'},{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'ΑΙΑΣ',t:'Ποιος είναι ο «Γ.»;'},{s:'ΝΤΕΜΗΣ',t:'Και πώς ξέρει ότι είμαστε τρεις;'}];}return[{s:'',t:'Η τσάντα είναι πλέον άδεια.'}];},
+          pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.'}] }},
+      { id:'window', x:.72, y:.12, w:.14, h:.28, label:'Παράθυρο',
+        verbs: { look:[{s:'',t:'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.'}],
+                 open:[{s:'',t:'Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.'}] }},
+      { id:'pots', x:.25, y:.08, w:.35, h:.15, label:'Χάλκινα σκεύη',
+        verbs: { look:[{s:'',t:'Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.'}] }},
+      { id:'fireplace', x:.0, y:.18, w:.14, h:.35, label:'Τζάκι',
+        verbs: { look:[{s:'',t:'Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.'}] }},
+    ],
+    exits: [{ side:'left', target:'exterior', label:'← Έξω' }],
+    entry: [
+      {s:'',t:'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.'},
+      {s:'ΚΛΕΙΩ',t:'Κοιτάξτε — κάποιος μας άφησε σύκα!'},
+      {s:'ΑΙΑΣ',t:'Και κάτι πάνω στην καρέκλα... μια τσάντα;'},
+    ],
+  },
+};
+
+// ════════════════════════════════════════════════════════════
+// RENDER CHARACTERS
+// ════════════════════════════════════════════════════════════
+function renderChars(sc) {
+  const vp = document.getElementById('viewport');
+  vp.querySelectorAll('.char').forEach(e => e.remove());
+
+  const vw = vp.clientWidth;
+  const vh = vp.clientHeight;
+  const entranceDelays = { ntemis: 100, ajax: 300, clio: 500 };
+  const breatheDelays = { ntemis: 0, ajax: 0.5, clio: 1.0 };
+  // Slightly different breathe speeds for natural feel
+  const breatheSpeeds = { ntemis: 2.0, ajax: 1.7, clio: 1.5 };
+  const breatheAmounts = { ntemis: 3, ajax: 3.5, clio: 4 };
+
+  for (const [id, pos] of Object.entries(sc.chars)) {
+    const c = chars[id];
+    killTweens(c.anim);
+    if (c.fidgetTimer) clearTimeout(c.fidgetTimer);
+
+    const el = document.createElement('div');
+    el.className = 'char';
+    el.id = `ch-${id}`;
+
+    const cvs = document.createElement('canvas');
+    el.appendChild(cvs);
+
+    const shad = document.createElement('div');
+    shad.className = 'char-shadow';
+    el.appendChild(shad);
+
+    c.el = el;
+    c.shadow = shad;
+    c.canvas = cvs;
+    c.ctx = cvs.getContext('2d');
+    c.hPx = vh * pos.heightPct;
+    c.baseY = vh * pos.bottomPct;
+    c.xPx = vw * pos.xPct;
+    c.anim = { breatheY: 0, scaleX: 1.0 };
+    c.isWalking = false;
+    c.facingLeft = false;
+    c.walkFrame = 0;
+    c.walkTimer = 0;
+
+    el.style.height = c.hPx + 'px';
+    el.style.left = c.xPx + 'px';
+    el.style.bottom = c.baseY + 'px';
+    el.style.transform = 'translateX(-50%)';
+
+    vp.appendChild(el);
+    drawChar(id);
+
+    // Staggered fade-in entrance
+    setTimeout(() => el.classList.add('visible'), entranceDelays[id]);
+
+    // Breathing — each character at slightly different speed/amplitude
+    startBreathing(id, breatheDelays[id], breatheSpeeds[id], breatheAmounts[id]);
+
+    // Random idle fidget (occasional slight weight shift)
+    scheduleFidget(id);
+  }
+
+  // Spawn dust motes
+  spawnDustMotes();
+}
+
+function startBreathing(id, delay, speed, amount) {
+  const c = chars[id];
+  c.anim.breatheY = 0;
+  tween(c.anim, { breatheY: amount }, speed, {
+    ease: easeInOutSine, yoyo: true, maxReps: 0, delay: delay,
+    apply: () => {
+      if (c.el && !c.isWalking) {
+        c.el.style.bottom = (c.baseY + c.anim.breatheY) + 'px';
+      }
+    }
+  });
+}
+
+function scheduleFidget(id) {
+  const c = chars[id];
+  const delay = 4000 + Math.random() * 8000; // 4-12 seconds
+  c.fidgetTimer = setTimeout(() => {
+    if (!c.el || c.isWalking || dlgActive) { scheduleFidget(id); return; }
+    // Tiny horizontal weight shift
+    const shift = (Math.random() > 0.5 ? 1 : -1) * (1 + Math.random() * 2);
+    const origX = c.xPx;
+    const fidgetPos = { x: c.xPx };
+    tween(fidgetPos, { x: c.xPx + shift }, 0.4, {
+      ease: easeInOutSine,
+      apply: () => { if (c.el && !c.isWalking) c.el.style.left = fidgetPos.x + 'px'; },
+      done: () => {
+        tween(fidgetPos, { x: origX }, 0.4, {
+          ease: easeInOutSine,
+          apply: () => { if (c.el && !c.isWalking) c.el.style.left = fidgetPos.x + 'px'; },
+          done: () => scheduleFidget(id)
+        });
+      }
+    });
+  }, delay);
+}
+
+function spawnDustMotes() {
+  const vp = document.getElementById('viewport');
+  vp.querySelectorAll('.dust-mote').forEach(e => e.remove());
+  for (let i = 0; i < 6; i++) {
+    const mote = document.createElement('div');
+    mote.className = 'dust-mote';
+    mote.style.left = (10 + Math.random() * 80) + '%';
+    mote.style.top = (20 + Math.random() * 50) + '%';
+    mote.style.animationDelay = (Math.random() * 8) + 's';
+    mote.style.animationDuration = (6 + Math.random() * 4) + 's';
+    vp.appendChild(mote);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// WALK
+// ════════════════════════════════════════════════════════════
+function walkTo(id, targetPx, done) {
+  const c = chars[id];
+  if (!c || !c.el) return;
+
+  const vp = document.getElementById('viewport');
+  const vw = vp.clientWidth;
+  targetPx = Math.max(vw * 0.05, Math.min(vw * 0.95, targetPx));
+
+  const dist = Math.abs(targetPx - c.xPx);
+  if (dist < 10) { if (done) done(); return; }
+
+  const duration = Math.max(0.4, Math.min(2.5, (dist / vw) * 3.5));
+
+  // Direction
+  c.facingLeft = targetPx < c.xPx;
+
+  // Kill breathing
+  killTweens(c.anim);
+
+  // Start walk
+  c.isWalking = true;
+  c.walkFrame = 0;
+  c.walkTimer = 0;
+  c.anim.breatheY = 0;
+  drawChar(id);
+
+  // Walk bob state
+  const bob = { phase: 0 };
+  const bobTween = tween(bob, { phase: Math.PI * 2 * Math.max(3, Math.ceil(duration / 0.35)) }, duration, {
+    ease: linear,
+    apply: () => {
+      if (c.el) {
+        const offset = Math.abs(Math.sin(bob.phase)) * 3;
+        c.el.style.bottom = (c.baseY + offset) + 'px';
+      }
+    }
+  });
+
+  // Main position tween
+  const pos = { x: c.xPx };
+  tween(pos, { x: targetPx }, duration, {
+    ease: easeInOutCubic,
+    apply: () => {
+      c.xPx = pos.x;
+      if (c.el) c.el.style.left = pos.x + 'px';
+    },
+    done: () => {
+      c.xPx = targetPx;
+      c.isWalking = false;
+      c.facingLeft = false;
+      bobTween.active = false;
+      drawChar(id);
+
+      // Restart breathing
+      c.anim.breatheY = 0;
+      c.el.style.bottom = c.baseY + 'px';
+      tween(c.anim, { breatheY: 4 }, 1.8, {
+        ease: easeInOutSine, yoyo: true, maxReps: 0,
+        apply: () => {
+          if (c.el) c.el.style.bottom = (c.baseY + c.anim.breatheY) + 'px';
+        }
+      });
+
+      if (done) done();
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// SCENE MANAGEMENT
+// ════════════════════════════════════════════════════════════
+function startScene(id) {
+  const sc = scenes[id];
+  scene = id;
+
+  document.getElementById('ui-panel').classList.add('on');
+  document.getElementById('action-line').classList.add('on');
+
+  // Background
+  const bg = document.getElementById('scene-bg');
+  bg.style.opacity = '0';
+  bg.style.backgroundImage = `url('${sc.image}')`;
+  requestAnimationFrame(() => { bg.style.opacity = '1'; });
+
+  // Label
+  const lbl = document.getElementById('scene-label');
+  lbl.textContent = sc.label;
+  lbl.style.opacity = '0';
+  setTimeout(() => { lbl.style.opacity = '1'; }, 300);
+
+  renderChars(sc);
+  renderObjects(sc);
+  renderExits(sc);
+
+  if (!visited.has(id) && sc.entry) {
+    visited.add(id);
+    setTimeout(() => showDlg(sc.entry), 600);
+  } else {
+    visited.add(id);
+  }
+}
+
+function changeScene(id) {
+  const f = document.getElementById('fade');
+  f.classList.add('on');
+  setTimeout(() => {
+    // Remove old hotspots/exits
+    document.querySelectorAll('.hotspot,.exit-zone').forEach(e => e.remove());
+    startScene(id);
+    setTimeout(() => f.classList.remove('on'), 200);
+  }, 500);
+}
+
+// ════════════════════════════════════════════════════════════
+// OBJECTS & EXITS
+// ════════════════════════════════════════════════════════════
+function renderObjects(sc) {
+  document.querySelectorAll('.hotspot').forEach(e => e.remove());
+  const vp = document.getElementById('viewport');
+  const vw = vp.clientWidth, vh = vp.clientHeight;
+
+  sc.objects.forEach(obj => {
+    const el = document.createElement('div');
+    el.className = 'hotspot';
+    el.style.left = (obj.x * vw) + 'px';
+    el.style.top = (obj.y * vh) + 'px';
+    el.style.width = (obj.w * vw) + 'px';
+    el.style.height = (obj.h * vh) + 'px';
+    el.onmouseenter = () => updAction(obj.label);
+    el.onmouseleave = () => updAction('');
+    el.onclick = (e) => { e.stopPropagation(); objClick(obj); };
+    vp.appendChild(el);
+  });
+}
+
+function renderExits(sc) {
+  document.querySelectorAll('.exit-zone').forEach(e => e.remove());
+  if (!sc.exits) return;
+  const vp = document.getElementById('viewport');
+
+  sc.exits.forEach(exit => {
+    const el = document.createElement('div');
+    el.className = 'exit-zone';
+    const L = exit.side === 'left';
+    el.style.cssText = L
+      ? 'left:0;top:0;width:4%;height:100%;cursor:w-resize;'
+      : 'right:0;top:0;width:4%;height:100%;cursor:e-resize;';
+    el.onmouseenter = () => {
+      el.style.background = L
+        ? 'linear-gradient(to right, rgba(212,160,60,.15), transparent)'
+        : 'linear-gradient(to left, rgba(212,160,60,.15), transparent)';
+      updAction(exit.label);
+    };
+    el.onmouseleave = () => { el.style.background = 'transparent'; updAction(''); };
+    el.onclick = (e) => { e.stopPropagation(); changeScene(exit.target); };
+    vp.appendChild(el);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// VERBS & INTERACTION
+// ════════════════════════════════════════════════════════════
+function setVerb(v) {
+  verb = v;
+  document.querySelectorAll('.vb').forEach(b => b.classList.remove('on'));
+  document.querySelector(`[data-v="${v}"]`).classList.add('on');
+  updAction('');
+}
+
+const verbLabels = { look:'Κοίτα', talk:'Μίλα σε', pick:'Πάρε', use:'Χρησιμοποίησε', open:'Άνοιξε', close:'Κλείσε', push:'Σπρώξε', walk:'Πήγαινε σε' };
+function updAction(obj) {
+  document.getElementById('action-line').textContent = obj ? `${verbLabels[verb]} ${obj}` : verbLabels[verb] || '';
+}
+
+function objClick(obj) {
+  if (dlgActive) return;
+  const vp = document.getElementById('viewport');
+  const vw = vp.clientWidth;
+  const targetPx = (obj.x + obj.w / 2) * vw;
+
+  walkTo('ntemis', targetPx, () => {
+    let d = obj.verbs[verb];
+    if (!d) {
+      const defs = {
+        talk:[{s:'ΝΤΕΜΗΣ',t:'Δεν μπορώ να μιλήσω σε αυτό.'}],
+        pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν χρειάζεται να το πάρω.'}],
+        push:[{s:'ΝΤΕΜΗΣ',t:'Δεν κουνιέται.'}],
+        close:[{s:'ΝΤΕΜΗΣ',t:'Δεν κλείνει.'}],
+        use:[{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρω πώς.'}],
+        open:[{s:'ΝΤΕΜΗΣ',t:'Δεν ανοίγει.'}],
+        look:[{s:'',t:'Τίποτα ιδιαίτερο.'}],
+        walk:[],
+      };
+      if (defs[verb]?.length) showDlg(defs[verb]);
+      return;
+    }
+    if (typeof d === 'string') { changeScene(d); return; }
+    if (typeof d === 'function') d = d();
+    if (Array.isArray(d) && d.length) showDlg(d);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// DIALOGUE
+// ════════════════════════════════════════════════════════════
+function showDlg(lines, cb) {
+  dlgQ = [...lines.filter(l => l.t)];
+  dlgCb = cb || null;
+  dlgActive = true;
+  const w = document.getElementById('dlg-wrap');
+  w.style.display = 'flex';
+  requestAnimationFrame(() => w.classList.add('on'));
+  nextLine();
+}
+
+function nextLine() {
+  if (!dlgQ.length) { closeDlg(); return; }
+  const l = dlgQ.shift();
+  const img = document.getElementById('port-img');
+  const frame = document.getElementById('port-frame');
+
+  if (l.s && portraits[l.s]) {
+    img.src = portraits[l.s]; img.style.display = 'block';
+    frame.style.background = '#1a1714';
+    img.style.transform = 'scale(.8)'; img.style.opacity = '.5';
+    img.style.transition = 'transform .25s cubic-bezier(.34,1.56,.64,1), opacity .25s';
+    requestAnimationFrame(() => { img.style.transform = 'scale(1)'; img.style.opacity = '1'; });
+  } else {
+    img.style.display = 'none';
+    frame.innerHTML = `<span style="color:#4a4a4a;font-size:1.2rem">${l.s ? '?' : '✦'}</span>`;
+  }
+
+  document.getElementById('dlg-speaker').textContent = l.s || '';
+  document.getElementById('dlg-text').textContent = '';
+  fullText = l.t;
+
+  let i = 0; typing = true;
+  clearInterval(typeTimer);
+  typeTimer = setInterval(() => {
+    if (i < l.t.length) { document.getElementById('dlg-text').textContent += l.t[i]; i++; }
+    else { clearInterval(typeTimer); typing = false; }
+  }, 30);
+}
+
+function advDlg(e) {
+  if (e) e.stopPropagation();
+  if (typing) { clearInterval(typeTimer); document.getElementById('dlg-text').textContent = fullText; typing = false; return; }
+  nextLine();
+}
+
+function closeDlg() {
+  dlgActive = false;
+  const w = document.getElementById('dlg-wrap');
+  w.classList.remove('on');
+  setTimeout(() => { w.style.display = 'none'; }, 300);
+  if (dlgCb) { dlgCb(); dlgCb = null; }
+  checkEnd();
+}
+
+// ════════════════════════════════════════════════════════════
+// INVENTORY
+// ════════════════════════════════════════════════════════════
+function addInv(item) {
+  if (inv.find(i => i.id === item.id)) return;
+  inv.push(item);
+  document.getElementById('inv-grid').innerHTML = inv.map(i =>
+    `<div class="inv-slot" data-id="${i.id}" onclick="invClick('${i.id}')">${i.label}</div>`
+  ).join('');
+}
+function invClick(id) {
+  if (id === 'note' && verb === 'look') {
+    showDlg([{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'',t:'Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.'}]);
+  }
+  document.querySelectorAll('.inv-slot').forEach(s => s.classList.remove('on'));
+  document.querySelector(`[data-id="${id}"]`)?.classList.add('on');
+}
+
+// ════════════════════════════════════════════════════════════
+// COMPLETION
+// ════════════════════════════════════════════════════════════
+function checkEnd() {
+  if (flags.note && !flags.done) {
+    flags.done = 1;
+    setTimeout(() => showDlg([
+      {s:'ΝΤΕΜΗΣ',t:'«Σας περιμέναμε»... Ποιος μας περιμένει;'},
+      {s:'ΚΛΕΙΩ',t:'Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.'},
+      {s:'ΑΙΑΣ',t:'Πάμε στο λιμάνι!'},
+      {s:'',t:'Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.'},
+      {s:'',t:'— Τέλος Σκηνής 1 —'},
+      {s:'',t:'Συνέχεια στη Σκηνή 2: Το Γράμμα...'},
+    ]), 1500);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// INTRO & TITLE
+// ════════════════════════════════════════════════════════════
+const introPages = [
+  'Γαλαξίδι.\nΤέλη Σεπτεμβρίου, 2026.',
+  'Ένα μικρό λιμάνι\nστον Κορινθιακό κόλπο.\n\nΕκεί που κάποτε ξεκινούσαν\nτα πιο τολμηρά καράβια\nτης Ελλάδας.',
+  'Ο Ντέμης έφτασε\nμε τα δυο του παιδιά\nγια ένα ήσυχο\nΣαββατοκύριακο.\n\nΤουλάχιστον,\nαυτό νόμιζε.',
+];
+let introP = 0;
+
+document.getElementById('title-screen').onclick = () => {
+  const ts = document.getElementById('title-screen');
+  ts.style.opacity = '0';
+  setTimeout(() => { ts.style.display = 'none'; document.getElementById('intro-screen').classList.add('on'); showIntro(); }, 2000);
+  bgm.play().catch(() => {}); musicOn = true;
+};
+
+function showIntro() {
+  const t = document.getElementById('intro-text');
+  const h = document.getElementById('intro-hint');
+  t.style.opacity = '0';
+  h.classList.remove('on');
+  setTimeout(() => {
+    t.innerHTML = introPages[introP].replace(/\n/g, '<br>');
+    t.style.opacity = '1';
+    setTimeout(() => h.classList.add('on'), 1200);
+  }, 300);
+}
+
+document.getElementById('intro-screen').onclick = () => {
+  introP++;
+  if (introP >= introPages.length) {
+    const is = document.getElementById('intro-screen');
+    is.style.opacity = '0';
+    setTimeout(() => { is.style.display = 'none'; startScene('exterior'); }, 1500);
+  } else { showIntro(); }
+};
+
+// ════════════════════════════════════════════════════════════
+// MUSIC & INPUT
+// ════════════════════════════════════════════════════════════
+function toggleMusic(e) {
+  e.stopPropagation();
+  if (musicOn) { bgm.pause(); musicOn = false; document.getElementById('music-btn').style.opacity = '.15'; }
+  else { bgm.play(); musicOn = true; document.getElementById('music-btn').style.opacity = '.4'; }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (dlgActive) advDlg(); }
+  const vk = {'1':'look','2':'use','3':'talk','4':'open','5':'pick','6':'push','7':'close','8':'walk'};
+  if (vk[e.key]) setVerb(vk[e.key]);
+});
+
+// Click viewport → walk
+document.getElementById('viewport').addEventListener('click', function(e) {
+  if (dlgActive) { advDlg(); return; }
+  if (e.target.closest('.hotspot') || e.target.closest('.exit-zone') ||
+      e.target.closest('#dlg-box') || e.target.closest('#music-btn')) return;
+  const rect = this.getBoundingClientRect();
+  walkTo('ntemis', e.clientX - rect.left);
+});
+</script>
+</body>
+</html>
