@@ -412,6 +412,12 @@ const ctx = CVS.getContext('2d');
 const GW = 640, GH = 400; // internal game resolution
 CVS.width = GW; CVS.height = GH;
 
+// ── Layer cache: offscreen buffers for static content ──
+const bgBuffer = document.createElement('canvas');
+bgBuffer.width = GW; bgBuffer.height = GH;
+const bgCtx = bgBuffer.getContext('2d');
+let bgCachedScene = null; // invalidate when scene changes
+
 // ════════════════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════════════════
@@ -471,18 +477,18 @@ const PORTRAITS = {};
 async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
-    loadImg('title-bg', 'assets/title-bg.png'),
-    loadImg('bg-exterior', 'assets/pixel-exterior.png'),
-    loadImg('bg-terrace', 'assets/pixel-terrace.png'),
-    loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
-    loadImg('bg-port', 'assets/pixel-port.png'),
-    loadImg('bg-museum', 'assets/pixel-museum.png'),
-    loadImg('bg-liotrivi', 'assets/pixel-liotrivi.png'),
-    loadImg('bg-cave', 'assets/pixel-cave.png'),
-    loadImg('bg-church', 'assets/pixel-church.png'),
-    loadImg('bg-windmill', 'assets/pixel-windmill.png'),
-    loadImg('bg-boat', 'assets/pixel-boat.png'),
-    loadImg('bg-graveyard', 'assets/pixel-graveyard.png'),
+    loadImg('title-bg', 'assets/title-bg.webp'),
+    loadImg('bg-exterior', 'assets/pixel-exterior.webp'),
+    loadImg('bg-terrace', 'assets/pixel-terrace.webp'),
+    loadImg('bg-kitchen', 'assets/pixel-kitchen.webp'),
+    loadImg('bg-port', 'assets/pixel-port.webp'),
+    loadImg('bg-museum', 'assets/pixel-museum.webp'),
+    loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
+    loadImg('bg-cave', 'assets/pixel-cave.webp'),
+    loadImg('bg-church', 'assets/pixel-church.webp'),
+    loadImg('bg-windmill', 'assets/pixel-windmill.webp'),
+    loadImg('bg-boat', 'assets/pixel-boat.webp'),
+    loadImg('bg-graveyard', 'assets/pixel-graveyard.webp'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -492,15 +498,15 @@ async function loadAllAssets() {
 
   // Portraits (family + NPCs)
   const portPromises = [
-    loadImg('port-ntemis', 'assets/portrait-ntemis.png').then(img => { PORTRAITS['ΝΤΕΜΗΣ'] = img; }),
-    loadImg('port-ajax', 'assets/portrait-ajax.png').then(img => { PORTRAITS['ΑΙΑΣ'] = img; }),
-    loadImg('port-clio', 'assets/portrait-clio.png').then(img => { PORTRAITS['ΚΛΕΙΩ'] = img; }),
-    loadImg('port-ghost', 'assets/portrait-ghost.png').then(img => { PORTRAITS['ΦΑΝΤΑΣΜΑ'] = img; }),
-    loadImg('port-athos', 'assets/portrait-athos.png').then(img => { PORTRAITS['ΑΘΟΣ'] = img; }),
-    loadImg('port-stathis', 'assets/portrait-stathis.png').then(img => { PORTRAITS['ΣΤΑΘΗΣ'] = img; }),
-    loadImg('port-akis', 'assets/portrait-akis.png').then(img => { PORTRAITS['ΑΚΗΣ'] = img; }),
-    loadImg('port-giannis', 'assets/portrait-giannis.png').then(img => { PORTRAITS['ΓΙΑΝΝΗΣ'] = img; }),
-    loadImg('port-curator', 'assets/portrait-curator.png').then(img => { PORTRAITS['ΕΠΙΜΕΛΗΤΗΣ'] = img; }),
+    loadImg('port-ntemis', 'assets/portrait-ntemis.webp').then(img => { PORTRAITS['ΝΤΕΜΗΣ'] = img; }),
+    loadImg('port-ajax', 'assets/portrait-ajax.webp').then(img => { PORTRAITS['ΑΙΑΣ'] = img; }),
+    loadImg('port-clio', 'assets/portrait-clio.webp').then(img => { PORTRAITS['ΚΛΕΙΩ'] = img; }),
+    loadImg('port-ghost', 'assets/portrait-ghost.webp').then(img => { PORTRAITS['ΦΑΝΤΑΣΜΑ'] = img; }),
+    loadImg('port-athos', 'assets/portrait-athos.webp').then(img => { PORTRAITS['ΑΘΟΣ'] = img; }),
+    loadImg('port-stathis', 'assets/portrait-stathis.webp').then(img => { PORTRAITS['ΣΤΑΘΗΣ'] = img; }),
+    loadImg('port-akis', 'assets/portrait-akis.webp').then(img => { PORTRAITS['ΑΚΗΣ'] = img; }),
+    loadImg('port-giannis', 'assets/portrait-giannis.webp').then(img => { PORTRAITS['ΓΙΑΝΝΗΣ'] = img; }),
+    loadImg('port-curator', 'assets/portrait-curator.webp').then(img => { PORTRAITS['ΕΠΙΜΕΛΗΤΗΣ'] = img; }),
   ];
 
   await Promise.all([...charPromises, ...portPromises]);
@@ -2373,6 +2379,7 @@ function startScene(id) {
   const sc = scenes[id];
   state.scene = id;
   state.hoverObj = null;
+  bgCachedScene = null; // invalidate background cache
 
   document.getElementById('ui-panel').classList.add('on');
   document.getElementById('action-line').classList.add('on');
@@ -2537,26 +2544,29 @@ function render() {
 
   const sc = scenes[state.scene];
 
-  // Background
-  const bgImg = images[sc.bg];
-  if (bgImg) {
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(bgImg, 0, 0, GW, GH);
-    ctx.imageSmoothingEnabled = false;
-  } else {
-    ctx.fillStyle = '#1a1510';
-    ctx.fillRect(0, 0, GW, GH);
+  // Background + ambient overlay (cached — only redraws on scene change)
+  if (bgCachedScene !== state.scene) {
+    bgCtx.clearRect(0, 0, GW, GH);
+    const bgImg = images[sc.bg];
+    if (bgImg) {
+      bgCtx.imageSmoothingEnabled = true;
+      bgCtx.imageSmoothingQuality = 'high';
+      bgCtx.drawImage(bgImg, 0, 0, GW, GH);
+      bgCtx.imageSmoothingEnabled = false;
+    } else {
+      bgCtx.fillStyle = '#1a1510';
+      bgCtx.fillRect(0, 0, GW, GH);
+    }
+    const grad = bgCtx.createLinearGradient(0, 0, 0, GH);
+    grad.addColorStop(0, 'rgba(212,160,60,0.03)');
+    grad.addColorStop(0.3, 'rgba(0,0,0,0)');
+    grad.addColorStop(0.7, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.15)');
+    bgCtx.fillStyle = grad;
+    bgCtx.fillRect(0, 0, GW, GH);
+    bgCachedScene = state.scene;
   }
-
-  // Ambient overlay
-  const grad = ctx.createLinearGradient(0, 0, 0, GH);
-  grad.addColorStop(0, 'rgba(212,160,60,0.03)');
-  grad.addColorStop(0.3, 'rgba(0,0,0,0)');
-  grad.addColorStop(0.7, 'rgba(0,0,0,0)');
-  grad.addColorStop(1, 'rgba(0,0,0,0.15)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, GW, GH);
+  ctx.drawImage(bgBuffer, 0, 0);
 
   // Scene-specific ambience (behind characters)
   drawSceneAmbience(state.tick);
