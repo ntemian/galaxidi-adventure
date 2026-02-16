@@ -1,0 +1,3242 @@
+{
+  "|Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.": {
+    "file": "narrator/001.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.": {
+    "file": "narrator/002.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.": {
+    "file": "narrator/003.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πήλινες γλάστρες με βασιλικό. Κάποιος τα περιποιείται ακόμα κι όταν το σπίτι μένει κλειστό.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.": {
+    "file": "narrator/004.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα παλιό ξύλινο βαρέλι. Μυρίζει κρασί και αλμύρα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.": {
+    "file": "narrator/005.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Χρωματιστά ψαροκάικα δεμένα στο λιμάνι. Κουνιούνται αργά στο απογευματινό φως.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.": {
+    "file": "narrator/006.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.": {
+    "file": "narrator/007.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.": {
+    "file": "narrator/008.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Κορινθιακός λάμπει σαν λιωμένο χρυσάφι. Ψαροκάικα κουνιούνται αργά στο λιμάνι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Τρία δελφίνια κόβουν βόλτες στο λιμάνι.": {
+    "file": "narrator/009.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Τρία δελφίνια κόβουν βόλτες στο λιμάνι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.": {
+    "file": "narrator/010.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Τα δελφίνια συνεχίζουν τους κύκλους τους. Σαν να φυλάνε κάτι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.": {
+    "file": "narrator/011.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κεραμίδια, σκεπές, καμινάδες. Κάθε σπίτι κι ένας καπετάνιος κάποτε.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.": {
+    "file": "narrator/012.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Παρνασσός στο βάθος. Οι Δελφοί κάπου εκεί πάνω.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.": {
+    "file": "narrator/013.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινο κάγκελο με θέα ολόκληρο το Γαλαξίδι. Θα μπορούσες να κάτσεις εδώ ώρες.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.": {
+    "file": "narrator/014.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Γεράνια σε πήλινη γλάστρα. Τα χρώματα λάμπουν στο ηλιοβασίλεμα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η θέα κόβει την ανάσα.": {
+    "file": "narrator/015.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η θέα κόβει την ανάσα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.": {
+    "file": "narrator/016.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Τρως ένα σύκο. Γλυκό σαν μέλι.": {
+    "file": "narrator/017.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Τρως ένα σύκο. Γλυκό σαν μέλι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.": {
+    "file": "narrator/018.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η τσάντα είναι άδεια τώρα.": {
+    "file": "narrator/019.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η τσάντα είναι άδεια τώρα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.": {
+    "file": "narrator/020.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»": {
+    "file": "narrator/021.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η τσάντα είναι πλέον άδεια.": {
+    "file": "narrator/022.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η τσάντα είναι πλέον άδεια.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.": {
+    "file": "narrator/023.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.": {
+    "file": "narrator/024.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.": {
+    "file": "narrator/025.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.": {
+    "file": "narrator/026.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.": {
+    "file": "narrator/027.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Χρωματιστά καΐκια δεμένα στα μπαλόνια. Η μπογιά ξεφλουδίζει — αλμύρα και χρόνια.": {
+    "file": "narrator/028.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Χρωματιστά καΐκια δεμένα στα μπαλόνια. Η μπογιά ξεφλουδίζει — αλμύρα και χρόνια.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μεταλλικές δέστρες ψηλότερες από την Κλειώ. Φτιαγμένες για τρικάταρτα, όχι για βαρκούλες.": {
+    "file": "narrator/029.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μεταλλικές δέστρες ψηλότερες από την Κλειώ. Φτιαγμένες για τρικάταρτα, όχι για βαρκούλες.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένας ψαράς μπαλώνει τα δίχτυα του. Τα χέρια του κινούνται αυτόματα — πενήντα χρόνια πρακτική.": {
+    "file": "narrator/030.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένας ψαράς μπαλώνει τα δίχτυα του. Τα χέρια του κινούνται αυτόματα — πενήντα χρόνια πρακτική.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο ψαράς σηκώνει το βλέμμα. Τα μάτια του είναι γαλάζια σαν τον κόλπο.": {
+    "file": "narrator/031.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο ψαράς σηκώνει το βλέμμα. Τα μάτια του είναι γαλάζια σαν τον κόλπο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|«Ψάρι λίγο. Ιστορίες πολλές. Κάτσε να σου πω.»": {
+    "file": "narrator/032.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "«Ψάρι λίγο. Ιστορίες πολλές. Κάτσε να σου πω.»",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινες αποθήκες με σιδερένιες πόρτες. Κάποτε γεμάτες σταφίδα και λάδι για εξαγωγή. Τώρα σιωπή.": {
+    "file": "narrator/033.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινες αποθήκες με σιδερένιες πόρτες. Κάποτε γεμάτες σταφίδα και λάδι για εξαγωγή. Τώρα σιωπή.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.": {
+    "file": "narrator/034.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Τρεις γάτες ξαπλωμένες στον ήλιο. Σε κοιτάνε με αδιαφορία.": {
+    "file": "narrator/035.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Τρεις γάτες ξαπλωμένες στον ήλιο. Σε κοιτάνε με αδιαφορία.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Στάθης με την κιθάρα του. Φίλος από τα παλιά.": {
+    "file": "narrator/036.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Στάθης με την κιθάρα του. Φίλος από τα παλιά.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Άκης παίζει φλογέρα στο λιμάνι. Η μελωδία ταξιδεύει στο νερό.": {
+    "file": "narrator/037.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Άκης παίζει φλογέρα στο λιμάνι. Η μελωδία ταξιδεύει στο νερό.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το λιμάνι του Γαλαξειδίου. Μισοφέγγαρο από πέτρα, κυμαρισμένο φως, μυρωδιά αλμύρας.": {
+    "file": "narrator/038.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το λιμάνι του Γαλαξειδίου. Μισοφέγγαρο από πέτρα, κυμαρισμένο φως, μυρωδιά αλμύρας.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα πανέμορφο μοντέλο τρικάταρτου μέσα σε γυάλινη βιτρίνα. Κάθε λεπτομέρεια τέλεια.": {
+    "file": "narrator/039.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα πανέμορφο μοντέλο τρικάταρτου μέσα σε γυάλινη βιτρίνα. Κάθε λεπτομέρεια τέλεια.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η πινακίδα γράφει: «Σκούνα Χρυσούλα, 1904 — το τελευταίο ιστιοφόρο του Γαλαξειδίου.»": {
+    "file": "narrator/040.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η πινακίδα γράφει: «Σκούνα Χρυσούλα, 1904 — το τελευταίο ιστιοφόρο του Γαλαξειδίου.»",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μια γωνιά αφιερωμένη στα ατμόπλοια. Ένα σιδερένιο μοντέλο, μικρότερο, λιγότερο εντυπωσιακό.": {
+    "file": "narrator/041.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μια γωνιά αφιερωμένη στα ατμόπλοια. Ένα σιδερένιο μοντέλο, μικρότερο, λιγότερο εντυπωσιακό.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πορτρέτα σε χρυσές κορνίζες. Σοβαρά πρόσωπα, κομψά μουστάκια, μάτια που έχουν δει θάλασσα.": {
+    "file": "narrator/042.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πορτρέτα σε χρυσές κορνίζες. Σοβαρά πρόσωπα, κομψά μουστάκια, μάτια που έχουν δει θάλασσα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πυξίδες, εξάντες, χάρτες. Τα εργαλεία που οδηγούσαν τα πλοία σε κάθε γωνιά της Μεσογείου.": {
+    "file": "narrator/043.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πυξίδες, εξάντες, χάρτες. Τα εργαλεία που οδηγούσαν τα πλοία σε κάθε γωνιά της Μεσογείου.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ναυτικές σημαίες κρέμονται από το ταβάνι. Ελληνική, γαλλική, ρωσική — τα λιμάνια που γνώριζαν.": {
+    "file": "narrator/044.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ναυτικές σημαίες κρέμονται από το ταβάνι. Ελληνική, γαλλική, ρωσική — τα λιμάνια που γνώριζαν.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένας παλιός χάρτης του Κορινθιακού ξαπλωμένος σε τραπέζι. Σημειώσεις με μελάνι — δρόμοι ναυσιπλοΐας.": {
+    "file": "narrator/045.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένας παλιός χάρτης του Κορινθιακού ξαπλωμένος σε τραπέζι. Σημειώσεις με μελάνι — δρόμοι ναυσιπλοΐας.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο επιμελητής του μουσείου. Τα μάτια του λάμπουν πίσω από τα στρογγυλά γυαλιά.": {
+    "file": "narrator/046.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο επιμελητής του μουσείου. Τα μάτια του λάμπουν πίσω από τα στρογγυλά γυαλιά.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το Ναυτικό Μουσείο του Γαλαξειδίου. Μυρωδιά ξύλου και παλιού χαρτιού.": {
+    "file": "narrator/047.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το Ναυτικό Μουσείο του Γαλαξειδίου. Μυρωδιά ξύλου και παλιού χαρτιού.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το παλιό ελαιοτριβείο — πέτρα και ξύλο. Κάποτε έβγαζε λάδι, τώρα βγάζει ιστορίες.": {
+    "file": "narrator/048.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το παλιό ελαιοτριβείο — πέτρα και ξύλο. Κάποτε έβγαζε λάδι, τώρα βγάζει ιστορίες.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ξύλινο μπαρ γεμάτο μπουκάλια. Τσίπουρο, ρακή, κρασιά ντόπια. Φανάρια ρίχνουν ζεστό φως.": {
+    "file": "narrator/049.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ξύλινο μπαρ γεμάτο μπουκάλια. Τσίπουρο, ρακή, κρασιά ντόπια. Φανάρια ρίχνουν ζεστό φως.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Γαλάζια πατζούρια ανοιχτά στο φεγγαρόφωτο. Το λιμάνι λάμπει ασημί.": {
+    "file": "narrator/050.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Γαλάζια πατζούρια ανοιχτά στο φεγγαρόφωτο. Το λιμάνι λάμπει ασημί.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ασπρόμαυρες φωτογραφίες στον τοίχο. Ψαράδες, καπετάνιοι, γυναίκες που περίμεναν.": {
+    "file": "narrator/051.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ασπρόμαυρες φωτογραφίες στον τοίχο. Ψαράδες, καπετάνιοι, γυναίκες που περίμεναν.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ξύλινα σκαμπό τριγμένα από χρόνια. Πόσες κουβέντες έχουν ακούσει.": {
+    "file": "narrator/052.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ξύλινα σκαμπό τριγμένα από χρόνια. Πόσες κουβέντες έχουν ακούσει.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.": {
+    "file": "narrator/053.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Άθος. Δικηγόρος και ιδιοκτήτης του Λιοτριβιού. Τα μάτια του κρύβουν χίλια μυστικά.": {
+    "file": "narrator/054.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Άθος. Δικηγόρος και ιδιοκτήτης του Λιοτριβιού. Τα μάτια του κρύβουν χίλια μυστικά.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το Λιοτρίβι. Πέτρα, ξύλο, ζεστό φως. Μυρωδιά τσίπουρου και ελιάς.": {
+    "file": "narrator/055.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το Λιοτρίβι. Πέτρα, ξύλο, ζεστό φως. Μυρωδιά τσίπουρου και ελιάς.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μια τεράστια πέτρινη πόρτα με δώδεκα κυκλικές εσοχές. Σχήμα τιμονιού.": {
+    "file": "narrator/056.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μια τεράστια πέτρινη πόρτα με δώδεκα κυκλικές εσοχές. Σχήμα τιμονιού.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Χαραγμένα σύμβολα στον βράχο. Νεκροκεφαλή, ψάρι, άγκυρα, μάτι.": {
+    "file": "narrator/057.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Χαραγμένα σύμβολα στον βράχο. Νεκροκεφαλή, ψάρι, άγκυρα, μάτι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Τυρκουάζ νερό λάμπει από το φως της εισόδου. Κρυστάλλινο.": {
+    "file": "narrator/058.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Τυρκουάζ νερό λάμπει από το φως της εισόδου. Κρυστάλλινο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Σταλακτίτες κρέμονται σαν δάχτυλα γίγαντα. Χιλιάδες χρόνια σε κάθε σταγόνα.": {
+    "file": "narrator/059.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Σταλακτίτες κρέμονται σαν δάχτυλα γίγαντα. Χιλιάδες χρόνια σε κάθε σταγόνα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα σάπιο βαρέλι. Μυρίζει θάλασσα και χρόνο.": {
+    "file": "narrator/060.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα σάπιο βαρέλι. Μυρίζει θάλασσα και χρόνο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Άδειο, εκτός από αλμύρα και σκόνη.": {
+    "file": "narrator/061.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Άδειο, εκτός από αλμύρα και σκόνη.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Χρυσό φως χύνεται μέσα από τη φυσική αψίδα. Σκόνη χορεύει στις ακτίνες.": {
+    "file": "narrator/062.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Χρυσό φως χύνεται μέσα από τη φυσική αψίδα. Σκόνη χορεύει στις ακτίνες.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Κάρκαρος. Ο θόλος υψώνεται σαν καθεδρικός. Χρυσό φως χύνεται από την είσοδο.": {
+    "file": "narrator/063.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Κάρκαρος. Ο θόλος υψώνεται σαν καθεδρικός. Χρυσό φως χύνεται από την είσοδο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινο σιντριβάνι στην πλατεία. Το νερό τρέχει αθόρυβα.": {
+    "file": "narrator/064.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινο σιντριβάνι στην πλατεία. Το νερό τρέχει αθόρυβα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Άγιος Νικόλαος — προστάτης των ναυτικών. Ο τρούλος λάμπει κόκκινος στον ήλιο.": {
+    "file": "narrator/065.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Άγιος Νικόλαος — προστάτης των ναυτικών. Ο τρούλος λάμπει κόκκινος στον ήλιο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Φούξια μπουκαμβίλιες σκεπάζουν τον τοίχο. Χρώμα που αψηφά τον χρόνο.": {
+    "file": "narrator/066.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Φούξια μπουκαμβίλιες σκεπάζουν τον τοίχο. Χρώμα που αψηφά τον χρόνο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μια πορτοκαλί γάτα κοιμάται αράχτη στα πλακάκια.": {
+    "file": "narrator/067.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μια πορτοκαλί γάτα κοιμάται αράχτη στα πλακάκια.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η γάτα νιαουρίζει απαλά.": {
+    "file": "narrator/068.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η γάτα νιαουρίζει απαλά.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινα παγκάκια στη σκιά. Γέροι κάθονταν εδώ κάθε απόγευμα, εδώ και δεκαετίες.": {
+    "file": "narrator/069.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινα παγκάκια στη σκιά. Γέροι κάθονταν εδώ κάθε απόγευμα, εδώ και δεκαετίες.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Γλάστρες με γεράνια και λουλούδια. Κάποιος φροντίζει αυτή την πλατεία με αγάπη.": {
+    "file": "narrator/070.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Γλάστρες με γεράνια και λουλούδια. Κάποιος φροντίζει αυτή την πλατεία με αγάπη.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η πλατεία του Αγίου Νικολάου. Ησυχία, λουλούδια, και ήχος νερού.": {
+    "file": "narrator/071.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η πλατεία του Αγίου Νικολάου. Ησυχία, λουλούδια, και ήχος νερού.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;": {
+    "file": "narrator/072.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η θέα κόβει την ανάσα. Ολόκληρο το Γαλαξίδι, ο κόλπος, τα βουνά. Από εδώ βλέπεις τα πάντα.": {
+    "file": "narrator/073.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η θέα κόβει την ανάσα. Ολόκληρο το Γαλαξίδι, ο κόλπος, τα βουνά. Από εδώ βλέπεις τα πάντα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινα ερείπια — ίσως ο παλιός μύλος. Αψίδα ακόμα όρθια, αψηφώντας τον χρόνο.": {
+    "file": "narrator/074.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινα ερείπια — ίσως ο παλιός μύλος. Αψίδα ακόμα όρθια, αψηφώντας τον χρόνο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.": {
+    "file": "narrator/075.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πέτρινο καλντερίμι ανεβαίνει τον λόφο. Λειασμένο από πόδια αιώνων.": {
+    "file": "narrator/076.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πέτρινο καλντερίμι ανεβαίνει τον λόφο. Λειασμένο από πόδια αιώνων.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Γιάννης Βελανής. Ιδιοκτήτης του παλιού μύλου. Ήσυχος, βλέπει τα πάντα από ψηλά.": {
+    "file": "narrator/077.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Γιάννης Βελανής. Ιδιοκτήτης του παλιού μύλου. Ήσυχος, βλέπει τα πάντα από ψηλά.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Γιάννης σου δίνει ένα φανάρι.": {
+    "file": "narrator/078.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Γιάννης σου δίνει ένα φανάρι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η κορυφή του λόφου. Αέρας, φως, και θέα που δεν τελειώνει.": {
+    "file": "narrator/079.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η κορυφή του λόφου. Αέρας, φως, και θέα που δεν τελειώνει.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|«ΕΛΠΙΔΑ» — χρυσά γράμματα σε ξεφλουδισμένο μπλε ξύλο.": {
+    "file": "narrator/080.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "«ΕΛΠΙΔΑ» — χρυσά γράμματα σε ξεφλουδισμένο μπλε ξύλο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα μικρό λευκό παρεκκλήσι πάνω στον βράχο. Ελληνική σημαία κυματίζει.": {
+    "file": "narrator/081.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα μικρό λευκό παρεκκλήσι πάνω στον βράχο. Ελληνική σημαία κυματίζει.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο ήλιος βυθίζεται στον Κορινθιακό. Χρυσό, πορτοκαλί, ροζ. Τα βουνά γίνονται σκιές.": {
+    "file": "narrator/082.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο ήλιος βυθίζεται στον Κορινθιακό. Χρυσό, πορτοκαλί, ροζ. Τα βουνά γίνονται σκιές.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κανείς δεν μιλάει. Δεν χρειάζεται.": {
+    "file": "narrator/083.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κανείς δεν μιλάει. Δεν χρειάζεται.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Σχοινιά τυλιγμένα στο κατάστρωμα. Μυρίζουν θάλασσα και πεύκο.": {
+    "file": "narrator/084.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Σχοινιά τυλιγμένα στο κατάστρωμα. Μυρίζουν θάλασσα και πεύκο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πορτοκαλί σωσίβιο. Λευκά γράμματα: ΕΛΠΙΔΑ — ΓΑΛΑΞΙΔΙ.": {
+    "file": "narrator/085.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πορτοκαλί σωσίβιο. Λευκά γράμματα: ΕΛΠΙΔΑ — ΓΑΛΑΞΙΔΙ.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το Γαλαξίδι λάμπει στον ήλιο του δειλινού. Σπίτια, εκκλησίες, το λιμάνι — σαν μακέτα.": {
+    "file": "narrator/086.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το Γαλαξίδι λάμπει στον ήλιο του δειλινού. Σπίτια, εκκλησίες, το λιμάνι — σαν μακέτα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η Ελπίδα πλέει αργά στον Κορινθιακό. Ο κόσμος σταμάτησε.": {
+    "file": "narrator/087.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η Ελπίδα πλέει αργά στον Κορινθιακό. Ο κόσμος σταμάτησε.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίζης».": {
+    "file": "narrator/088.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίζης».",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η πέτρα ήδη τοποθετήθηκε. Η πλάκα λάμπει αχνά.": {
+    "file": "narrator/089.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η πέτρα ήδη τοποθετήθηκε. Η πλάκα λάμπει αχνά.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο Ντέμης τοποθετεί την πράσινη πέτρα τζέιντ στην εσοχή της πλάκας...": {
+    "file": "narrator/090.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Ντέμης τοποθετεί την πράσινη πέτρα τζέιντ στην εσοχή της πλάκας...",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μαρμάρινοι σταυροί και πλάκες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς, Χρυσοβαλάντου.": {
+    "file": "narrator/091.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μαρμάρινοι σταυροί και πλάκες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς, Χρυσοβαλάντου.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι.": {
+    "file": "narrator/092.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κόκκινες παπαρούνες ανάμεσα στους τάφους. Η ζωή εκεί που αναπαύεται ο θάνατος.": {
+    "file": "narrator/093.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κόκκινες παπαρούνες ανάμεσα στους τάφους. Η ζωή εκεί που αναπαύεται ο θάνατος.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η θάλασσα λάμπει χρυσή από το ηλιοβασίλεμα. Ακόμα και μετά θάνατον, οι καπετάνιοι βλέπουν τη θάλασσα.": {
+    "file": "narrator/094.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η θάλασσα λάμπει χρυσή από το ηλιοβασίλεμα. Ακόμα και μετά θάνατον, οι καπετάνιοι βλέπουν τη θάλασσα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα ιστιοφόρο στον ορίζοντα. Σαν φάντασμα του παρελθόντος.": {
+    "file": "narrator/095.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα ιστιοφόρο στον ορίζοντα. Σαν φάντασμα του παρελθόντος.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.": {
+    "file": "narrator/096.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Σκιές τρεμοπαίζουν ανάμεσα στα κυπαρίσσια. Σαν να κινείται κάτι...": {
+    "file": "narrator/097.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Σκιές τρεμοπαίζουν ανάμεσα στα κυπαρίσσια. Σαν να κινείται κάτι...",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μια αχνή, ψηλή σιλουέτα κοντά στα κυπαρίσσια. Τρεμοπαίζει σαν φως σε νερό.": {
+    "file": "narrator/098.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μια αχνή, ψηλή σιλουέτα κοντά στα κυπαρίσσια. Τρεμοπαίζει σαν φως σε νερό.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Δεν υπάρχει κανείς εδώ... ακόμα.": {
+    "file": "narrator/099.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Δεν υπάρχει κανείς εδώ... ακόμα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το φάντασμα δεν μιλάει. Δείχνει προς την εκκλησία.": {
+    "file": "narrator/100.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το φάντασμα δεν μιλάει. Δείχνει προς την εκκλησία.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το παλιό νεκροταφείο. Θέα στη θάλασσα, μυρωδιά θυμαριού, ησυχία.": {
+    "file": "narrator/101.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το παλιό νεκροταφείο. Θέα στη θάλασσα, μυρωδιά θυμαριού, ησυχία.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο αέρας αλλάζει. Η θερμοκρασία πέφτει. Τα κυπαρίσσια σταματούν να κουνιούνται.": {
+    "file": "narrator/102.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο αέρας αλλάζει. Η θερμοκρασία πέφτει. Τα κυπαρίσσια σταματούν να κουνιούνται.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Μια φιγούρα υψώνεται πάνω από τον τάφο. Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.": {
+    "file": "narrator/103.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μια φιγούρα υψώνεται πάνω από τον τάφο. Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το φάντασμα σηκώνει αργά το χέρι. Δείχνει... προς τον Άγιο Νικόλαο.": {
+    "file": "narrator/104.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το φάντασμα σηκώνει αργά το χέρι. Δείχνει... προς τον Άγιο Νικόλαο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Τίποτα ιδιαίτερο.": {
+    "file": "narrator/105.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Τίποτα ιδιαίτερο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.": {
+    "file": "narrator/106.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.": {
+    "file": "narrator/107.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|— Τέλος Σκηνής 1 —": {
+    "file": "narrator/108.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "— Τέλος Σκηνής 1 —",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Συνέχεια στη Σκηνή 2: Το Γράμμα...": {
+    "file": "narrator/109.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Συνέχεια στη Σκηνή 2: Το Γράμμα...",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "ΑΘΟΣ|Λατσούδη! Περίμενα πότε θα φτάσεις.": {
+    "file": "athos/001.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Λατσούδη! Περίμενα πότε θα φτάσεις.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΘΟΣ|Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.": {
+    "file": "athos/002.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΘΟΣ|Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.": {
+    "file": "athos/003.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Άδειο. Κρίμα!": {
+    "file": "ajax/001.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Άδειο. Κρίμα!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, θα πάμε βόλτα με βάρκα;": {
+    "file": "ajax/002.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, θα πάμε βόλτα με βάρκα;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Τέλειο! Πάμε κατευθείαν στο λιμάνι;": {
+    "file": "ajax/003.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Τέλειο! Πάμε κατευθείαν στο λιμάνι;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...": {
+    "file": "ajax/004.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Δελφίνια μέσα στο λιμάνι; Αυτό δεν είναι συνηθισμένο...",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, μπορώ να φάω ένα;": {
+    "file": "ajax/005.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, μπορώ να φάω ένα;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Ποιος είναι ο «Γ.»;": {
+    "file": "ajax/006.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Ποιος είναι ο «Γ.»;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Και κάτι πάνω στην καρέκλα... μια τσάντα;": {
+    "file": "ajax/007.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Και κάτι πάνω στην καρέκλα... μια τσάντα;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, μπορώ να πηδήξω σε κάποιο;": {
+    "file": "ajax/008.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, μπορώ να πηδήξω σε κάποιο;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Αυτό το λιμάνι φαίνεται τεράστιο για τόσο μικρό χωριό.": {
+    "file": "ajax/009.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Αυτό το λιμάνι φαίνεται τεράστιο για τόσο μικρό χωριό.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Γιατί; Ήταν χαζοί;": {
+    "file": "ajax/010.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Γιατί; Ήταν χαζοί;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Ε, λίγο μόνο.": {
+    "file": "ajax/011.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Ε, λίγο μόνο.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Εγώ θέλω να δω αν έχει κανόνια.": {
+    "file": "ajax/012.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Εγώ θέλω να δω αν έχει κανόνια.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Εγώ μπορώ να πάρω λεμονάδα;": {
+    "file": "ajax/013.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Εγώ μπορώ να πάρω λεμονάδα;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Αυτό μοιάζει σαν πειρατικό καπηλειό!": {
+    "file": "ajax/014.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Αυτό μοιάζει σαν πειρατικό καπηλειό!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Ή σαν τιμόνι καραβιού!": {
+    "file": "ajax/015.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Ή σαν τιμόνι καραβιού!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπορώ να κολυμπήσω;": {
+    "file": "ajax/016.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπορώ να κολυμπήσω;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μήπως είχε ρούμι;": {
+    "file": "ajax/017.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μήπως είχε ρούμι;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Σαν εκκλησία!": {
+    "file": "ajax/018.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Σαν εκκλησία!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Η πόρτα! Κοιτάξτε αυτή την τεράστια πόρτα!": {
+    "file": "ajax/019.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Η πόρτα! Κοιτάξτε αυτή την τεράστια πόρτα!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Πάλι γάτα;": {
+    "file": "ajax/020.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Πάλι γάτα;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Τι; Τι βλέπεις;": {
+    "file": "ajax/021.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Τι; Τι βλέπεις;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, βλέπω μέχρι την Ιτέα!": {
+    "file": "ajax/022.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, βλέπω μέχρι την Ιτέα!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|ΤΕΛΕΙΟ! Βλέπω τα πάντα από εδώ!": {
+    "file": "ajax/023.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "ΤΕΛΕΙΟ! Βλέπω τα πάντα από εδώ!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Ξέρω κόμπους! Ο παππούς μου έμαθε.": {
+    "file": "ajax/024.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Ξέρω κόμπους! Ο παππούς μου έμαθε.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, μπορούμε να μείνουμε για πάντα εδώ;": {
+    "file": "ajax/025.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, μπορούμε να μείνουμε για πάντα εδώ;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Αυτός είναι ο καπετάνιος από το γράμμα!": {
+    "file": "ajax/026.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Αυτός είναι ο καπετάνιος από το γράμμα!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Τους έβαλαν εδώ επίτηδες. Να βλέπουν.": {
+    "file": "ajax/027.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Τους έβαλαν εδώ επίτηδες. Να βλέπουν.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Φάντασμα; Σοβαρά τώρα;": {
+    "file": "ajax/028.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Φάντασμα; Σοβαρά τώρα;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.": {
+    "file": "ajax/029.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Τι γίνεται; Γιατί σκοτείνιασε;": {
+    "file": "ajax/030.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Τι γίνεται; Γιατί σκοτείνιασε;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, βλέπω μέσα από αυτόν!": {
+    "file": "ajax/031.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, βλέπω μέσα από αυτόν!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Αυτό... αυτό μόλις έγινε. Δεν ονειρεύομαι.": {
+    "file": "ajax/032.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Αυτό... αυτό μόλις έγινε. Δεν ονειρεύομαι.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Πάμε στο λιμάνι!": {
+    "file": "ajax/033.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Πάμε στο λιμάνι!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΚΗΣ|Ε, Ντέμη! Τα παιδιά μεγάλωσαν!": {
+    "file": "akis/001.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Ε, Ντέμη! Τα παιδιά μεγάλωσαν!",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΚΗΣ|Ένα παλιό τραγούδι ναυτικό. Πήγαινε στο μουσείο — θα καταλάβεις.": {
+    "file": "akis/002.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Ένα παλιό τραγούδι ναυτικό. Πήγαινε στο μουσείο — θα καταλάβεις.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΓΙΑΝΝΗΣ|...": {
+    "file": "giannis/001.mp3",
+    "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+    "speaker": "ΓΙΑΝΝΗΣ",
+    "text": "...",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΓΙΑΝΝΗΣ|Το ξέρω. Σε βλέπω από εδώ πάνω.": {
+    "file": "giannis/002.mp3",
+    "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+    "speaker": "ΓΙΑΝΝΗΣ",
+    "text": "Το ξέρω. Σε βλέπω από εδώ πάνω.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΓΙΑΝΝΗΣ|Πάρε αυτό. Θα το χρειαστείς.": {
+    "file": "giannis/003.mp3",
+    "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+    "speaker": "ΓΙΑΝΝΗΣ",
+    "text": "Πάρε αυτό. Θα το χρειαστείς.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|Καλώς ήρθατε! Βλέπω ξέρετε να εκτιμάτε την ιστορία.": {
+    "file": "curator/001.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "Καλώς ήρθατε! Βλέπω ξέρετε να εκτιμάτε την ιστορία.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|Τριακόσια πλοία! Η Χρυσούλα ήταν το τελευταίο. Τα ατμόπλοια τα σκότωσαν όλα.": {
+    "file": "curator/002.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "Τριακόσια πλοία! Η Χρυσούλα ήταν το τελευταίο. Τα ατμόπλοια τα σκότωσαν όλα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|Ωραία ερώτηση, μικρή. Ήταν τόσο καλοί στα πανιά, που δεν φαντάζονταν κόσμο χωρίς αυτά.": {
+    "file": "curator/003.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "Ωραία ερώτηση, μικρή. Ήταν τόσο καλοί στα πανιά, που δεν φαντάζονταν κόσμο χωρίς αυτά.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.": {
+    "file": "clio/001.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.": {
+    "file": "clio/002.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Πρώτα ας αφήσουμε τις βαλίτσες. Θέλω να δω τη βεράντα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, κοίτα! Δελφίνια!": {
+    "file": "clio/003.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, κοίτα! Δελφίνια!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.": {
+    "file": "clio/004.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Οι Αμφικτίονες ξεκινούσαν από τους Δελφούς... Το Γαλαξίδι ήταν λιμάνι τους.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, μην ακουμπάς, φαίνεται παλιό!": {
+    "file": "clio/005.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, μην ακουμπάς, φαίνεται παλιό!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αυτό είναι το πιο όμορφο μέρος στον κόσμο.": {
+    "file": "clio/006.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αυτό είναι το πιο όμορφο μέρος στον κόσμο.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, κοίτα — υπάρχει κάτι μέσα.": {
+    "file": "clio/007.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, κοίτα — υπάρχει κάτι μέσα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Διάβασέ το!": {
+    "file": "clio/008.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Διάβασέ το!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Κοιτάξτε — κάποιος μας άφησε σύκα!": {
+    "file": "clio/009.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Κοιτάξτε — κάποιος μας άφησε σύκα!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Γιατί είναι τόσο μεγάλες;": {
+    "file": "clio/010.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Γιατί είναι τόσο μεγάλες;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...": {
+    "file": "clio/011.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Πόσο τέλεια! Αυτή η πορτοκαλί μου αρέσει πολύ.": {
+    "file": "clio/012.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Πόσο τέλεια! Αυτή η πορτοκαλί μου αρέσει πολύ.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Θείε Άκη, τι παίζεις;": {
+    "file": "clio/013.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Θείε Άκη, τι παίζεις;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Τριακόσια καράβια, μπαμπά. Το διάβασα.": {
+    "file": "clio/014.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Τριακόσια καράβια, μπαμπά. Το διάβασα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Κοιτάξτε τα πανιά! Ένα-ένα ραμμένα.": {
+    "file": "clio/015.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Κοιτάξτε τα πανιά! Ένα-ένα ραμμένα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αυτός μοιάζει λίγο με τον μπαμπά.": {
+    "file": "clio/016.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αυτός μοιάζει λίγο με τον μπαμπά.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Χωρίς GPS; Πώς;": {
+    "file": "clio/017.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Χωρίς GPS; Πώς;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, σημείωσε αυτό. Μπορεί να μας χρειαστεί.": {
+    "file": "clio/018.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, σημείωσε αυτό. Μπορεί να μας χρειαστεί.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Γιατί δεν έφτιαξαν κι αυτοί ατμόπλοια;": {
+    "file": "clio/019.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Γιατί δεν έφτιαξαν κι αυτοί ατμόπλοια;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Πόσα μοντέλα! Θέλω να τα δω ΟΛΑ.": {
+    "file": "clio/020.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Πόσα μοντέλα! Θέλω να τα δω ΟΛΑ.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Φανταστείτε πόσα χέρια το γύρισαν.": {
+    "file": "clio/021.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Φανταστείτε πόσα χέρια το γύρισαν.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μαγικό. Σαν πίνακας ζωγραφικής.": {
+    "file": "clio/022.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μαγικό. Σαν πίνακας ζωγραφικής.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Σπήλαιο; Θα πάμε σε σπήλαιο;!": {
+    "file": "clio/023.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Σπήλαιο; Θα πάμε σε σπήλαιο;!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μυρίζει ωραία. Σαν τη γιαγιά.": {
+    "file": "clio/024.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μυρίζει ωραία. Σαν τη γιαγιά.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Δώδεκα θέσεις. Σαν ρολόι.": {
+    "file": "clio/025.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Δώδεκα θέσεις. Σαν ρολόι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!": {
+    "file": "clio/026.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ο Κάρκαρος. Λέγανε ότι η φωνή σου γυρίζει πίσω τρεις φορές.": {
+    "file": "clio/027.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ο Κάρκαρος. Λέγανε ότι η φωνή σου γυρίζει πίσω τρεις φορές.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Σαν να σε καλεί μέσα.": {
+    "file": "clio/028.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Σαν να σε καλεί μέσα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά... αυτό δεν μοιάζει σπήλαιο. Μοιάζει σαν κάποιος να το έφτιαξε.": {
+    "file": "clio/029.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά... αυτό δεν μοιάζει σπήλαιο. Μοιάζει σαν κάποιος να το έφτιαξε.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ρίχνω ένα νόμισμα;": {
+    "file": "clio/030.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ρίχνω ένα νόμισμα;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Την ξαναβρήκα! Αυτή είναι η ίδια από το λιμάνι.": {
+    "file": "clio/031.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Την ξαναβρήκα! Αυτή είναι η ίδια από το λιμάνι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Γεια σου, μικρούλα. Με ακολουθείς;": {
+    "file": "clio/032.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Γεια σου, μικρούλα. Με ακολουθείς;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Τι ωραία πλατεία! Και γάτα!": {
+    "file": "clio/033.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Τι ωραία πλατεία! Και γάτα!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αφήστε με να κοιτάξω!": {
+    "file": "clio/034.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αφήστε με να κοιτάξω!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Βλέπω... το λιμάνι! Και κάτι στο νερό...": {
+    "file": "clio/035.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Βλέπω... το λιμάνι! Και κάτι στο νερό...",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ένα σημάδι στην προβλήτα. Σαν αστέρι.": {
+    "file": "clio/036.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ένα σημάδι στην προβλήτα. Σαν αστέρι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Και τους Δελφούς! Εκεί πάνω!": {
+    "file": "clio/037.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Και τους Δελφούς! Εκεί πάνω!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Θέλω να ζωγραφίσω αυτά.": {
+    "file": "clio/038.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Θέλω να ζωγραφίσω αυτά.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, κοίτα — ένα τηλεσκόπιο!": {
+    "file": "clio/039.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, κοίτα — ένα τηλεσκόπιο!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ποιος πάει εκεί πάνω για λειτουργία;": {
+    "file": "clio/040.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ποιος πάει εκεί πάνω για λειτουργία;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Από εδώ φαίνεται σαν παραμύθι.": {
+    "file": "clio/041.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Από εδώ φαίνεται σαν παραμύθι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αυτό... αυτό είναι τέλειο.": {
+    "file": "clio/042.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αυτό... αυτό είναι τέλειο.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Κοίτα κάτω — «Η θάλασσα θυμάται».": {
+    "file": "clio/043.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Κοίτα κάτω — «Η θάλασσα θυμάται».",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Κάθε πέτρα και ένα ταξίδι.": {
+    "file": "clio/044.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Κάθε πέτρα και ένα ταξίδι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά, δεν είναι τρομακτικό. Είναι... ωραίο.": {
+    "file": "clio/045.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, δεν είναι τρομακτικό. Είναι... ωραίο.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά... νιώθω κάτι εδώ.": {
+    "file": "clio/046.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά... νιώθω κάτι εδώ.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά... βλέπω κάτι εκεί.": {
+    "file": "clio/047.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά... βλέπω κάτι εκεί.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Θέλει να πάμε στον Άγιο Νικόλαο!": {
+    "file": "clio/048.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Θέλει να πάμε στον Άγιο Νικόλαο!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά... δεν μου αρέσουν τα νεκροταφεία.": {
+    "file": "clio/049.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά... δεν μου αρέσουν τα νεκροταφεία.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά... η πέτρα λάμπει!": {
+    "file": "clio/050.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά... η πέτρα λάμπει!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ο... ο Καπετάν Βισβίζης;": {
+    "file": "clio/051.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ο... ο Καπετάν Βισβίζης;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ο χάρτης. Θέλει να βρούμε τον χάρτη.": {
+    "file": "clio/052.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ο χάρτης. Θέλει να βρούμε τον χάρτη.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Περίμενε 120 χρόνια. Για κάποιον σαν εμάς.": {
+    "file": "clio/053.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Περίμενε 120 χρόνια. Για κάποιον σαν εμάς.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.": {
+    "file": "clio/054.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ας μπούμε μέσα.": {
+    "file": "ntemis/001.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ας μπούμε μέσα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.": {
+    "file": "ntemis/002.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Καλωσορίσατε στο Γαλαξίδι.": {
+    "file": "ntemis/003.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Καλωσορίσατε στο Γαλαξίδι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Φυσικά.": {
+    "file": "ntemis/004.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Φυσικά.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Και πώς ξέρει ότι είμαστε τρεις;": {
+    "file": "ntemis/005.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Και πώς ξέρει ότι είμαστε τρεις;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.": {
+    "file": "ntemis/006.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Μπορείς να κοιτάξεις. Από εδώ.": {
+    "file": "ntemis/007.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Μπορείς να κοιτάξεις. Από εδώ.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Γιατί κάποτε εδώ δένανε ιστιοφόρα πενήντα μέτρων.": {
+    "file": "ntemis/008.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Γιατί κάποτε εδώ δένανε ιστιοφόρα πενήντα μέτρων.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Καλησπέρα! Πολύ ψάρι σήμερα;": {
+    "file": "ntemis/009.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Καλησπέρα! Πολύ ψάρι σήμερα;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Στάθη! Πόσο καιρό!": {
+    "file": "ntemis/010.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Στάθη! Πόσο καιρό!",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Γιατί κάποτε δεν ήταν μικρό χωριό. Ήταν ναυτική δύναμη.": {
+    "file": "ntemis/011.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Γιατί κάποτε δεν ήταν μικρό χωριό. Ήταν ναυτική δύναμη.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Αυτό ήταν το μέλλον. Και το Γαλαξίδι δεν το είδε.": {
+    "file": "ntemis/012.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Αυτό ήταν το μέλλον. Και το Γαλαξίδι δεν το είδε.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Όχι. Ήταν οι καλύτεροι στα πανιά. Γι\\u0027 αυτό ακριβώς δεν άλλαξαν.": {
+    "file": "ntemis/013.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Όχι. Ήταν οι καλύτεροι στα πανιά. Γι\\u0027 αυτό ακριβώς δεν άλλαξαν.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ευχαριστώ, νομίζω.": {
+    "file": "ntemis/014.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ευχαριστώ, νομίζω.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Αστέρια, εμπειρία, και θάρρος.": {
+    "file": "ntemis/015.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Αστέρια, εμπειρία, και θάρρος.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Τα παιδιά μου ήθελαν να δουν τα καράβια.": {
+    "file": "ntemis/016.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Τα παιδιά μου ήθελαν να δουν τα καράβια.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Σσσ. Μουσείο, παιδιά. Ησυχία.": {
+    "file": "ntemis/017.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Σσσ. Μουσείο, παιδιά. Ησυχία.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Κάθε φωτογραφία και μια ιστορία. Κάθε πρόσωπο και μια ζωή.": {
+    "file": "ntemis/018.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Κάθε φωτογραφία και μια ιστορία. Κάθε πρόσωπο και μια ζωή.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Κάτσε. Ξεκουράσου. Η νύχτα είναι μακριά.": {
+    "file": "ntemis/019.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Κάτσε. Ξεκουράσου. Η νύχτα είναι μακριά.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Με ξέρεις;": {
+    "file": "ntemis/020.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Με ξέρεις;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ελάτε, ας δούμε ποιος είναι εδώ.": {
+    "file": "ntemis/021.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ελάτε, ας δούμε ποιος είναι εδώ.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Κάτι πρέπει να μπει σε κάθε εσοχή. Αλλά τι;": {
+    "file": "ntemis/022.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Κάτι πρέπει να μπει σε κάθε εσοχή. Αλλά τι;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δεν κουνιέται. Χρειαζόμαστε κάτι για τις εσοχές.": {
+    "file": "ntemis/023.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δεν κουνιέται. Χρειαζόμαστε κάτι για τις εσοχές.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δεν έχουμε αρκετά ακόμα. Πρέπει να ψάξουμε περισσότερο.": {
+    "file": "ntemis/024.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δεν έχουμε αρκετά ακόμα. Πρέπει να ψάξουμε περισσότερο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα. Αυτοί οι τοίχοι θυμούνται.": {
+    "file": "ntemis/025.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα. Αυτοί οι τοίχοι θυμούνται.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Όχι τώρα, Αία. Ποιος ξέρει πόσο βαθιά είναι.": {
+    "file": "ntemis/026.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Όχι τώρα, Αία. Ποιος ξέρει πόσο βαθιά είναι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Πιθανόν, κάποτε.": {
+    "file": "ntemis/027.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Πιθανόν, κάποτε.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δώδεκα εσοχές. Σαν τιμόνι πλοίου. Κάτι μας λείπει.": {
+    "file": "ntemis/028.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δώδεκα εσοχές. Σαν τιμόνι πλοίου. Κάτι μας λείπει.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Γιατί όχι; Κάνε μια ευχή.": {
+    "file": "ntemis/029.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Γιατί όχι; Κάνε μια ευχή.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.": {
+    "file": "ntemis/030.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ο Άγιος Νικόλαος. Προστάτης των ναυτικών. Κατάλληλος για το Γαλαξίδι.": {
+    "file": "ntemis/031.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ο Άγιος Νικόλαος. Προστάτης των ναυτικών. Κατάλληλος για το Γαλαξίδι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Σημείωσέ το, Κλειώ.": {
+    "file": "ntemis/032.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Σημείωσέ το, Κλειώ.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.": {
+    "file": "ntemis/033.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ένα σημείο παρατήρησης. Κάποιος παρακολουθούσε τα πλοία από εδώ.": {
+    "file": "ntemis/034.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ένα σημείο παρατήρησης. Κάποιος παρακολουθούσε τα πλοία από εδώ.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ελπίδα. Πάντα υπάρχει ελπίδα.": {
+    "file": "ntemis/035.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ελπίδα. Πάντα υπάρχει ελπίδα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Οι ψαράδες. Πριν και μετά το ταξίδι.": {
+    "file": "ntemis/036.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Οι ψαράδες. Πριν και μετά το ταξίδι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δείξε μας.": {
+    "file": "ntemis/037.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δείξε μας.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Για λίγο ακόμα. Κοιτάξτε τον ήλιο.": {
+    "file": "ntemis/038.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Για λίγο ακόμα. Κοιτάξτε τον ήλιο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Λείπει κάτι. Η εσοχή στην πλάκα... σαν να περιμένει κάτι.": {
+    "file": "ntemis/039.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Λείπει κάτι. Η εσοχή στην πλάκα... σαν να περιμένει κάτι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Κάθε πέτρα και μια οικογένεια που περίμενε.": {
+    "file": "ntemis/040.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Κάθε πέτρα και μια οικογένεια που περίμενε.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Μόλις μας έδωσε οδηγίες ένα φάντασμα.": {
+    "file": "ntemis/041.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Μόλις μας έδωσε οδηγίες ένα φάντασμα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.": {
+    "file": "ntemis/042.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Στην εκκλησία; Τι κρύβεται εκεί;": {
+    "file": "ntemis/043.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Στην εκκλησία; Τι κρύβεται εκεί;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Στον Άγιο Νικόλαο. Τώρα.": {
+    "file": "ntemis/044.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Στον Άγιο Νικόλαο. Τώρα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δεν μπορώ να μιλήσω σε αυτό.": {
+    "file": "ntemis/045.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δεν μπορώ να μιλήσω σε αυτό.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δεν ανοίγει.": {
+    "file": "ntemis/046.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δεν ανοίγει.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Δεν ξέρω πώς.": {
+    "file": "ntemis/047.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Δεν ξέρω πώς.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|«Σας περιμέναμε»... Ποιος μας περιμένει;": {
+    "file": "ntemis/048.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "«Σας περιμέναμε»... Ποιος μας περιμένει;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΣΤΑΘΗΣ|Ντέμη! Τι κάνεις εδώ; Πάρε μια καρέκλα!": {
+    "file": "stathis/001.mp3",
+    "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+    "speaker": "ΣΤΑΘΗΣ",
+    "text": "Ντέμη! Τι κάνεις εδώ; Πάρε μια καρέκλα!",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΣΤΑΘΗΣ|Ψάχνεις κάτι; Ρώτα τον Άθο στο Λιοτρίβι. Ξέρει τα πάντα για τις παλιές οικογένειες.": {
+    "file": "stathis/002.mp3",
+    "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+    "speaker": "ΣΤΑΘΗΣ",
+    "text": "Ψάχνεις κάτι; Ρώτα τον Άθο στο Λιοτρίβι. Ξέρει τα πάντα για τις παλιές οικογένειες.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Ποιος είναι αυτός;": {
+    "file": "clio/055.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Ποιος είναι αυτός;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ο Καπετάν Βισβίκης. Ο προπάππους μου.": {
+    "file": "ntemis/049.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ο Καπετάν Βισβίκης. Ο προπάππους μου.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Φέρε τη σε μένα... Είναι νεκρός εδώ και εκατό χρόνια.": {
+    "file": "ajax/034.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Φέρε τη σε μένα... Είναι νεκρός εδώ και εκατό χρόνια.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Στο νεκροταφείο, βλάκα.": {
+    "file": "clio/056.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Στο νεκροταφείο, βλάκα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|...Κλειώ.": {
+    "file": "ntemis/050.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "...Κλειώ.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Τι; Λογικό είναι.": {
+    "file": "clio/057.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Τι; Λογικό είναι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Ποιου παππού;": {
+    "file": "ajax/035.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Ποιου παππού;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Του προπάππου μου. Κανένας δεν έχει μπει εδώ χρόνια. Κληρονομιά.": {
+    "file": "ntemis/051.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Του προπάππου μου. Κανένας δεν έχει μπει εδώ χρόνια. Κληρονομιά.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Θα έχει φαντάσματα;": {
+    "file": "clio/058.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Θα έχει φαντάσματα;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|...Όχι, Κλειώ. Θα έχει σκόνη.": {
+    "file": "ntemis/052.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "...Όχι, Κλειώ. Θα έχει σκόνη.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "|Μοντέλα πλοίων σε ράφια, ορειχάλκινα όργανα, χάρτες στους τοίχους. Μια ξεθωριασμένη φωτογραφία.": {
+    "file": "narrator/110.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Μοντέλα πλοίων σε ράφια, ορειχάλκινα όργανα, χάρτες στους τοίχους. Μια ξεθωριασμένη φωτογραφία.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα κλειδωμένο συρτάρι στο γραφείο. Χρειάζεται κλειδί.": {
+    "file": "narrator/111.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα κλειδωμένο συρτάρι στο γραφείο. Χρειάζεται κλειδί.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα χάλκινο δοχείο στο τζάκι. Κάτι κουδουνίζει μέσα.": {
+    "file": "narrator/112.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα χάλκινο δοχείο στο τζάκι. Κάτι κουδουνίζει μέσα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα παλιό γράμμα, σφραγισμένο με κερί. Η γραφή είναι σχολαστική, αρχαϊκή.": {
+    "file": "narrator/113.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα παλιό γράμμα, σφραγισμένο με κερί. Η γραφή είναι σχολαστική, αρχαϊκή.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "ΝΤΕΜΗΣ|Πόσα χρόνια, ρε παιδιά;": {
+    "file": "ntemis/053.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Πόσα χρόνια, ρε παιδιά;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΚΗΣ|Αρκετά. Αλλά το Γαλαξίδι δε σ' αφήνει να ξεχάσεις.": {
+    "file": "akis/003.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Αρκετά. Αλλά το Γαλαξίδι δε σ' αφήνει να ξεχάσεις.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Λυπημένο αλλά ωραίο.": {
+    "file": "clio/059.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Λυπημένο αλλά ωραίο.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΣΤΑΘΗΣ|Ήταν το τραγούδι των ναυτικών. Το τραγουδούσαν όταν έφευγαν.": {
+    "file": "stathis/003.mp3",
+    "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+    "speaker": "ΣΤΑΘΗΣ",
+    "text": "Ήταν το τραγούδι των ναυτικών. Το τραγουδούσαν όταν έφευγαν.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΚΗΣ|Ταξίδεψε στη Σμύρνη, στην Αλεξάνδρεια, στη Βηρυτό. Λέγανε ότι γύρισε με κάτι πράσινο... κάτι που δεν έδειξε σε κανέναν.": {
+    "file": "akis/004.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Ταξίδεψε στη Σμύρνη, στην Αλεξάνδρεια, στη Βηρυτό. Λέγανε ότι γύρισε με κάτι πράσινο... κάτι που δεν έδειξε σε κανέναν.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΚΗΣ|Ο Κάρκαρος. Το σπήλαιο πίσω από την πλατεία Μάμα. Μπαίνεις μέσα και η φωνή σου γυρίζει πίσω τρεις φορές.": {
+    "file": "akis/005.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Ο Κάρκαρος. Το σπήλαιο πίσω από την πλατεία Μάμα. Μπαίνεις μέσα και η φωνή σου γυρίζει πίσω τρεις φορές.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΚΗΣ|Αν θέλεις να καταλάβεις τον Βισβίκη, πρέπει να δεις πρώτα τι έχασε το Γαλαξίδι. Εκεί ζει η ιστορία.": {
+    "file": "akis/006.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Αν θέλεις να καταλάβεις τον Βισβίκη, πρέπει να δεις πρώτα τι έχασε το Γαλαξίδι. Εκεί ζει η ιστορία.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΣΤΑΘΗΣ|Και μίλα στον Άθο στο Λιοτρίβι. Ξέρει κάθε οικογένεια, κάθε μυστικό. Διάβασε και τη διαθήκη.": {
+    "file": "stathis/004.mp3",
+    "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+    "speaker": "ΣΤΑΘΗΣ",
+    "text": "Και μίλα στον Άθο στο Λιοτρίβι. Ξέρει κάθε οικογένεια, κάθε μυστικό. Διάβασε και τη διαθήκη.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Σαν να παίζουν για τη θάλασσα.": {
+    "file": "clio/060.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Σαν να παίζουν για τη θάλασσα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΚΗΣ|Γιατί αυτό κάνουμε, μικρή.": {
+    "file": "akis/007.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Γιατί αυτό κάνουμε, μικρή.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|Τριακόσια καράβια. Έξι χιλιάδες κάτοικοι. Το Γαλαξίδι ήταν η ναυτική πρωτεύουσα της Ελλάδας.": {
+    "file": "curator/004.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "Τριακόσια καράβια. Έξι χιλιάδες κάτοικοι. Το Γαλαξίδι ήταν η ναυτική πρωτεύουσα της Ελλάδας.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|...ήρθε ο ατμός. Κι αυτοί που ήξεραν τα πάντα για τα πανιά, αρνήθηκαν να μάθουν κάτι καινούριο.": {
+    "file": "curator/005.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "...ήρθε ο ατμός. Κι αυτοί που ήξεραν τα πάντα για τα πανιά, αρνήθηκαν να μάθουν κάτι καινούριο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Δηλαδή... ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;": {
+    "file": "ajax/036.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Δηλαδή... ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|Ακριβώς, μικρέ μου. Ακριβώς αυτό.": {
+    "file": "curator/006.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "Ακριβώς, μικρέ μου. Ακριβώς αυτό.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Εκατόν τέσσερις υπογραφές. Σαν ομάδα.": {
+    "file": "ajax/037.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Εκατόν τέσσερις υπογραφές. Σαν ομάδα.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΕΠΙΜΕΛΗΤΗΣ|Η πιο σημαντική ομάδα που είχε ποτέ αυτή η πόλη.": {
+    "file": "curator/007.mp3",
+    "voice_id": "onwK4e9ZLuTAKqWW03F9",
+    "speaker": "ΕΠΙΜΕΛΗΤΗΣ",
+    "text": "Η πιο σημαντική ομάδα που είχε ποτέ αυτή η πόλη.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΘΟΣ|Ξέρεις ότι διάβασα τη διαθήκη του; Τα άφησε όλα στο Γαλαξίδι. Όχι σε πρόσωπο. Στην πόλη.": {
+    "file": "athos/004.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Ξέρεις ότι διάβασα τη διαθήκη του; Τα άφησε όλα στο Γαλαξίδι. Όχι σε πρόσωπο. Στην πόλη.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Εμείς ξέρουμε! Εκεί που η γη μιλάει.": {
+    "file": "ajax/038.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Εμείς ξέρουμε! Εκεί που η γη μιλάει.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΘΟΣ|Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ' το.": {
+    "file": "athos/005.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ' το.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Αλλά στο μουσείο είπαν ότι οι καπεταναίοι ήταν σπουδαίοι ΚΑΙ πεισματάρηδες.": {
+    "file": "ajax/039.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Αλλά στο μουσείο είπαν ότι οι καπεταναίοι ήταν σπουδαίοι ΚΑΙ πεισματάρηδες.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΘΟΣ|Ήταν. Τα δύο πάνε μαζί πιο συχνά απ' ό,τι νομίζεις.": {
+    "file": "athos/006.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Ήταν. Τα δύο πάνε μαζί πιο συχνά απ' ό,τι νομίζεις.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΘΟΣ|Ποιο είναι το ατμόπλοιο σήμερα; Ποιο είναι αυτό που έρχεται, και πρέπει να το πιάσουμε αυτή τη φορά;": {
+    "file": "athos/007.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Ποιο είναι το ατμόπλοιο σήμερα; Ποιο είναι αυτό που έρχεται, και πρέπει να το πιάσουμε αυτή τη φορά;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μοιάζεις με δικαστή.": {
+    "file": "clio/061.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μοιάζεις με δικαστή.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΘΟΣ|Χειρότερα. Δικηγόρος.": {
+    "file": "athos/008.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Χειρότερα. Δικηγόρος.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΓΙΑΝΝΗΣ|Ξέρεις γιατί αγόρασα τον μύλο; Γιατί από εδώ βλέπεις τα πάντα.": {
+    "file": "giannis/004.mp3",
+    "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+    "speaker": "ΓΙΑΝΝΗΣ",
+    "text": "Ξέρεις γιατί αγόρασα τον μύλο; Γιατί από εδώ βλέπεις τα πάντα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΓΙΑΝΝΗΣ|Εκεί κάτω. Πίσω από την πλατεία Μάμα. Θα χρειαστείτε φως.": {
+    "file": "giannis/005.mp3",
+    "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+    "speaker": "ΓΙΑΝΝΗΣ",
+    "text": "Εκεί κάτω. Πίσω από την πλατεία Μάμα. Θα χρειαστείτε φως.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΓΙΑΝΝΗΣ|Ήταν του πατέρα μου. Ναυτικός. Πάρ' το.": {
+    "file": "giannis/006.mp3",
+    "voice_id": "CwhRBWXzGAHq8TQ4Fs17",
+    "speaker": "ΓΙΑΝΝΗΣ",
+    "text": "Ήταν του πατέρα μου. Ναυτικός. Πάρ' το.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Βλέπω το νησάκι! Εκεί θα πάμε;": {
+    "file": "ajax/040.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Βλέπω το νησάκι! Εκεί θα πάμε;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Αν βρούμε αυτό που ψάχνουμε στο σπήλαιο.": {
+    "file": "ntemis/054.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Αν βρούμε αυτό που ψάχνουμε στο σπήλαιο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Σαν τον Βισβίκη. Αυτός ήθελε να μείνει κάτι.": {
+    "file": "clio/062.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Σαν τον Βισβίκη. Αυτός ήθελε να μείνει κάτι.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. Λ.Β. 1887.": {
+    "file": "ajax/041.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. Λ.Β. 1887.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.": {
+    "file": "ajax/042.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|Τρεις ήξεραν. Και κανείς δεν τους άκουσε.": {
+    "file": "ajax/043.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Τρεις ήξεραν. Και κανείς δεν τους άκουσε.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Νεφρίτης. Jade. Από την Ανατολή, σίγουρα.": {
+    "file": "ntemis/055.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Νεφρίτης. Jade. Από την Ανατολή, σίγουρα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Αξίζει κάτι;": {
+    "file": "ajax/044.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Αξίζει κάτι;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Αξίζει ό,τι ο Βισβίκης ήθελε να δείξει μ' αυτό. Τώρα πρέπει... να του το πάμε.": {
+    "file": "ntemis/056.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Αξίζει ό,τι ο Βισβίκης ήθελε να δείξει μ' αυτό. Τώρα πρέπει... να του το πάμε.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Σας το είπα.": {
+    "file": "clio/063.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Σας το είπα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΑΙΑΣ|...Στο νεκροταφείο.": {
+    "file": "ajax/045.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "...Στο νεκροταφείο.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Σας. Το. Είπα.": {
+    "file": "clio/064.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Σας. Το. Είπα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Μόλις μας έδωσε οδηγίες ο προπάππους μου.": {
+    "file": "ntemis/057.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Μόλις μας έδωσε οδηγίες ο προπάππους μου.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Κουρασμένος αλλά χαρούμενος. Σαν κάποιος που τελικά μπορεί να κοιμηθεί.": {
+    "file": "clio/065.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Κουρασμένος αλλά χαρούμενος. Σαν κάποιος που τελικά μπορεί να κοιμηθεί.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Πάτερ, ψάχνουμε κάτι που άφησε ο Καπετάν Βισβίκης.": {
+    "file": "ntemis/058.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Πάτερ, ψάχνουμε κάτι που άφησε ο Καπετάν Βισβίκης.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|Ο Βισβίκης ήταν ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας. Πλήρωσε τη στέγη, τις εικόνες, το τέμπλο.": {
+    "file": "papas/001.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "Ο Βισβίκης ήταν ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας. Πλήρωσε τη στέγη, τις εικόνες, το τέμπλο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|Κάθε ταξίδι ξεκινούσε με προσευχή εδώ. Κάθε ασφαλής επιστροφή τελείωνε με κερί ευχαριστίας.": {
+    "file": "papas/002.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "Κάθε ταξίδι ξεκινούσε με προσευχή εδώ. Κάθε ασφαλής επιστροφή τελείωνε με κερί ευχαριστίας.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|Για ποιον;": {
+    "file": "papas/003.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "Για ποιον;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Για τους καπεταναίους. Και τα πλοία τους.": {
+    "file": "clio/066.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Για τους καπεταναίους. Και τα πλοία τους.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|Αυτό, παιδί μου, είναι ακριβώς αυτό που έκαναν κι εκείνοι.": {
+    "file": "papas/004.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "Αυτό, παιδί μου, είναι ακριβώς αυτό που έκαναν κι εκείνοι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|ΟΧΙ στις εικόνες!": {
+    "file": "papas/005.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "ΟΧΙ στις εικόνες!",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Μπαμπά. Το πάτωμα.": {
+    "file": "clio/067.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά. Το πάτωμα.",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "|Ένα πλακάκι κοντά στο ιερό έχει το σημάδι του Βισβίκη — Λ.Β. Είναι χαλαρό.": {
+    "file": "narrator/114.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα πλακάκι κοντά στο ιερό έχει το σημάδι του Βισβίκη — Λ.Β. Είναι χαλαρό.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κάτω από το πλακάκι: ένας τυλιγμένος ναυτικός χάρτης, σφραγισμένος σε κηρόπανο.": {
+    "file": "narrator/115.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κάτω από το πλακάκι: ένας τυλιγμένος ναυτικός χάρτης, σφραγισμένος σε κηρόπανο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "ΑΙΑΣ|Ξέρω αυτό το νησάκι! Μπορούμε να πάμε με βάρκα!": {
+    "file": "ajax/046.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Ξέρω αυτό το νησάκι! Μπορούμε να πάμε με βάρκα!",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|Αν βρείτε κάτι... θυμηθείτε ποιος το σώζει. Αυτή η πόλη χρειάζεται θαύματα.": {
+    "file": "papas/006.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "Αν βρείτε κάτι... θυμηθείτε ποιος το σώζει. Αυτή η πόλη χρειάζεται θαύματα.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΠΑΠΑΣ|Παιδί μου, ο Θεός και η θάλασσα κανένα δεν σε ρωτάει αν είσαι έτοιμος.": {
+    "file": "papas/007.mp3",
+    "voice_id": "n0vzWypeCK1NlWPVwhOc",
+    "speaker": "ΠΑΠΑΣ",
+    "text": "Παιδί μου, ο Θεός και η θάλασσα κανένα δεν σε ρωτάει αν είσαι έτοιμος.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΧΡΥΣΟΣΤΟΜΟΣ|Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν. Δεν πίστευα ότι θα ζούσα να το δω.": {
+    "file": "chrysostomos/001.mp3",
+    "voice_id": "iP95p4xoKVk53GoZ742B",
+    "speaker": "ΧΡΥΣΟΣΤΟΜΟΣ",
+    "text": "Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν. Δεν πίστευα ότι θα ζούσα να το δω.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΧΡΥΣΟΣΤΟΜΟΣ|Ήταν ο τελευταίος ρομαντικός. Ταξίδεψε μέχρι την Ανατολή κι επέστρεψε. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.": {
+    "file": "chrysostomos/002.mp3",
+    "voice_id": "iP95p4xoKVk53GoZ742B",
+    "speaker": "ΧΡΥΣΟΣΤΟΜΟΣ",
+    "text": "Ήταν ο τελευταίος ρομαντικός. Ταξίδεψε μέχρι την Ανατολή κι επέστρεψε. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΧΡΥΣΟΣΤΟΜΟΣ|Η θάλασσα δεν σε ρωτάει τι αγαπάς. Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της, αλλιώς πνίγεσαι.": {
+    "file": "chrysostomos/003.mp3",
+    "voice_id": "iP95p4xoKVk53GoZ742B",
+    "speaker": "ΧΡΥΣΟΣΤΟΜΟΣ",
+    "text": "Η θάλασσα δεν σε ρωτάει τι αγαπάς. Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της, αλλιώς πνίγεσαι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΧΡΥΣΟΣΤΟΜΟΣ|Η Ελπίδα ξέρει τον δρόμο. Εγώ απλά κρατάω το τιμόνι.": {
+    "file": "chrysostomos/004.mp3",
+    "voice_id": "iP95p4xoKVk53GoZ742B",
+    "speaker": "ΧΡΥΣΟΣΤΟΜΟΣ",
+    "text": "Η Ελπίδα ξέρει τον δρόμο. Εγώ απλά κρατάω το τιμόνι.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "|Η Ελπίδα πλέει αργά στον Κορινθιακό. Το Γαλαξίδι μικραίνει πίσω τους.": {
+    "file": "narrator/116.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η Ελπίδα πλέει αργά στον Κορινθιακό. Το Γαλαξίδι μικραίνει πίσω τους.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα μικρό νησάκι με ένα λευκό παρεκκλήσι. Άγιος Γεώργιος.": {
+    "file": "narrator/117.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα μικρό νησάκι με ένα λευκό παρεκκλήσι. Άγιος Γεώργιος.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ο βράχος κοιτάει νοτιοδυτικά. Κάτω από τον σταυρό, πέντε βήματα.": {
+    "file": "narrator/118.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο βράχος κοιτάει νοτιοδυτικά. Κάτω από τον σταυρό, πέντε βήματα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Το φτυάρι χτυπάει ξύλο.": {
+    "file": "narrator/119.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Το φτυάρι χτυπάει ξύλο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ένα θαλασσινό σεντούκι. Παλιό, σιδερόδετο. Ο Βισβίκης έφτιαχνε πράγματα που αντέχουν.": {
+    "file": "narrator/120.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ένα θαλασσινό σεντούκι. Παλιό, σιδερόδετο. Ο Βισβίκης έφτιαχνε πράγματα που αντέχουν.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Χρυσά νομίσματα — Οθωμανικά, Βενετσιάνικα, αρχαία Ελληνικά. Ένα κολιέ από νεφρίτη. Και ένα βιβλίο — το πρωτότυπο βιβλίο της αλληλασφάλειας.": {
+    "file": "narrator/121.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Χρυσά νομίσματα — Οθωμανικά, Βενετσιάνικα, αρχαία Ελληνικά. Ένα κολιέ από νεφρίτη. Και ένα βιβλίο — το πρωτότυπο βιβλίο της αλληλασφάλειας.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.": {
+    "file": "narrator/122.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Ταξίδεψα στην Ανατολή και γύρισα πλούσιος. Αλλά ο αληθινός πλούτος δεν είναι ο χρυσός. Είναι αυτό που χτίσαμε μαζί — η αλληλεγγύη. Κανείς δεν ταξιδεύει μόνος.": {
+    "file": "narrator/123.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ταξίδεψα στην Ανατολή και γύρισα πλούσιος. Αλλά ο αληθινός πλούτος δεν είναι ο χρυσός. Είναι αυτό που χτίσαμε μαζί — η αλληλεγγύη. Κανείς δεν ταξιδεύει μόνος.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.": {
+    "file": "narrator/124.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "ΚΛΕΙΩ|Μπαμπά, τι θα κάνουμε;": {
+    "file": "clio/068.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Μπαμπά, τι θα κάνουμε;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Αυτό που ήθελε ο Βισβίκης. Θα τα δώσουμε στο Γαλαξίδι.": {
+    "file": "ntemis/059.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Αυτό που ήθελε ο Βισβίκης. Θα τα δώσουμε στο Γαλαξίδι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Εκατό τέσσερις. Εκατό τέσσερις άνθρωποι υπέγραψαν. Κανένας δεν ταξιδεύει μόνος.": {
+    "file": "ajax/047.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Εκατό τέσσερις. Εκατό τέσσερις άνθρωποι υπέγραψαν. Κανένας δεν ταξιδεύει μόνος.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΚΛΕΙΩ|Αν ο Βισβίκης μπορούσε να δει τώρα, θα χαμογελούσε;": {
+    "file": "clio/069.mp3",
+    "voice_id": "cgSgspJ2msm6clMCkdW9",
+    "speaker": "ΚΛΕΙΩ",
+    "text": "Αν ο Βισβίκης μπορούσε να δει τώρα, θα χαμογελούσε;",
+    "stability": 0.45,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ναι, μικρή μου. Νομίζω ότι τώρα, μπορεί επιτέλους να κοιμηθεί.": {
+    "file": "ntemis/060.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ναι, μικρή μου. Νομίζω ότι τώρα, μπορεί επιτέλους να κοιμηθεί.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ο Βισβίκης δεν μας άφησε θησαυρό. Μας άφησε ερώτηση. Τι κάνεις όταν ο κόσμος αλλάζει κι εσύ αγαπάς αυτό που ήταν;": {
+    "file": "ntemis/061.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ο Βισβίκης δεν μας άφησε θησαυρό. Μας άφησε ερώτηση. Τι κάνεις όταν ο κόσμος αλλάζει κι εσύ αγαπάς αυτό που ήταν;",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Ο Άκης ξέρει να κρατάει ιστορίες ζωντανές. Το έκανε στην Άμφισσα. Θα το κάνει και για το Γαλαξίδι.": {
+    "file": "ntemis/062.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Ο Άκης ξέρει να κρατάει ιστορίες ζωντανές. Το έκανε στην Άμφισσα. Θα το κάνει και για το Γαλαξίδι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΚΗΣ|Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Το Γαλαξίδι δεν θα σβήσει. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή.": {
+    "file": "akis/008.mp3",
+    "voice_id": "cjVigY5qzO86Huf0OWal",
+    "speaker": "ΑΚΗΣ",
+    "text": "Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Το Γαλαξίδι δεν θα σβήσει. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή.",
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΘΟΣ|Ο χρυσός θα χρηματοδοτήσει τρία πράγματα. Το ντοκιμαντέρ. Την αποκατάσταση του μουσείου. Και κάτι καινούριο.": {
+    "file": "athos/009.mp3",
+    "voice_id": "nPczCjzI2devNBz1zQrb",
+    "speaker": "ΑΘΟΣ",
+    "text": "Ο χρυσός θα χρηματοδοτήσει τρία πράγματα. Το ντοκιμαντέρ. Την αποκατάσταση του μουσείου. Και κάτι καινούριο.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Οι καπεταναίοι αρνήθηκαν τον ατμό. Δεν θα κάνουμε το ίδιο λάθος. Το ατμόπλοιο σήμερα λέγεται τεχνητή νοημοσύνη.": {
+    "file": "ntemis/063.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Οι καπεταναίοι αρνήθηκαν τον ατμό. Δεν θα κάνουμε το ίδιο λάθος. Το ατμόπλοιο σήμερα λέγεται τεχνητή νοημοσύνη.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Και τι γίνεται με μέρη σαν εδώ;": {
+    "file": "ajax/048.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Και τι γίνεται με μέρη σαν εδώ;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Σε έναν κόσμο που τρέχει, τα μέρη που αναπνέουν γίνονται ο νέος παράδεισος. Το Γαλαξίδι δεν χρειάζεται να γίνει σαν την Αθήνα. Χρειάζεται να γίνει περισσότερο Γαλαξίδι.": {
+    "file": "ntemis/064.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Σε έναν κόσμο που τρέχει, τα μέρη που αναπνέουν γίνονται ο νέος παράδεισος. Το Γαλαξίδι δεν χρειάζεται να γίνει σαν την Αθήνα. Χρειάζεται να γίνει περισσότερο Γαλαξίδι.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Η αλληλασφάλεια ήταν 104 υπογραφές. Σήμερα ζητάω τις δικές σας.": {
+    "file": "ntemis/065.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Η αλληλασφάλεια ήταν 104 υπογραφές. Σήμερα ζητάω τις δικές σας.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Μπαμπά, πόσες υπογραφές;": {
+    "file": "ajax/049.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Μπαμπά, πόσες υπογραφές;",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "ΝΤΕΜΗΣ|Εκατόν τρεις. Λείπει μία.": {
+    "file": "ntemis/066.mp3",
+    "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+    "speaker": "ΝΤΕΜΗΣ",
+    "text": "Εκατόν τρεις. Λείπει μία.",
+    "stability": 0.55,
+    "similarity_boost": 0.8,
+    "style": 0
+  },
+  "ΑΙΑΣ|Εκατόν τέσσερις.": {
+    "file": "ajax/050.mp3",
+    "voice_id": "IKne3meq5aSn9XLyUdCD",
+    "speaker": "ΑΙΑΣ",
+    "text": "Εκατόν τέσσερις.",
+    "stability": 0.4,
+    "similarity_boost": 0.75,
+    "style": 0
+  },
+  "|Ο Καπετάν Βισβίκης ταξίδεψε στην Ανατολή, γύρισε πλούσιος, κι έκρυψε τον θησαυρό του για κάποιον που θα αγαπούσε το Γαλαξίδι αρκετά για να τον βρει.": {
+    "file": "narrator/125.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Ο Καπετάν Βισβίκης ταξίδεψε στην Ανατολή, γύρισε πλούσιος, κι έκρυψε τον θησαυρό του για κάποιον που θα αγαπούσε το Γαλαξίδι αρκετά για να τον βρει.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Εκατόν είκοσι χρόνια αργότερα, τρεις ταξιδιώτες τον βρήκαν.": {
+    "file": "narrator/126.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Εκατόν είκοσι χρόνια αργότερα, τρεις ταξιδιώτες τον βρήκαν.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Οι παλιοί καπεταναίοι αρνήθηκαν τον ατμό. Οι νέοι δεν θα κάνουν το ίδιο λάθος.": {
+    "file": "narrator/127.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Οι παλιοί καπεταναίοι αρνήθηκαν τον ατμό. Οι νέοι δεν θα κάνουν το ίδιο λάθος.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Εκατόν τέσσερις υπογραφές. Τότε και τώρα.": {
+    "file": "narrator/128.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Εκατόν τέσσερις υπογραφές. Τότε και τώρα.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Η θάλασσα θυμάται. Κι εμείς τώρα, αλλάζουμε μαζί της.": {
+    "file": "narrator/129.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Η θάλασσα θυμάται. Κι εμείς τώρα, αλλάζουμε μαζί της.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  },
+  "|Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. Το Μυστήριο του Γαλαξειδίου.": {
+    "file": "narrator/130.mp3",
+    "voice_id": "pqHfZKP75CvOlQylNhV4",
+    "speaker": "",
+    "text": "Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. Το Μυστήριο του Γαλαξειδίου.",
+    "stability": 0.6,
+    "similarity_boost": 0.8,
+    "style": 0.2
+  }
+}
