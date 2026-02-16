@@ -1675,17 +1675,20 @@ function drawCaveAmbience(tick) {
 // ════════════════════════════════════════════════════════════
 const CHAR_HEIGHTS = { ntemis: 118, ajax: 84, clio: 92 };
 
-// Per-character anatomy: waist split ratio & max leg stride (pixels)
+// Scale factor: sprites are small relative to 640x400 canvas — scale up to MI2 proportions
+const CHAR_SCALE = 1.5;
+
+// Per-character anatomy: waist split ratio & max leg stride (pixels, in sprite space)
 const WALK_ANATOMY = {
-  ntemis:  { waist: 0.62, stride: 7 },
-  ajax:    { waist: 0.58, stride: 6 },
-  clio:    { waist: 0.60, stride: 6 },
+  ntemis:  { waist: 0.62, stride: 10 },
+  ajax:    { waist: 0.58, stride: 8 },
+  clio:    { waist: 0.60, stride: 8 },
   ghost:   { waist: 0.55, stride: 0 },
-  athos:   { waist: 0.60, stride: 5 },
-  stathis: { waist: 0.58, stride: 6 },
-  akis:    { waist: 0.60, stride: 6 },
-  giannis: { waist: 0.58, stride: 5 },
-  curator: { waist: 0.62, stride: 4 },
+  athos:   { waist: 0.60, stride: 7 },
+  stathis: { waist: 0.58, stride: 8 },
+  akis:    { waist: 0.60, stride: 8 },
+  giannis: { waist: 0.58, stride: 7 },
+  curator: { waist: 0.62, stride: 6 },
 };
 
 function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
@@ -1697,25 +1700,26 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
   const sprW = img.naturalWidth;
   const sprH = img.naturalHeight;
   const anat = WALK_ANATOMY[who] || { waist: 0.60, stride: 6 };
+  const S = CHAR_SCALE;
 
   if (walking) {
-    // ── WALK PHASE ──
-    const walkPhase = frame * Math.PI * 3 + frameOffset * Math.PI / 3;
-    const bob = -Math.abs(Math.sin(walkPhase)) * 3;
-    const lean = dir * 0.025;
+    // ── WALK PHASE (slower cycle for natural cadence) ──
+    const walkPhase = frame * Math.PI * 2.4 + frameOffset * Math.PI / 3;
+    const bob = -Math.abs(Math.sin(walkPhase)) * 2;
+    const lean = dir * 0.02;
     const strideDir = Math.sin(walkPhase); // -1 to 1
 
     const waistY = Math.floor(sprH * anat.waist);
     const legH = sprH - waistY;
     const maxStride = anat.stride;
 
-    // Ground shadow (stretches with stride)
+    // Ground shadow (scaled)
     ctx.save();
     ctx.globalAlpha = 0.22;
     ctx.fillStyle = '#4A3A28';
-    const sw = sprW * 0.6 + Math.abs(strideDir) * 3;
+    const sw = (sprW * 0.6 + Math.abs(strideDir) * 3) * S;
     ctx.beginPath();
-    ctx.ellipse(gx, gy + 3, sw, 3.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(gx, gy + 3, sw, 3.5 * S, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -1723,7 +1727,9 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
     ctx.translate(gx, gy + bob);
-    if (dir < 0) ctx.scale(-1, 1);
+    // Apply character scale + horizontal flip
+    if (dir < 0) ctx.scale(-S, S);
+    else ctx.scale(S, S);
     ctx.rotate(lean);
 
     // ── UPPER BODY (slight counter-sway) ──
@@ -1772,11 +1778,12 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     const squashX = 1 + bc * 0.005;
     const squashY = 1 - bc * 0.005;
 
+    // Ground shadow (scaled)
     ctx.save();
     ctx.globalAlpha = 0.18;
     ctx.fillStyle = '#4A3A28';
     ctx.beginPath();
-    ctx.ellipse(gx, gy + 3, sprW * 0.6, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(gx, gy + 3, sprW * S * 0.6, 4 * S, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -1784,7 +1791,9 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
     ctx.translate(gx, gy + breathe);
-    if (dir < 0) ctx.scale(-1, 1);
+    // Apply character scale + horizontal flip
+    if (dir < 0) ctx.scale(-S, S);
+    else ctx.scale(S, S);
     ctx.rotate(sway);
     ctx.scale(squashX, squashY);
     ctx.drawImage(img, -sprW/2, -sprH);
@@ -1843,12 +1852,13 @@ function drawNPC(who, tick) {
   const squashX = 1 + bc * 0.005;
   const squashY = 1 - bc * 0.005;
 
-  // Ground shadow
+  // Ground shadow (scaled)
+  const S = CHAR_SCALE;
   ctx.save();
   ctx.globalAlpha = who === 'ghost' ? 0.06 : 0.18;
   ctx.fillStyle = '#4A3A28';
   ctx.beginPath();
-  ctx.ellipse(gx, gy + 3, sprW * 0.6, 4, 0, 0, Math.PI * 2);
+  ctx.ellipse(gx, gy + 3, sprW * S * 0.6, 4 * S, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
@@ -1865,7 +1875,8 @@ function drawNPC(who, tick) {
   }
 
   ctx.translate(gx, gy + breathe);
-  if (npc.dir < 0) ctx.scale(-1, 1);
+  if (npc.dir < 0) ctx.scale(-S, S);
+  else ctx.scale(S, S);
   ctx.rotate(sway);
   ctx.scale(squashX, squashY);
   ctx.drawImage(img, -sprW / 2, -sprH);
@@ -1885,7 +1896,7 @@ function startWalk(who, targetX, cb) {
   c.startX = c.x;
   c.targetX = targetX;
   c.walkT = 0;
-  c.walkDur = Math.max(0.4, Math.min(2.0, (dist / GW) * 2.5));
+  c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0));
   c.frame = 0;
   walkDoneCallback = cb;
 }
@@ -2908,24 +2919,285 @@ const LINE2_DELAY = 55;
 const LINE3_DELAY = 25;
 const PROMPT_DELAY = 70;
 
+// ═══════════════════════════════════════
+// TITLE SCREEN AMBIENT ANIMATIONS
+// ═══════════════════════════════════════
+
+// Seagulls — pixel V-shapes gliding across the sky
+const titleGulls = [];
+function initTitleGulls() {
+  titleGulls.length = 0;
+  for (let i = 0; i < 5; i++) titleGulls.push(newTitleGull(true));
+}
+function newTitleGull(randomX) {
+  const y = 30 + Math.random() * 80;
+  return {
+    x: randomX ? Math.random() * GW : -20 - Math.random() * 60,
+    y: y,
+    baseY: y,
+    speed: 0.3 + Math.random() * 0.4,
+    wingPhase: Math.random() * Math.PI * 2,
+    wingSpeed: 0.06 + Math.random() * 0.04,
+    size: 3 + Math.random() * 3,
+    drift: Math.random() * Math.PI * 2,
+    alpha: 0.5 + Math.random() * 0.4,
+  };
+}
+function updateTitleGulls() {
+  for (const g of titleGulls) {
+    g.x += g.speed;
+    g.wingPhase += g.wingSpeed;
+    g.drift += 0.008;
+    g.y = g.baseY + Math.sin(g.drift) * 6;
+    if (g.x > GW + 30) Object.assign(g, newTitleGull(false));
+  }
+}
+function drawTitleGulls() {
+  ctx.save();
+  for (const g of titleGulls) {
+    ctx.globalAlpha = g.alpha;
+    ctx.strokeStyle = '#1A1A2E';
+    ctx.lineWidth = 1;
+    const wingY = Math.sin(g.wingPhase) * g.size * 0.7;
+    ctx.beginPath();
+    ctx.moveTo(g.x - g.size, g.y + wingY);
+    ctx.quadraticCurveTo(g.x - g.size * 0.3, g.y - g.size * 0.3 + wingY * 0.3, g.x, g.y);
+    ctx.quadraticCurveTo(g.x + g.size * 0.3, g.y - g.size * 0.3 + wingY * 0.3, g.x + g.size, g.y + wingY);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// Walking people — tiny silhouettes strolling along the harbor
+const titlePeople = [];
+function initTitlePeople() {
+  titlePeople.length = 0;
+  for (let i = 0; i < 4; i++) titlePeople.push(newTitlePerson(true));
+}
+function newTitlePerson(randomX) {
+  const dir = Math.random() < 0.5 ? 1 : -1;
+  const lane = Math.random();
+  // People walk along the harbor/waterfront area
+  const y = lane < 0.5 ? 268 + Math.random() * 8 : 280 + Math.random() * 8;
+  return {
+    x: randomX ? 80 + Math.random() * 480 : (dir > 0 ? -8 : GW + 8),
+    y: y,
+    dir: dir,
+    speed: 0.15 + Math.random() * 0.15,
+    walkPhase: Math.random() * Math.PI * 2,
+    height: 6 + Math.floor(Math.random() * 3),
+    color: ['#3A2820','#4A3830','#2A3040','#5A3028','#3A3A50'][Math.floor(Math.random()*5)],
+    hatColor: Math.random() < 0.3 ? '#8B4513' : null,
+  };
+}
+function updateTitlePeople() {
+  for (const p of titlePeople) {
+    p.x += p.speed * p.dir;
+    p.walkPhase += 0.08;
+    if ((p.dir > 0 && p.x > GW + 15) || (p.dir < 0 && p.x < -15)) {
+      Object.assign(p, newTitlePerson(false));
+    }
+  }
+}
+function drawTitlePeople() {
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  for (const p of titlePeople) {
+    const legSwing = Math.sin(p.walkPhase) * 2;
+    ctx.fillStyle = p.color;
+    // Body
+    ctx.fillRect(Math.floor(p.x), Math.floor(p.y - p.height), 2, p.height - 2);
+    // Head
+    ctx.fillRect(Math.floor(p.x), Math.floor(p.y - p.height - 2), 2, 2);
+    // Legs (walking)
+    ctx.fillRect(Math.floor(p.x - 1 + legSwing * 0.3), Math.floor(p.y - 2), 1, 2);
+    ctx.fillRect(Math.floor(p.x + 2 - legSwing * 0.3), Math.floor(p.y - 2), 1, 2);
+    // Hat
+    if (p.hatColor) {
+      ctx.fillStyle = p.hatColor;
+      ctx.fillRect(Math.floor(p.x - 1), Math.floor(p.y - p.height - 3), 4, 1);
+    }
+  }
+  ctx.restore();
+}
+
+// Waves — animated sea shimmer for the title harbor water
+function drawTitleWaves(tick) {
+  const t = tick * 0.02;
+  ctx.save();
+  // Water covers the lower-center portion of the title bg (harbor area)
+  for (let ry = 290; ry < 360; ry += 2) {
+    const d = (ry - 290) / 70;
+    // Golden-blue reflections
+    ctx.fillStyle = `rgba(180,210,240,${0.03 + d * 0.02})`;
+    for (let rx = 80; rx < 560; rx += 4) {
+      const shimmer = Math.sin(rx * 0.04 + ry * 0.06 + t * 1.5) * 0.5 + 0.5;
+      if (shimmer > 0.5) {
+        ctx.fillRect(rx, ry, 2 + Math.floor(shimmer * 2), 1);
+      }
+    }
+    // Golden sun reflections on water
+    ctx.fillStyle = `rgba(255,200,80,${0.03 + d * 0.015})`;
+    for (let rx = 200; rx < 440; rx += 5) {
+      const glow = Math.sin(rx * 0.06 + ry * 0.04 + t * 2.0) * 0.5 + 0.5;
+      if (glow > 0.6) {
+        ctx.fillRect(rx, ry, 1 + Math.floor(glow * 2), 1);
+      }
+    }
+    // Dark wave troughs
+    ctx.fillStyle = `rgba(0,20,50,${0.02 + d * 0.015})`;
+    for (let rx = 80; rx < 560; rx += 7) {
+      if (Math.sin(rx * 0.06 + ry * 0.1 - t * 1.2) > 0.45) {
+        ctx.fillRect(rx, ry + 1, 3, 1);
+      }
+    }
+  }
+  ctx.restore();
+}
+
+// Sun rays — warm diagonal light beams pulsing gently
+function drawTitleSunRays(tick) {
+  ctx.save();
+  const t = tick * 0.004;
+  // Warm overlay from upper-right (where the sun is in the title bg)
+  const lg = ctx.createLinearGradient(GW * 0.7, 0, GW * 0.2, GH * 0.5);
+  lg.addColorStop(0, `rgba(255,220,120,${0.05 + Math.sin(t) * 0.015})`);
+  lg.addColorStop(0.5, `rgba(255,200,80,${0.02 + Math.sin(t + 1) * 0.008})`);
+  lg.addColorStop(1, 'rgba(255,200,80,0)');
+  ctx.fillStyle = lg;
+  ctx.fillRect(0, 0, GW, GH);
+  // Visible light beams — god rays
+  ctx.globalAlpha = 0.018 + Math.sin(t * 0.8) * 0.006;
+  ctx.fillStyle = '#FFD880';
+  // Ray 1
+  ctx.beginPath();
+  ctx.moveTo(GW * 0.65, 0);
+  ctx.lineTo(GW * 0.25, GH * 0.6);
+  ctx.lineTo(GW * 0.32, GH * 0.6);
+  ctx.lineTo(GW * 0.72, 0);
+  ctx.closePath();
+  ctx.fill();
+  // Ray 2
+  ctx.globalAlpha = 0.014 + Math.sin(t * 0.6 + 1.5) * 0.005;
+  ctx.beginPath();
+  ctx.moveTo(GW * 0.78, 0);
+  ctx.lineTo(GW * 0.45, GH * 0.5);
+  ctx.lineTo(GW * 0.50, GH * 0.5);
+  ctx.lineTo(GW * 0.83, 0);
+  ctx.closePath();
+  ctx.fill();
+  // Ray 3 — wider, fainter
+  ctx.globalAlpha = 0.010 + Math.sin(t * 0.5 + 3.0) * 0.004;
+  ctx.beginPath();
+  ctx.moveTo(GW * 0.55, 0);
+  ctx.lineTo(GW * 0.10, GH * 0.7);
+  ctx.lineTo(GW * 0.18, GH * 0.7);
+  ctx.lineTo(GW * 0.60, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// Wind particles — golden dust motes drifting in gusts
+const titleDust = [];
+function initTitleDust() {
+  titleDust.length = 0;
+  for (let i = 0; i < 20; i++) titleDust.push(newTitleDustMote());
+}
+function newTitleDustMote() {
+  return {
+    x: Math.random() * GW,
+    y: 40 + Math.random() * 300,
+    vx: 0.1 + Math.random() * 0.3,
+    vy: -0.05 + Math.random() * 0.1,
+    size: 0.5 + Math.random() * 1.5,
+    alpha: 0.15 + Math.random() * 0.35,
+    drift: Math.random() * Math.PI * 2,
+    driftSpeed: 0.01 + Math.random() * 0.02,
+  };
+}
+function updateTitleDust() {
+  for (const d of titleDust) {
+    d.drift += d.driftSpeed;
+    // Gusty movement — accelerates and decelerates
+    const gust = 0.5 + Math.sin(d.drift * 3) * 0.5;
+    d.x += d.vx * (0.5 + gust);
+    d.y += d.vy + Math.sin(d.drift) * 0.15;
+    if (d.x > GW + 5 || d.x < -5 || d.y < -5 || d.y > GH + 5) {
+      Object.assign(d, newTitleDustMote());
+      d.x = -3;
+    }
+  }
+}
+function drawTitleDust() {
+  ctx.save();
+  for (const d of titleDust) {
+    ctx.globalAlpha = d.alpha;
+    ctx.fillStyle = '#FFE8A0';
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+// Initialize title animations
+initTitleGulls();
+initTitlePeople();
+initTitleDust();
+
 function drawTitleScreen(tick) {
   if (titleStartTick < 0) titleStartTick = tick;
   const elapsed = tick - titleStartTick;
 
   // ═══════════════════════════════════════
-  // BACKGROUND — static pixel art
+  // BACKGROUND — cinematic slow zoom-out
   // ═══════════════════════════════════════
   const bg = images['title-bg'];
 
+  // Zoom: starts at 1.15x, eases down to 1.0x over ~400 ticks (~7 seconds)
+  const zoomDuration = 400;
+  const zoomT = Math.min(1, elapsed / zoomDuration);
+  // Smooth ease-out cubic
+  const easeOut = 1 - Math.pow(1 - zoomT, 3);
+  const zoom = 1.15 - 0.15 * easeOut;
+
+  ctx.save();
   if (bg && bg.complete) {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
-    ctx.drawImage(bg, 0, 0, GW, GH);
+    // Draw zoomed and centered
+    const zw = GW * zoom;
+    const zh = GH * zoom;
+    const zx = (GW - zw) / 2;
+    const zy = (GH - zh) / 2;
+    ctx.drawImage(bg, zx, zy, zw, zh);
     ctx.imageSmoothingEnabled = false;
   } else {
     ctx.fillStyle = '#4A9FD8';
     ctx.fillRect(0, 0, GW, GH);
   }
+
+  // ═══════════════════════════════════════
+  // AMBIENT ANIMATIONS — living harbor
+  // ═══════════════════════════════════════
+  // Waves & sea shimmer
+  drawTitleWaves(tick);
+
+  // Sun rays / light shafts
+  drawTitleSunRays(tick);
+
+  // Update & draw seagulls
+  updateTitleGulls();
+  drawTitleGulls();
+
+  // Update & draw walking people
+  updateTitlePeople();
+  drawTitlePeople();
+
+  // Update & draw wind dust particles
+  updateTitleDust();
+  drawTitleDust();
 
   // Subtle vignette
   const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.3, GW/2, GH/2, GW*0.75);
@@ -2933,6 +3205,7 @@ function drawTitleScreen(tick) {
   vig.addColorStop(1, 'rgba(0,0,0,0.12)');
   ctx.fillStyle = vig;
   ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
 
   // ═══════════════════════════════════════
   // ANIMATED TITLE — letters unfold cinematically
