@@ -745,19 +745,20 @@ function drawParticles() {
 const seagulls = [];
 function initSeagulls() {
   seagulls.length = 0;
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     seagulls.push({
-      x: -30 - Math.random() * 200,
+      x: 100 + Math.random() * 400,  // start spread across screen
       y: 25 + Math.random() * 50,
-      vx: 0.3 + Math.random() * 0.4,
+      vx: 0.25 + Math.random() * 0.35,
       wingPhase: Math.random() * Math.PI * 2,
-      wingSpeed: 0.06 + Math.random() * 0.03,
+      wingSpeed: 0.07 + Math.random() * 0.03,
       size: 3 + Math.random() * 2,
-      swoopAmp: 8 + Math.random() * 12,
-      swoopFreq: 0.008 + Math.random() * 0.006,
-      baseY: 25 + Math.random() * 50,
-      circling: Math.random() < 0.3,
-      circlePhase: Math.random() * Math.PI * 2,
+      swoopAmp: 6 + Math.random() * 10,
+      swoopFreq: 0.01 + Math.random() * 0.008,
+      baseY: 20 + Math.random() * 50,
+      circling: false,
+      circlePhase: 0,
+      circleCenterX: 0,
     });
   }
 }
@@ -765,44 +766,166 @@ function initSeagulls() {
 function updateSeagulls(dt) {
   for (const g of seagulls) {
     if (g.circling) {
-      g.circlePhase += dt * 0.5;
-      g.x += Math.cos(g.circlePhase) * 0.4;
-      g.y = g.baseY + Math.sin(g.circlePhase) * 15;
-      if (g.circlePhase > Math.PI * 6) { g.circling = false; }
+      g.circlePhase += dt * 0.7;
+      g.x = g.circleCenterX + Math.cos(g.circlePhase) * 30;
+      g.y = g.baseY + Math.sin(g.circlePhase) * 12;
+      if (g.circlePhase > Math.PI * 4) {
+        g.circling = false;
+        g.vx = 0.25 + Math.random() * 0.35;
+      }
     } else {
       g.x += g.vx;
       g.y = g.baseY + Math.sin(g.x * g.swoopFreq) * g.swoopAmp;
+      // Random chance to start circling over harbor
+      if (Math.random() < 0.0005 && g.x > 350 && g.x < 550) {
+        g.circling = true;
+        g.circlePhase = 0;
+        g.circleCenterX = g.x;
+      }
     }
     g.wingPhase += g.wingSpeed;
     if (g.x > GW + 40) {
-      g.x = -30 - Math.random() * 100;
-      g.baseY = 20 + Math.random() * 55;
+      g.x = -20 - Math.random() * 40;
+      g.baseY = 15 + Math.random() * 55;
       g.y = g.baseY;
-      g.vx = 0.3 + Math.random() * 0.4;
-      g.circling = Math.random() < 0.25;
-      g.circlePhase = 0;
+      g.vx = 0.25 + Math.random() * 0.35;
+      g.circling = false;
     }
   }
 }
 
 function drawSeagulls() {
   for (const g of seagulls) {
-    if (g.x < -30 || g.x > GW + 30) continue;
+    if (g.x < -25 || g.x > GW + 25) continue;
     const wing = Math.sin(g.wingPhase) * g.size;
     ctx.save();
     ctx.translate(g.x, g.y);
+    // Shadow on water if over harbor
+    if (g.x > 360 && g.x < 580 && g.y < 100) {
+      ctx.globalAlpha = 0.08;
+      ctx.fillStyle = '#2A3A50';
+      ctx.fillRect(-2, 80 - g.y + 100, 4, 2);
+      ctx.globalAlpha = 1;
+    }
     ctx.strokeStyle = '#f8f0e0';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    // Left wing
     ctx.moveTo(-g.size * 1.5, wing * 0.6);
     ctx.quadraticCurveTo(-g.size * 0.6, wing, 0, 0);
-    // Right wing
     ctx.quadraticCurveTo(g.size * 0.6, wing, g.size * 1.5, wing * 0.6);
     ctx.stroke();
-    // Body dot
     ctx.fillStyle = '#e8e0d0';
     ctx.fillRect(-1, -1, 2, 2);
+    ctx.restore();
+  }
+}
+
+// ── Drifting Clouds ──
+const clouds = [];
+function initClouds() {
+  clouds.length = 0;
+  for (let i = 0; i < 4; i++) {
+    clouds.push({
+      x: Math.random() * GW,
+      y: 5 + Math.random() * 25,
+      vx: 0.04 + Math.random() * 0.06,
+      width: 40 + Math.random() * 60,
+      height: 10 + Math.random() * 8,
+      puffs: Math.floor(3 + Math.random() * 3),
+      alpha: 0.08 + Math.random() * 0.06,
+      seed: Math.random() * 1000,
+    });
+  }
+}
+function updateClouds(dt) {
+  for (const c of clouds) {
+    c.x += c.vx;
+    if (c.x > GW + c.width) {
+      c.x = -c.width - Math.random() * 60;
+      c.y = 3 + Math.random() * 28;
+      c.alpha = 0.08 + Math.random() * 0.06;
+    }
+  }
+}
+function drawClouds() {
+  for (const c of clouds) {
+    ctx.save();
+    ctx.globalAlpha = c.alpha;
+    ctx.fillStyle = '#FFF8F0';
+    // Draw cloud as overlapping ellipses
+    const pw = c.width / c.puffs;
+    for (let p = 0; p < c.puffs; p++) {
+      const px = c.x + p * pw * 0.7;
+      const py = c.y + Math.sin(c.seed + p * 1.3) * 3;
+      const pr = pw * 0.5 + Math.sin(c.seed + p) * 3;
+      const ph = c.height * (0.6 + Math.sin(c.seed + p * 0.7) * 0.3);
+      ctx.beginPath();
+      ctx.ellipse(px, py, pr, ph, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+}
+
+// ── Harbor Boats (pixel art, bobbing) ──
+const boats = [];
+function initBoats() {
+  boats.length = 0;
+  // Small fishing boats in the harbor area
+  boats.push({ x: 410, baseY: 128, size: 1.0, phase: 0, drift: 0, color: '#B83030', mast: true });
+  boats.push({ x: 460, baseY: 132, size: 0.7, phase: 1.8, drift: 0, color: '#2060A0', mast: false });
+  boats.push({ x: 510, baseY: 126, size: 0.85, phase: 3.5, drift: 0, color: '#F0E8D0', mast: true });
+}
+function updateBoats(dt) {
+  for (const b of boats) {
+    b.phase += dt * 0.8;
+    b.drift += dt * 0.1;
+  }
+}
+function drawBoats(tick) {
+  for (const b of boats) {
+    const bob = Math.sin(b.phase) * 1.5;
+    const rock = Math.sin(b.phase * 0.7 + 0.5) * 0.03;
+    const sway = Math.sin(b.drift) * 0.3;
+    const bx = b.x + sway;
+    const by = b.baseY + bob;
+    const s = b.size;
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.rotate(rock);
+    // Hull
+    ctx.fillStyle = b.color;
+    ctx.beginPath();
+    ctx.moveTo(-12 * s, 0);
+    ctx.lineTo(-14 * s, -3 * s);
+    ctx.lineTo(14 * s, -3 * s);
+    ctx.lineTo(12 * s, 0);
+    ctx.closePath();
+    ctx.fill();
+    // Hull stripe
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillRect(-11 * s, -2 * s, 22 * s, 1);
+    // Cabin bump
+    ctx.fillStyle = '#E8D8C0';
+    ctx.fillRect(-3 * s, -6 * s, 6 * s, 3 * s);
+    if (b.mast) {
+      // Mast
+      ctx.fillStyle = '#8B7355';
+      ctx.fillRect(-0.5, -16 * s, 1, 13 * s);
+      // Flag
+      const flagWave = Math.sin(tick * 0.03 + b.phase) * 2;
+      ctx.fillStyle = b.color === '#B83030' ? '#FFD700' : '#FF6030';
+      ctx.beginPath();
+      ctx.moveTo(0.5, -16 * s);
+      ctx.lineTo(6 * s + flagWave, -14 * s);
+      ctx.lineTo(0.5, -12 * s);
+      ctx.closePath();
+      ctx.fill();
+    }
+    // Water reflection
+    ctx.globalAlpha = 0.15;
+    ctx.fillStyle = b.color;
+    ctx.fillRect(-10 * s, 2, 20 * s, 2);
     ctx.restore();
   }
 }
@@ -881,18 +1004,15 @@ function drawPetals() {
   }
 }
 
-// ── Boat Bobbing ──
+// ── Boat Bobbing (water reflections around harbor boats) ──
 function drawBoatBob(tick) {
-  // Subtle overlay shimmer on the boat area to suggest bobbing
   const bob = Math.sin(tick * 0.015) * 1.5;
-  const bob2 = Math.sin(tick * 0.022 + 1.5) * 1;
   ctx.save();
-  // Boat reflection distortion
-  ctx.globalAlpha = 0.08;
+  ctx.globalAlpha = 0.06;
   ctx.fillStyle = '#D4A03C';
-  for (let rx = 390; rx < 520; rx += 3) {
+  for (let rx = 390; rx < 540; rx += 3) {
     const wave = Math.sin(rx * 0.06 + tick * 0.02) * 2 + bob;
-    ctx.fillRect(rx, 195 + wave, 2, 1);
+    ctx.fillRect(rx, 138 + wave, 2, 1);
   }
   ctx.restore();
 }
@@ -1192,6 +1312,8 @@ function startSceneAmbience(sceneId) {
       }
     } catch (e) { /* Web Audio not available */ }
     initSeagulls();
+    initClouds();
+    initBoats();
     initPetals();
     ambientSounds.active = true;
   } else {
@@ -1211,6 +1333,8 @@ function stopSceneAmbience() {
     ambientSounds.cicadasNode = null;
   }
   seagulls.length = 0;
+  clouds.length = 0;
+  boats.length = 0;
   petals.length = 0;
   ambientSounds.active = false;
 }
@@ -1230,18 +1354,23 @@ function updateAmbientSound(dt) {
 function updateSceneAmbience(dt) {
   if (state.scene === 'exterior') {
     updateSeagulls(dt);
+    updateClouds(dt);
+    updateBoats(dt);
     updatePetals();
     updateCat(dt);
     updateAmbientSound(dt);
   } else if (state.scene === 'terrace') {
     updateSeagulls(dt);
+    updateClouds(dt);
     updateAmbientSound(dt);
   }
 }
 
 function drawSceneAmbience(tick) {
   if (state.scene === 'exterior') {
+    drawClouds();
     drawSeaShimmer(tick);
+    drawBoats(tick);
     drawBoatBob(tick);
     drawLightShaft(tick);
     drawSeagulls();
@@ -1249,6 +1378,7 @@ function drawSceneAmbience(tick) {
     drawCat();
     drawHeatHaze(tick);
   } else if (state.scene === 'terrace') {
+    drawClouds();
     drawSeaShimmer(tick);
     drawLightShaft(tick);
     drawSeagulls();
