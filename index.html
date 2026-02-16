@@ -198,7 +198,7 @@
 </div>
 
 <audio id="title-music" loop preload="auto"><source src="music/galaxidi-title-theme-1.mp3" type="audio/mpeg"></audio>
-<audio id="bgm" loop preload="auto"><source src="music/scene1-music.mp3" type="audio/mpeg"></audio>
+<audio id="bgm" loop preload="auto"><source src="music/arrival-at-galaxidi-scene-1-1.mp3" type="audio/mpeg"></audio>
 
 <script>
 // ════════════════════════════════════════════════════════════
@@ -2406,16 +2406,7 @@ CVS.addEventListener('click', function titleClickHandler(e) {
   }
   titleClicked = true;
 
-  // Crossfade title music out
-  const fadeInterval = setInterval(() => {
-    if (titleMusic.volume > 0.02) {
-      titleMusic.volume = Math.max(0, titleMusic.volume - 0.01);
-    } else {
-      titleMusic.pause();
-      titleMusic.volume = 0.3;
-      clearInterval(fadeInterval);
-    }
-  }, 50);
+  // Keep title music playing through intro — don't fade it here
 
   // Animate fade to black
   const fadeStep = () => {
@@ -2424,9 +2415,9 @@ CVS.addEventListener('click', function titleClickHandler(e) {
       requestAnimationFrame(fadeStep);
     } else {
       titleFadeOut = 1;
-      // Switch to intro
+      // Switch to intro — title music keeps playing
       state.phase = 'intro';
-      bgm.play().catch(() => {}); state.musicOn = true;
+      state.musicOn = true;
       const intro = document.getElementById('intro-screen');
       intro.classList.add('show');
       showIntroPage();
@@ -2452,9 +2443,33 @@ document.getElementById('intro-screen').onclick = () => {
   if (state.introPage >= introPages.length) {
     const is = document.getElementById('intro-screen');
     is.style.opacity = '0';
+
+    // Crossfade: title music out, scene music in (2 second overlap)
+    bgm.volume = 0;
+    bgm.play().catch(() => {});
+    const crossfadeDur = 2000; // 2 seconds
+    const crossfadeStart = performance.now();
+    const crossfadeStep = () => {
+      const elapsed = performance.now() - crossfadeStart;
+      const t = Math.min(1, elapsed / crossfadeDur);
+      // Ease: smooth cubic
+      const ease = t < 0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+      titleMusic.volume = Math.max(0, 0.7 * (1 - ease));
+      bgm.volume = 0.25 * ease;
+      if (t < 1) {
+        requestAnimationFrame(crossfadeStep);
+      } else {
+        titleMusic.pause();
+        titleMusic.volume = 0.7;
+        bgm.volume = 0.25;
+      }
+    };
+    requestAnimationFrame(crossfadeStep);
+
     setTimeout(() => {
       is.style.display = 'none';
       state.phase = 'playing';
+      state.musicOn = true;
       startScene('exterior');
     }, 1500);
   } else {
