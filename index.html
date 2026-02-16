@@ -20,60 +20,140 @@
     min-height: 0;
   }
 
-  /* ── ACTION LINE — Brass scroll bar ── */
+  /* ── ACTION LINE — Trunk wood strip ── */
   #action-line {
     height: 36px; display: none; align-items: center; justify-content: center;
     font-family: 'Press Start 2P', monospace;
     font-size: .65rem; color: #FFE8A0; letter-spacing: 1px;
     background:
-      repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px),
-      linear-gradient(180deg, #5a4228 0%, #4a3520 30%, #3e2c18 70%, #2e1e0e 100%);
+      /* Tree ring curves flowing through */
+      radial-gradient(ellipse 120px 200px at -10% 50%, transparent 65%, rgba(45,28,8,0.12) 66%, transparent 67%, transparent 72%, rgba(40,25,8,0.08) 73%, transparent 74%),
+      radial-gradient(ellipse 140px 220px at 110% 50%, transparent 60%, rgba(42,26,8,0.1) 61%, transparent 62%, transparent 68%, rgba(48,30,10,0.07) 69%, transparent 70%),
+      /* Grain lines */
+      repeating-linear-gradient(87deg, transparent 0px, transparent 5px, rgba(80,55,20,0.1) 5px, rgba(80,55,20,0.1) 6px, transparent 6px, transparent 18px),
+      repeating-linear-gradient(93deg, transparent 0px, transparent 11px, rgba(0,0,0,0.07) 11px, rgba(0,0,0,0.07) 12px, transparent 12px, transparent 30px),
+      /* Stains */
+      radial-gradient(ellipse 80px 20px at 25% 60%, rgba(90,60,20,0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 60px 18px at 70% 30%, rgba(40,25,8,0.1) 0%, transparent 100%),
+      linear-gradient(180deg, #5a4228 0%, #4e3820 20%, #3e2c18 50%, #4a3620 75%, #2e1e0e 100%);
     border-top: 3px solid #8a6e42;
     border-bottom: 2px solid #1a0e04;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.9), 0 0 10px rgba(255,220,120,0.25);
-    box-shadow: inset 0 1px 0 rgba(255,220,160,0.15), inset 0 -1px 0 rgba(0,0,0,0.3);
+    box-shadow: inset 0 1px 0 rgba(255,220,160,0.12), inset 0 -1px 0 rgba(0,0,0,0.3);
   }
   #action-line.on { display: flex; }
 
-  /* ── UI PANEL — MI2 Wooden SCUMM Panel ── */
+  /* ── UI PANEL — MI2 rough-hewn trunk wood ── */
   #ui-panel {
     background:
-      /* Wood grain texture */
-      repeating-linear-gradient(90deg,
-        transparent 0px, transparent 8px,
-        rgba(0,0,0,0.06) 8px, rgba(0,0,0,0.06) 9px,
-        transparent 9px, transparent 14px,
-        rgba(0,0,0,0.04) 14px, rgba(0,0,0,0.04) 15px
+      /* === TREE RING LINES — curved organic bands === */
+      /* Ring cluster left — tight ellipses like cut trunk */
+      radial-gradient(ellipse 180px 300px at -20% 50%,
+        transparent 58%, rgba(45,28,8,0.14) 59%, transparent 60%,
+        transparent 63%, rgba(50,30,10,0.1) 64%, transparent 65%,
+        transparent 69%, rgba(40,25,8,0.12) 70%, transparent 71%,
+        transparent 76%, rgba(55,35,12,0.09) 77%, transparent 78%,
+        transparent 84%, rgba(45,28,8,0.1) 85%, transparent 86%
       ),
-      repeating-linear-gradient(90deg,
-        transparent 0px, transparent 40px,
-        rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px
+      /* Ring cluster right — offset, different scale */
+      radial-gradient(ellipse 200px 350px at 110% 40%,
+        transparent 55%, rgba(40,25,8,0.12) 56%, transparent 57%,
+        transparent 61%, rgba(50,32,10,0.09) 62%, transparent 63%,
+        transparent 68%, rgba(42,26,8,0.11) 69%, transparent 70%,
+        transparent 75%, rgba(48,30,10,0.08) 76%, transparent 77%,
+        transparent 83%, rgba(38,22,6,0.1) 84%, transparent 85%
       ),
-      /* Base wood gradient */
+      /* Ring cluster center — subtle, wide */
+      radial-gradient(ellipse 260px 400px at 50% 120%,
+        transparent 50%, rgba(42,28,10,0.08) 51%, transparent 52%,
+        transparent 57%, rgba(50,32,12,0.06) 58%, transparent 59%,
+        transparent 65%, rgba(40,25,8,0.07) 66%, transparent 67%,
+        transparent 74%, rgba(48,30,10,0.05) 75%, transparent 76%
+      ),
+      /* === FLOWING GRAIN LINES — wavy, organic === */
+      repeating-linear-gradient(87deg,
+        transparent 0px, transparent 4px,
+        rgba(0,0,0,0.08) 4px, rgba(0,0,0,0.08) 5.5px,
+        transparent 5.5px, transparent 10px,
+        rgba(55,35,12,0.06) 10px, rgba(55,35,12,0.06) 11px,
+        transparent 11px, transparent 18px
+      ),
+      repeating-linear-gradient(92deg,
+        transparent 0px, transparent 6px,
+        rgba(0,0,0,0.06) 6px, rgba(0,0,0,0.06) 7px,
+        transparent 7px, transparent 15px,
+        rgba(60,40,15,0.05) 15px, rgba(60,40,15,0.05) 16px,
+        transparent 16px, transparent 25px
+      ),
+      repeating-linear-gradient(89deg,
+        transparent 0px, transparent 9px,
+        rgba(0,0,0,0.04) 9px, rgba(0,0,0,0.04) 10px,
+        transparent 10px, transparent 30px
+      ),
+      /* === KNOTS — tree trunk eye patterns === */
+      /* Big knot with rings */
+      radial-gradient(ellipse 18px 14px at 18% 40%, rgba(20,10,2,0.35) 0%, rgba(35,20,5,0.2) 35%, transparent 60%),
+      radial-gradient(ellipse 30px 24px at 18% 40%, transparent 50%, rgba(35,20,5,0.12) 55%, transparent 60%, transparent 70%, rgba(40,25,8,0.08) 72%, transparent 76%),
+      /* Medium knot */
+      radial-gradient(ellipse 12px 10px at 62% 65%, rgba(22,12,3,0.3) 0%, rgba(40,25,8,0.15) 40%, transparent 65%),
+      radial-gradient(ellipse 22px 18px at 62% 65%, transparent 45%, rgba(38,22,6,0.1) 50%, transparent 55%, transparent 65%, rgba(42,26,8,0.07) 68%, transparent 72%),
+      /* Small knot */
+      radial-gradient(ellipse 10px 8px at 85% 30%, rgba(25,14,4,0.28) 0%, rgba(38,22,6,0.12) 45%, transparent 70%),
+      radial-gradient(ellipse 16px 13px at 85% 30%, transparent 50%, rgba(35,20,5,0.08) 55%, transparent 62%),
+      /* Sap/resin streak */
+      radial-gradient(ellipse 8px 50px at 42% 50%, rgba(80,55,20,0.1) 0%, rgba(60,40,14,0.05) 50%, transparent 100%),
+      radial-gradient(ellipse 6px 35px at 73% 35%, rgba(70,48,18,0.08) 0%, transparent 100%),
+      /* === WORN/LIGHTER patches === */
+      radial-gradient(ellipse 80px 45px at 30% 50%, rgba(100,70,30,0.07) 0%, transparent 100%),
+      radial-gradient(ellipse 70px 40px at 78% 55%, rgba(90,62,25,0.06) 0%, transparent 100%),
+      /* Plank seams */
+      repeating-linear-gradient(90deg,
+        transparent 0px, transparent 95px,
+        rgba(0,0,0,0.16) 95px, rgba(0,0,0,0.2) 97px,
+        rgba(40,28,10,0.06) 97px, transparent 99px,
+        transparent 200px
+      ),
+      /* === BASE — uneven warm trunk wood === */
       linear-gradient(180deg,
-        #6b5030 0%, #5a4228 8%, #4e3820 20%,
-        #443018 40%, #3e2c16 60%, #382814 80%,
-        #2e2010 95%, #241a0c 100%
+        #6b5030 0%, #5e4528 5%, #523c22 12%, #5a4428 18%,
+        #4a3620 28%, #523e24 35%, #443018 45%, #4e3a22 55%,
+        #3e2c16 62%, #463420 70%, #382814 78%, #3e3018 85%,
+        #2e2010 93%, #241a0c 100%
       );
-    border-top: 4px solid #8a6e42;
+    border-top: 4px solid #7a5e38;
     display: none; flex-direction: column;
     box-shadow:
-      inset 0 2px 0 rgba(255,220,160,0.12),
-      inset 0 -2px 4px rgba(0,0,0,0.4),
+      inset 0 2px 0 rgba(255,200,120,0.1),
+      inset 0 -3px 6px rgba(0,0,0,0.5),
       0 -2px 8px rgba(0,0,0,0.5);
     position: relative;
   }
   #ui-panel.on { display: flex; }
-  /* Brass nail decorations */
+  /* Brass nail heads — irregular spacing */
   #ui-panel::before {
     content: '';
-    position: absolute; top: 6px; left: 0; right: 0; height: 1px;
-    background: repeating-linear-gradient(90deg,
-      transparent 0px, transparent 28px,
-      #8a7040 28px, #8a7040 32px,
-      transparent 32px, transparent 60px
+    position: absolute; top: 5px; left: 12px; right: 12px; height: 4px;
+    background:
+      radial-gradient(circle 2.5px at 8px 2px, #9a8048 0%, #705828 60%, transparent 100%),
+      radial-gradient(circle 2px at 62px 2px, #8a7040 0%, #604820 60%, transparent 100%),
+      radial-gradient(circle 2.5px at 130px 2px, #9a8048 0%, #705828 60%, transparent 100%),
+      radial-gradient(circle 2px at 198px 2px, #8a7040 0%, #604820 60%, transparent 100%),
+      radial-gradient(circle 2.5px at 270px 2px, #9a8048 0%, #705828 60%, transparent 100%),
+      radial-gradient(circle 2px at 350px 2px, #8a7040 0%, #604820 60%, transparent 100%),
+      radial-gradient(circle 2.5px at 425px 2px, #9a8048 0%, #705828 60%, transparent 100%),
+      radial-gradient(circle 2px at 510px 2px, #8a7040 0%, #604820 60%, transparent 100%),
+      radial-gradient(circle 2.5px at 590px 2px, #9a8048 0%, #705828 60%, transparent 100%);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  /* Bottom edge wear line */
+  #ui-panel::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg,
+      #1a1008 0%, #28200e 15%, #1e1608 30%, #2a1e10 50%,
+      #1a1208 65%, #241a0c 80%, #1e1408 100%
     );
-    opacity: 0.4;
     pointer-events: none;
   }
 
@@ -82,102 +162,143 @@
     display: flex; height: 150px; padding: 8px 10px;
   }
 
-  /* ── VERB GRID — Carved wooden plaques ── */
+  /* ── VERB GRID — Rough carved buttons ── */
   #verb-panel {
     display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
-    gap: 6px; width: 300px; flex-shrink: 0;
+    gap: 5px; width: 300px; flex-shrink: 0;
   }
   .vb {
     font-family: 'Press Start 2P', monospace; font-size: .6rem; color: #c8a868;
     background:
-      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px),
-      linear-gradient(180deg, #4a3822 0%, #3e2e18 35%, #352814 65%, #2e2010 100%);
+      /* Tree ring arc through button */
+      radial-gradient(ellipse 80px 120px at -15% 50%,
+        transparent 55%, rgba(42,26,8,0.13) 56%, transparent 57%,
+        transparent 63%, rgba(38,22,6,0.09) 64%, transparent 65%
+      ),
+      /* Grain lines at angles */
+      repeating-linear-gradient(86deg, transparent 0px, transparent 4px, rgba(0,0,0,0.07) 4px, rgba(0,0,0,0.07) 5.5px, transparent 5.5px, transparent 11px),
+      repeating-linear-gradient(93deg, transparent 0px, transparent 8px, rgba(60,40,15,0.05) 8px, rgba(60,40,15,0.05) 9px, transparent 9px, transparent 20px),
+      /* Small knot */
+      radial-gradient(ellipse 8px 6px at 75% 35%, rgba(25,14,4,0.2) 0%, rgba(40,25,8,0.08) 50%, transparent 100%),
+      /* Uneven color patches */
+      radial-gradient(ellipse 40px 25px at 30% 40%, rgba(70,48,18,0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 35px 20px at 70% 60%, rgba(40,25,8,0.1) 0%, transparent 100%),
+      linear-gradient(180deg, #4a3822 0%, #3e2e18 25%, #3a2a16 50%, #352814 75%, #2e2010 100%);
     border: 3px solid #5a4428;
     border-top-color: #7a6040; border-left-color: #6a5438;
     border-bottom-color: #2a1c0c; border-right-color: #2a1c0c;
-    cursor: pointer; transition: all .15s;
+    cursor: pointer; transition: all .12s;
     display: flex; align-items: center; justify-content: center;
     padding: 4px 8px; text-align: center;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.7), 0 1px 0 rgba(0,0,0,0.4);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.8), 0 1px 0 rgba(0,0,0,0.5);
     box-shadow:
-      inset 0 1px 0 rgba(255,220,160,0.1),
-      inset 0 -1px 0 rgba(0,0,0,0.2),
-      1px 2px 3px rgba(0,0,0,0.4);
-    border-radius: 2px;
+      inset 0 1px 0 rgba(255,200,120,0.08),
+      inset -1px -1px 0 rgba(0,0,0,0.15),
+      2px 2px 4px rgba(0,0,0,0.45);
+    border-radius: 1px;
   }
   .vb:hover {
     color: #FFE090;
     background:
-      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px),
-      linear-gradient(180deg, #5a4828 0%, #4e3e20 35%, #443418 65%, #3a2c14 100%);
+      radial-gradient(ellipse 80px 120px at -15% 50%, transparent 55%, rgba(52,34,12,0.13) 56%, transparent 57%, transparent 63%, rgba(48,30,10,0.09) 64%, transparent 65%),
+      repeating-linear-gradient(86deg, transparent 0px, transparent 4px, rgba(0,0,0,0.07) 4px, rgba(0,0,0,0.07) 5.5px, transparent 5.5px, transparent 11px),
+      repeating-linear-gradient(93deg, transparent 0px, transparent 8px, rgba(60,40,15,0.05) 8px, rgba(60,40,15,0.05) 9px, transparent 9px, transparent 20px),
+      radial-gradient(ellipse 8px 6px at 75% 35%, rgba(25,14,4,0.2) 0%, rgba(40,25,8,0.08) 50%, transparent 100%),
+      radial-gradient(ellipse 40px 25px at 30% 40%, rgba(90,60,22,0.12) 0%, transparent 100%),
+      linear-gradient(180deg, #5a4828 0%, #4e3e20 30%, #443418 60%, #3a2c14 100%);
     border-top-color: #9a7848; border-left-color: #8a6840;
-    text-shadow: 0 0 8px rgba(255,224,144,0.35), 1px 1px 1px rgba(0,0,0,0.7);
+    text-shadow: 0 0 8px rgba(255,224,144,0.3), 1px 1px 1px rgba(0,0,0,0.8);
     box-shadow:
-      inset 0 1px 0 rgba(255,220,160,0.15),
-      inset 0 -1px 0 rgba(0,0,0,0.2),
-      1px 2px 4px rgba(0,0,0,0.3),
-      0 0 8px rgba(180,140,60,0.1);
+      inset 0 1px 0 rgba(255,200,120,0.12),
+      inset -1px -1px 0 rgba(0,0,0,0.1),
+      2px 2px 5px rgba(0,0,0,0.35),
+      0 0 8px rgba(180,140,60,0.08);
   }
   .vb:active { transform: scale(.97); }
   .vb.on {
     color: #FFE8A0;
     background:
-      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(255,200,80,0.03) 6px, rgba(255,200,80,0.03) 7px),
-      linear-gradient(180deg, #5e4828 0%, #503c1e 35%, #483416 65%, #3e2c12 100%);
+      radial-gradient(ellipse 80px 120px at -15% 50%, transparent 55%, rgba(55,38,14,0.12) 56%, transparent 57%, transparent 63%, rgba(50,32,12,0.08) 64%, transparent 65%),
+      repeating-linear-gradient(86deg, transparent 0px, transparent 4px, rgba(255,180,60,0.05) 4px, rgba(255,180,60,0.05) 5.5px, transparent 5.5px, transparent 11px),
+      radial-gradient(ellipse 8px 6px at 75% 35%, rgba(25,14,4,0.18) 0%, rgba(40,25,8,0.06) 50%, transparent 100%),
+      radial-gradient(ellipse 50px 30px at 50% 50%, rgba(100,70,25,0.12) 0%, transparent 100%),
+      linear-gradient(180deg, #5e4828 0%, #503c1e 30%, #483416 60%, #3e2c12 100%);
     border: 3px solid #B8903C;
     border-top-color: #D4A848; border-left-color: #C49840;
     border-bottom-color: #705020; border-right-color: #705020;
-    text-shadow: 0 0 10px rgba(255,232,160,0.45), 1px 1px 1px rgba(0,0,0,0.7);
+    text-shadow: 0 0 10px rgba(255,232,160,0.4), 1px 1px 1px rgba(0,0,0,0.8);
     box-shadow:
-      inset 0 1px 0 rgba(255,220,160,0.18),
-      inset 0 -1px 0 rgba(0,0,0,0.15),
-      0 0 10px rgba(212,168,72,0.2),
-      1px 2px 3px rgba(0,0,0,0.3);
+      inset 0 1px 0 rgba(255,200,120,0.15),
+      inset -1px -1px 0 rgba(0,0,0,0.08),
+      0 0 12px rgba(212,168,72,0.18),
+      2px 2px 4px rgba(0,0,0,0.3);
   }
 
-  /* ── INVENTORY — Recessed wooden chest compartment ── */
+  /* ── INVENTORY — Dark recessed hold ── */
   #inv-panel {
     flex: 1; display: flex; align-items: stretch;
     margin-left: 10px;
     border: 3px solid #3a2a16;
-    border-top-color: #2a1c0c; border-left-color: #2a1c0c;
+    border-top-color: #221408; border-left-color: #221408;
     border-bottom-color: #6a5438; border-right-color: #5a4428;
     background:
-      repeating-linear-gradient(90deg, transparent 0px, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 11px),
-      linear-gradient(180deg, #1e1608 0%, #28200e 30%, #241c0c 70%, #1a1408 100%);
+      /* Tree ring arcs inside the hold */
+      radial-gradient(ellipse 150px 250px at -5% 50%,
+        transparent 58%, rgba(35,20,5,0.1) 59%, transparent 60%,
+        transparent 66%, rgba(30,18,4,0.07) 67%, transparent 68%,
+        transparent 75%, rgba(32,19,5,0.06) 76%, transparent 77%
+      ),
+      radial-gradient(ellipse 130px 200px at 105% 40%,
+        transparent 55%, rgba(32,18,4,0.08) 56%, transparent 57%,
+        transparent 63%, rgba(28,16,4,0.06) 64%, transparent 65%
+      ),
+      /* Dark wood grain inside */
+      repeating-linear-gradient(87deg, transparent 0px, transparent 5px, rgba(0,0,0,0.08) 5px, rgba(0,0,0,0.08) 6.5px, transparent 6.5px, transparent 14px),
+      repeating-linear-gradient(92deg, transparent 0px, transparent 9px, rgba(40,25,8,0.06) 9px, rgba(40,25,8,0.06) 10px, transparent 10px, transparent 22px),
+      /* Dark knot */
+      radial-gradient(ellipse 14px 11px at 35% 45%, rgba(15,8,2,0.2) 0%, rgba(25,14,4,0.08) 50%, transparent 100%),
+      /* Wear stains */
+      radial-gradient(ellipse 60px 30px at 55% 50%, rgba(50,35,12,0.1) 0%, transparent 100%),
+      radial-gradient(ellipse 50px 25px at 80% 30%, rgba(30,18,5,0.08) 0%, transparent 100%),
+      linear-gradient(180deg, #1a1206 0%, #221a0a 15%, #201808 30%, #241c0c 45%, #1e1608 60%, #28200e 75%, #1a1408 90%, #161008 100%);
     box-shadow:
-      inset 0 3px 6px rgba(0,0,0,0.5),
-      inset 0 -1px 0 rgba(255,220,160,0.05),
-      inset 3px 0 6px rgba(0,0,0,0.3),
-      inset -3px 0 6px rgba(0,0,0,0.3);
-    border-radius: 3px;
+      inset 0 4px 8px rgba(0,0,0,0.6),
+      inset 0 -1px 0 rgba(255,200,120,0.04),
+      inset 4px 0 8px rgba(0,0,0,0.35),
+      inset -4px 0 8px rgba(0,0,0,0.35);
+    border-radius: 2px;
     padding: 0;
   }
   #inv-label { display: none; }
   #inv-arrows {
     display: flex; flex-direction: column; justify-content: center;
     gap: 8px; padding: 6px 8px; flex-shrink: 0;
-    border-right: 2px solid #2a1c0c;
-    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+    border-right: 2px solid #1e1408;
+    background:
+      radial-gradient(ellipse 20px 40px at 50% 50%, rgba(50,35,12,0.1) 0%, transparent 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.12) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.12) 100%);
   }
   #inv-arrows button {
     font-size: .8rem; color: #B89858;
     background:
-      linear-gradient(180deg, #4a3822 0%, #3a2c18 50%, #302410 100%);
+      repeating-linear-gradient(89deg, transparent 0px, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 6px, transparent 6px, transparent 14px),
+      linear-gradient(180deg, #4a3822 0%, #3a2c18 40%, #352814 70%, #302410 100%);
     border: 2px solid #5a4428;
     border-top-color: #7a6040; border-left-color: #6a5438;
     border-bottom-color: #2a1c0c; border-right-color: #2a1c0c;
     cursor: pointer; padding: 8px 10px; line-height: 1;
-    transition: all .15s;
-    border-radius: 2px;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    transition: all .12s;
+    border-radius: 1px;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.6);
   }
   #inv-arrows button:hover {
     color: #FFE090; border-top-color: #9a7848;
-    background: linear-gradient(180deg, #5a4828 0%, #4a3820 50%, #3a2c16 100%);
-    text-shadow: 0 0 6px rgba(255,224,144,0.3);
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.2), 0 0 6px rgba(180,140,60,0.1);
+    background:
+      repeating-linear-gradient(89deg, transparent 0px, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 6px, transparent 6px, transparent 14px),
+      linear-gradient(180deg, #5a4828 0%, #4a3820 40%, #403018 70%, #3a2c16 100%);
+    text-shadow: 0 0 6px rgba(255,224,144,0.25);
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.3), 0 0 6px rgba(180,140,60,0.08);
   }
   #inv-grid {
     flex: 1; display: grid;
@@ -191,31 +312,36 @@
   .inv-slot {
     width: 60px; height: 60px;
     background:
-      linear-gradient(180deg, #161008 0%, #1e180c 50%, #161008 100%);
+      /* Subtle grain inside slots */
+      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px, transparent 7px, transparent 15px),
+      radial-gradient(ellipse 30px 30px at 50% 50%, rgba(40,28,10,0.1) 0%, transparent 100%),
+      linear-gradient(180deg, #141008 0%, #1c1608 35%, #181208 65%, #141008 100%);
     border: 2px solid #3a2c18;
-    border-top-color: #221808; border-left-color: #221808;
+    border-top-color: #1e1408; border-left-color: #1e1408;
     border-bottom-color: #4a3822; border-right-color: #4a3822;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all .15s;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,220,160,0.04);
-    border-radius: 2px;
+    cursor: pointer; transition: all .12s;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), inset 0 -1px 0 rgba(255,200,120,0.03);
+    border-radius: 1px;
   }
   .inv-slot:hover {
-    border-color: #8a6e42;
-    border-bottom-color: #B89858; border-right-color: #9a7848;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 0 6px rgba(180,140,60,0.15);
+    border-color: #7a5e38;
+    border-bottom-color: #9a7848; border-right-color: #8a6838;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.35), 0 0 6px rgba(180,140,60,0.12);
   }
   .inv-slot.on {
     border: 2px solid #B8903C;
     border-top-color: #D4A848; border-left-color: #C49840;
     border-bottom-color: #705020; border-right-color: #705020;
-    background: linear-gradient(180deg, #2a2010 0%, #322810 50%, #2a2010 100%);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 10px rgba(212,168,72,0.25);
+    background:
+      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(255,180,60,0.03) 6px, rgba(255,180,60,0.03) 7px, transparent 7px, transparent 15px),
+      linear-gradient(180deg, #2a2010 0%, #322810 50%, #2a2010 100%);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 10px rgba(212,168,72,0.2);
   }
   .inv-slot .inv-text {
     font-family: 'Press Start 2P', monospace; font-size: .35rem; color: #c8a868;
     text-align: center; line-height: 1.3;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
   }
 
   /* ── TITLE (canvas-rendered, no HTML overlay) ── */
@@ -307,6 +433,17 @@ const chars = {
   ajax:   { x: 0, y: 0, dir: 1, walking: false, frame: 0, targetX: null, startX: 0, walkT: 0, walkDur: 0, visible: true, fadeIn: 0 },
   clio:   { x: 0, y: 0, dir: 1, walking: false, frame: 0, targetX: null, startX: 0, walkT: 0, walkDur: 0, visible: true, fadeIn: 0 },
 };
+
+// NPC characters — static, scene-specific
+const npcChars = {
+  ghost:   { scene: 'graveyard', x: 480, y: 300, dir: -1, visible: true },
+  athos:   { scene: 'liotrivi', x: 120, y: 335, dir: 1, visible: true },
+  stathis: { scene: 'port', x: 80, y: 340, dir: 1, visible: true },
+  akis:    { scene: 'port', x: 150, y: 342, dir: 1, visible: true },
+  giannis: { scene: 'windmill', x: 150, y: 340, dir: 1, visible: true },
+  curator: { scene: 'museum', x: 100, y: 340, dir: 1, visible: true },
+};
+
 let walkDoneCallback = null;
 
 // ════════════════════════════════════════════════════════════
@@ -339,21 +476,27 @@ async function loadAllAssets() {
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.png'),
     loadImg('bg-cave', 'assets/pixel-cave.png'),
     loadImg('bg-church', 'assets/pixel-church.jpg'),
-    loadImg('bg-windmill', 'assets/pixel-windmill.jpg'),
+    loadImg('bg-windmill', 'assets/pixel-windmill.png'),
     loadImg('bg-boat', 'assets/pixel-boat.png'),
     loadImg('bg-graveyard', 'assets/pixel-graveyard.png'),
   ]);
 
-  // Character idle sprites
-  const charPromises = ['ntemis','ajax','clio'].map(id =>
+  // Character idle sprites (family + NPCs)
+  const charPromises = ['ntemis','ajax','clio','ghost','athos','stathis','akis','giannis','curator'].map(id =>
     loadImg(`char-${id}`, `assets/char-${id}-final.png`).then(img => { CHAR_IMGS[id] = img; })
   );
 
-  // Portraits
+  // Portraits (family + NPCs)
   const portPromises = [
     loadImg('port-ntemis', 'assets/portrait-ntemis.png').then(img => { PORTRAITS['ΝΤΕΜΗΣ'] = img; }),
     loadImg('port-ajax', 'assets/portrait-ajax.png').then(img => { PORTRAITS['ΑΙΑΣ'] = img; }),
     loadImg('port-clio', 'assets/portrait-clio.png').then(img => { PORTRAITS['ΚΛΕΙΩ'] = img; }),
+    loadImg('port-ghost', 'assets/portrait-ghost.png').then(img => { PORTRAITS['ΦΑΝΤΑΣΜΑ'] = img; }),
+    loadImg('port-athos', 'assets/portrait-athos.png').then(img => { PORTRAITS['ΑΘΟΣ'] = img; }),
+    loadImg('port-stathis', 'assets/portrait-stathis.png').then(img => { PORTRAITS['ΣΤΑΘΗΣ'] = img; }),
+    loadImg('port-akis', 'assets/portrait-akis.png').then(img => { PORTRAITS['ΑΚΗΣ'] = img; }),
+    loadImg('port-giannis', 'assets/portrait-giannis.png').then(img => { PORTRAITS['ΓΙΑΝΝΗΣ'] = img; }),
+    loadImg('port-curator', 'assets/portrait-curator.png').then(img => { PORTRAITS['ΕΠΙΜΕΛΗΤΗΣ'] = img; }),
   ];
 
   await Promise.all([...charPromises, ...portPromises]);
@@ -498,6 +641,12 @@ const scenes = {
         verbs: { look:[{s:'',t:'Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.'},{s:'ΚΛΕΙΩ',t:'Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...'}] }},
       { id:'cats', x:500, y:290, w:60, h:50, label:'Γάτες',
         verbs: { look:[{s:'',t:'Τρεις γάτες ξαπλωμένες στον ήλιο. Σε κοιτάνε με αδιαφορία.'},{s:'ΚΛΕΙΩ',t:'Πόσο τέλεια! Αυτή η πορτοκαλί μου αρέσει πολύ.'}] }},
+      { id:'stathis', x:55, y:270, w:70, h:100, label:'Στάθης',
+        verbs: { look:[{s:'',t:'Ο Στάθης με την κιθάρα του. Φίλος από τα παλιά.'}],
+                 talk:[{s:'ΣΤΑΘΗΣ',t:'Ντέμη! Τι κάνεις εδώ; Πάρε μια καρέκλα!'},{s:'ΝΤΕΜΗΣ',t:'Στάθη! Πόσο καιρό!'},{s:'ΣΤΑΘΗΣ',t:'Ψάχνεις κάτι; Ρώτα τον Άθο στο Λιοτρίβι. Ξέρει τα πάντα για τις παλιές οικογένειες.'}] }},
+      { id:'akis', x:125, y:272, w:60, h:98, label:'Άκης',
+        verbs: { look:[{s:'',t:'Ο Άκης παίζει φλογέρα στο λιμάνι. Η μελωδία ταξιδεύει στο νερό.'}],
+                 talk:[{s:'ΑΚΗΣ',t:'Ε, Ντέμη! Τα παιδιά μεγάλωσαν!'},{s:'ΚΛΕΙΩ',t:'Θείε Άκη, τι παίζεις;'},{s:'ΑΚΗΣ',t:'Ένα παλιό τραγούδι ναυτικό. Πήγαινε στο μουσείο — θα καταλάβεις.'}] }},
     ],
     exits: [{ side:'right', target:'exterior', label:'Σπίτι →' }, { side:'left', target:'museum', label:'← Μουσείο' }],
     entry: [
@@ -525,6 +674,9 @@ const scenes = {
         verbs: { look:[{s:'',t:'Ναυτικές σημαίες κρέμονται από το ταβάνι. Ελληνική, γαλλική, ρωσική — τα λιμάνια που γνώριζαν.'}] }},
       { id:'map_table', x:350, y:300, w:120, h:60, label:'Χάρτης',
         verbs: { look:[{s:'',t:'Ένας παλιός χάρτης του Κορινθιακού ξαπλωμένος σε τραπέζι. Σημειώσεις με μελάνι — δρόμοι ναυσιπλοΐας.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, σημείωσε αυτό. Μπορεί να μας χρειαστεί.'}] }},
+      { id:'curator_npc', x:75, y:270, w:90, h:100, label:'Επιμελητής',
+        verbs: { look:[{s:'',t:'Ο επιμελητής του μουσείου. Τα μάτια του λάμπουν πίσω από τα στρογγυλά γυαλιά.'}],
+                 talk:[{s:'ΕΠΙΜΕΛΗΤΗΣ',t:'Καλώς ήρθατε! Βλέπω ξέρετε να εκτιμάτε την ιστορία.'},{s:'ΝΤΕΜΗΣ',t:'Τα παιδιά μου ήθελαν να δουν τα καράβια.'},{s:'ΕΠΙΜΕΛΗΤΗΣ',t:'Τριακόσια πλοία! Η Χρυσούλα ήταν το τελευταίο. Τα ατμόπλοια τα σκότωσαν όλα.'},{s:'ΚΛΕΙΩ',t:'Γιατί δεν έφτιαξαν κι αυτοί ατμόπλοια;'},{s:'ΕΠΙΜΕΛΗΤΗΣ',t:'Ωραία ερώτηση, μικρή. Ήταν τόσο καλοί στα πανιά, που δεν φαντάζονταν κόσμο χωρίς αυτά.'}] }},
     ],
     exits: [{ side:'right', target:'port', label:'Λιμάνι →' }, { side:'left', target:'liotrivi', label:'← Λιοτρίβι' }],
     entry: [
@@ -839,7 +991,8 @@ function initBoatBob() {
   cut.width = boatRegion.w;
   cut.height = boatRegion.h;
   const cctx = cut.getContext('2d');
-  cctx.imageSmoothingEnabled = false;
+  cctx.imageSmoothingEnabled = true;
+  cctx.imageSmoothingQuality = 'high';
   cctx.drawImage(bgImg, sx, sy, sw, sh, 0, 0, boatRegion.w, boatRegion.h);
   boatCutout = cut;
   // Water patch from row just below boats
@@ -847,7 +1000,8 @@ function initBoatBob() {
   patch.width = boatRegion.w;
   patch.height = boatRegion.h + 8;
   const pctx = patch.getContext('2d');
-  pctx.imageSmoothingEnabled = false;
+  pctx.imageSmoothingEnabled = true;
+  pctx.imageSmoothingQuality = 'high';
   const waterSrcY = sy + sh;
   for (let row = 0; row < patch.height; row++) {
     pctx.drawImage(bgImg, sx, waterSrcY, sw, 1, 0, row, boatRegion.w, 1);
@@ -1405,9 +1559,15 @@ const CHAR_HEIGHTS = { ntemis: 118, ajax: 84, clio: 92 };
 
 // Per-character anatomy: waist split ratio & max leg stride (pixels)
 const WALK_ANATOMY = {
-  ntemis: { waist: 0.62, stride: 7 },
-  ajax:   { waist: 0.58, stride: 6 },
-  clio:   { waist: 0.60, stride: 6 },
+  ntemis:  { waist: 0.62, stride: 7 },
+  ajax:    { waist: 0.58, stride: 6 },
+  clio:    { waist: 0.60, stride: 6 },
+  ghost:   { waist: 0.55, stride: 0 },
+  athos:   { waist: 0.60, stride: 5 },
+  stathis: { waist: 0.58, stride: 6 },
+  akis:    { waist: 0.60, stride: 6 },
+  giannis: { waist: 0.58, stride: 5 },
+  curator: { waist: 0.62, stride: 4 },
 };
 
 function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
@@ -1544,6 +1704,54 @@ function drawCharacter(who, tick) {
   }
   drawSprite(who, c.x, c.y, c.dir, c.walking, c.frame, tick, offsets[who]);
   if (alpha < 1) ctx.restore();
+}
+
+function drawNPC(who, tick) {
+  const npc = npcChars[who];
+  if (!npc || !npc.visible || npc.scene !== state.scene) return;
+  const img = CHAR_IMGS[who];
+  if (!img || !img.complete || !img.naturalWidth) return;
+
+  const sprW = img.naturalWidth;
+  const sprH = img.naturalHeight;
+  const gx = npc.x;
+  const gy = npc.y;
+
+  // Idle animation (same as family chars)
+  const bp = tick * 0.03;
+  const breathe = Math.sin(bp) * 1.0 + Math.sin(bp * 0.6 + 0.5) * 0.4;
+  const sway = Math.sin(tick * 0.01) * 0.008 + Math.sin(tick * 0.023) * 0.003;
+  const bc = Math.sin(bp);
+  const squashX = 1 + bc * 0.005;
+  const squashY = 1 - bc * 0.005;
+
+  // Ground shadow
+  ctx.save();
+  ctx.globalAlpha = who === 'ghost' ? 0.06 : 0.18;
+  ctx.fillStyle = '#4A3A28';
+  ctx.beginPath();
+  ctx.ellipse(gx, gy + 3, sprW * 0.6, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  // Ghost special effects
+  if (who === 'ghost') {
+    ctx.globalAlpha = 0.45 + Math.sin(tick * 0.02) * 0.1;
+    // Blue glow aura
+    ctx.shadowColor = 'rgba(100,180,255,0.5)';
+    ctx.shadowBlur = 12;
+  }
+
+  ctx.translate(gx, gy + breathe);
+  if (npc.dir < 0) ctx.scale(-1, 1);
+  ctx.rotate(sway);
+  ctx.scale(squashX, squashY);
+  ctx.drawImage(img, -sprW / 2, -sprH);
+  ctx.restore();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1792,7 +2000,10 @@ function drawDialogue() {
 
     const portImg = PORTRAITS[state.dlg.speaker];
     if (portImg && portImg.complete) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(portImg, portX + 2, portY + 2, portSize - 4, portSize - 4);
+      ctx.imageSmoothingEnabled = false;
     } else {
       ctx.fillStyle = '#4a4a4a';
       ctx.font = '16px serif';
@@ -2106,8 +2317,10 @@ function render() {
   // Background
   const bgImg = images[sc.bg];
   if (bgImg) {
-    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(bgImg, 0, 0, GW, GH);
+    ctx.imageSmoothingEnabled = false;
   } else {
     ctx.fillStyle = '#1a1510';
     ctx.fillRect(0, 0, GW, GH);
@@ -2165,6 +2378,11 @@ function render() {
         ctx.restore();
       }
     }
+  }
+
+  // NPCs in current scene
+  for (const npcId of Object.keys(npcChars)) {
+    drawNPC(npcId, state.tick);
   }
 
   // Characters — back to front for depth
@@ -2434,8 +2652,10 @@ function drawTitleScreen(tick) {
   const bg = images['title-bg'];
 
   if (bg && bg.complete) {
-    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(bg, 0, 0, GW, GH);
+    ctx.imageSmoothingEnabled = false;
   } else {
     ctx.fillStyle = '#4A9FD8';
     ctx.fillRect(0, 0, GW, GH);
