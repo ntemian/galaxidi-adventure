@@ -1,33 +1,31 @@
 # Galaxidi Adventure — Session Handoff
 
 **Last updated**: 2026-02-16
-**Last session**: Animation overhaul + project reorganization
+**Last session**: Pilot storyboard + Game Bible
 
 ---
 
 ## Current State
 
-- **Main game**: `index.html` — single monolithic file, fully working
-- **3 scenes** implemented: exterior, terrace, kitchen
+- **Main game**: `index.html` — single monolithic file, fully working (3 scenes)
+- **Pilot storyboard**: `storyboard.html` — the living pilot script, 8 scenes with art
+- **Two story tracks**: MAIN (10-scene Game Bible) and PILOT (8-scene Visvikis treasure hunt)
 - **Walk animation**: Procedural two-leg scissoring (no walk frame sprites needed)
-- **Idle animation**: Compound sine breathing + sway
 - **Dialog system**: Typewriter text with portraits
-- **Inventory**: Note from satchel (first puzzle item)
 - **Music**: scene1-music.mp3 plays on start
 
 ## What Was Done This Session (2026-02-16)
 
-1. **Animation overhaul** — replaced choppy frame-based walk with procedural two-leg animation:
-   - Splits sprite at waist, draws back leg (dark, opposite) + front leg (bright, forward)
-   - Per-scanline displacement in 2px bands for natural foot movement
-   - Compound sine idle with squash/stretch
-   - Sub-pixel rendering (removed Math.round)
-2. **Project reorganization** — clean folder structure:
-   - `tides.html` renamed to `index.html` as canonical version
-   - Old versions moved to `backups/`
-   - Assets organized: `assets/`, `music/`, `inspiration/`
-   - Asset paths updated in index.html
-3. **Project management** — created CLAUDE.md, HANDOFF.md, DEVLOG.md, LESSONS.md
+1. **Game Bible v3** — saved definitive 10-scene design doc as `GAME-BIBLE.md`
+2. **Pilot story** — wrote 8-scene Captain Visvikis treasure hunt (`PILOT-STORY.md`)
+3. **Storyboard** — built `storyboard.html` as living visual storyboard for the pilot:
+   - All 8 scenes with dialog, gameplay notes, music direction
+   - Scene backgrounds from `assets/` embedded (pixel-exterior, kitchen, port, cave, graveyard, church, boat)
+   - Character sprites and portraits in hero section
+   - Styled with gold/sea/stone palette, letter effects, ghost text, jade highlights
+   - **This is the primary pilot reference — refine continuously**
+4. **Historical research** — `inspiration/galaxidi-history.md` with verified timeline
+5. **Title change** — everything renamed to "Το Μυστήριο του Γαλαξειδίου"
 
 ## What Works
 
@@ -50,16 +48,26 @@
 
 ## Next Steps (Priority Order)
 
-1. **More scenes** — port, beach, town, cave from old version or create new
-2. **More puzzles** — expand the mystery story
-3. **Sound effects** — footsteps, door open, item pickup, sea ambience
-4. **Save/load** — localStorage persistence
-5. **New background art** — generate for additional scenes
-6. **Character art improvements** — more detailed sprites, multiple poses
+1. **Refine storyboard** — iterate on `storyboard.html` based on feedback
+2. **Build pilot game** — implement 8 pilot scenes in `index.html`
+3. **Generate missing art** — island scene background (Scene 8)
+4. **Generate music** — per-scene tracks for the pilot
+5. **NPC portraits** — Stavros, Papas, Chrysostomos, Ghost
+
+## Key Documents
+
+| File | Purpose |
+|------|---------|
+| `storyboard.html` | **Living pilot storyboard** — refine continuously |
+| `PILOT-STORY.md` | Pilot story text (8 scenes) |
+| `GAME-BIBLE.md` | Main version design doc (10 scenes) |
+| `CLAUDE.md` | Project rules and architecture |
+| `LESSONS.md` | Lessons learned |
 
 ## For Other Sessions
 
 - Read `CLAUDE.md` for full project rules and architecture
 - Read `LESSONS.md` before making animation or asset changes
+- **Open `storyboard.html` in browser** to see pilot visual reference
 - Game entity in LOSC: `thought:2026-02-15-galaxidi-adventure-game-the-se`
 - Always test in browser after changes: `open index.html`

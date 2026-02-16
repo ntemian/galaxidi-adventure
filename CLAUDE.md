@@ -179,7 +179,9 @@ Scene 10 (cave): place all 12 → open door → ledger + letter
 
 ## Key Documents
 
-- `GAME-BIBLE.md` — Definitive game bible (v3, 10 scenes + epilogue, full story)
+- **`storyboard.html`** — **Living pilot storyboard** — the visual script, refine continuously. Open in browser to review
+- `PILOT-STORY.md` — Pilot story text (8-scene Visvikis treasure hunt)
+- `GAME-BIBLE.md` — Definitive game bible (v3, 10 scenes + epilogue, full story — MAIN version)
 - `inspiration/galaxidi-history.md` — Verified Galaxidi history timeline
 - `HANDOFF.md` — Session handoff state
 - `DEVLOG.md` — Development log
