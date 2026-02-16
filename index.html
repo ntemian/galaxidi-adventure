@@ -46,74 +46,73 @@
   /* ── UI PANEL — MI2 rough-hewn trunk wood ── */
   #ui-panel {
     background:
-      /* === TREE RING LINES — curved organic bands === */
-      /* Ring cluster left — tight ellipses like cut trunk */
+      /* === ETCHED ROSES — carved into the wood === */
+      /* Rose 1 — top-left, full bloom */
+      radial-gradient(ellipse 11px 10px at 8% 18%, rgba(90,25,15,0.22) 0%, rgba(65,18,10,0.12) 45%, transparent 100%),
+      radial-gradient(ellipse 14px 13px at 8% 18%, transparent 55%, rgba(75,20,12,0.1) 60%, transparent 68%),
+      radial-gradient(ellipse 18px 16px at 8% 18%, transparent 62%, rgba(60,16,8,0.07) 66%, transparent 74%),
+      radial-gradient(ellipse 8px 10px at 6% 15%, rgba(95,28,18,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 9px 7px at 10% 21%, rgba(85,22,14,0.13) 0%, transparent 65%),
+      radial-gradient(ellipse 7px 9px at 7% 22%, rgba(80,20,12,0.11) 0%, transparent 60%),
+      /* Rose 2 — center-right, bud */
+      radial-gradient(ellipse 9px 8px at 72% 28%, rgba(85,22,14,0.2) 0%, rgba(60,16,8,0.1) 50%, transparent 100%),
+      radial-gradient(ellipse 12px 11px at 72% 28%, transparent 50%, rgba(70,18,10,0.08) 56%, transparent 65%),
+      radial-gradient(ellipse 7px 8px at 70% 25%, rgba(90,25,16,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 6px 7px at 74% 31%, rgba(80,20,12,0.1) 0%, transparent 60%),
+      /* Rose 3 — bottom-center */
+      radial-gradient(ellipse 10px 9px at 45% 82%, rgba(88,24,15,0.18) 0%, rgba(62,17,9,0.09) 48%, transparent 100%),
+      radial-gradient(ellipse 14px 12px at 45% 82%, transparent 52%, rgba(68,18,10,0.07) 58%, transparent 68%),
+      radial-gradient(ellipse 8px 9px at 43% 79%, rgba(92,26,16,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 7px 8px at 47% 85%, rgba(82,21,13,0.1) 0%, transparent 60%),
+      /* Rose 4 — far right */
+      radial-gradient(ellipse 7px 6px at 92% 65%, rgba(80,20,12,0.18) 0%, rgba(55,14,7,0.08) 50%, transparent 100%),
+      radial-gradient(ellipse 10px 9px at 92% 65%, transparent 48%, rgba(65,16,8,0.07) 55%, transparent 65%),
+      /* === TWISTING VINES — carved S-curves === */
+      radial-gradient(ellipse 300px 180px at -5% -20%, transparent 96%, rgba(28,45,15,0.14) 96.5%, rgba(28,45,15,0.14) 97%, transparent 97.5%),
+      radial-gradient(ellipse 280px 200px at 35% 130%, transparent 93%, rgba(25,40,12,0.12) 93.5%, rgba(25,40,12,0.12) 94%, transparent 94.5%),
+      radial-gradient(ellipse 320px 160px at 70% -30%, transparent 95%, rgba(30,48,16,0.13) 95.5%, rgba(30,48,16,0.13) 96%, transparent 96.5%),
+      radial-gradient(ellipse 250px 180px at 105% 120%, transparent 94%, rgba(26,42,14,0.11) 94.5%, rgba(26,42,14,0.11) 95%, transparent 95.5%),
+      radial-gradient(ellipse 200px 120px at 15% 110%, transparent 95.5%, rgba(22,38,12,0.1) 96%, rgba(22,38,12,0.1) 96.3%, transparent 96.8%),
+      radial-gradient(ellipse 180px 140px at 85% -10%, transparent 94.5%, rgba(24,40,13,0.09) 95%, rgba(24,40,13,0.09) 95.3%, transparent 95.8%),
+      /* === THORNS === */
+      radial-gradient(ellipse 3px 6px at 12% 35%, rgba(30,48,16,0.16) 0%, transparent 100%),
+      radial-gradient(ellipse 3px 5px at 25% 72%, rgba(28,45,14,0.14) 0%, transparent 100%),
+      radial-gradient(ellipse 4px 6px at 38% 25%, rgba(32,50,18,0.13) 0%, transparent 100%),
+      radial-gradient(ellipse 3px 5px at 55% 80%, rgba(26,42,13,0.15) 0%, transparent 100%),
+      radial-gradient(ellipse 3px 6px at 65% 38%, rgba(30,48,16,0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 4px 5px at 78% 70%, rgba(28,45,14,0.14) 0%, transparent 100%),
+      radial-gradient(ellipse 3px 6px at 88% 42%, rgba(32,50,18,0.11) 0%, transparent 100%),
+      /* === LEAVES along vines === */
+      radial-gradient(ellipse 10px 5px at 15% 30%, rgba(30,52,18,0.14) 0%, rgba(25,42,14,0.06) 50%, transparent 100%),
+      radial-gradient(ellipse 8px 4px at 22% 68%, rgba(28,48,16,0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 9px 5px at 35% 22%, rgba(32,55,20,0.11) 0%, transparent 100%),
+      radial-gradient(ellipse 11px 5px at 52% 78%, rgba(26,45,15,0.13) 0%, transparent 100%),
+      radial-gradient(ellipse 8px 4px at 62% 35%, rgba(30,50,18,0.1) 0%, transparent 100%),
+      radial-gradient(ellipse 10px 5px at 75% 68%, rgba(28,48,16,0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 9px 4px at 85% 40%, rgba(32,52,18,0.1) 0%, transparent 100%),
+      radial-gradient(ellipse 7px 4px at 48% 15%, rgba(26,44,14,0.11) 0%, transparent 100%),
+      /* === TREE RINGS === */
       radial-gradient(ellipse 180px 300px at -20% 50%,
-        transparent 58%, rgba(45,28,8,0.14) 59%, transparent 60%,
-        transparent 63%, rgba(50,30,10,0.1) 64%, transparent 65%,
-        transparent 69%, rgba(40,25,8,0.12) 70%, transparent 71%,
-        transparent 76%, rgba(55,35,12,0.09) 77%, transparent 78%,
-        transparent 84%, rgba(45,28,8,0.1) 85%, transparent 86%
+        transparent 58%, rgba(45,28,8,0.12) 59%, transparent 60%,
+        transparent 63%, rgba(50,30,10,0.08) 64%, transparent 65%,
+        transparent 69%, rgba(40,25,8,0.1) 70%, transparent 71%,
+        transparent 76%, rgba(55,35,12,0.07) 77%, transparent 78%
       ),
-      /* Ring cluster right — offset, different scale */
       radial-gradient(ellipse 200px 350px at 110% 40%,
-        transparent 55%, rgba(40,25,8,0.12) 56%, transparent 57%,
-        transparent 61%, rgba(50,32,10,0.09) 62%, transparent 63%,
-        transparent 68%, rgba(42,26,8,0.11) 69%, transparent 70%,
-        transparent 75%, rgba(48,30,10,0.08) 76%, transparent 77%,
-        transparent 83%, rgba(38,22,6,0.1) 84%, transparent 85%
+        transparent 55%, rgba(40,25,8,0.1) 56%, transparent 57%,
+        transparent 61%, rgba(50,32,10,0.07) 62%, transparent 63%,
+        transparent 68%, rgba(42,26,8,0.09) 69%, transparent 70%
       ),
-      /* Ring cluster center — subtle, wide */
-      radial-gradient(ellipse 260px 400px at 50% 120%,
-        transparent 50%, rgba(42,28,10,0.08) 51%, transparent 52%,
-        transparent 57%, rgba(50,32,12,0.06) 58%, transparent 59%,
-        transparent 65%, rgba(40,25,8,0.07) 66%, transparent 67%,
-        transparent 74%, rgba(48,30,10,0.05) 75%, transparent 76%
-      ),
-      /* === FLOWING GRAIN LINES — wavy, organic === */
-      repeating-linear-gradient(87deg,
-        transparent 0px, transparent 4px,
-        rgba(0,0,0,0.08) 4px, rgba(0,0,0,0.08) 5.5px,
-        transparent 5.5px, transparent 10px,
-        rgba(55,35,12,0.06) 10px, rgba(55,35,12,0.06) 11px,
-        transparent 11px, transparent 18px
-      ),
-      repeating-linear-gradient(92deg,
-        transparent 0px, transparent 6px,
-        rgba(0,0,0,0.06) 6px, rgba(0,0,0,0.06) 7px,
-        transparent 7px, transparent 15px,
-        rgba(60,40,15,0.05) 15px, rgba(60,40,15,0.05) 16px,
-        transparent 16px, transparent 25px
-      ),
-      repeating-linear-gradient(89deg,
-        transparent 0px, transparent 9px,
-        rgba(0,0,0,0.04) 9px, rgba(0,0,0,0.04) 10px,
-        transparent 10px, transparent 30px
-      ),
-      /* === KNOTS — tree trunk eye patterns === */
-      /* Big knot with rings */
-      radial-gradient(ellipse 18px 14px at 18% 40%, rgba(20,10,2,0.35) 0%, rgba(35,20,5,0.2) 35%, transparent 60%),
-      radial-gradient(ellipse 30px 24px at 18% 40%, transparent 50%, rgba(35,20,5,0.12) 55%, transparent 60%, transparent 70%, rgba(40,25,8,0.08) 72%, transparent 76%),
-      /* Medium knot */
-      radial-gradient(ellipse 12px 10px at 62% 65%, rgba(22,12,3,0.3) 0%, rgba(40,25,8,0.15) 40%, transparent 65%),
-      radial-gradient(ellipse 22px 18px at 62% 65%, transparent 45%, rgba(38,22,6,0.1) 50%, transparent 55%, transparent 65%, rgba(42,26,8,0.07) 68%, transparent 72%),
-      /* Small knot */
-      radial-gradient(ellipse 10px 8px at 85% 30%, rgba(25,14,4,0.28) 0%, rgba(38,22,6,0.12) 45%, transparent 70%),
-      radial-gradient(ellipse 16px 13px at 85% 30%, transparent 50%, rgba(35,20,5,0.08) 55%, transparent 62%),
-      /* Sap/resin streak */
-      radial-gradient(ellipse 8px 50px at 42% 50%, rgba(80,55,20,0.1) 0%, rgba(60,40,14,0.05) 50%, transparent 100%),
-      radial-gradient(ellipse 6px 35px at 73% 35%, rgba(70,48,18,0.08) 0%, transparent 100%),
-      /* === WORN/LIGHTER patches === */
-      radial-gradient(ellipse 80px 45px at 30% 50%, rgba(100,70,30,0.07) 0%, transparent 100%),
-      radial-gradient(ellipse 70px 40px at 78% 55%, rgba(90,62,25,0.06) 0%, transparent 100%),
-      /* Plank seams */
-      repeating-linear-gradient(90deg,
-        transparent 0px, transparent 95px,
-        rgba(0,0,0,0.16) 95px, rgba(0,0,0,0.2) 97px,
-        rgba(40,28,10,0.06) 97px, transparent 99px,
-        transparent 200px
-      ),
-      /* === BASE — uneven warm trunk wood === */
+      /* === GRAIN LINES === */
+      repeating-linear-gradient(87deg, transparent 0px, transparent 4px, rgba(0,0,0,0.07) 4px, rgba(0,0,0,0.07) 5.5px, transparent 5.5px, transparent 10px, rgba(55,35,12,0.05) 10px, rgba(55,35,12,0.05) 11px, transparent 11px, transparent 18px),
+      repeating-linear-gradient(92deg, transparent 0px, transparent 6px, rgba(0,0,0,0.05) 6px, rgba(0,0,0,0.05) 7px, transparent 7px, transparent 15px, rgba(60,40,15,0.04) 15px, rgba(60,40,15,0.04) 16px, transparent 16px, transparent 25px),
+      /* === KNOTS === */
+      radial-gradient(ellipse 18px 14px at 18% 45%, rgba(20,10,2,0.3) 0%, rgba(35,20,5,0.15) 35%, transparent 60%),
+      radial-gradient(ellipse 12px 10px at 62% 60%, rgba(22,12,3,0.25) 0%, rgba(40,25,8,0.1) 40%, transparent 65%),
+      /* === WORN patches === */
+      radial-gradient(ellipse 80px 45px at 30% 50%, rgba(100,70,30,0.06) 0%, transparent 100%),
+      radial-gradient(ellipse 70px 40px at 78% 55%, rgba(90,62,25,0.05) 0%, transparent 100%),
+      /* === BASE wood === */
       linear-gradient(180deg,
         #6b5030 0%, #5e4528 5%, #523c22 12%, #5a4428 18%,
         #4a3620 28%, #523e24 35%, #443018 45%, #4e3a22 55%,
@@ -127,34 +126,39 @@
       inset 0 -3px 6px rgba(0,0,0,0.5),
       0 -2px 8px rgba(0,0,0,0.5);
     position: relative;
+    overflow: hidden;
   }
   #ui-panel.on { display: flex; }
-  /* Brass nail heads — irregular spacing */
+  /* Vine + rosette border along top */
   #ui-panel::before {
     content: '';
-    position: absolute; top: 5px; left: 12px; right: 12px; height: 4px;
+    position: absolute; top: 0; left: 0; right: 0; height: 8px;
     background:
-      radial-gradient(circle 2.5px at 8px 2px, #9a8048 0%, #705828 60%, transparent 100%),
-      radial-gradient(circle 2px at 62px 2px, #8a7040 0%, #604820 60%, transparent 100%),
-      radial-gradient(circle 2.5px at 130px 2px, #9a8048 0%, #705828 60%, transparent 100%),
-      radial-gradient(circle 2px at 198px 2px, #8a7040 0%, #604820 60%, transparent 100%),
-      radial-gradient(circle 2.5px at 270px 2px, #9a8048 0%, #705828 60%, transparent 100%),
-      radial-gradient(circle 2px at 350px 2px, #8a7040 0%, #604820 60%, transparent 100%),
-      radial-gradient(circle 2.5px at 425px 2px, #9a8048 0%, #705828 60%, transparent 100%),
-      radial-gradient(circle 2px at 510px 2px, #8a7040 0%, #604820 60%, transparent 100%),
-      radial-gradient(circle 2.5px at 590px 2px, #9a8048 0%, #705828 60%, transparent 100%);
-    opacity: 0.6;
-    pointer-events: none;
+      radial-gradient(ellipse 40px 12px at 10% 60%, rgba(30,50,18,0.18) 0%, transparent 80%),
+      radial-gradient(ellipse 35px 10px at 30% 40%, rgba(28,46,16,0.15) 0%, transparent 75%),
+      radial-gradient(ellipse 45px 12px at 50% 65%, rgba(32,52,20,0.17) 0%, transparent 80%),
+      radial-gradient(ellipse 38px 10px at 70% 35%, rgba(26,44,14,0.14) 0%, transparent 75%),
+      radial-gradient(ellipse 42px 12px at 90% 55%, rgba(30,48,18,0.16) 0%, transparent 80%),
+      radial-gradient(circle 3px at 20% 50%, rgba(90,25,15,0.2) 0%, rgba(70,18,10,0.08) 50%, transparent 100%),
+      radial-gradient(circle 3px at 50% 50%, rgba(85,22,14,0.18) 0%, transparent 100%),
+      radial-gradient(circle 3px at 80% 50%, rgba(88,24,15,0.2) 0%, transparent 100%),
+      linear-gradient(180deg, rgba(138,110,66,0.6) 0%, rgba(100,78,40,0.3) 40%, transparent 100%);
+    pointer-events: none; z-index: 1;
   }
-  /* Bottom edge wear line */
+  /* Bottom vine border */
   #ui-panel::after {
     content: '';
-    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg,
-      #1a1008 0%, #28200e 15%, #1e1608 30%, #2a1e10 50%,
-      #1a1208 65%, #241a0c 80%, #1e1408 100%
-    );
-    pointer-events: none;
+    position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
+    background:
+      radial-gradient(ellipse 35px 10px at 15% 40%, rgba(28,46,16,0.15) 0%, transparent 75%),
+      radial-gradient(ellipse 40px 12px at 40% 60%, rgba(30,50,18,0.16) 0%, transparent 80%),
+      radial-gradient(ellipse 38px 10px at 65% 35%, rgba(26,44,14,0.14) 0%, transparent 75%),
+      radial-gradient(ellipse 42px 12px at 88% 55%, rgba(32,52,20,0.16) 0%, transparent 80%),
+      radial-gradient(circle 2.5px at 28% 50%, rgba(88,24,15,0.18) 0%, transparent 100%),
+      radial-gradient(circle 2.5px at 55% 50%, rgba(85,22,14,0.16) 0%, transparent 100%),
+      radial-gradient(circle 2.5px at 78% 50%, rgba(90,25,15,0.18) 0%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, rgba(26,16,8,0.4) 60%, rgba(20,12,4,0.6) 100%);
+    pointer-events: none; z-index: 1;
   }
 
   /* Bottom row: verbs LEFT, inventory RIGHT */
@@ -471,11 +475,11 @@ async function loadAllAssets() {
     loadImg('bg-exterior', 'assets/pixel-exterior.png'),
     loadImg('bg-terrace', 'assets/pixel-terrace.png'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
-    loadImg('bg-port', 'assets/pixel-port.jpg'),
+    loadImg('bg-port', 'assets/pixel-port.png'),
     loadImg('bg-museum', 'assets/pixel-museum.png'),
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.png'),
     loadImg('bg-cave', 'assets/pixel-cave.png'),
-    loadImg('bg-church', 'assets/pixel-church.jpg'),
+    loadImg('bg-church', 'assets/pixel-church.png'),
     loadImg('bg-windmill', 'assets/pixel-windmill.png'),
     loadImg('bg-boat', 'assets/pixel-boat.png'),
     loadImg('bg-graveyard', 'assets/pixel-graveyard.png'),
@@ -705,6 +709,9 @@ const scenes = {
                  use:[{s:'ΝΤΕΜΗΣ',t:'Κάτσε. Ξεκουράσου. Η νύχτα είναι μακριά.'}] }},
       { id:'checkered_floor', x:100, y:300, w:400, h:80, label:'Πλακάκια',
         verbs: { look:[{s:'',t:'Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.'}] }},
+      { id:'athos_npc', x:95, y:265, w:65, h:100, label:'Άθος',
+        verbs: { look:[{s:'',t:'Ο Άθος. Δικηγόρος και ιδιοκτήτης του Λιοτριβιού. Τα μάτια του κρύβουν χίλια μυστικά.'}],
+                 talk:[{s:'ΑΘΟΣ',t:'Λατσούδη! Περίμενα πότε θα φτάσεις.'},{s:'ΝΤΕΜΗΣ',t:'Με ξέρεις;'},{s:'ΑΘΟΣ',t:'Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.'},{s:'ΑΘΟΣ',t:'Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.'},{s:'ΚΛΕΙΩ',t:'Σπήλαιο; Θα πάμε σε σπήλαιο;!'}] }},
     ],
     exits: [{ side:'right', target:'museum', label:'Μουσείο →' }, { side:'left', target:'church', label:'← Εκκλησία' }],
     entry: [
@@ -789,6 +796,9 @@ const scenes = {
         verbs: { look:[{s:'',t:'Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.'},{s:'ΚΛΕΙΩ',t:'Θέλω να ζωγραφίσω αυτά.'}] }},
       { id:'stone_path_wm', x:300, y:300, w:200, h:60, label:'Μονοπάτι',
         verbs: { look:[{s:'',t:'Πέτρινο καλντερίμι ανεβαίνει τον λόφο. Λειασμένο από πόδια αιώνων.'}] }},
+      { id:'giannis_npc', x:125, y:268, w:75, h:105, label:'Γιάννης Βελανής',
+        verbs: { look:[{s:'',t:'Ο Γιάννης Βελανής. Ιδιοκτήτης του παλιού μύλου. Ήσυχος, βλέπει τα πάντα από ψηλά.'}],
+                 talk:[{s:'ΓΙΑΝΝΗΣ',t:'...'},{s:'ΝΤΕΜΗΣ',t:'Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.'},{s:'ΓΙΑΝΝΗΣ',t:'Το ξέρω. Σε βλέπω από εδώ πάνω.'},{s:'ΓΙΑΝΝΗΣ',t:'Πάρε αυτό. Θα το χρειαστείς.'},{s:'',t:'Ο Γιάννης σου δίνει ένα φανάρι.'}] }},
     ],
     exits: [{ side:'right', target:'graveyard', label:'Νεκροταφείο →' }, { side:'left', target:'church', label:'← Εκκλησία' }],
     entry: [
@@ -844,6 +854,9 @@ const scenes = {
         verbs: { look:[{s:'',t:'Ένα ιστιοφόρο στον ορίζοντα. Σαν φάντασμα του παρελθόντος.'}] }},
       { id:'path_stones_gr', x:150, y:280, w:200, h:60, label:'Πέτρινο μονοπάτι',
         verbs: { look:[{s:'',t:'Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.'}] }},
+      { id:'ghost_npc', x:455, y:290, w:55, h:110, label:'Σκιά',
+        verbs: { look:[{s:'',t:'Μια αχνή, ψηλή σιλουέτα κοντά στα κυπαρίσσια. Τρεμοπαίζει σαν φως σε νερό.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά... βλέπω κάτι εκεί.'},{s:'ΑΙΑΣ',t:'Φάντασμα; Σοβαρά τώρα;'}],
+                 talk:[{s:'ΦΑΝΤΑΣΜΑ',t:'...'},{s:'',t:'Το φάντασμα δεν μιλάει. Δείχνει προς την εκκλησία.'},{s:'ΚΛΕΙΩ',t:'Θέλει να πάμε στον Άγιο Νικόλαο!'},{s:'ΝΤΕΜΗΣ',t:'Μόλις μας έδωσε οδηγίες ένα φάντασμα.'}] }},
     ],
     exits: [{ side:'left', target:'windmill', label:'← Μύλος' }],
     entry: [
@@ -2341,40 +2354,77 @@ function render() {
   // Dust particles
   drawParticles();
 
-  // Hotspot highlight on hover
-  if (state.hoverObj) {
+  // Hotspot shimmer hints — subtle sparkles on all interactive objects
+  if (sc.objects) {
+    const t = state.tick;
+    for (let i = 0; i < sc.objects.length; i++) {
+      const obj = sc.objects[i];
+      if (obj === state.hoverObj) continue;
+      const seed = (obj.x * 7 + obj.y * 13 + i * 31);
+      const sparkleT = (t + seed) * 0.03;
+      const alpha = Math.max(0, Math.sin(sparkleT) * 0.6 - 0.2);
+      if (alpha > 0) {
+        ctx.save();
+        ctx.globalAlpha = alpha * 0.5;
+        const sx = obj.x + (seed * 17 % obj.w);
+        const sy = obj.y + (seed * 23 % obj.h);
+        ctx.fillStyle = '#FFE8A0';
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - 2); ctx.lineTo(sx + 0.7, sy);
+        ctx.lineTo(sx, sy + 2); ctx.lineTo(sx - 0.7, sy);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+  }
+
+  // Hotspot highlight on hover — soft pulsing glow
+  if (state.hoverObj && state.hoverObj.w) {
     const obj = state.hoverObj;
+    const pulse = 0.35 + Math.sin(state.tick * 0.08) * 0.15;
     ctx.save();
-    ctx.strokeStyle = 'rgba(212,160,60,0.4)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
-    ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
-    ctx.setLineDash([]);
+    ctx.shadowColor = 'rgba(255,220,120,0.6)';
+    ctx.shadowBlur = 6;
+    ctx.strokeStyle = `rgba(212,160,60,${pulse})`;
+    ctx.lineWidth = 1.5;
+    const r = 3, hx = obj.x - 2, hy = obj.y - 2, hw = obj.w + 4, hh = obj.h + 4;
+    ctx.beginPath();
+    ctx.moveTo(hx + r, hy);
+    ctx.lineTo(hx + hw - r, hy); ctx.arcTo(hx + hw, hy, hx + hw, hy + r, r);
+    ctx.lineTo(hx + hw, hy + hh - r); ctx.arcTo(hx + hw, hy + hh, hx + hw - r, hy + hh, r);
+    ctx.lineTo(hx + r, hy + hh); ctx.arcTo(hx, hy + hh, hx, hy + hh - r, r);
+    ctx.lineTo(hx, hy + r); ctx.arcTo(hx, hy, hx + r, hy, r);
+    ctx.closePath();
+    ctx.stroke();
     ctx.restore();
   }
 
-  // Exit zone highlights
+  // Exit zone highlights with pulsing arrow
   if (sc.exits) {
+    const arrowPulse = 0.6 + Math.sin(state.tick * 0.06) * 0.4;
+    const arrowBob = Math.sin(state.tick * 0.08) * 2;
     for (const exit of sc.exits) {
       const isHover = (exit.side === 'left' && state.mouseGX < 25) ||
                       (exit.side === 'right' && state.mouseGX > GW - 25);
       if (isHover) {
         ctx.save();
         const exGrad = exit.side === 'left'
-          ? ctx.createLinearGradient(0, 0, 25, 0)
-          : ctx.createLinearGradient(GW, 0, GW - 25, 0);
-        exGrad.addColorStop(0, 'rgba(212,160,60,0.15)');
+          ? ctx.createLinearGradient(0, 0, 30, 0)
+          : ctx.createLinearGradient(GW, 0, GW - 30, 0);
+        exGrad.addColorStop(0, `rgba(212,160,60,${0.12 + arrowPulse * 0.08})`);
         exGrad.addColorStop(1, 'rgba(212,160,60,0)');
         ctx.fillStyle = exGrad;
-        if (exit.side === 'left') ctx.fillRect(0, 0, 25, GH);
-        else ctx.fillRect(GW - 25, 0, 25, GH);
-        // Arrow
-        ctx.fillStyle = '#D4A03C';
+        if (exit.side === 'left') ctx.fillRect(0, 0, 30, GH);
+        else ctx.fillRect(GW - 30, 0, 30, GH);
+        // Pulsing bobbing arrow
+        ctx.globalAlpha = arrowPulse;
+        ctx.fillStyle = '#FFE8A0';
         ctx.font = '16px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        if (exit.side === 'left') ctx.fillText('◀', 12, GH / 2);
-        else ctx.fillText('▶', GW - 12, GH / 2);
+        const ax = exit.side === 'left' ? 12 + arrowBob : GW - 12 - arrowBob;
+        ctx.fillText(exit.side === 'left' ? '◀' : '▶', ax, GH / 2);
         ctx.restore();
       }
     }
@@ -2506,6 +2556,7 @@ CVS.addEventListener('mousemove', (e) => {
   }
 
   if (state.phase !== 'playing' || state.dlg.active) {
+    CVS.style.cursor = state.dlg.active ? 'pointer' : 'default';
     state.hoverObj = null;
     updateActionLine();
     return;
@@ -2521,9 +2572,11 @@ CVS.addEventListener('mousemove', (e) => {
     CVS.style.cursor = exit.side === 'left' ? 'w-resize' : 'e-resize';
     state.hoverObj = { label: exit.label }; // fake obj for action line
   } else if (obj) {
-    CVS.style.cursor = 'pointer';
+    // Verb-aware cursor
+    const verbCursors = { look: 'zoom-in', talk: 'help', open: 'grab', use: 'pointer' };
+    CVS.style.cursor = verbCursors[state.verb] || 'pointer';
   } else {
-    CVS.style.cursor = 'crosshair';
+    CVS.style.cursor = g.y > 200 ? 'crosshair' : 'default';
   }
   updateActionLine();
 });
