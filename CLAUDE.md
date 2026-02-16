@@ -1,10 +1,16 @@
-# Το Μυστήριο του Γαλαξειδίου — Project Instructions
+# Παλίρροιες της Μνήμης / The Tides of Memory — Project Instructions
 
 ## What This Is
 
-**"Η Θάλασσα Θυμάται"** (The Sea Remembers) — a Monkey Island-style point-and-click adventure game built entirely in vanilla HTML5 Canvas + JavaScript. No frameworks, no bundler, no dependencies. Single HTML file that runs by opening `index.html`.
+**"Παλίρροιες της Μνήμης"** (The Tides of Memory) — an Indiana Jones × Monkey Island style point-and-click adventure game built entirely in vanilla HTML5 Canvas + JavaScript. No frameworks, no bundler, no dependencies. Single HTML file that runs by opening `index.html`.
 
-Family adventure starring Ntemis, Ajax, and Clio in Galaxidi, Greece. Currently Act 1 ("Η Αφίξη").
+Family adventure starring Ntemis, Ajax, and Clio in Galaxidi, Greece. A gift to Galaxidi and the world — free, bilingual (Greek/English), historically accurate. Chapter 1 of an expandable saga.
+
+**Definitive design document**: `GAME-BIBLE.md` — 10 scenes + epilogue, full story, all puzzles, NPCs, music direction.
+
+**Core mystery**: Find 12 captain's tokens hidden across Galaxidi to unlock the original αλληλασφάλεια ledger and a letter from the founding captains.
+
+**Two lessons**: (1) The power of solidarity — αλληλεγγύη. (2) The danger of not adapting — the captains who mastered sail but refused steam. **Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.**
 
 ## Critical Rules
 
@@ -12,7 +18,7 @@ Family adventure starring Ntemis, Ajax, and Clio in Galaxidi, Greece. Currently 
 2. **Single file**: `index.html` is the complete game. No build step, no modules
 3. **Canvas**: Native resolution **640x400**, scaled to fill browser window. CSS `image-rendering: pixelated`
 4. **Art style**: Warm Mediterranean — golden hour exterior, cozy kitchen, sea views. NOT dark/night
-5. **Language**: All in-game text is **Greek**. Code comments in English
+5. **Language**: Bilingual Greek/English. Player selects at start. Greek is primary. Code comments in English
 6. **Test after changes**: Always `open index.html` in browser after edits. Check console for errors
 7. **Assets are external**: Images in `assets/`, music in `music/`. Referenced by relative path from index.html
 
@@ -65,22 +71,58 @@ The game is one `<script>` block with these sections (in order):
 | **Game Loop** | `requestAnimationFrame` loop with delta time |
 | **Title/Intro** | Title screen, intro sequence, game start |
 
-## Game Scenes (3 currently)
+## Game Scenes (10 planned, 3 implemented)
 
-| Scene | Label | Key Objects |
-|-------|-------|-------------|
-| **exterior** | ΤΟ ΣΠΙΤΙ — ΓΑΛΑΞΙΔΙ | Door (→kitchen), bougainvillea, barrel, boats, sea |
-| **terrace** | Η ΒΕΡΑΝΤΑ | Harbor view, dolphins event, rooftops, Parnassus |
-| **kitchen** | Η ΚΟΥΖΙΝΑ | Satchel (→note), figs, window, fireplace, copper pots |
+See `GAME-BIBLE.md` for full scene details.
 
-Navigation: exterior ←→ terrace, exterior ←→ kitchen (via door)
+| # | Scene | Label | Status |
+|---|-------|-------|--------|
+| 1 | **house** (exterior/terrace/kitchen) | ΤΟ ΣΠΙΤΙ | Done (3 sub-scenes) |
+| 2 | **port** | ΤΟ ΛΙΜΑΝΙ | TODO |
+| 3 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | TODO |
+| 4 | **liotrivi** | ΛΙΟΤΡΙΒΙ | TODO |
+| 5 | **cave** | ΤΟ ΣΠΗΛΑΙΟ (ΠΛΑΤΕΙΑ ΜΑΜΑ) | TODO |
+| 6 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
+| 7 | **windmill** | Ο ΜΥΛΟΣ | TODO |
+| 8 | **boat** | ΤΟ ΚΑΡΑΒΙ | TODO |
+| 9 | **graveyard** | ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ | TODO |
+| 10 | **cave_final** | ΤΟ ΣΠΗΛΑΙΟ — ΤΕΛΙΚΗ ΕΠΙΣΤΡΟΦΗ | TODO |
+| E | **epilogue** | Η ΓΙΟΡΤΗ | TODO |
 
-## Current Puzzle Chain
+## Puzzle Chain (12 captain's tokens)
 
 ```
-kitchen: open satchel → take note (mysterious invitation)
+Scene 1 (house): find loose terrace tile → first captain's token
+Scene 2 (port): talk to Stavros → quest hook, explore harbor
+Scene 3 (museum): model ship puzzle → second token
+Scene 4 (liotrivi): Fotini's history test → third token
+Scene 5 (cave): place tokens, discover vote inscription
+Scene 6 (church): architecture puzzle → token
+Scene 7 (windmill): map puzzle → ship pattern eureka
+Scene 8 (boat): coastal chapel → token + logbook
+Scene 9 (graveyard): find captain's grave → ghost encounter → token
+Scene 10 (cave): place all 12 → open door → ledger + letter
 ```
-More puzzles TBD as story expands.
+
+## NPCs
+
+| NPC | Scene | Role |
+|-----|-------|------|
+| **Σταύρος / Stavros** | Port | Fisherman, quest hook, grandfather's bitterness |
+| **Επιμελητής / Curator** | Museum | Educator, the big history lesson |
+| **Φωτεινή / Fotini** | Liotrivi | Bartender, captain's descendant, token test |
+| **Ειρήνη / Eirini** | Liotrivi (outside) | Tech entrepreneur, future voice |
+| **Παπάς / Papas** | Church | Warm, mischievous, faith+maritime link |
+| **Χρυσόστομος / Chrysostomos** | Boat | Old sailor, wisdom about change |
+| **Ghost Captain** | Graveyard | Silent, shows visions, finds peace |
+
+## Historical Research
+
+- Primary reference: `inspiration/galaxidi-history.md` (verified timeline 3000 BC–2025)
+- Web sources: https://galaxidi.eu/ and https://syngalax.gr/
+- Key date: 1860 — αλληλασφάλεια founded, 104 signers, Agia Paraskevi church
+- Key fact: 300 ships at peak, 6,000 residents (1870)
+- Key symbol: schooner "Chrysoula" (1904) — last sailing ship launched
 
 ## Key Globals
 
@@ -134,3 +176,12 @@ More puzzles TBD as story expands.
 - Game entity: `thought:2026-02-15-galaxidi-adventure-game-the-se`
 - Game file: `file:2026-02-15-galaxidi-adventure`
 - Always fetch latest context from LOSC when resuming work on this game
+
+## Key Documents
+
+- `GAME-BIBLE.md` — Definitive game bible (v3, 10 scenes + epilogue, full story)
+- `inspiration/galaxidi-history.md` — Verified Galaxidi history timeline
+- `HANDOFF.md` — Session handoff state
+- `DEVLOG.md` — Development log
+- `LESSONS.md` — Lessons learned
+- `TODO.md` — Task tracking
