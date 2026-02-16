@@ -2286,13 +2286,19 @@ function startScene(id) {
 }
 
 function changeScene(id) {
+  // Iris wipe centered on Ntemis
   state.fade.active = true;
   state.fade.alpha = 0;
-  state.fade.dir = 1; // fade out
+  state.fade.dir = 1; // iris close
+  state.fade.mode = 'iris';
+  state.fade.cx = chars.ntemis.x;
+  state.fade.cy = chars.ntemis.y - 30; // chest height
   state.fade.cb = () => {
     startScene(id);
-    state.fade.dir = -1; // fade in
-    state.fade.cb = () => { state.fade.active = false; };
+    state.fade.cx = chars.ntemis.x;
+    state.fade.cy = chars.ntemis.y - 30;
+    state.fade.dir = -1; // iris open
+    state.fade.cb = () => { state.fade.active = false; state.fade.mode = null; };
   };
 }
 
@@ -2466,12 +2472,26 @@ function render() {
   // Dialogue overlay
   drawDialogue();
 
-  // Fade overlay
+  // Transition overlay — iris wipe or flat fade
   if (state.fade.active && state.fade.alpha > 0) {
     ctx.save();
-    ctx.globalAlpha = state.fade.alpha;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, GW, GH);
+    if (state.fade.mode === 'iris') {
+      // Iris wipe: circle shrinks/grows centered on character
+      const maxR = Math.sqrt(GW * GW + GH * GH) * 0.6;
+      const radius = maxR * (1 - state.fade.alpha);
+      const cx = state.fade.cx || GW / 2;
+      const cy = state.fade.cy || GH / 2;
+      // Draw black everywhere except the circle
+      ctx.beginPath();
+      ctx.rect(0, 0, GW, GH);
+      ctx.arc(cx, cy, Math.max(0, radius), 0, Math.PI * 2, true); // counter-clockwise = hole
+      ctx.fillStyle = '#000';
+      ctx.fill('evenodd');
+    } else {
+      ctx.globalAlpha = state.fade.alpha;
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, GW, GH);
+    }
     ctx.restore();
   }
 }
@@ -2509,9 +2529,9 @@ function update(dt) {
   // Scene ambience (seagulls, petals, cat, sounds)
   updateSceneAmbience(dt);
 
-  // Fade transition
+  // Fade/iris transition
   if (state.fade.active) {
-    const speed = 2.0; // fade speed (slower = smoother)
+    const speed = state.fade.mode === 'iris' ? 1.5 : 2.0;
     state.fade.alpha += state.fade.dir * dt * speed;
     if (state.fade.dir > 0 && state.fade.alpha >= 1) {
       state.fade.alpha = 1;
