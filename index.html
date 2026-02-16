@@ -1682,184 +1682,24 @@ function drawTitleScreen(tick) {
   const t = tick * 0.02;
 
   // ═══════════════════════════════════════
-  // SKY — dramatic sunset purple → orange → gold
+  // BACKGROUND — pixel art image
   // ═══════════════════════════════════════
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, 200);
-  skyGrad.addColorStop(0, '#1A0A2E');
-  skyGrad.addColorStop(0.12, '#2E1040');
-  skyGrad.addColorStop(0.25, '#5A1838');
-  skyGrad.addColorStop(0.38, '#8A2828');
-  skyGrad.addColorStop(0.5, '#C04820');
-  skyGrad.addColorStop(0.62, '#D87018');
-  skyGrad.addColorStop(0.72, '#E89818');
-  skyGrad.addColorStop(0.82, '#F0B020');
-  skyGrad.addColorStop(0.92, '#E8A828');
-  skyGrad.addColorStop(1, '#C88020');
-  ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, GW, 200);
-
-  // ── Chunky pixel clouds (sunset) ──
-  ctx.save();
-  const cloudRows = [
-    // [y, colors[]] — each row is a band of cloud chunks
-    [5, ['#1A0A2E','#2E1040','#1A0A2E','#2E1040','#1A0A2E']],
-    [18, ['#3A1030','#4A1838','#5A1838','#4A1838','#3A1030','#5A1838','#4A1838']],
-    [32, ['#8A3020','#A04820','#C05020','#A04020','#C06020','#B05020','#A04020']],
-    [45, ['#C06828','#D07828','#C06020','#D07020','#B05828','#C06828']],
-    [56, ['#D88020','#E89020','#D88820','#E8A020','#D89020','#E88820']],
-    [68, ['#E8A020','#F0B828','#E8A828','#F0B020','#E8A828','#F0B028']],
-    [80, ['#F0C030','#E8B828','#F0C030','#E8B020','#F0C030','#E8B828']],
-  ];
-  for (const [cy, colors] of cloudRows) {
-    const segW = GW / colors.length;
-    for (let i = 0; i < colors.length; i++) {
-      ctx.fillStyle = colors[i];
-      for (let bx = i * segW; bx < (i + 1) * segW; bx += 4) {
-        const vary = Math.sin(bx * 0.08 + cy * 0.1) * 5;
-        const h = 10 + Math.sin(bx * 0.12 + cy) * 4;
-        ctx.fillRect(Math.floor(bx), Math.floor(cy + vary), 4, Math.max(2, Math.floor(h)));
-      }
-    }
+  const bg = images['title-bg'];
+  if (bg && bg.complete) {
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(bg, 0, 0, GW, GH);
+  } else {
+    // Fallback solid color while loading
+    ctx.fillStyle = '#1A0A2E';
+    ctx.fillRect(0, 0, GW, GH);
   }
-  // Sun glow
-  const sunGlowGrad = ctx.createRadialGradient(GW * 0.4, 95, 5, GW * 0.4, 95, 160);
-  sunGlowGrad.addColorStop(0, 'rgba(255,210,70,0.4)');
-  sunGlowGrad.addColorStop(0.3, 'rgba(240,160,40,0.2)');
-  sunGlowGrad.addColorStop(1, 'rgba(200,80,20,0)');
-  ctx.fillStyle = sunGlowGrad;
-  ctx.fillRect(0, 20, GW, 160);
-  ctx.restore();
 
-  // ── Mountain silhouette ──
-  ctx.save();
-  ctx.fillStyle = '#2A1820';
-  ctx.beginPath();
-  ctx.moveTo(0, 200); ctx.lineTo(0, 145);
-  ctx.quadraticCurveTo(60, 120, 130, 138);
-  ctx.quadraticCurveTo(200, 148, 260, 128);
-  ctx.quadraticCurveTo(320, 112, 380, 130);
-  ctx.quadraticCurveTo(440, 140, 490, 122);
-  ctx.quadraticCurveTo(560, 110, 610, 132);
-  ctx.lineTo(GW, 140); ctx.lineTo(GW, 200);
-  ctx.closePath(); ctx.fill();
-  ctx.restore();
-
-  // ═══════════════════════════════════════
-  // TOWN SILHOUETTE — buildings, domes, rooftops
-  // ═══════════════════════════════════════
-  const townY = 185;
-  ctx.save();
-  const blds = [
-    [15,155,35,'r'],[48,148,28,'r'],[74,152,32,'t'],[104,145,38,'d'],
-    [140,150,30,'r'],[168,142,35,'c'],[200,148,28,'r'],[226,144,34,'r'],
-    [258,140,30,'d'],[286,148,32,'r'],[316,143,36,'t'],[350,150,28,'r'],
-    [376,146,32,'d'],[406,152,26,'r'],[430,148,34,'r'],[462,144,30,'c'],
-    [490,150,28,'r'],
-  ];
-  for (const [bx, by, bw, bt] of blds) {
-    ctx.fillStyle = '#1A0C10';
-    ctx.fillRect(bx, by, bw, townY - by);
-    if (bt === 'd') { ctx.beginPath(); ctx.arc(bx+bw/2, by, bw/2.5, Math.PI, 0); ctx.fill(); }
-    if (bt === 'c') { ctx.fillRect(bx+bw/2-3, by-18, 6, 18); ctx.fillRect(bx+bw/2-1, by-24, 2, 8); ctx.fillRect(bx+bw/2-4, by-22, 8, 2); }
-    if (bt === 't') { ctx.fillRect(bx+4, by-10, bw-8, 10); }
-    // Lit windows
-    const wr = Math.floor((townY - by - 8) / 12);
-    for (let r = 0; r < wr; r++) {
-      const wy = by + 6 + r * 12;
-      const wc = Math.floor((bw - 8) / 10);
-      for (let c = 0; c < wc; c++) {
-        if (Math.sin(bx*3.7 + r*7.1 + c*13.3) > 0.2) {
-          ctx.fillStyle = Math.sin(bx+r+c) > 0 ? '#D89030' : '#E8A838';
-          ctx.fillRect(bx + 5 + c*10, wy, 4, 4);
-        }
-      }
-    }
-  }
-  ctx.restore();
-
-  // ═══════════════════════════════════════
-  // SHIP SILHOUETTE — right side
-  // ═══════════════════════════════════════
-  ctx.save();
-  ctx.fillStyle = '#100608';
-  const sx = 520;
-  // Hull
-  ctx.beginPath();
-  ctx.moveTo(sx-40,townY); ctx.lineTo(sx-55,townY-10); ctx.lineTo(sx-50,townY-30);
-  ctx.lineTo(sx-30,townY-35); ctx.lineTo(sx+60,townY-35);
-  ctx.lineTo(sx+70,townY-28); ctx.lineTo(sx+75,townY-15);
-  ctx.lineTo(sx+65,townY); ctx.closePath(); ctx.fill();
-  // Masts
-  ctx.fillRect(sx+10, townY-120, 4, 90);
-  ctx.fillRect(sx-25, townY-110, 70, 3); ctx.fillRect(sx-18, townY-95, 56, 3); ctx.fillRect(sx-12, townY-78, 44, 3);
-  ctx.fillRect(sx-25, townY-100, 3, 68);
-  ctx.fillRect(sx-45, townY-92, 50, 3); ctx.fillRect(sx-38, townY-78, 36, 3);
-  ctx.fillRect(sx+50, townY-90, 3, 58);
-  ctx.fillRect(sx+35, townY-82, 35, 3);
-  // Rigging
-  ctx.strokeStyle = '#100608'; ctx.lineWidth = 1;
-  [[sx+12,townY-118, sx-40,townY-35],[sx+12,townY-118, sx+68,townY-35],
-   [sx-24,townY-98, sx-50,townY-35],[sx-24,townY-98, sx+5,townY-35],
-   [sx+51,townY-88, sx+30,townY-35],[sx+51,townY-88, sx+72,townY-30],
-   [sx+12,townY-118, sx-24,townY-98],[sx+12,townY-118, sx+51,townY-88],
-  ].forEach(([x1,y1,x2,y2]) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
-  // Bowsprit
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(sx-50,townY-32); ctx.lineTo(sx-80,townY-50); ctx.stroke();
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx+12,townY-118); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx-24,townY-98); ctx.stroke();
-  ctx.restore();
-
-  // ═══════════════════════════════════════
-  // WATER — sunset reflections
-  // ═══════════════════════════════════════
-  const waterGrad = ctx.createLinearGradient(0, townY, 0, GH);
-  waterGrad.addColorStop(0, '#C07818');
-  waterGrad.addColorStop(0.1, '#A06018');
-  waterGrad.addColorStop(0.25, '#704010');
-  waterGrad.addColorStop(0.45, '#402008');
-  waterGrad.addColorStop(0.7, '#281008');
-  waterGrad.addColorStop(1, '#180808');
-  ctx.fillStyle = waterGrad;
-  ctx.fillRect(0, townY, GW, GH - townY);
-
-  // Reflection shimmer
-  ctx.save();
-  for (let ry = townY + 2; ry < GH - 5; ry += 3) {
-    const d = (ry - townY) / (GH - 5 - townY);
-    ctx.fillStyle = `rgba(230,160,40,${0.15*(1-d*0.7)})`;
-    for (let rx = 0; rx < GW; rx += 6) {
-      const sh = Math.sin(rx*0.04 + ry*0.08 + t*1.5)*0.5 + 0.5;
-      if (sh > 0.4) ctx.fillRect(rx, ry, 2+Math.floor(sh*4), 1);
-    }
-    ctx.fillStyle = `rgba(10,5,2,${0.06+d*0.1})`;
-    for (let rx = 0; rx < GW; rx += 8) {
-      if (Math.sin(rx*0.06 + ry*0.12 - t*0.8) > 0.3) ctx.fillRect(rx, ry+1, 4, 1);
-    }
-  }
-  // Bright sun reflection path
-  const sunX = GW * 0.4;
-  for (let ry = townY; ry < GH - 5; ry += 2) {
-    const d = (ry - townY) / (GH - 5 - townY);
-    const spread = 20 + d*80;
-    ctx.fillStyle = `rgba(255,200,60,${0.25*(1-d*0.5)})`;
-    const wobble = Math.sin(ry*0.15 + t*2) * spread*0.3;
-    const w = 3 + Math.floor(Math.sin(ry*0.2 + t*1.8)*3 + 3);
-    ctx.fillRect(sunX + wobble - w/2, ry, w, 1);
-    if (Math.sin(ry*0.3 + t*1.2) > 0.2) {
-      ctx.fillRect(sunX + wobble + spread*0.3, ry, 2, 1);
-      ctx.fillRect(sunX + wobble - spread*0.3, ry, 2, 1);
-    }
-  }
-  // Town reflections
-  ctx.fillStyle = 'rgba(10,5,5,0.15)';
-  for (const [bx,,bw] of blds) {
-    for (let r = 0; r < 20; r += 2) {
-      ctx.fillRect(bx + Math.sin(r*0.2+t)*2, townY+r, bw, 1);
-    }
-  }
-  ctx.restore();
+  // Subtle vignette overlay
+  const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.25, GW/2, GH/2, GW*0.75);
+  vig.addColorStop(0, 'rgba(0,0,0,0)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.35)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, GW, GH);
 
   // ═══════════════════════════════════════
   // ANIMATED TITLE — letters unfold cinematically
