@@ -44,13 +44,13 @@ Inside the drawer: **a letter**. Old paper, careful handwriting, sealed with wax
 
 Ntemis reads aloud:
 
-> *«Σε όποιον βρει αυτό το γράμμα — εγώ, Καπετάν Δημήτρης Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα. Δεν τον δίνω σε κανέναν. Τον δίνω μόνο σε αυτόν που θα βρει την πράσινη πέτρα.*
+> *«Σε όποιον βρει αυτό το γράμμα — εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα. Δεν τον δίνω σε κανέναν. Τον δίνω μόνο σε αυτόν που θα βρει την πράσινη πέτρα.*
 >
 > *Την πέτρα τη βρήκα στα ταξίδια μου στην Ανατολή. Την έκρυψα εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο κι ο ήχος δεν φεύγει ποτέ.*
 >
 > *Βρες την πέτρα. Φέρε τη σε μένα. Θα σου δείξω τον δρόμο.*
 >
-> *— Καπ. Δ. Βισβίκης, 1887»*
+> *— Καπ. Λ. Βισβίκης, 1887»*
 
 **AJAX:** "Φέρε τη σε μένα"... Είναι νεκρός εδώ και εκατό χρόνια. Πώς θα του τη φέρουμε;
 **CLIO:** Στο νεκροταφείο, βλάκα.
@@ -82,7 +82,7 @@ Back at the harbor, now in the warm glow of early evening. Taverna lights coming
 
 They show the letter around. Most people shrug or tell them stories about "crazy captain Visvikis." But **Σταύρος**, old fisherman mending nets, goes very still.
 
-**STAVROS:** Βισβίκης... Ο Δημήτρης. Ο παππούς μου μιλούσε γι' αυτόν. Ταξίδεψε στη Σμύρνη, στην Αλεξάνδρεια, στη Βηρυτό. Λέγανε ότι γύρισε με κάτι... κάτι πράσινο. Δεν το έδειξε ποτέ σε κανέναν.
+**STAVROS:** Βισβίκης... Ο Λουκάς. Ο παππούς μου μιλούσε γι' αυτόν. Ταξίδεψε στη Σμύρνη, στην Αλεξάνδρεια, στη Βηρυτό. Λέγανε ότι γύρισε με κάτι... κάτι πράσινο. Δεν το έδειξε ποτέ σε κανέναν.
 
 **NTEMIS:** Ξέρεις πού μπορεί να το έκρυψε;
 
@@ -113,7 +113,7 @@ Plateia Mama. Small square, overlooked. Behind old crates and overgrown bushes: 
 
 Inside: dripping water, echo, darkness. Ntemis uses his phone flashlight. The walls have old marks — ship names, initials, dates scratched into stone. Captain marks from centuries.
 
-**AJAX:** Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. "Δ.Β. 1887."
+**AJAX:** Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. "Λ.Β. 1887."
 
 They search. Clio finds it — not on the ground, but wedged into a crack in the wall above eye level. A seven-year-old's height, looking up, is exactly right.
 
@@ -130,7 +130,7 @@ They search. Clio finds it — not on the ground, but wedged into a crack in the
 
 **Gameplay:**
 - Enter cave (atmospheric transition)
-- Examine wall markings — find "Δ.Β. 1887"
+- Examine wall markings — find "Λ.Β. 1887"
 - Search for stone — multiple wrong spots first
 - Clio finds it (only she looks up at the right angle)
 - Examine stone — jade description
@@ -192,13 +192,13 @@ The church, overlooking the harbor. Candlelight. Icons. The famous carved wooden
 The **Παπάς** is locking up for the evening. They catch him just in time.
 
 **NTEMIS:** Πάτερ, ψάχνουμε κάτι που άφησε ο Καπετάν Βισβίκης. Στην εκκλησία.
-**PAPAS** *(surprised)*: Βισβίκης... Ο Δημήτρης. Ήταν ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας. Πλήρωσε για τη στέγη, για τα εικονίσματα, ακόμα και για το τέμπλο. Πολλά μυστικά έκρυψε αυτός ο άνθρωπος.
+**PAPAS** *(surprised)*: Βισβίκης... Ο Λουκάς. Ήταν ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας. Πλήρωσε για τη στέγη, για τα εικονίσματα, ακόμα και για το τέμπλο. Πολλά μυστικά έκρυψε αυτός ο άνθρωπος.
 
 He lets them in. They search. Ntemis examines the icons. Ajax climbs (PAPAS: "ΟΧΙ στις εικόνες!"). Clio sits quietly, looking at the floor.
 
 **CLIO:** Μπαμπά. Το πάτωμα.
 
-A floor tile near the altar has Visvikis's mark — the same "Δ.Β." from the cave. It's loose. Underneath: **a rolled nautical chart**, sealed in oilcloth. Protected for over a century.
+A floor tile near the altar has Visvikis's mark — the same "Λ.Β." from the cave. It's loose. Underneath: **a rolled nautical chart**, sealed in oilcloth. Protected for over a century.
 
 They unroll it. Hand-drawn. The Corinthian Gulf. Galaxidi. And marked with an X — the tiny island of **Άγιος Γεώργιος**, just offshore.
 
@@ -214,7 +214,7 @@ A note in the margin, in Visvikis's hand:
 - Talk to Papas — he lets you in
 - Search church: examine icons, iconostasis, windows
 - Ajax tries to climb (comic beat, Papas stops him)
-- Clio spots the floor tile with "Δ.Β." mark
+- Clio spots the floor tile with "Λ.Β." mark
 - Use/open floor tile → nautical chart found
 - Examine chart → X marks Agios Georgios
 - Map goes into inventory
@@ -279,7 +279,7 @@ And **a letter**:
 >
 > *Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.*
 >
-> *— Καπ. Δ. Βισβίκης»*
+> *— Καπ. Λ. Βισβίκης»*
 
 Silence on the island. Just the waves and the gulls.
 

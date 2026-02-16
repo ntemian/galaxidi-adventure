@@ -257,7 +257,7 @@ const PORTRAITS = {};
 async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
-    loadImg('title-bg', 'assets/title-bg.jpg'),
+    loadImg('title-bg', 'assets/title-bg.png'),
     loadImg('bg-exterior', 'assets/pixel-exterior.png'),
     loadImg('bg-terrace', 'assets/pixel-terrace.png'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
@@ -2218,7 +2218,7 @@ function toggleMusic() {
 }
 
 // ════════════════════════════════════════════════════════════
-// TITLE SCREEN — Cinematic sunset harbor with animated title
+// TITLE SCREEN — Bright sunny harbor with animated title
 // ════════════════════════════════════════════════════════════
 const titleMusic = document.getElementById('title-music');
 titleMusic.volume = 0.7;
@@ -2248,14 +2248,14 @@ function drawTitleScreen(tick) {
     ctx.drawImage(bg, 0, 0, GW, GH);
   } else {
     // Fallback solid color while loading
-    ctx.fillStyle = '#1A0A2E';
+    ctx.fillStyle = '#4A9FD8';
     ctx.fillRect(0, 0, GW, GH);
   }
 
   // Subtle vignette overlay
-  const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.25, GW/2, GH/2, GW*0.75);
+  const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.3, GW/2, GH/2, GW*0.75);
   vig.addColorStop(0, 'rgba(0,0,0,0)');
-  vig.addColorStop(1, 'rgba(0,0,0,0.35)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.15)');
   ctx.fillStyle = vig;
   ctx.fillRect(0, 0, GW, GH);
 
