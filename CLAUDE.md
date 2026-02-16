@@ -1,8 +1,8 @@
-# Παλίρροιες της Μνήμης / The Tides of Memory — Project Instructions
+# Το Μυστήριο του Γαλαξειδίου / The Mystery of Galaxidi — Project Instructions
 
 ## What This Is
 
-**"Παλίρροιες της Μνήμης"** (The Tides of Memory) — an Indiana Jones × Monkey Island style point-and-click adventure game built entirely in vanilla HTML5 Canvas + JavaScript. No frameworks, no bundler, no dependencies. Single HTML file that runs by opening `index.html`.
+**"Το Μυστήριο του Γαλαξειδίου"** (The Mystery of Galaxidi) — an Indiana Jones × Monkey Island style point-and-click adventure game built entirely in vanilla HTML5 Canvas + JavaScript. No frameworks, no bundler, no dependencies. Single HTML file that runs by opening `index.html`.
 
 Family adventure starring Ntemis, Ajax, and Clio in Galaxidi, Greece. A gift to Galaxidi and the world — free, bilingual (Greek/English), historically accurate. Chapter 1 of an expandable saga.
 

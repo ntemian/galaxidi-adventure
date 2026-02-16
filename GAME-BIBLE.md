@@ -1,4 +1,4 @@
-# ΠΑΛΙΡΡΟΙΕΣ ΤΗΣ ΜΝΗΜΗΣ / THE TIDES OF MEMORY
+# ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ / THE MYSTERY OF GALAXIDI
 ### Ένα Περιπετειώδες Παιχνίδι στο Γαλαξίδι / An Adventure Game Set in Galaxidi, Greece
 ### Ύφος: Indiana Jones and the Fate of Atlantis × Monkey Island
 ### Έκδοση 3 — Ολοκληρωμένο Βιβλίο Παιχνιδιού / Version 3 — Definitive Game Bible
@@ -43,11 +43,11 @@ This game exists to:
 
 ### Η Σάγκα / The Saga
 
-The Tides of Memory is designed as **Chapter 1** of an expandable saga:
+Το Μυστήριο του Γαλαξειδίου is designed as **Chapter 1** of an expandable saga:
 
 | Chapter | Location | Theme |
 |---------|----------|-------|
-| **1: Παλίρροιες της Μνήμης** | Galaxidi | Solidarity, adaptation, maritime legacy |
+| **1: Το Μυστήριο του Γαλαξειδίου** | Galaxidi | Solidarity, adaptation, maritime legacy |
 | 2: *Future* | Amfissa | Mountain and plain, agriculture, the olive, community resilience |
 | 3: *Future* | Delphi | Knowledge, prophecy, the weight of truth |
 | 4: *Future* | Itea | The port that replaced Galaxidi — what adaptation looks like |
@@ -630,8 +630,8 @@ The captains of Galaxidi left us two things: a system of solidarity that worked,
 
 ---
 
-*Παλίρροιες της Μνήμης — Κεφάλαιο 1: Γαλαξίδι*
-*The Tides of Memory — Chapter 1: Galaxidi*
+*Το Μυστήριο του Γαλαξειδίου — Κεφάλαιο 1: Γαλαξίδι*
+*The Mystery of Galaxidi — Chapter 1: Galaxidi*
 
 *Για τον Αίαντα και την Κλειώ, και για κάθε παιδί που θα μάθει αυτήν την ιστορία.*
 *For Ajax and Clio, and for every child who will learn this story.*

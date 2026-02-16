@@ -1,4 +1,4 @@
-You are working on **Η Θάλασσα Θυμάται** (The Sea Remembers) — a Galaxidi Adventure game.
+You are working on **Το Μυστήριο του Γαλαξειδίου** (The Mystery of Galaxidi) — a Galaxidi Adventure game.
 
 Do the following:
 

@@ -1,4 +1,4 @@
-# Η Θάλασσα Θυμάται — Story Bible
+# Το Μυστήριο του Γαλαξειδίου — Story Bible
 
 ## Logline
 

@@ -1,4 +1,4 @@
-# Παλίρροιες της Μνήμης — TODO
+# Το Μυστήριο του Γαλαξειδίου — TODO
 
 Priority: P0 = must have, P1 = important, P2 = nice to have, P3 = future
 
