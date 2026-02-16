@@ -436,17 +436,245 @@ Solo Greek lyra. A melody that starts lonely and melancholy — the sound of an 
 
 ## THE NPCs
 
-*Detailed NPC lore to be added as scenes are implemented.*
+Each NPC represents a different facet of Galaxidi's relationship with its own past.
 
-| NPC | Scene | Quick Profile |
-|-----|-------|--------------|
-| **Σταύρος / Stavros** | Port | Old fisherman, Visvikis rememberer, quest hook. His grandfather sailed with Loukas. Bitter because his family chose to stay when others left. |
-| **Επιμελητής / Curator** | Museum | Thin man, reading glasses, boundless passion. The town's memory keeper. Has the portrait of Loukas on his wall. |
-| **Φωτεινή / Fotini** | Liotrivi | Bartender, captain's descendant. Her great-grandfather was in Loukas's crew. Tests Ntemis because she's been guarding her piece of the puzzle. |
-| **Ειρήνη / Eirini** | Liotrivi (outside) | ~25, tech startup, the future voice. Doesn't romanticize the past. Says what Ajax needs to hear. |
-| **Παπάς / Papas** | Church | Warm, mischievous. Knows Loukas was the church's biggest benefactor. Keeps his secrets. |
-| **Χρυσόστομος / Chrysostomos** | Boat (Ελπίδα) | Old sailor, family friend. Sails Loukas's ship. Knows more than he says. His acceptance of change gives Ntemis permission to stop clinging. |
-| **Φάντασμα / Ghost** | Graveyard | Captain Loukas Visvikis himself. Silent, gesturing, showing visions. Finds peace when Clio waves. |
+---
+
+### ΣΤΑΥΡΟΣ / STAVROS — The Fisherman
+
+**Age:** ~70 | **Scene:** Port (Scene 2) | **Role:** Quest hook, first voice of the decline
+
+#### Who He Is
+
+Stavros mends nets on the quay the way his grandfather did, and his grandfather's grandfather before that. He's the last of a line that chose to stay when everyone else left. He's not a captain — his family were crew, the working hands that kept the great ships moving. That distinction matters to him more than he'd admit.
+
+His face is leather. His hands are rope. His eyes are the same blue as the Corinthian Gulf, and they've been staring at it for seventy years. He sits on the same bollard every evening — a bollard built for warships, now holding his dinghy rope. The irony isn't lost on him. Nothing is lost on Stavros.
+
+#### His Bitterness
+
+Stavros is bitter, but his bitterness is a specific kind: it's the bitterness of someone who loves something and watched it fail. His grandfather sailed with Loukas Visvikis on the Ελπίδα. His grandfather AGREED with Loukas about steam. But his grandfather was crew, not captain. Crew don't vote.
+
+"Ο παππούς μου ήξερε. Αλλά ποιος ρωτάει τον ναύτη;"
+
+This is Stavros's wound: the right answer existed, but the wrong people had the power to ignore it. It's not bitterness against the captains — it's grief for a system where wisdom didn't flow upward.
+
+#### His Function in the Game
+
+Stavros is the quest hook. When he sees the captain's token (or Visvikis's letter, depending on story track), he goes still. He recognizes it. He tells the family the legend. He gives them the first explicit connection between the token and the treasure.
+
+But he also delivers the first emotional punch: his grandfather's words about the steamships. *"We built the greatest sailing fleet in Greece, and we were too proud to change."* This isn't history — it's family pain, passed down like an heirloom nobody wanted.
+
+#### Voice
+
+Slow, deliberate, weathered. He pauses mid-sentence to watch the horizon. His Greek is old-fashioned — he uses words his grandfather used. When he speaks about the past, his voice drops. Not for drama. Because it costs him something.
+
+- "Κάτσε. Θα σου πω." (Sit. I'll tell you.)
+- "Ο κόλπος θυμάται. Εγώ επίσης." (The gulf remembers. So do I.)
+
+#### Connection to Clio
+
+He gives Clio a seashell. Just a small one, worn smooth. "Αυτό ήταν στην τσέπη του παππού μου πενήντα χρόνια." She keeps it. It goes into her notebook.
+
+---
+
+### ΕΠΙΜΕΛΗΤΗΣ / THE CURATOR — The Memory Keeper
+
+**Age:** ~55 | **Scene:** Museum (Scene 3) | **Role:** The big history lesson, educator
+
+#### Who He Is
+
+Thin, reading glasses that are always slightly crooked, hands that gesture too much when he talks. The Curator runs the Nautical Museum of Galaxidi — small but dense with history. He is not from Galaxidi originally. He came thirty years ago to catalog the collection for "a few months" and never left. The town claimed him the way the sea claims driftwood: slowly, completely, permanently.
+
+He knows every model ship by name, every captain's biography, every date. He can tell you the displacement tonnage of a polacca brigantine and the name of the cat that lived on the Χρυσούλα. He is the town's living archive, and he treats this responsibility with the seriousness of a priest guarding holy relics.
+
+#### His Passion
+
+The Curator's passion is not nostalgic — it's analytical. He loves the captains but he doesn't sentimentalize them. He's the one who walks visitors to the small, almost apologetic steamship model in the corner and says: "This ugly thing was the future. And they couldn't see it."
+
+He has spent decades trying to understand WHY brilliant men made a terrible decision. His conclusion: excellence itself can be a trap. Being the best at sail made it psychologically impossible to embrace steam. **This insight IS the game's thesis, and the Curator delivers it.**
+
+#### His Function in the Game
+
+The museum scene is the game's educational heart. The Curator gives the full history:
+- The golden age: ship types, trade routes, the pact
+- The portraits: real names, real faces
+- The decline: steam, refusal, the comparison with Chios/Oinousses/Andros
+
+He also holds a puzzle clue — the captain's token is hidden inside a model ship, and finding it requires connecting pact history to identify which ship.
+
+#### Voice
+
+Fast, enthusiastic, slightly breathless. He interrupts himself with digressions. He answers questions with three other questions. He uses technical maritime terms and then apologizes. His glasses slide down his nose when he's excited, which is always.
+
+- "Κοιτάξτε! Κοιτάξτε αυτό!" (Look! Look at this!) — his catchphrase
+- "Περιμένετε, υπάρχει κι άλλο." (Wait, there's more.) — there's always more
+
+#### Connection to the Family
+
+With Ntemis, he's an intellectual equal — two enthusiasts geeking out. With Ajax, he makes a deliberate effort to engage, and succeeds more than expected (the steamship conversation). With Clio, he lets her draw in the museum, breaking every rule he normally enforces. He recognizes something in her attention that reminds him of why he stayed.
+
+---
+
+### ΦΩΤΕΙΝΗ / FOTINI — The Guardian
+
+**Age:** ~40 | **Scene:** Liotrivi Bar (Scene 4) | **Role:** Token keeper, oral history, the human cost of decline
+
+#### Who He Is
+
+Fotini runs Liotrivi — the bar built inside an old olive press (λιοτρίβι), stone walls, amber lighting, tsipouro on every table. She's a captain's descendant. Her great-grandfather served on Loukas Visvikis's crew. Her family stayed in Galaxidi through the decline, watched the harbor empty, watched the young leave for Piraeus and Chios.
+
+She has the look of someone who's heard every story this town has to tell and is tired of the ones that end with "and then it all went away." She's not bitter like Stavros — she's *guarded*. She has a captain's token and she's been holding it her whole life, waiting for someone worthy.
+
+#### Her Test
+
+Fotini doesn't give the token freely. She tests Ntemis — a dialogue puzzle where he must demonstrate real understanding of the αλληλασφάλεια pact. Not dates. Not facts. Understanding. Why did it work? What made it different from insurance? Why did it fail?
+
+If Ntemis answers with just facts, she's unimpressed. If he shows he understands the *human* element — that the pact worked because people trusted each other absolutely — she softens. She gives the token. And she adds the line that makes it personal:
+
+"Η γιαγιά μου έλεγε: 'Ξέραμε πώς να χτίζουμε πλοία. Απλά δεν ξέραμε πώς να χτίζουμε *καινούργια* πλοία.'"
+
+#### Voice
+
+Direct, slightly challenging, warm underneath. She speaks like someone who's been tending bar for twenty years — she's heard every excuse, every boast, every sad story. She calls bullshit with a look. But when she decides you're real, her warmth is fierce.
+
+- "Θα σου πω. Αλλά πρώτα, πες μου εσύ." (I'll tell you. But first, you tell me.)
+- "Τσίπουρο;" — offered as both test and welcome
+
+#### Hidden Moment
+
+Clio, hiding behind a chair, overhears locals telling embellished captain stories. This triggers a mini-game: separate historical fact from tall tale. When Fotini discovers Clio ("Πόση ώρα είσαι εδώ;" / "Από το τσίπουρο."), she laughs — the first genuine laugh we hear from her — and sneaks Clio a cookie.
+
+---
+
+### ΕΙΡΗΝΗ / EIRINI — The Future
+
+**Age:** ~25 | **Scene:** Outside Liotrivi (Scene 4) | **Role:** The modern voice, Ajax's catalyst
+
+#### Who She Is
+
+Eirini is from Itea — the port town next door, the one that replaced Galaxidi when Galaxidi faded. She runs a tech startup from her laptop at café tables overlooking the gulf. She chose to stay in Fokida when everyone her age left for Athens. Not because she's sentimental — because she believes that **what killed Galaxidi wasn't geography, it was mindset**, and mindset can change.
+
+She's sharp, direct, slightly impatient with nostalgia. She respects the captains but refuses to worship them. She's the first person in the game who says the uncomfortable truth out loud: the captains were **great AND wrong**. Not one or the other. Both.
+
+#### Her Function in the Game
+
+Eirini is the bridge between past and future. Her conversation with Ajax outside Liotrivi is the game's turning point for his character. She says what nobody else will:
+
+"Όλοι μιλάνε για τους καπεταναίους σαν να ήταν τέλειοι. Δεν ήταν. Ήταν σπουδαίοι ΚΑΙ πεισματάρηδες."
+
+And then the question that lodges in Ajax's brain for the rest of the game:
+
+"Ποιο είναι το 'ατμόπλοιο' του Γαλαξειδίου σήμερα; Ποιο είναι αυτό που έρχεται, και πρέπει να το πιάσουμε αυτή τη φορά;"
+
+She doesn't have the answer. She says so openly. But she's asking the right question, and that's worth more than all the nostalgic reverence in the harbor.
+
+#### Voice
+
+Modern, energetic, slightly restless. She uses some English tech terms mixed into her Greek naturally. She talks with her hands. She makes Ajax feel like an adult, which is exactly what a 13-year-old needs from a 25-year-old.
+
+- "Δεν ξέρω ακόμα. Αλλά ψάχνω." (I don't know yet. But I'm looking.)
+- "Η νοσταλγία δεν πληρώνει νοίκι." (Nostalgia doesn't pay rent.)
+
+#### In the Epilogue
+
+At the festival, Eirini places a blank book next to the displayed ledger with a sign: *"Νέο Σύμφωνο — What do you pledge for Galaxidi's future?"* People begin writing. The old pact inspires a new one. This is her contribution: not replacing the past but extending it.
+
+---
+
+### ΠΑΠΑΣ / PAPAS — The Keeper of Faith
+
+**Age:** ~65 | **Scene:** Agios Nikolaos Church (Scene 6) | **Role:** Faith-maritime connection, emotional depth
+
+#### Who He Is
+
+The priest of Agios Nikolaos — Galaxidi's patron saint church overlooking the harbor. He's warm, slightly mischievous, proud of his church's layers: the current building, the older one beneath, foundations older still.
+
+He's not a typical stern village priest. He has a twinkle. He tells jokes during the liturgy (quietly, to the altar boys). He keeps a chess set in the vestry. He knows every fisherman's confession and none of their secrets leave the stone walls.
+
+He knows the church's relationship with the captains intimately: every voyage began with a prayer here, every safe return ended with a thanksgiving candle. Agios Nikolaos isn't just a patron saint — he's the witness to every departure and every homecoming. The captains' faith was practical: pray, sail, insure each other, pray again.
+
+#### His Secret Knowledge
+
+The Papas knows Loukas Visvikis was the church's biggest benefactor — the roof, the icons, the templon. He also knows (or suspects) that Loukas hid something in the church. He's never looked. That's not his business. His business is keeping the church alive, and the church has been alive for centuries because people like Loukas loved it enough to maintain it.
+
+When Ntemis asks about Visvikis, the Papas gives information willingly — but only after Clio lights a candle for the captains. That act of simple faith earns more than any question could.
+
+#### Voice
+
+Warm, resonant, with an unexpected humor. He calls everyone "παιδί μου" (my child) regardless of age. He quotes scripture and seamanship in the same breath, and doesn't see a contradiction.
+
+- "Παιδί μου, ο Θεός και η θάλασσα έχουν πολλά κοινά. Κανένα δεν σε ρωτάει αν είσαι έτοιμος." (My child, God and the sea have much in common. Neither asks if you're ready.)
+- "ΟΧΙ στις εικόνες!" — when Ajax tries to climb
+
+#### The Candle Scene
+
+The game's quietest emotional moment. Clio lights a candle. The Papas asks who it's for.
+
+CLIO: Για τους καπεταναίους. Και τα πλοία τους.
+PAPAS *(moved)*: Αυτό, παιδί μου, είναι ακριβώς αυτό που έκαναν κι εκείνοι.
+
+He's moved because a seven-year-old just instinctively did what the captains did for centuries. The chain is unbroken. This is why the Papas shares his extra clue — not because they earned it through cleverness, but because Clio proved the spirit is still alive.
+
+---
+
+### ΧΡΥΣΟΣΤΟΜΟΣ / CHRYSOSTOMOS — The Last Sailor
+
+**Age:** ~70 | **Scene:** Boat / The Crossing (Scene 8) | **Role:** Wisdom, acceptance, the most beautiful scene
+
+#### Who He Is
+
+Old family friend. The last true sailor in Galaxidi — not a fisherman catching mullet, but a man who understands the gulf the way the old captains understood the Mediterranean. His seamanship is effortless, the kind that comes from fifty years of reading water and wind.
+
+He sails the **Ελπίδα** — Loukas Visvikis's ship, passed down through generations, maintained with devotion. Chrysostomos knows whose ship he sails. He doesn't advertise it. The Ελπίδα is his responsibility, not his trophy.
+
+He's the bridge between the old way and acceptance. Where Stavros is bitter and the Curator is analytical, Chrysostomos is at peace. He loved the old way. He lost it. He made peace with the loss. And his peace is the permission Ntemis needs to stop clinging to his own past.
+
+#### His Wisdom
+
+Chrysostomos's signature speech:
+
+"Ξέρεις, εγώ δεν κατηγορώ τους παλιούς καπεταναίους. Ήξεραν τον άνεμο σαν τη γυναίκα τους. Πώς να τους πεις να πετάξουν αυτό; Αλλά η θάλασσα δεν σε ρωτάει τι αγαπάς. Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της, αλλιώς πνίγεσαι."
+
+*"I don't blame the old captains. They knew the wind like their own wife. How do you tell a man to throw that away? But the sea doesn't ask what you love. The sea changes and you change with it, or you drown."*
+
+This is the game's most mature expression of its thesis. Not anger at the captains (Stavros), not analysis (Curator), not forward momentum (Eirini) — just quiet acceptance that change is the sea's nature, and fighting it is like fighting the tide.
+
+#### The Crossing
+
+The boat scene (Scene 8) is the game's most beautiful sequence. Chrysostomos takes the family across the gulf to the coastal chapel. Galaxidi seen from the water. Mountains. Sunset.
+
+He tells stories the whole way — what it was like to sail these waters, the routes, the weather patterns, the dangers. But the stories aren't boasting. They're offerings. He's giving the family his life's knowledge because he senses they'll need it — not for sailing, but for understanding.
+
+On the return, Clio falls asleep on Ntemis's lap. Ajax watches Galaxidi grow closer from the bow. Chrysostomos hums the ghost's theme without knowing why.
+
+#### Voice
+
+Slow, steady, rhythmic — like waves. He doesn't waste words. When he speaks, the sea sounds louder because he's quiet. His humor is dry and kind.
+
+- "Η Ελπίδα ξέρει τον δρόμο. Εγώ απλά κρατάω το τιμόνι." (Hope knows the way. I just hold the tiller.)
+- "Θα φτάσουμε. Πάντα φτάνουμε." (We'll get there. We always do.)
+
+#### Real-World Thread
+
+In real Galaxidi, Ajax's friend Dimitris has a brother named Chrysostomos (parents: Vassilis and Evangelia). The NPC carries echoes of this real connection — the game's Chrysostomos is the old sailor the real Chrysostomos might become in sixty years, still on the water, still knowing the gulf's moods.
+
+---
+
+### THE NPC ORCHESTRA
+
+Together, the NPCs form a progression — a six-part response to the same question: *What do you do with a glorious past?*
+
+| NPC | Response to the Past | Emotional Key |
+|-----|---------------------|---------------|
+| **Stavros** | Grieve it | Bitterness as love |
+| **Curator** | Study it | Understanding as devotion |
+| **Fotini** | Guard it | Loyalty as duty |
+| **Eirini** | Challenge it | Honesty as respect |
+| **Papas** | Bless it | Faith as continuity |
+| **Chrysostomos** | Accept it | Peace as wisdom |
+| **Ghost (Loukas)** | Release it | Rest as resolution |
+
+The player encounters them in this order, and each one adds a layer until the full picture emerges: the past is beautiful, it's real, it's worth protecting, it needs challenging, it deserves blessing, it must be accepted, and finally — it can be let go. **That's the emotional arc of the game, delivered through seven voices.**
 
 ---
 
