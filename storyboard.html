@@ -203,6 +203,8 @@
   .speaker-stavros { color: #80a060; }
   .speaker-papas { color: #a080c0; }
   .speaker-chrysostomos { color: #60c4a0; }
+  .speaker-curator { color: #c4a080; }
+  .speaker-fotini { color: #c48060; }
 
   .dialog-text {
     color: var(--cream);
@@ -486,8 +488,8 @@
   <h1>Το Μυστήριο του Γαλαξειδίου</h1>
   <div class="subtitle">The Mystery of Galaxidi</div>
   <div class="tagline">
-    8 σκηνές. Ένας θησαυρός. Μια πράσινη πέτρα. Ένα φάντασμα που θυμάται.<br>
-    <em>8 scenes. One treasure. One green stone. One ghost who remembers.</em>
+    10 σκηνές. Ένας θησαυρός. Μια πράσινη πέτρα. Ένα φάντασμα που θυμάται.<br>
+    <em>10 scenes. One treasure. One green stone. One ghost who remembers.</em>
   </div>
   <div class="characters-row">
     <div class="char-card">
@@ -691,15 +693,15 @@
     </div>
   </div>
 
-  <div class="story"><em>The cat walks toward Plateia Mama. Clio follows.</em></div>
+  <div class="story"><em>The cat walks toward the museum. Clio follows.</em></div>
 
   <div class="gameplay-box">
     <div class="label">Gameplay</div>
     <ul>
       <li>Show letter to 2-3 NPCs (comic/dismissive responses)</li>
       <li>Find Stavros — main dialog tree with history</li>
-      <li>Stavros reveals: "Karkaros" cave behind Plateia Mama</li>
-      <li>Cat leads toward cave exit</li>
+      <li>Stavros mentions Visvikis → suggests the museum for more</li>
+      <li>Exit to Museum</li>
     </ul>
   </div>
 
@@ -711,9 +713,168 @@
 
 <div class="scene-divider">· · ·</div>
 
-<!-- ═══════════════ SCENE 4 ═══════════════ -->
+<!-- ═══════════════ SCENE 4 — MUSEUM ═══════════════ -->
 <div class="scene">
   <div class="scene-number">Σκηνή 4 / Scene 4</div>
+  <div class="scene-title">ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ</div>
+  <div class="scene-subtitle">"The Maritime Museum"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-museum.png" alt="Galaxidi Maritime Museum interior">
+    <p>Warm wood, naval flags, model ships in glass cases. Captain portraits on the walls — proud men with beards and dress coats. A telescope, brass instruments, maps. And in the corner: a steamship model, smaller, darker — the thing that ended it all.</p>
+  </div>
+
+  <div class="story">The Nautical Museum of Galaxidi. Small but dense with history. The curator — a thin man with reading glasses and passion that could fill the harbor — lights up when they mention Visvikis.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΕΠΙΜΕΛΗΤΗΣ</span>
+      <span class="dialog-text greek">Βισβίκης! Ένας από τους τελευταίους μεγάλους. Κοιτάξτε — εδώ.</span>
+    </div>
+  </div>
+
+  <div class="story">He leads them to a portrait. Captain Dimitrios Visvikis. The same face as the photograph in the house — but younger, prouder, with the sea behind him.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΕΠΙΜΕΛΗΤΗΣ</span>
+      <span class="dialog-text greek">Τριακόσια καράβια. Έξι χιλιάδες κάτοικοι. Το Γαλαξίδι ήταν η ναυτική πρωτεύουσα της Ελλάδας. Και μετά...</span>
+    </div>
+  </div>
+
+  <div class="story">He walks them to the corner. The steamship model. Small, iron, ugly next to the graceful schooners.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΕΠΙΜΕΛΗΤΗΣ</span>
+      <span class="dialog-text greek">...ήρθε ο ατμός. Κι αυτοί που ήξεραν τα πάντα για τα πανιά, αρνήθηκαν να μάθουν κάτι καινούριο. Ο Βισβίκης ήταν από τους λίγους που κατάλαβε. Αλλά ήταν αργά.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">Δηλαδή... ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΕΠΙΜΕΛΗΤΗΣ</span>
+      <span class="dialog-text greek">Ακριβώς, μικρέ μου. Ακριβώς αυτό.</span>
+    </div>
+  </div>
+
+  <div class="story">Clio stares at a display case. Inside: a fragment of the αλληλασφάλεια ledger — a copy. <em>104 captains signed a mutual insurance pact in 1860. They protected each other. That was their real treasure.</em></div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek">Μπαμπά, ο Βισβίκης υπέγραψε κι αυτός;</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Ας ρωτήσουμε... κάποιον που ξέρει περισσότερα. Μήπως στο Λιοτρίβι;</span>
+    </div>
+  </div>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Explore museum — click on model ships, portraits, instruments</li>
+      <li>Curator dialog tree: the golden age, the 300 ships, the decline</li>
+      <li>The steamship corner — pivotal narrative turn</li>
+      <li>Ajax's key question: "Being the best made them worse?"</li>
+      <li>Clio finds the αλληλασφάλεια display</li>
+      <li>Exit to Liotrivi</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Reflective piano and strings. Warm and grand when showing the golden age. Shifts to minor key at the steamship corner — the sound of something ending. Quiet, thoughtful.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 5 — LIOTRIVI ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 5 / Scene 5</div>
+  <div class="scene-title">ΛΙΟΤΡΙΒΙ</div>
+  <div class="scene-subtitle">"The Old Olive Press"</div>
+
+  <div class="visual-box">
+    <div class="label">Εικόνα / Visual</div>
+    <img class="scene-bg" src="assets/pixel-liotrivi.png" alt="Liotrivi bar — stone walls, olive press, amber warmth">
+    <p>Stone walls, amber lanterns, the old olive press preserved as decor. Wooden bar, checkered floor, bottles glowing. Through the blue-shuttered window: the moonlit harbor with a sail. Fotini behind the bar — dark hair, sharp eyes, captain's blood.</p>
+  </div>
+
+  <div class="story">Evening. The Liotrivi — half bar, half living history. The old olive press sits in the corner, massive and silent. Fotini runs the place. She has her great-grandmother's face and her great-grandfather's stubbornness.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-ntemis">ΝΤΕΜΗΣ</span>
+      <span class="dialog-text greek">Ψάχνουμε κάτι που έκρυψε ο Καπετάν Βισβίκης. Ξέρεις τίποτα;</span>
+    </div>
+  </div>
+
+  <div class="story">Fotini freezes. Then she laughs — but her eyes don't.</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΦΩΤΕΙΝΗ</span>
+      <span class="dialog-text greek">Βισβίκης. Ο παππούς του παππού μου ήταν στο πλήρωμά του. Λέγανε ότι ο Βισβίκης γύρισε από ένα ταξίδι στην Ανατολή αλλαγμένος. Κουβαλούσε κάτι μαζί του. Κάτι πράσινο. Κανείς δεν ξέρει πού το έκρυψε.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-ajax">ΑΙΑΣ</span>
+      <span class="dialog-text greek">Εμείς ξέρουμε! "Εκεί που η γη μιλάει."</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΦΩΤΕΙΝΗ</span>
+      <span class="dialog-text greek">Ο Κάρκαρος. Το σπήλαιο πίσω από την πλατεία Μάμα. Μπαίνεις μέσα, φωνάζεις, κι η φωνή σου γυρίζει τρεις φορές. Η γη μιλάει.</span>
+    </div>
+  </div>
+
+  <div class="story">She pours Ntemis a tsipouro. The children get lemonade. She leans across the bar:</div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΦΩΤΕΙΝΗ</span>
+      <span class="dialog-text greek">Πρόσεξε. Ο Βισβίκης δεν ήταν τρελός. Ό,τι κι αν έκρυψε, το έκρυψε γιατί πίστευε ότι κάποιος αξίζει να το βρει. Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ' το.</span>
+    </div>
+  </div>
+
+  <div class="dialog">
+    <div class="dialog-line">
+      <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
+      <span class="dialog-text greek stage-direction">(drawing Fotini in her notebook)</span>
+      <span class="dialog-text greek">Μοιάζεις με τον καπετάνιο στο μουσείο.</span>
+    </div>
+    <div class="dialog-line">
+      <span class="speaker speaker-narrator">ΦΩΤΕΙΝΗ</span>
+      <span class="dialog-text greek stage-direction">(smiling)</span>
+      <span class="dialog-text greek">Ξέρω.</span>
+    </div>
+  </div>
+
+  <div class="gameplay-box">
+    <div class="label">Gameplay</div>
+    <ul>
+      <li>Talk to Fotini — she confirms the cave: Karkaros behind Plateia Mama</li>
+      <li>Examine the olive press, the bottles, old photos on walls</li>
+      <li>Clio draws Fotini (notebook moment)</li>
+      <li>Optional: listen to bar stories from other patrons</li>
+      <li>Exit to Plateia Mama → Cave</li>
+    </ul>
+  </div>
+
+  <div class="music-box">
+    <div class="label">Music</div>
+    <p>Rebetiko warmth. Bouzouki and guitar, amber and smoky. The sound of a place where stories live. Quieter, conspiratorial when Fotini speaks about Visvikis.</p>
+  </div>
+</div>
+
+<div class="scene-divider">· · ·</div>
+
+<!-- ═══════════════ SCENE 6 ═══════════════ -->
+<div class="scene">
+  <div class="scene-number">Σκηνή 6 / Scene 6</div>
   <div class="scene-title">ΤΟ ΣΠΗΛΑΙΟ</div>
   <div class="scene-subtitle">"The Cave of Karkaros"</div>
 
@@ -786,9 +947,9 @@
 
 <div class="scene-divider">· · ·</div>
 
-<!-- ═══════════════ SCENE 5 ═══════════════ -->
+<!-- ═══════════════ SCENE 7 ═══════════════ -->
 <div class="scene">
-  <div class="scene-number">Σκηνή 5 / Scene 5</div>
+  <div class="scene-number">Σκηνή 7 / Scene 7</div>
   <div class="scene-title">ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ</div>
   <div class="scene-subtitle">"The Captain's Rest"</div>
 
@@ -854,9 +1015,9 @@
 
 <div class="scene-divider">· · ·</div>
 
-<!-- ═══════════════ SCENE 6 ═══════════════ -->
+<!-- ═══════════════ SCENE 8 ═══════════════ -->
 <div class="scene">
-  <div class="scene-number">Σκηνή 6 / Scene 6</div>
+  <div class="scene-number">Σκηνή 8 / Scene 8</div>
   <div class="scene-title">ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ</div>
   <div class="scene-subtitle">"The Map in the Church"</div>
 
@@ -939,9 +1100,9 @@
 
 <div class="scene-divider">· · ·</div>
 
-<!-- ═══════════════ SCENE 7 ═══════════════ -->
+<!-- ═══════════════ SCENE 9 ═══════════════ -->
 <div class="scene">
-  <div class="scene-number">Σκηνή 7 / Scene 7</div>
+  <div class="scene-number">Σκηνή 9 / Scene 9</div>
   <div class="scene-title">ΤΟ ΚΑΡΑΒΙ</div>
   <div class="scene-subtitle">"The Crossing"</div>
 
@@ -992,9 +1153,9 @@
 
 <div class="scene-divider">· · ·</div>
 
-<!-- ═══════════════ SCENE 8 ═══════════════ -->
+<!-- ═══════════════ SCENE 10 ═══════════════ -->
 <div class="scene">
-  <div class="scene-number">Σκηνή 8 / Scene 8</div>
+  <div class="scene-number">Σκηνή 10 / Scene 10</div>
   <div class="scene-title">Ο ΘΗΣΑΥΡΟΣ</div>
   <div class="scene-subtitle">"The Treasure"</div>
 
