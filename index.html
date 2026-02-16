@@ -257,9 +257,18 @@ const PORTRAITS = {};
 async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
+    loadImg('title-bg', 'assets/title-bg.jpg'),
     loadImg('bg-exterior', 'assets/pixel-exterior.png'),
     loadImg('bg-terrace', 'assets/pixel-terrace.png'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
+    loadImg('bg-port', 'assets/pixel-port.jpg'),
+    loadImg('bg-museum', 'assets/pixel-museum.png'),
+    loadImg('bg-liotrivi', 'assets/pixel-liotrivi.png'),
+    loadImg('bg-cave', 'assets/pixel-cave.png'),
+    loadImg('bg-church', 'assets/pixel-church.jpg'),
+    loadImg('bg-windmill', 'assets/pixel-windmill.jpg'),
+    loadImg('bg-boat', 'assets/pixel-boat.png'),
+    loadImg('bg-graveyard', 'assets/pixel-graveyard.png'),
   ]);
 
   // Character idle sprites
@@ -320,7 +329,10 @@ const scenes = {
       { id:'sea', x:350, y:60, w:230, h:60, label:'Η θάλασσα',
         verbs: { look:[{s:'',t:'Ο Κορινθιακός κόλπος λάμπει χρυσαφί στο ηλιοβασίλεμα. Μαγικό.'}] }},
     ],
-    exits: [{ side:'right', target:'terrace', label:'Βεράντα →' }],
+    exits: [
+      { side:'right', target:'terrace', label:'Βεράντα →' },
+      { side:'left', target:'port', label:'← Λιμάνι' },
+    ],
     entry: [
       {s:'',t:'Ο ήλιος βάφει χρυσά τα καλντερίμια. Μυρωδιά πεύκου ανακατεμένη με θαλασσινό αλάτι.'},
       {s:'ΝΤΕΜΗΣ',t:'Φτάσαμε, παιδιά. Αυτό είναι το σπίτι μας για το Σαββατοκύριακο.'},
@@ -391,6 +403,226 @@ const scenes = {
       {s:'',t:'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.'},
       {s:'ΚΛΕΙΩ',t:'Κοιτάξτε — κάποιος μας άφησε σύκα!'},
       {s:'ΑΙΑΣ',t:'Και κάτι πάνω στην καρέκλα... μια τσάντα;'},
+    ],
+  },
+
+  // ── SCENE 2: THE PORT ──
+  port: {
+    label: 'ΤΟ ΛΙΜΑΝΙ', bg: 'bg-port',
+    charPos: { ntemis: { x: 320, y: 340 }, ajax: { x: 400, y: 345 }, clio: { x: 240, y: 345 } },
+    objects: [
+      { id:'boats_port', x:120, y:80, w:200, h:100, label:'Ψαρόβαρκες',
+        verbs: { look:[{s:'',t:'Χρωματιστά καΐκια δεμένα στα μπαλόνια. Η μπογιά ξεφλουδίζει — αλμύρα και χρόνια.'},{s:'ΑΙΑΣ',t:'Μπαμπά, μπορώ να πηδήξω σε κάποιο;'},{s:'ΝΤΕΜΗΣ',t:'Μπορείς να κοιτάξεις. Από εδώ.'}] }},
+      { id:'bollards', x:380, y:250, w:80, h:60, label:'Δέστρες',
+        verbs: { look:[{s:'',t:'Μεταλλικές δέστρες ψηλότερες από την Κλειώ. Φτιαγμένες για τρικάταρτα, όχι για βαρκούλες.'},{s:'ΚΛΕΙΩ',t:'Γιατί είναι τόσο μεγάλες;'},{s:'ΝΤΕΜΗΣ',t:'Γιατί κάποτε εδώ δένανε ιστιοφόρα πενήντα μέτρων.'}] }},
+      { id:'nets', x:30, y:200, w:100, h:100, label:'Δίχτυα',
+        verbs: { look:[{s:'',t:'Ένας ψαράς μπαλώνει τα δίχτυα του. Τα χέρια του κινούνται αυτόματα — πενήντα χρόνια πρακτική.'}],
+                 talk:[{s:'ΝΤΕΜΗΣ',t:'Καλησπέρα! Πολύ ψάρι σήμερα;'},{s:'',t:'Ο ψαράς σηκώνει το βλέμμα. Τα μάτια του είναι γαλάζια σαν τον κόλπο.'},{s:'',t:'«Ψάρι λίγο. Ιστορίες πολλές. Κάτσε να σου πω.»'}] }},
+      { id:'warehouses', x:450, y:60, w:150, h:140, label:'Αποθήκες',
+        verbs: { look:[{s:'',t:'Πέτρινες αποθήκες με σιδερένιες πόρτες. Κάποτε γεμάτες σταφίδα και λάδι για εξαγωγή. Τώρα σιωπή.'}] }},
+      { id:'seagulls', x:300, y:10, w:150, h:50, label:'Γλάροι',
+        verbs: { look:[{s:'',t:'Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.'},{s:'ΚΛΕΙΩ',t:'Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...'}] }},
+      { id:'cats', x:500, y:290, w:60, h:50, label:'Γάτες',
+        verbs: { look:[{s:'',t:'Τρεις γάτες ξαπλωμένες στον ήλιο. Σε κοιτάνε με αδιαφορία.'},{s:'ΚΛΕΙΩ',t:'Πόσο τέλεια! Αυτή η πορτοκαλί μου αρέσει πολύ.'}] }},
+    ],
+    exits: [{ side:'right', target:'exterior', label:'Σπίτι →' }, { side:'left', target:'museum', label:'← Μουσείο' }],
+    entry: [
+      {s:'',t:'Το λιμάνι του Γαλαξειδίου. Μισοφέγγαρο από πέτρα, κυμαρισμένο φως, μυρωδιά αλμύρας.'},
+      {s:'ΑΙΑΣ',t:'Αυτό το λιμάνι φαίνεται τεράστιο για τόσο μικρό χωριό.'},
+      {s:'ΝΤΕΜΗΣ',t:'Γιατί κάποτε δεν ήταν μικρό χωριό. Ήταν ναυτική δύναμη.'},
+      {s:'ΚΛΕΙΩ',t:'Τριακόσια καράβια, μπαμπά. Το διάβασα.'},
+    ],
+  },
+
+  // ── SCENE 3: THE NAUTICAL MUSEUM ──
+  museum: {
+    label: 'ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ', bg: 'bg-museum',
+    charPos: { ntemis: { x: 320, y: 345 }, ajax: { x: 420, y: 348 }, clio: { x: 200, y: 348 } },
+    objects: [
+      { id:'model_ship', x:20, y:100, w:180, h:150, label:'Μοντέλο ιστιοφόρου',
+        verbs: { look:[{s:'',t:'Ένα πανέμορφο μοντέλο τρικάταρτου μέσα σε γυάλινη βιτρίνα. Κάθε λεπτομέρεια τέλεια.'},{s:'ΚΛΕΙΩ',t:'Κοιτάξτε τα πανιά! Ένα-ένα ραμμένα.'},{s:'',t:'Η πινακίδα γράφει: «Σκούνα Χρυσούλα, 1904 — το τελευταίο ιστιοφόρο του Γαλαξειδίου.»'}] }},
+      { id:'steamship', x:380, y:100, w:180, h:150, label:'Ατμόπλοιο',
+        verbs: { look:[{s:'',t:'Μια γωνιά αφιερωμένη στα ατμόπλοια. Ένα σιδερένιο μοντέλο, μικρότερο, λιγότερο εντυπωσιακό.'},{s:'ΝΤΕΜΗΣ',t:'Αυτό ήταν το μέλλον. Και το Γαλαξίδι δεν το είδε.'},{s:'ΑΙΑΣ',t:'Γιατί; Ήταν χαζοί;'},{s:'ΝΤΕΜΗΣ',t:'Όχι. Ήταν οι καλύτεροι στα πανιά. Γι\u0027 αυτό ακριβώς δεν άλλαξαν.'}] }},
+      { id:'portraits_mus', x:200, y:20, w:180, h:100, label:'Πορτρέτα καπεταναίων',
+        verbs: { look:[{s:'',t:'Πορτρέτα σε χρυσές κορνίζες. Σοβαρά πρόσωπα, κομψά μουστάκια, μάτια που έχουν δει θάλασσα.'},{s:'ΚΛΕΙΩ',t:'Αυτός μοιάζει λίγο με τον μπαμπά.'},{s:'ΑΙΑΣ',t:'Ε, λίγο μόνο.'},{s:'ΝΤΕΜΗΣ',t:'Ευχαριστώ, νομίζω.'}] }},
+      { id:'instruments', x:30, y:310, w:150, h:60, label:'Ναυτικά όργανα',
+        verbs: { look:[{s:'',t:'Πυξίδες, εξάντες, χάρτες. Τα εργαλεία που οδηγούσαν τα πλοία σε κάθε γωνιά της Μεσογείου.'},{s:'ΚΛΕΙΩ',t:'Χωρίς GPS; Πώς;'},{s:'ΝΤΕΜΗΣ',t:'Αστέρια, εμπειρία, και θάρρος.'}] }},
+      { id:'flags', x:100, y:5, w:400, h:40, label:'Σημαίες',
+        verbs: { look:[{s:'',t:'Ναυτικές σημαίες κρέμονται από το ταβάνι. Ελληνική, γαλλική, ρωσική — τα λιμάνια που γνώριζαν.'}] }},
+      { id:'map_table', x:350, y:300, w:120, h:60, label:'Χάρτης',
+        verbs: { look:[{s:'',t:'Ένας παλιός χάρτης του Κορινθιακού ξαπλωμένος σε τραπέζι. Σημειώσεις με μελάνι — δρόμοι ναυσιπλοΐας.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, σημείωσε αυτό. Μπορεί να μας χρειαστεί.'}] }},
+    ],
+    exits: [{ side:'right', target:'port', label:'Λιμάνι →' }, { side:'left', target:'liotrivi', label:'← Λιοτρίβι' }],
+    entry: [
+      {s:'',t:'Το Ναυτικό Μουσείο του Γαλαξειδίου. Μυρωδιά ξύλου και παλιού χαρτιού.'},
+      {s:'ΚΛΕΙΩ',t:'Πόσα μοντέλα! Θέλω να τα δω ΟΛΑ.'},
+      {s:'ΑΙΑΣ',t:'Εγώ θέλω να δω αν έχει κανόνια.'},
+      {s:'ΝΤΕΜΗΣ',t:'Σσσ. Μουσείο, παιδιά. Ησυχία.'},
+    ],
+  },
+
+  // ── SCENE 4: LIOTRIVI BAR ──
+  liotrivi: {
+    label: 'ΛΙΟΤΡΙΒΙ', bg: 'bg-liotrivi',
+    charPos: { ntemis: { x: 320, y: 340 }, ajax: { x: 400, y: 345 }, clio: { x: 240, y: 345 } },
+    objects: [
+      { id:'olive_press', x:10, y:80, w:140, h:180, label:'Ελαιοτριβείο',
+        verbs: { look:[{s:'',t:'Το παλιό ελαιοτριβείο — πέτρα και ξύλο. Κάποτε έβγαζε λάδι, τώρα βγάζει ιστορίες.'},{s:'ΚΛΕΙΩ',t:'Φανταστείτε πόσα χέρια το γύρισαν.'}] }},
+      { id:'bar_counter', x:200, y:80, w:180, h:120, label:'Μπαρ',
+        verbs: { look:[{s:'',t:'Ξύλινο μπαρ γεμάτο μπουκάλια. Τσίπουρο, ρακή, κρασιά ντόπια. Φανάρια ρίχνουν ζεστό φως.'},{s:'ΑΙΑΣ',t:'Εγώ μπορώ να πάρω λεμονάδα;'}] }},
+      { id:'window_liot', x:420, y:50, w:130, h:140, label:'Παράθυρο',
+        verbs: { look:[{s:'',t:'Γαλάζια πατζούρια ανοιχτά στο φεγγαρόφωτο. Το λιμάνι λάμπει ασημί.'},{s:'ΚΛΕΙΩ',t:'Μαγικό. Σαν πίνακας ζωγραφικής.'}] }},
+      { id:'photos_liot', x:150, y:20, w:100, h:60, label:'Παλιές φωτογραφίες',
+        verbs: { look:[{s:'',t:'Ασπρόμαυρες φωτογραφίες στον τοίχο. Ψαράδες, καπετάνιοι, γυναίκες που περίμεναν.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε φωτογραφία και μια ιστορία. Κάθε πρόσωπο και μια ζωή.'}] }},
+      { id:'stools', x:280, y:250, w:80, h:60, label:'Σκαμπό',
+        verbs: { look:[{s:'',t:'Ξύλινα σκαμπό τριγμένα από χρόνια. Πόσες κουβέντες έχουν ακούσει.'}],
+                 use:[{s:'ΝΤΕΜΗΣ',t:'Κάτσε. Ξεκουράσου. Η νύχτα είναι μακριά.'}] }},
+      { id:'checkered_floor', x:100, y:300, w:400, h:80, label:'Πλακάκια',
+        verbs: { look:[{s:'',t:'Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.'}] }},
+    ],
+    exits: [{ side:'right', target:'museum', label:'Μουσείο →' }, { side:'left', target:'church', label:'← Εκκλησία' }],
+    entry: [
+      {s:'',t:'Το Λιοτρίβι. Πέτρα, ξύλο, ζεστό φως. Μυρωδιά τσίπουρου και ελιάς.'},
+      {s:'ΑΙΑΣ',t:'Αυτό μοιάζει σαν πειρατικό καπηλειό!'},
+      {s:'ΚΛΕΙΩ',t:'Μυρίζει ωραία. Σαν τη γιαγιά.'},
+      {s:'ΝΤΕΜΗΣ',t:'Ελάτε, ας δούμε ποιος είναι εδώ.'},
+    ],
+  },
+
+  // ── SCENE 5: THE CAVE ──
+  cave: {
+    label: 'ΤΟ ΣΠΗΛΑΙΟ — ΠΛΑΤΕΙΑ ΜΑΜΑ', bg: 'bg-cave',
+    charPos: { ntemis: { x: 320, y: 350 }, ajax: { x: 420, y: 355 }, clio: { x: 220, y: 355 } },
+    objects: [
+      { id:'stone_door', x:160, y:40, w:250, h:250, label:'Πέτρινη πόρτα',
+        verbs: { look:[{s:'',t:'Μια τεράστια πέτρινη πόρτα με δώδεκα κυκλικές εσοχές. Σχήμα τιμονιού.'},{s:'ΚΛΕΙΩ',t:'Δώδεκα θέσεις. Σαν ρολόι.'},{s:'ΑΙΑΣ',t:'Ή σαν τιμόνι καραβιού!'},{s:'ΝΤΕΜΗΣ',t:'Κάτι πρέπει να μπει σε κάθε εσοχή. Αλλά τι;'}],
+                 open:[{s:'ΝΤΕΜΗΣ',t:'Δεν κουνιέται. Χρειαζόμαστε κάτι για τις εσοχές.'}],
+                 use:[{s:'ΝΤΕΜΗΣ',t:'Δεν έχουμε αρκετά ακόμα. Πρέπει να ψάξουμε περισσότερο.'}] }},
+      { id:'captain_marks', x:20, y:60, w:100, h:150, label:'Σημάδια στον τοίχο',
+        verbs: { look:[{s:'',t:'Χαραγμένα σύμβολα στον βράχο. Νεκροκεφαλή, ψάρι, άγκυρα, μάτι.'},{s:'ΚΛΕΙΩ',t:'Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!'},{s:'ΝΤΕΜΗΣ',t:'Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα.'}] }},
+      { id:'cave_water', x:100, y:300, w:400, h:80, label:'Νερό',
+        verbs: { look:[{s:'',t:'Τυρκουάζ νερό λάμπει από το φως της εισόδου. Κρυστάλλινο.'},{s:'ΑΙΑΣ',t:'Μπορώ να κολυμπήσω;'},{s:'ΝΤΕΜΗΣ',t:'Όχι τώρα, Αία.'}] }},
+      { id:'stalactites', x:150, y:0, w:300, h:40, label:'Σταλακτίτες',
+        verbs: { look:[{s:'',t:'Σταλακτίτες κρέμονται σαν δάχτυλα. Χιλιάδες χρόνια σε κάθε σταγόνα.'}] }},
+      { id:'barrel_cave', x:0, y:200, w:60, h:80, label:'Βαρέλι',
+        verbs: { look:[{s:'',t:'Ένα σάπιο βαρέλι. Πόσα χρόνια εδώ μέσα;'}],
+                 open:[{s:'',t:'Άδειο, εκτός από αλμύρα και σκόνη.'}] }},
+    ],
+    exits: [{ side:'right', target:'church', label:'Έξοδος →' }],
+    entry: [
+      {s:'',t:'Σκοτάδι, υγρασία, και ένα αίσθημα μυστηρίου. Δαυλοί φωτίζουν τον χώρο.'},
+      {s:'ΚΛΕΙΩ',t:'Μπαμπά... αυτό δεν μοιάζει φυσικό σπήλαιο.'},
+      {s:'ΑΙΑΣ',t:'Η πόρτα! Κοιτάξτε αυτή την πόρτα!'},
+      {s:'ΝΤΕΜΗΣ',t:'Δώδεκα εσοχές. Κάτι μας λείπει.'},
+    ],
+  },
+
+  // ── SCENE 6: CHURCH OF AGIOS NIKOLAOS ──
+  church: {
+    label: 'ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ', bg: 'bg-church',
+    charPos: { ntemis: { x: 300, y: 340 }, ajax: { x: 390, y: 345 }, clio: { x: 210, y: 345 } },
+    objects: [
+      { id:'fountain', x:200, y:180, w:130, h:140, label:'Σιντριβάνι',
+        verbs: { look:[{s:'',t:'Πέτρινο σιντριβάνι στην πλατεία. Το νερό τρέχει αθόρυβα.'},{s:'ΚΛΕΙΩ',t:'Ρίχνω ένα νόμισμα;'},{s:'ΝΤΕΜΗΣ',t:'Γιατί όχι; Κάνε μια ευχή.'}] }},
+      { id:'church_dome', x:250, y:10, w:160, h:120, label:'Εκκλησία',
+        verbs: { look:[{s:'',t:'Ο Άγιος Νικόλαος — προστάτης των ναυτικών. Ο τρούλος λάμπει κόκκινος στον ήλιο.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.'}] }},
+      { id:'bougainvillea_ch', x:0, y:60, w:90, h:180, label:'Μπουκαμβίλιες',
+        verbs: { look:[{s:'',t:'Φούξια μπουκαμβίλιες σκεπάζουν τον τοίχο. Χρώμα που αψηφά τον χρόνο.'}] }},
+      { id:'cat_church', x:420, y:300, w:60, h:40, label:'Γάτα',
+        verbs: { look:[{s:'',t:'Μια πορτοκαλί γάτα κοιμάται αράχτη στα πλακάκια.'},{s:'ΚΛΕΙΩ',t:'Την ξαναβρήκα! Αυτή είναι η ίδια από το λιμάνι.'}],
+                 talk:[{s:'ΚΛΕΙΩ',t:'Γεια σου, μικρούλα. Με ακολουθείς;'},{s:'',t:'Η γάτα νιαουρίζει απαλά.'}] }},
+      { id:'benches', x:50, y:270, w:120, h:50, label:'Παγκάκια',
+        verbs: { look:[{s:'',t:'Πέτρινα παγκάκια στη σκιά. Γέροι κάθονταν εδώ κάθε απόγευμα, εδώ και δεκαετίες.'}] }},
+      { id:'pots_church', x:480, y:180, w:80, h:100, label:'Γλάστρες',
+        verbs: { look:[{s:'',t:'Γλάστρες με γεράνια και λουλούδια. Κάποιος φροντίζει αυτή την πλατεία με αγάπη.'}] }},
+    ],
+    exits: [{ side:'right', target:'liotrivi', label:'Λιοτρίβι →' }, { side:'left', target:'cave', label:'← Σπήλαιο' }],
+    entry: [
+      {s:'',t:'Η πλατεία του Αγίου Νικολάου. Ησυχία, λουλούδια, και ήχος νερού.'},
+      {s:'ΚΛΕΙΩ',t:'Τι ωραία πλατεία! Και γάτα!'},
+      {s:'ΑΙΑΣ',t:'Πάλι γάτα;'},
+      {s:'ΝΤΕΜΗΣ',t:'Ο Άγιος Νικόλαος. Προστάτης των ναυτικών. Κατάλληλος για το Γαλαξίδι.'},
+    ],
+  },
+
+  // ── SCENE 7: THE WINDMILL ──
+  windmill: {
+    label: 'Ο ΜΥΛΟΣ', bg: 'bg-windmill',
+    charPos: { ntemis: { x: 350, y: 345 }, ajax: { x: 440, y: 348 }, clio: { x: 260, y: 348 } },
+    objects: [
+      { id:'telescope', x:60, y:140, w:80, h:120, label:'Τηλεσκόπιο',
+        verbs: { look:[{s:'',t:'Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;'},{s:'ΚΛΕΙΩ',t:'Αφήστε με να κοιτάξω!'}],
+                 use:[{s:'ΚΛΕΙΩ',t:'Βλέπω... το λιμάνι! Και κάτι στο νερό...'},{s:'ΑΙΑΣ',t:'Τι; Τι βλέπεις;'},{s:'ΚΛΕΙΩ',t:'Ένα σημάδι στην προβλήτα. Σαν αστέρι.'},{s:'ΝΤΕΜΗΣ',t:'Σημείωσέ το, Κλειώ.'}] }},
+      { id:'panorama', x:0, y:20, w:640, h:100, label:'Πανόραμα',
+        verbs: { look:[{s:'',t:'Η θέα κόβει την ανάσα. Ολόκληρο το Γαλαξίδι, ο κόλπος, τα βουνά. Από εδώ βλέπεις τα πάντα.'},{s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέχρι την Ιτέα!'},{s:'ΚΛΕΙΩ',t:'Και τους Δελφούς! Εκεί πάνω!'}] }},
+      { id:'ruins', x:470, y:130, w:120, h:130, label:'Ερείπια',
+        verbs: { look:[{s:'',t:'Πέτρινα ερείπια — ίσως ο παλιός μύλος. Αψίδα ακόμα όρθια, αψηφώντας τον χρόνο.'}] }},
+      { id:'wildflowers', x:150, y:250, w:200, h:80, label:'Αγριολούλουδα',
+        verbs: { look:[{s:'',t:'Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.'},{s:'ΚΛΕΙΩ',t:'Θέλω να ζωγραφίσω αυτά.'}] }},
+      { id:'stone_path_wm', x:300, y:300, w:200, h:60, label:'Μονοπάτι',
+        verbs: { look:[{s:'',t:'Πέτρινο καλντερίμι ανεβαίνει τον λόφο. Λειασμένο από πόδια αιώνων.'}] }},
+    ],
+    exits: [{ side:'right', target:'graveyard', label:'Νεκροταφείο →' }, { side:'left', target:'church', label:'← Εκκλησία' }],
+    entry: [
+      {s:'',t:'Η κορυφή του λόφου. Αέρας, φως, και θέα που δεν τελειώνει.'},
+      {s:'ΑΙΑΣ',t:'ΤΕΛΕΙΟ! Βλέπω τα πάντα από εδώ!'},
+      {s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα — ένα τηλεσκόπιο!'},
+      {s:'ΝΤΕΜΗΣ',t:'Ένα σημείο παρατήρησης. Κάποιος παρακολουθούσε τα πλοία από εδώ.'},
+    ],
+  },
+
+  // ── SCENE 8: THE BOAT (ELPIDA) ──
+  boat: {
+    label: 'ΤΟ ΚΑΡΑΒΙ — ΕΛΠΙΔΑ', bg: 'bg-boat',
+    charPos: { ntemis: { x: 350, y: 340 }, ajax: { x: 430, y: 345 }, clio: { x: 270, y: 345 } },
+    objects: [
+      { id:'nameplate', x:50, y:310, w:120, h:40, label:'ΕΛΠΙΔΑ',
+        verbs: { look:[{s:'',t:'«ΕΛΠΙΔΑ» — χρυσά γράμματα σε ξεφλουδισμένο μπλε ξύλο.'},{s:'ΝΤΕΜΗΣ',t:'Ελπίδα. Πάντα υπάρχει ελπίδα.'}] }},
+      { id:'chapel', x:30, y:60, w:150, h:150, label:'Παρεκκλήσι',
+        verbs: { look:[{s:'',t:'Ένα μικρό λευκό παρεκκλήσι πάνω στον βράχο. Ελληνική σημαία κυματίζει.'},{s:'ΚΛΕΙΩ',t:'Ποιος πάει εκεί πάνω για λειτουργία;'},{s:'ΝΤΕΜΗΣ',t:'Οι ψαράδες. Πριν και μετά το ταξίδι.'}] }},
+      { id:'sunset_sea', x:200, y:20, w:400, h:120, label:'Ηλιοβασίλεμα',
+        verbs: { look:[{s:'',t:'Ο ήλιος βυθίζεται στον Κορινθιακό. Χρυσό, πορτοκαλί, ροζ. Τα βουνά γίνονται σκιές.'},{s:'',t:'Κανείς δεν μιλάει. Δεν χρειάζεται.'}] }},
+      { id:'rope', x:350, y:250, w:80, h:60, label:'Σχοινιά',
+        verbs: { look:[{s:'',t:'Σχοινιά τυλιγμένα στο κατάστρωμα. Μυρίζουν θάλασσα και πεύκο.'}],
+                 use:[{s:'ΑΙΑΣ',t:'Ξέρω κόμπους! Ο παππούς μου έμαθε.'},{s:'ΝΤΕΜΗΣ',t:'Δείξε μας.'}] }},
+      { id:'lifebuoy', x:460, y:290, w:60, h:60, label:'Σωσίβιο',
+        verbs: { look:[{s:'',t:'Πορτοκαλί σωσίβιο. Λευκά γράμματα: ΕΛΠΙΔΑ — ΓΑΛΑΞΙΔΙ.'}] }},
+      { id:'galaxidi_view', x:400, y:80, w:200, h:100, label:'Γαλαξίδι στο βάθος',
+        verbs: { look:[{s:'',t:'Το Γαλαξίδι λάμπει στον ήλιο του δειλινού. Σπίτια, εκκλησίες, το λιμάνι — σαν μακέτα.'},{s:'ΚΛΕΙΩ',t:'Από εδώ φαίνεται σαν παραμύθι.'}] }},
+    ],
+    exits: [{ side:'left', target:'port', label:'← Λιμάνι' }],
+    entry: [
+      {s:'',t:'Η Ελπίδα πλέει αργά στον Κορινθιακό. Ο κόσμος σταμάτησε.'},
+      {s:'ΚΛΕΙΩ',t:'Αυτό... αυτό είναι τέλειο.'},
+      {s:'ΑΙΑΣ',t:'Μπαμπά, μπορούμε να μείνουμε για πάντα εδώ;'},
+      {s:'ΝΤΕΜΗΣ',t:'Για λίγο ακόμα. Κοιτάξτε τον ήλιο.'},
+    ],
+  },
+
+  // ── SCENE 9: THE GRAVEYARD ──
+  graveyard: {
+    label: 'ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ', bg: 'bg-graveyard',
+    charPos: { ntemis: { x: 300, y: 345 }, ajax: { x: 390, y: 348 }, clio: { x: 210, y: 348 } },
+    objects: [
+      { id:'headstones', x:100, y:100, w:200, h:150, label:'Ταφόπλακες',
+        verbs: { look:[{s:'',t:'Μαρμάρινοι σταυροί και πλάκες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς, Χρυσοβαλάντου.'},{s:'ΚΛΕΙΩ',t:'Κάθε πέτρα και ένα ταξίδι.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε πέτρα και μια οικογένεια που περίμενε.'}] }},
+      { id:'cypress', x:0, y:20, w:60, h:300, label:'Κυπαρίσσια',
+        verbs: { look:[{s:'',t:'Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι.'}] }},
+      { id:'poppies_gr', x:300, y:200, w:150, h:100, label:'Παπαρούνες',
+        verbs: { look:[{s:'',t:'Κόκκινες παπαρούνες ανάμεσα στους τάφους. Η ζωή εκεί που αναπαύεται ο θάνατος.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, δεν είναι τρομακτικό. Είναι... ωραίο.'}] }},
+      { id:'sea_view_gr', x:350, y:30, w:250, h:100, label:'Θέα στη θάλασσα',
+        verbs: { look:[{s:'',t:'Η θάλασσα λάμπει χρυσή από το ηλιοβασίλεμα. Ακόμα και μετά θάνατον, οι καπετάνιοι βλέπουν τη θάλασσα.'},{s:'ΑΙΑΣ',t:'Τους έβαλαν εδώ επίτηδες. Να βλέπουν.'}] }},
+      { id:'sailboat_dist', x:500, y:80, w:60, h:40, label:'Ιστιοφόρο στο βάθος',
+        verbs: { look:[{s:'',t:'Ένα ιστιοφόρο στον ορίζοντα. Σαν φάντασμα του παρελθόντος.'}] }},
+      { id:'path_stones_gr', x:150, y:280, w:200, h:60, label:'Πέτρινο μονοπάτι',
+        verbs: { look:[{s:'',t:'Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.'}] }},
+    ],
+    exits: [{ side:'left', target:'windmill', label:'← Μύλος' }],
+    entry: [
+      {s:'',t:'Το παλιό νεκροταφείο. Θέα στη θάλασσα, μυρωδιά θυμαριού, ησυχία.'},
+      {s:'ΚΛΕΙΩ',t:'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία.'},
+      {s:'ΝΤΕΜΗΣ',t:'Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.'},
+      {s:'ΑΙΑΣ',t:'Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.'},
     ],
   },
 };
@@ -1196,244 +1428,16 @@ function render() {
   drawParticles();
 
   // Hotspot highlight on hover
-  if (state.hoverObj) {
-    const obj = state.hoverObj;
-    ctx.save();
-    ctx.strokeStyle = 'rgba(212,160,60,0.4)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
-    ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
-    ctx.setLineDash([]);
-    ctx.restore();
-  }
-
-  // Exit zone highlights
-  if (sc.exits) {
-    for (const exit of sc.exits) {
-      const isHover = (exit.side === 'left' && state.mouseGX < 25) ||
-                      (exit.side === 'right' && state.mouseGX > GW - 25);
-      if (isHover) {
-        ctx.save();
-        const exGrad = exit.side === 'left'
-          ? ctx.createLinearGradient(0, 0, 25, 0)
-          : ctx.createLinearGradient(GW, 0, GW - 25, 0);
-        exGrad.addColorStop(0, 'rgba(212,160,60,0.15)');
-        exGrad.addColorStop(1, 'rgba(212,160,60,0)');
-        ctx.fillStyle = exGrad;
-        if (exit.side === 'left') ctx.fillRect(0, 0, 25, GH);
-        else ctx.fillRect(GW - 25, 0, 25, GH);
-        // Arrow
-        ctx.fillStyle = '#D4A03C';
-        ctx.font = '16px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        if (exit.side === 'left') ctx.fillText('◀', 12, GH / 2);
-        else ctx.fillText('▶', GW - 12, GH / 2);
-        ctx.restore();
-      }
-    }
-  }
-
-  // Characters — back to front for depth
-  drawCharacter('clio', state.tick);
-  drawCharacter('ajax', state.tick);
-  drawCharacter('ntemis', state.tick);
-
-  // Scene label
-  ctx.save();
-  ctx.fillStyle = '#D4A03C';
-  ctx.font = '8px "Press Start 2P", monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.shadowColor = '#000';
-  ctx.shadowBlur = 4;
-  ctx.shadowOffsetX = 2;
-  ctx.shadowOffsetY = 2;
-  ctx.fillText(sc.label, GW / 2, 8);
-  ctx.restore();
-
-  // Music toggle icon
-  ctx.save();
-  ctx.globalAlpha = state.musicOn ? 0.5 : 0.2;
-  ctx.fillStyle = '#D4A03C';
-  ctx.font = '14px sans-serif';
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'top';
-  ctx.fillText('♪', GW - 8, 8);
-  ctx.restore();
-
-  // Dialogue overlay
-  drawDialogue();
-
-  // Fade overlay
-  if (state.fade.active && state.fade.alpha > 0) {
-    ctx.save();
-    ctx.globalAlpha = state.fade.alpha;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, GW, GH);
-    ctx.restore();
-  }
-}
 
 // ════════════════════════════════════════════════════════════
-// UPDATE — Main logic update
-// ════════════════════════════════════════════════════════════
-function update(dt) {
-  state.tick++;
-
-  // Title screen — start music on first interaction (handled by click)
-  if (state.phase === 'title') return;
-
-  if (state.phase !== 'playing') return;
-
-  // Walking
-  updateWalking(dt);
-
-  // Character fade-in
-  for (const who of ['ntemis','ajax','clio']) {
-    if (chars[who].fadeIn < 1) {
-      const delays = { ntemis: 0.1, ajax: 0.3, clio: 0.5 };
-      if (state.tick > delays[who] * 60) {
-        chars[who].fadeIn = Math.min(1, chars[who].fadeIn + dt * 1.5);
-      }
-    }
-  }
-
-  // Dialogue typewriter
-  updateDlg(dt);
-
-  // Particles
-  updateParticles();
-
-  // Fade transition
-  if (state.fade.active) {
-    const speed = 2.0; // fade speed (slower = smoother)
-    state.fade.alpha += state.fade.dir * dt * speed;
-    if (state.fade.dir > 0 && state.fade.alpha >= 1) {
-      state.fade.alpha = 1;
-      if (state.fade.cb) { const cb = state.fade.cb; state.fade.cb = null; cb(); }
-    }
-    if (state.fade.dir < 0 && state.fade.alpha <= 0) {
-      state.fade.alpha = 0;
-      if (state.fade.cb) { const cb = state.fade.cb; state.fade.cb = null; cb(); }
-    }
-  }
-}
-
-// ════════════════════════════════════════════════════════════
-// GAME LOOP
-// ════════════════════════════════════════════════════════════
-let lastTime = 0;
-
-function gameLoop(timestamp) {
-  const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.05) : 0.016;
-  lastTime = timestamp;
-
-  // Resize canvas to fill available space
-  const rect = CVS.getBoundingClientRect();
-  // Keep internal resolution fixed, CSS handles scaling
-
-  update(dt);
-  render();
-  requestAnimationFrame(gameLoop);
-}
-
-// ════════════════════════════════════════════════════════════
-// INPUT HANDLING
-// ════════════════════════════════════════════════════════════
-CVS.addEventListener('mousemove', (e) => {
-  const g = screenToGame(e.clientX, e.clientY);
-  state.mouseGX = g.x;
-  state.mouseGY = g.y;
-
-  if (state.phase === 'title') {
-    CVS.style.cursor = 'pointer';
-    return;
-  }
-
-  if (state.phase !== 'playing' || state.dlg.active) {
-    state.hoverObj = null;
-    updateActionLine();
-    return;
-  }
-
-  // Check hotspots
-  const obj = hitTestObj(g.x, g.y);
-  state.hoverObj = obj;
-
-  // Check exits for cursor change
-  const exit = hitTestExit(g.x, g.y);
-  if (exit) {
-    CVS.style.cursor = exit.side === 'left' ? 'w-resize' : 'e-resize';
-    state.hoverObj = { label: exit.label }; // fake obj for action line
-  } else if (obj) {
-    CVS.style.cursor = 'pointer';
-  } else {
-    CVS.style.cursor = 'crosshair';
-  }
-  updateActionLine();
-});
-
-CVS.addEventListener('click', (e) => {
-  const g = screenToGame(e.clientX, e.clientY);
-
-  // Title clicks handled by dedicated handler
-  if (state.phase !== 'playing') return;
-
-  // Dialogue advance
-  if (state.dlg.active) { advanceDlg(); return; }
-
-  // Music toggle (top-right corner)
-  if (g.x > GW - 30 && g.y < 25) { toggleMusic(); return; }
-
-  // Check exit zones
-  const exit = hitTestExit(g.x, g.y);
-  if (exit) { changeScene(exit.target); return; }
-
-  // Check hotspots
-  const obj = hitTestObj(g.x, g.y);
-  if (obj) { objClick(obj); return; }
-
-  // Click ground — walk Ntemis
-  if (g.y > 200) { // Only walk on ground area
-    startWalk('ntemis', g.x);
-    familyFollow(g.x);
-  }
-});
-
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (e.key === ' ' || e.key === 'Enter') {
-    e.preventDefault();
-    if (state.dlg.active) advanceDlg();
-  }
-  const vk = {'1':'look','2':'talk','3':'open','4':'use'};
-  if (vk[e.key] && state.phase === 'playing') setVerb(vk[e.key]);
-});
-
-// ════════════════════════════════════════════════════════════
-// MUSIC
-// ════════════════════════════════════════════════════════════
-const bgm = document.getElementById('bgm');
-bgm.volume = 0.25;
-
-function toggleMusic() {
-  if (state.musicOn) {
-    bgm.pause(); state.musicOn = false;
-  } else {
-    bgm.play().catch(() => {}); state.musicOn = true;
-  }
-}
-
-// ════════════════════════════════════════════════════════════
-// TITLE SCREEN — Cinematic sunset harbor with animated title
+// TITLE SCREEN — Pixel art background + animated title overlay
 // ════════════════════════════════════════════════════════════
 const titleMusic = document.getElementById('title-music');
 titleMusic.volume = 0.4;
 let titleFadeOut = 0;
 let titleStartTick = -1;
 
-// Title text animation config
+// Title text
 const titleLine1 = 'ΤΟ ΜΥΣΤΗΡΙΟ';
 const titleLine2 = 'του';
 const titleLine3 = 'ΓΑΛΑΞΕΙΔΙΟΥ';
@@ -1448,187 +1452,39 @@ function drawTitleScreen(tick) {
   const t = tick * 0.02;
 
   // ═══════════════════════════════════════
-  // SKY — dramatic sunset purple → orange → gold
+  // BACKGROUND — pixel art harbor scene
   // ═══════════════════════════════════════
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, 200);
-  skyGrad.addColorStop(0, '#1A0A2E');
-  skyGrad.addColorStop(0.12, '#2E1040');
-  skyGrad.addColorStop(0.25, '#5A1838');
-  skyGrad.addColorStop(0.38, '#8A2828');
-  skyGrad.addColorStop(0.5, '#C04820');
-  skyGrad.addColorStop(0.62, '#D87018');
-  skyGrad.addColorStop(0.72, '#E89818');
-  skyGrad.addColorStop(0.82, '#F0B020');
-  skyGrad.addColorStop(0.92, '#E8A828');
-  skyGrad.addColorStop(1, '#C88020');
-  ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, GW, 200);
-
-  // ── Chunky pixel clouds (sunset) ──
-  ctx.save();
-  const cloudRows = [
-    // [y, colors[]] — each row is a band of cloud chunks
-    [5, ['#1A0A2E','#2E1040','#1A0A2E','#2E1040','#1A0A2E']],
-    [18, ['#3A1030','#4A1838','#5A1838','#4A1838','#3A1030','#5A1838','#4A1838']],
-    [32, ['#8A3020','#A04820','#C05020','#A04020','#C06020','#B05020','#A04020']],
-    [45, ['#C06828','#D07828','#C06020','#D07020','#B05828','#C06828']],
-    [56, ['#D88020','#E89020','#D88820','#E8A020','#D89020','#E88820']],
-    [68, ['#E8A020','#F0B828','#E8A828','#F0B020','#E8A828','#F0B028']],
-    [80, ['#F0C030','#E8B828','#F0C030','#E8B020','#F0C030','#E8B828']],
-  ];
-  for (const [cy, colors] of cloudRows) {
-    const segW = GW / colors.length;
-    for (let i = 0; i < colors.length; i++) {
-      ctx.fillStyle = colors[i];
-      for (let bx = i * segW; bx < (i + 1) * segW; bx += 4) {
-        const vary = Math.sin(bx * 0.08 + cy * 0.1) * 5;
-        const h = 10 + Math.sin(bx * 0.12 + cy) * 4;
-        ctx.fillRect(Math.floor(bx), Math.floor(cy + vary), 4, Math.max(2, Math.floor(h)));
-      }
-    }
+  const bg = images['title-bg'];
+  if (bg && bg.complete) {
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(bg, 0, 0, GW, GH);
+  } else {
+    // Fallback if image not loaded
+    ctx.fillStyle = '#1A0A2E';
+    ctx.fillRect(0, 0, GW, GH);
   }
-  // Sun glow
-  const sunGlowGrad = ctx.createRadialGradient(GW * 0.4, 95, 5, GW * 0.4, 95, 160);
-  sunGlowGrad.addColorStop(0, 'rgba(255,210,70,0.4)');
-  sunGlowGrad.addColorStop(0.3, 'rgba(240,160,40,0.2)');
-  sunGlowGrad.addColorStop(1, 'rgba(200,80,20,0)');
-  ctx.fillStyle = sunGlowGrad;
-  ctx.fillRect(0, 20, GW, 160);
-  ctx.restore();
 
-  // ── Mountain silhouette ──
+  // Subtle vignette overlay
   ctx.save();
-  ctx.fillStyle = '#2A1820';
-  ctx.beginPath();
-  ctx.moveTo(0, 200); ctx.lineTo(0, 145);
-  ctx.quadraticCurveTo(60, 120, 130, 138);
-  ctx.quadraticCurveTo(200, 148, 260, 128);
-  ctx.quadraticCurveTo(320, 112, 380, 130);
-  ctx.quadraticCurveTo(440, 140, 490, 122);
-  ctx.quadraticCurveTo(560, 110, 610, 132);
-  ctx.lineTo(GW, 140); ctx.lineTo(GW, 200);
-  ctx.closePath(); ctx.fill();
+  const vigL = ctx.createLinearGradient(0, 0, 60, 0);
+  vigL.addColorStop(0, 'rgba(0,0,0,0.4)');
+  vigL.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = vigL;
+  ctx.fillRect(0, 0, 60, GH);
+  const vigR = ctx.createLinearGradient(GW, 0, GW - 60, 0);
+  vigR.addColorStop(0, 'rgba(0,0,0,0.4)');
+  vigR.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = vigR;
+  ctx.fillRect(GW - 60, 0, 60, GH);
+  const vigT = ctx.createLinearGradient(0, 0, 0, 40);
+  vigT.addColorStop(0, 'rgba(0,0,0,0.3)');
+  vigT.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = vigT;
+  ctx.fillRect(0, 0, GW, 40);
   ctx.restore();
 
   // ═══════════════════════════════════════
-  // TOWN SILHOUETTE — buildings, domes, rooftops
-  // ═══════════════════════════════════════
-  const townY = 185;
-  ctx.save();
-  const blds = [
-    [15,155,35,'r'],[48,148,28,'r'],[74,152,32,'t'],[104,145,38,'d'],
-    [140,150,30,'r'],[168,142,35,'c'],[200,148,28,'r'],[226,144,34,'r'],
-    [258,140,30,'d'],[286,148,32,'r'],[316,143,36,'t'],[350,150,28,'r'],
-    [376,146,32,'d'],[406,152,26,'r'],[430,148,34,'r'],[462,144,30,'c'],
-    [490,150,28,'r'],
-  ];
-  for (const [bx, by, bw, bt] of blds) {
-    ctx.fillStyle = '#1A0C10';
-    ctx.fillRect(bx, by, bw, townY - by);
-    if (bt === 'd') { ctx.beginPath(); ctx.arc(bx+bw/2, by, bw/2.5, Math.PI, 0); ctx.fill(); }
-    if (bt === 'c') { ctx.fillRect(bx+bw/2-3, by-18, 6, 18); ctx.fillRect(bx+bw/2-1, by-24, 2, 8); ctx.fillRect(bx+bw/2-4, by-22, 8, 2); }
-    if (bt === 't') { ctx.fillRect(bx+4, by-10, bw-8, 10); }
-    // Lit windows
-    const wr = Math.floor((townY - by - 8) / 12);
-    for (let r = 0; r < wr; r++) {
-      const wy = by + 6 + r * 12;
-      const wc = Math.floor((bw - 8) / 10);
-      for (let c = 0; c < wc; c++) {
-        if (Math.sin(bx*3.7 + r*7.1 + c*13.3) > 0.2) {
-          ctx.fillStyle = Math.sin(bx+r+c) > 0 ? '#D89030' : '#E8A838';
-          ctx.fillRect(bx + 5 + c*10, wy, 4, 4);
-        }
-      }
-    }
-  }
-  ctx.restore();
-
-  // ═══════════════════════════════════════
-  // SHIP SILHOUETTE — right side
-  // ═══════════════════════════════════════
-  ctx.save();
-  ctx.fillStyle = '#100608';
-  const sx = 520;
-  // Hull
-  ctx.beginPath();
-  ctx.moveTo(sx-40,townY); ctx.lineTo(sx-55,townY-10); ctx.lineTo(sx-50,townY-30);
-  ctx.lineTo(sx-30,townY-35); ctx.lineTo(sx+60,townY-35);
-  ctx.lineTo(sx+70,townY-28); ctx.lineTo(sx+75,townY-15);
-  ctx.lineTo(sx+65,townY); ctx.closePath(); ctx.fill();
-  // Masts
-  ctx.fillRect(sx+10, townY-120, 4, 90);
-  ctx.fillRect(sx-25, townY-110, 70, 3); ctx.fillRect(sx-18, townY-95, 56, 3); ctx.fillRect(sx-12, townY-78, 44, 3);
-  ctx.fillRect(sx-25, townY-100, 3, 68);
-  ctx.fillRect(sx-45, townY-92, 50, 3); ctx.fillRect(sx-38, townY-78, 36, 3);
-  ctx.fillRect(sx+50, townY-90, 3, 58);
-  ctx.fillRect(sx+35, townY-82, 35, 3);
-  // Rigging
-  ctx.strokeStyle = '#100608'; ctx.lineWidth = 1;
-  [[sx+12,townY-118, sx-40,townY-35],[sx+12,townY-118, sx+68,townY-35],
-   [sx-24,townY-98, sx-50,townY-35],[sx-24,townY-98, sx+5,townY-35],
-   [sx+51,townY-88, sx+30,townY-35],[sx+51,townY-88, sx+72,townY-30],
-   [sx+12,townY-118, sx-24,townY-98],[sx+12,townY-118, sx+51,townY-88],
-  ].forEach(([x1,y1,x2,y2]) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
-  // Bowsprit
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(sx-50,townY-32); ctx.lineTo(sx-80,townY-50); ctx.stroke();
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx+12,townY-118); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(sx-80,townY-50); ctx.lineTo(sx-24,townY-98); ctx.stroke();
-  ctx.restore();
-
-  // ═══════════════════════════════════════
-  // WATER — sunset reflections
-  // ═══════════════════════════════════════
-  const waterGrad = ctx.createLinearGradient(0, townY, 0, GH);
-  waterGrad.addColorStop(0, '#C07818');
-  waterGrad.addColorStop(0.1, '#A06018');
-  waterGrad.addColorStop(0.25, '#704010');
-  waterGrad.addColorStop(0.45, '#402008');
-  waterGrad.addColorStop(0.7, '#281008');
-  waterGrad.addColorStop(1, '#180808');
-  ctx.fillStyle = waterGrad;
-  ctx.fillRect(0, townY, GW, GH - townY);
-
-  // Reflection shimmer
-  ctx.save();
-  for (let ry = townY + 2; ry < GH - 5; ry += 3) {
-    const d = (ry - townY) / (GH - 5 - townY);
-    ctx.fillStyle = `rgba(230,160,40,${0.15*(1-d*0.7)})`;
-    for (let rx = 0; rx < GW; rx += 6) {
-      const sh = Math.sin(rx*0.04 + ry*0.08 + t*1.5)*0.5 + 0.5;
-      if (sh > 0.4) ctx.fillRect(rx, ry, 2+Math.floor(sh*4), 1);
-    }
-    ctx.fillStyle = `rgba(10,5,2,${0.06+d*0.1})`;
-    for (let rx = 0; rx < GW; rx += 8) {
-      if (Math.sin(rx*0.06 + ry*0.12 - t*0.8) > 0.3) ctx.fillRect(rx, ry+1, 4, 1);
-    }
-  }
-  // Bright sun reflection path
-  const sunX = GW * 0.4;
-  for (let ry = townY; ry < GH - 5; ry += 2) {
-    const d = (ry - townY) / (GH - 5 - townY);
-    const spread = 20 + d*80;
-    ctx.fillStyle = `rgba(255,200,60,${0.25*(1-d*0.5)})`;
-    const wobble = Math.sin(ry*0.15 + t*2) * spread*0.3;
-    const w = 3 + Math.floor(Math.sin(ry*0.2 + t*1.8)*3 + 3);
-    ctx.fillRect(sunX + wobble - w/2, ry, w, 1);
-    if (Math.sin(ry*0.3 + t*1.2) > 0.2) {
-      ctx.fillRect(sunX + wobble + spread*0.3, ry, 2, 1);
-      ctx.fillRect(sunX + wobble - spread*0.3, ry, 2, 1);
-    }
-  }
-  // Town reflections
-  ctx.fillStyle = 'rgba(10,5,5,0.15)';
-  for (const [bx,,bw] of blds) {
-    for (let r = 0; r < 20; r += 2) {
-      ctx.fillRect(bx + Math.sin(r*0.2+t)*2, townY+r, bw, 1);
-    }
-  }
-  ctx.restore();
-
-  // ═══════════════════════════════════════
-  // ANIMATED TITLE — letters unfold cinematically
+  // TITLE TEXT — Gold metallic with deep shadows
   // ═══════════════════════════════════════
   const l1N = titleLine1.length;
   const l1End = l1N * LETTER_DELAY;
@@ -1642,35 +1498,46 @@ function drawTitleScreen(tick) {
   ctx.save();
   ctx.textBaseline = 'middle';
 
-  // Single letter renderer with scale-in animation
-  function drawLetter(ch, cx, cy, size, progress) {
+  // Metallic letter renderer — warm gold with strong bevel
+  function drawMetalLetter(ch, cx, cy, size, progress) {
     if (progress <= 0) return;
     const p = Math.min(1, progress);
-    const scale = p < 0.5 ? 1.5 - p : 1.0 + Math.sin((p-0.5)*Math.PI)*0.05;
-    const alpha = Math.min(1, p * 2);
+    const scale = p < 0.5 ? 1.4 - p * 0.8 : 1.0;
+    const alpha = Math.min(1, p * 2.5);
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
     ctx.globalAlpha = alpha;
     ctx.font = `bold ${size}px "Press Start 2P", monospace`;
     ctx.textAlign = 'center';
-    // Shadow layers
-    const shd = [['#060200',5],['#1A0804',4],['#2E1508',3],['#4A2010',2],['#7A5018',1]];
-    for (const [c,d] of shd) { ctx.fillStyle = c; ctx.fillText(ch, d, d); }
-    // Gold with glow
-    const g = 0.3 + Math.sin(t*1.2 + cx*0.01)*0.15;
-    ctx.shadowColor = `rgba(255,180,40,${g*alpha})`;
-    ctx.shadowBlur = 20;
-    ctx.fillStyle = '#D4A03C';
+    // Deep shadow
+    ctx.fillStyle = '#000000';
+    ctx.fillText(ch, 4, 5);
+    ctx.fillStyle = '#0A0400';
+    ctx.fillText(ch, 3, 4);
+    // Dark outline
+    ctx.fillStyle = '#2A1000';
+    ctx.fillText(ch, 2, 3);
+    // Mid tone
+    ctx.fillStyle = '#6A3810';
+    ctx.fillText(ch, 1, 2);
+    // Main body — rich gold
+    ctx.fillStyle = '#C07820';
     ctx.fillText(ch, 0, 0);
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = `rgba(255,235,170,${0.35*alpha})`;
+    // Upper highlight — bright gold
+    ctx.fillStyle = '#E0A030';
     ctx.fillText(ch, 0, -1);
+    // Top edge — hot highlight
+    ctx.fillStyle = `rgba(255,200,80,${0.6 * alpha})`;
+    ctx.fillText(ch, -1, -2);
+    // Gleam
+    ctx.fillStyle = `rgba(255,230,140,${0.3 * alpha})`;
+    ctx.fillText(ch, -1, -3);
     ctx.restore();
   }
 
   // Line 1: "ΤΟ ΜΥΣΤΗΡΙΟ"
-  const l1Size = 36, l1Y = 100;
+  const l1Size = 36, l1Y = 75;
   ctx.font = `bold ${l1Size}px "Press Start 2P", monospace`;
   ctx.textAlign = 'left';
   const l1W = ctx.measureText(titleLine1).width;
@@ -1678,7 +1545,7 @@ function drawTitleScreen(tick) {
   for (let i = 0; i < l1N; i++) {
     const ch = titleLine1[i];
     const chW = ctx.measureText(ch).width;
-    drawLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
+    drawMetalLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
     l1X += chW;
   }
 
@@ -1687,24 +1554,26 @@ function drawTitleScreen(tick) {
     const p2 = Math.min(1, (elapsed - l2Start) / 25);
     ctx.save();
     ctx.globalAlpha = p2;
-    ctx.translate(GW/2, l1Y + 50);
-    ctx.scale(1.3 - p2*0.3, 1.3 - p2*0.3);
+    ctx.translate(GW/2, l1Y + 48);
+    ctx.scale(1.2 - p2*0.2, 1.2 - p2*0.2);
     ctx.font = 'bold 14px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#1A0804'; ctx.fillText(titleLine2, 2, 2);
-    ctx.fillStyle = '#B8842C'; ctx.fillText(titleLine2, 0, 0);
+    ctx.fillStyle = '#000'; ctx.fillText(titleLine2, 2, 2);
+    ctx.fillStyle = '#6A3810'; ctx.fillText(titleLine2, 1, 1);
+    ctx.fillStyle = '#C08828'; ctx.fillText(titleLine2, 0, 0);
+    ctx.fillStyle = `rgba(240,190,90,${0.5*p2})`; ctx.fillText(titleLine2, 0, -1);
     ctx.restore();
   }
 
   // Line 3: "ΓΑΛΑΞΕΙΔΙΟΥ"
-  const l3Size = 38, l3Y = l1Y + 102;
+  const l3Size = 38, l3Y = l1Y + 100;
   ctx.font = `bold ${l3Size}px "Press Start 2P", monospace`;
   const l3W = ctx.measureText(titleLine3).width;
   let l3X = (GW - l3W) / 2;
   for (let i = 0; i < l3N; i++) {
     const ch = titleLine3[i];
     const chW = ctx.measureText(ch).width;
-    drawLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
+    drawMetalLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
     l3X += chW;
   }
   ctx.restore();
@@ -1715,22 +1584,25 @@ function drawTitleScreen(tick) {
     ctx.save(); ctx.globalAlpha = ca;
     ctx.font = '7px "Press Start 2P", monospace';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#8A6828';
-    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 12);
+    ctx.fillStyle = '#000'; ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2 + 1, GH - 9);
+    ctx.fillStyle = '#C08828';
+    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 10);
     ctx.restore();
   }
 
   // Blinking start prompt
   if (elapsed > promptAt) {
-    const blink = 0.2 + Math.sin(tick*0.06)*0.45;
-    ctx.save();
-    ctx.font = '8px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.globalAlpha = Math.max(0, blink);
-    ctx.fillStyle = '#D4A03C';
-    ctx.shadowColor = 'rgba(212,160,60,0.5)'; ctx.shadowBlur = 10;
-    ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 35);
-    ctx.restore();
+    const blink = Math.sin(tick*0.06) > 0;
+    if (blink) {
+      ctx.save();
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#000';
+      ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2 + 1, GH - 29);
+      ctx.fillStyle = '#E0A030';
+      ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 30);
+      ctx.restore();
+    }
   }
 
   // Fade overlay
@@ -1742,6 +1614,227 @@ function drawTitleScreen(tick) {
     ctx.restore();
   }
 }
+  ctx.fillStyle = '#0A0E28';
+  ctx.fillRect(0, townY, GW, GH - townY);
+
+  // Scanline water reflections
+  for (let ry = townY + 1; ry < GH - 25; ry += 2) {
+    const d = (ry - townY) / (GH - 25 - townY);
+    // Blue shimmer lines
+    const shift = Math.sin(ry * 0.1 + t * 1.2) * 3;
+    ctx.fillStyle = d < 0.3 ? '#101838' : '#0C1230';
+    for (let rx = 0; rx < GW; rx += 8) {
+      if (Math.sin(rx * 0.05 + ry * 0.08 + t * 1.5) > 0.3) {
+        ctx.fillRect(rx + shift, ry, 3 + Math.floor(Math.sin(rx*0.1+ry*0.2)*2), 1);
+      }
+    }
+  }
+  // Moon reflection
+  const moonRX = 540;
+  for (let ry = townY + 2; ry < townY + 60; ry += 2) {
+    const d = (ry - townY) / 60;
+    const wobble = Math.sin(ry * 0.2 + t * 2) * (3 + d * 8);
+    ctx.fillStyle = d < 0.3 ? '#283860' : '#1A2848';
+    const w = 2 + Math.floor(d * 3);
+    ctx.fillRect(moonRX + wobble - w/2, ry, w, 1);
+  }
+  // Town reflections (vertical streaks)
+  for (const [bx,,bw] of blds) {
+    for (let r = 0; r < 15; r += 2) {
+      const wobble = Math.sin(r * 0.3 + t * 1.5) * 2;
+      ctx.fillStyle = '#0E1430';
+      ctx.fillRect(bx + wobble, townY + r, bw, 1);
+    }
+  }
+
+  // ═══════════════════════════════════════
+  // FOREGROUND — harbor edge silhouette
+  // ═══════════════════════════════════════
+  // Stone quay edge
+  ctx.fillStyle = '#080C20';
+  ctx.fillRect(0, GH - 22, GW, 22);
+  ctx.fillStyle = '#101838';
+  ctx.fillRect(0, GH - 22, GW, 1);
+  // Bollard left
+  ctx.fillStyle = '#0E1230';
+  ctx.fillRect(28, GH - 30, 6, 10);
+  ctx.fillRect(26, GH - 32, 10, 3);
+  ctx.fillStyle = '#182050';
+  ctx.fillRect(26, GH - 32, 10, 1);
+  // Barrel
+  ctx.fillStyle = '#0C1028';
+  ctx.fillRect(60, GH - 32, 14, 12);
+  ctx.fillStyle = '#182050';
+  ctx.fillRect(60, GH - 32, 14, 1);
+  ctx.fillRect(60, GH - 26, 14, 1);
+  // Rope coil
+  ctx.strokeStyle = '#141838';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(90, GH - 24, 5, 0, Math.PI * 1.5); ctx.stroke();
+  // Bollard right
+  ctx.fillStyle = '#0E1230';
+  ctx.fillRect(560, GH - 30, 6, 10);
+  ctx.fillRect(558, GH - 32, 10, 3);
+  ctx.fillStyle = '#182050';
+  ctx.fillRect(558, GH - 32, 10, 1);
+  // Anchor
+  ctx.fillStyle = '#0E1230';
+  ctx.fillRect(590, GH - 34, 2, 12);
+  ctx.fillRect(585, GH - 26, 12, 2);
+
+  // ═══════════════════════════════════════
+  // DECORATIVE COLUMNS (framing, like Fate of Atlantis)
+  // ═══════════════════════════════════════
+  // Left column
+  for (let y = 0; y < GH; y += 2) {
+    const shade = y < GH/2 ? '#0E1238' : '#0A0E30';
+    ctx.fillStyle = shade;
+    ctx.fillRect(0, y, 8, 2);
+    ctx.fillStyle = '#182058';
+    ctx.fillRect(8, y, 1, 2);
+  }
+  ctx.fillStyle = '#141848';
+  ctx.fillRect(0, 0, 10, 4); // capital
+  ctx.fillRect(0, GH-4, 10, 4); // base
+  // Right column
+  for (let y = 0; y < GH; y += 2) {
+    const shade = y < GH/2 ? '#0E1238' : '#0A0E30';
+    ctx.fillStyle = shade;
+    ctx.fillRect(GW - 8, y, 8, 2);
+    ctx.fillStyle = '#182058';
+    ctx.fillRect(GW - 9, y, 1, 2);
+  }
+  ctx.fillStyle = '#141848';
+  ctx.fillRect(GW - 10, 0, 10, 4);
+  ctx.fillRect(GW - 10, GH-4, 10, 4);
+
+  // ═══════════════════════════════════════
+  // TITLE TEXT — Red/Orange metallic (Indiana Jones style)
+  // ═══════════════════════════════════════
+  const l1N = titleLine1.length;
+  const l1End = l1N * LETTER_DELAY;
+  const l2Start = l1End + LINE2_DELAY;
+  const l2End = l2Start + 15;
+  const l3Start = l2End + LINE3_DELAY;
+  const l3N = titleLine3.length;
+  const l3End = l3Start + l3N * LETTER_DELAY;
+  const promptAt = l3End + PROMPT_DELAY;
+
+  ctx.save();
+  ctx.textBaseline = 'middle';
+
+  // Metallic letter renderer — bold red/orange with bevel
+  function drawMetalLetter(ch, cx, cy, size, progress) {
+    if (progress <= 0) return;
+    const p = Math.min(1, progress);
+    const scale = p < 0.5 ? 1.4 - p * 0.8 : 1.0;
+    const alpha = Math.min(1, p * 2.5);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    ctx.globalAlpha = alpha;
+    ctx.font = `bold ${size}px "Press Start 2P", monospace`;
+    ctx.textAlign = 'center';
+    // Layer 1: Deep shadow (bottom-right)
+    ctx.fillStyle = '#100000';
+    ctx.fillText(ch, 4, 4);
+    // Layer 2: Dark outline
+    ctx.fillStyle = '#300800';
+    ctx.fillText(ch, 3, 3);
+    // Layer 3: Mid shadow
+    ctx.fillStyle = '#601808';
+    ctx.fillText(ch, 2, 2);
+    // Layer 4: Main body (red-orange)
+    ctx.fillStyle = '#C03010';
+    ctx.fillText(ch, 0, 0);
+    // Layer 5: Upper gradient (brighter orange)
+    ctx.fillStyle = '#E06020';
+    ctx.fillText(ch, 0, -1);
+    // Layer 6: Top highlight (bright orange-yellow)
+    ctx.fillStyle = `rgba(255,160,40,${0.7 * alpha})`;
+    ctx.fillText(ch, -1, -2);
+    // Layer 7: Hot edge (very top)
+    ctx.fillStyle = `rgba(255,200,80,${0.4 * alpha})`;
+    ctx.fillText(ch, -1, -3);
+    ctx.restore();
+  }
+
+  // Line 1: "ΤΟ ΜΥΣΤΗΡΙΟ"
+  const l1Size = 36, l1Y = 80;
+  ctx.font = `bold ${l1Size}px "Press Start 2P", monospace`;
+  ctx.textAlign = 'left';
+  const l1W = ctx.measureText(titleLine1).width;
+  let l1X = (GW - l1W) / 2;
+  for (let i = 0; i < l1N; i++) {
+    const ch = titleLine1[i];
+    const chW = ctx.measureText(ch).width;
+    drawMetalLetter(ch, l1X + chW/2, l1Y, l1Size, (elapsed - i*LETTER_DELAY)/20);
+    l1X += chW;
+  }
+
+  // Line 2: "του" — blue-toned, smaller
+  if (elapsed > l2Start) {
+    const p2 = Math.min(1, (elapsed - l2Start) / 25);
+    ctx.save();
+    ctx.globalAlpha = p2;
+    ctx.translate(GW/2, l1Y + 48);
+    ctx.scale(1.2 - p2*0.2, 1.2 - p2*0.2);
+    ctx.font = 'bold 14px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#0A0820'; ctx.fillText(titleLine2, 2, 2);
+    ctx.fillStyle = '#384880'; ctx.fillText(titleLine2, 1, 1);
+    ctx.fillStyle = '#6080C0'; ctx.fillText(titleLine2, 0, 0);
+    ctx.fillStyle = `rgba(140,170,220,${0.5*p2})`; ctx.fillText(titleLine2, 0, -1);
+    ctx.restore();
+  }
+
+  // Line 3: "ΓΑΛΑΞΕΙΔΙΟΥ"
+  const l3Size = 38, l3Y = l1Y + 100;
+  ctx.font = `bold ${l3Size}px "Press Start 2P", monospace`;
+  const l3W = ctx.measureText(titleLine3).width;
+  let l3X = (GW - l3W) / 2;
+  for (let i = 0; i < l3N; i++) {
+    const ch = titleLine3[i];
+    const chW = ctx.measureText(ch).width;
+    drawMetalLetter(ch, l3X + chW/2, l3Y, l3Size, (elapsed - l3Start - i*LETTER_DELAY)/20);
+    l3X += chW;
+  }
+  ctx.restore();
+
+  // Credits — light blue
+  if (elapsed > l3End) {
+    const ca = Math.min(1, (elapsed - l3End) / 40);
+    ctx.save(); ctx.globalAlpha = ca;
+    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#384878';
+    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 10);
+    ctx.restore();
+  }
+
+  // Blinking start prompt — light blue
+  if (elapsed > promptAt) {
+    const blink = Math.sin(tick*0.06) > 0;
+    if (blink) {
+      ctx.save();
+      ctx.font = '8px "Press Start 2P", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#5070A0';
+      ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW/2, GH - 30);
+      ctx.restore();
+    }
+  }
+
+  // Fade overlay
+  if (titleFadeOut > 0) {
+    ctx.save();
+    ctx.globalAlpha = titleFadeOut;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
+
 
 
 
