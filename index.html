@@ -2037,6 +2037,7 @@ function startScene(id) {
   initParticles();
   initAmbientSound();
   startSceneAmbience(id);
+  changeSceneMusic(id);
 
   // Entry dialogue
   if (!state.visited.has(id) && sc.entry) {
@@ -2339,6 +2340,43 @@ document.addEventListener('keydown', e => {
 const bgm = document.getElementById('bgm');
 bgm.volume = 0.25;
 
+// Per-scene music map
+const sceneMusic = {
+  exterior: 'music/arrival-at-galaxidi-scene-1-1.mp3',
+  terrace:  'music/arrival-at-galaxidi-scene-1-1.mp3',
+  kitchen:  'music/the-grandfather-s-house-1.mp3',
+};
+
+let currentMusicSrc = '';
+
+function changeSceneMusic(sceneId) {
+  const newSrc = sceneMusic[sceneId];
+  if (!newSrc || newSrc === currentMusicSrc) return;
+  // Crossfade: old out, new in
+  const oldVol = bgm.volume;
+  const fadeDur = 1500;
+  const fadeStart = performance.now();
+  const fadeOut = () => {
+    const t = Math.min(1, (performance.now() - fadeStart) / fadeDur);
+    bgm.volume = oldVol * (1 - t);
+    if (t < 1) { requestAnimationFrame(fadeOut); return; }
+    bgm.pause();
+    bgm.src = newSrc;
+    currentMusicSrc = newSrc;
+    bgm.volume = 0;
+    bgm.play().catch(() => {});
+    // Fade in
+    const fadeInStart = performance.now();
+    const fadeIn = () => {
+      const t2 = Math.min(1, (performance.now() - fadeInStart) / fadeDur);
+      bgm.volume = 0.25 * t2;
+      if (t2 < 1) requestAnimationFrame(fadeIn);
+    };
+    requestAnimationFrame(fadeIn);
+  };
+  requestAnimationFrame(fadeOut);
+}
+
 function toggleMusic() {
   if (state.musicOn) {
     bgm.pause(); state.musicOn = false;
@@ -2575,6 +2613,7 @@ document.getElementById('intro-screen').onclick = () => {
     is.style.opacity = '0';
 
     // Crossfade: title music out, scene music in (2 second overlap)
+    currentMusicSrc = sceneMusic['exterior'];
     bgm.volume = 0;
     bgm.play().catch(() => {});
     const crossfadeDur = 2000; // 2 seconds
