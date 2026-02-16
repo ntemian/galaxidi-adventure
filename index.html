@@ -742,6 +742,57 @@ function drawParticles() {
 // ════════════════════════════════════════════════════════════
 
 
+// ── Bobbing Boats (extracted from background, redrawn with bob) ──
+let boatCutout = null;
+let boatWaterPatch = null;
+const boatRegion = { x: 375, y: 135, w: 190, h: 80 };
+let boatBobPhase = 0;
+
+function initBoatBob() {
+  boatBobPhase = Math.random() * Math.PI * 2;
+  boatCutout = null;
+  boatWaterPatch = null;
+  const bgImg = images['bg-exterior'];
+  if (!bgImg || !bgImg.complete) return;
+  // Source coords in the 1024x1024 image
+  const sx = boatRegion.x / GW * bgImg.naturalWidth;
+  const sy = boatRegion.y / GH * bgImg.naturalHeight;
+  const sw = boatRegion.w / GW * bgImg.naturalWidth;
+  const sh = boatRegion.h / GH * bgImg.naturalHeight;
+  // Extract boats
+  const cut = document.createElement('canvas');
+  cut.width = boatRegion.w;
+  cut.height = boatRegion.h;
+  const cctx = cut.getContext('2d');
+  cctx.imageSmoothingEnabled = false;
+  cctx.drawImage(bgImg, sx, sy, sw, sh, 0, 0, boatRegion.w, boatRegion.h);
+  boatCutout = cut;
+  // Water patch from row just below boats
+  const patch = document.createElement('canvas');
+  patch.width = boatRegion.w;
+  patch.height = boatRegion.h + 8;
+  const pctx = patch.getContext('2d');
+  pctx.imageSmoothingEnabled = false;
+  const waterSrcY = sy + sh;
+  for (let row = 0; row < patch.height; row++) {
+    pctx.drawImage(bgImg, sx, waterSrcY, sw, 1, 0, row, boatRegion.w, 1);
+  }
+  boatWaterPatch = patch;
+}
+
+function updateBoatBob(dt) {
+  boatBobPhase += dt * 0.8;
+}
+
+function drawBoatBob() {
+  if (!boatCutout || !boatWaterPatch) return;
+  const bob = Math.sin(boatBobPhase) * 3;
+  // Cover original boats with water
+  ctx.drawImage(boatWaterPatch, boatRegion.x, boatRegion.y);
+  // Redraw boats shifted by bob
+  ctx.drawImage(boatCutout, boatRegion.x, boatRegion.y + bob);
+}
+
 // ── Sea Shimmer ──
 function drawSeaShimmer(tick) {
   const t = tick * 0.02;
@@ -1111,6 +1162,7 @@ function startSceneAmbience(sceneId) {
         setTimeout(() => playChurchBell(), 2500);
       }
     } catch (e) { /* Web Audio not available */ }
+    initBoatBob();
     initPetals();
     ambientSounds.active = true;
   } else {
@@ -1129,6 +1181,8 @@ function stopSceneAmbience() {
     } catch (e) {}
     ambientSounds.cicadasNode = null;
   }
+  boatCutout = null;
+  boatWaterPatch = null;
   petals.length = 0;
   ambientSounds.active = false;
 }
@@ -1147,6 +1201,7 @@ function updateAmbientSound(dt) {
 // ── Master draw/update for scene ambience ──
 function updateSceneAmbience(dt) {
   if (state.scene === 'exterior') {
+    updateBoatBob(dt);
     updatePetals();
     updateCat(dt);
     updateAmbientSound(dt);
@@ -1157,6 +1212,7 @@ function updateSceneAmbience(dt) {
 
 function drawSceneAmbience(tick) {
   if (state.scene === 'exterior') {
+    drawBoatBob();
     drawSeaShimmer(tick);
     drawLightShaft(tick);
     drawPetals();
@@ -2131,6 +2187,12 @@ const sceneMusic = {
   port:     'music/the-harbor-at-dusk-1.mp3',
   museum:   'music/the-maritime-museum-1.mp3',
   liotrivi: 'music/the-old-olive-press-1.mp3',
+  cave:     'music/the-cave-of-karkaros-1.mp3',
+  graveyard:'music/the-captain-s-rest-1.mp3',
+  church:   'music/the-map-in-the-church-1.mp3',
+  boat:     'music/the-crossing-1.mp3',
+  cave_final:'music/the-treasure-1.mp3',
+  epilogue:  'music/the-sea-remembers-1.mp3',
 };
 
 let currentMusicSrc = '';
@@ -2194,42 +2256,95 @@ function drawTitleScreen(tick) {
   const t = tick * 0.02;
 
   // ═══════════════════════════════════════
-  // BACKGROUND — pixel art image
+  // BACKGROUND — pixel art with animated water
+  // Classic scanline displacement (Monkey Island / SNES technique)
+  // The actual image pixels move — no overlays
   // ═══════════════════════════════════════
   const bg = images['title-bg'];
+  const waterLine = Math.floor(GH * 0.76);
+
   if (bg && bg.complete) {
     ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(bg, 0, 0, GW, GH);
+
+    // Sky + land + dock: draw static (above waterline)
+    const srcWaterY = bg.naturalHeight * (waterLine / GH);
+    ctx.drawImage(bg,
+      0, 0, bg.naturalWidth, srcWaterY,
+      0, 0, GW, waterLine);
+
+    // Water only: per-scanline horizontal displacement
+    for (let y = waterLine; y < GH; y++) {
+      const depth = (y - waterLine) / (GH - waterLine);
+      const amp = 0.8 + depth * 2.0;
+      const dx = Math.sin(y * 0.08 + t * 1.6) * amp
+               + Math.sin(y * 0.13 - t * 1.0) * (amp * 0.4);
+      const srcY = bg.naturalHeight * (y / GH);
+      ctx.drawImage(bg,
+        0, srcY, bg.naturalWidth, 1,
+        dx, y, GW, 1);
+    }
+
+    // Sun sparkles on the water
+    for (let i = 0; i < 18; i++) {
+      const sx = ((tick * 0.35 + i * 43) % GW);
+      const sy = waterLine + 4 + ((i * 29) % (GH - waterLine - 8));
+      const glint = Math.sin(tick * 0.09 + i * 2.3);
+      if (glint > 0.55) {
+        const a = (glint - 0.55) * 2.2;
+        ctx.fillStyle = `rgba(255,255,240,${a * 0.45})`;
+        ctx.fillRect(sx, sy, 2, 1);
+        if (glint > 0.8) {
+          ctx.fillRect(sx + 1, sy - 1, 1, 1);
+          ctx.fillRect(sx + 1, sy + 1, 1, 1);
+        }
+      }
+    }
+
+    // Seagulls — pixel birds flying across the sky
+    const gulls = [
+      { speed: 0.35, y0: 30, amp: 5, phase: 0 },
+      { speed: 0.25, y0: 50, amp: 8, phase: 150 },
+      { speed: 0.45, y0: 18, amp: 4, phase: 300 },
+      { speed: 0.30, y0: 65, amp: 6, phase: 220 },
+      { speed: 0.20, y0: 40, amp: 10, phase: 400 },
+    ];
+    for (const gull of gulls) {
+      const cycle = GW + 100;
+      const gx = ((tick * gull.speed + gull.phase * 2) % cycle) - 50;
+      const gy = gull.y0 + Math.sin(t * 1.2 + gull.phase) * gull.amp;
+      const wingFlap = Math.sin(tick * 0.15 + gull.phase) * 5;
+      const gSize = 0.8 + gull.speed * 0.5;
+      ctx.save();
+      ctx.translate(gx, gy);
+      ctx.scale(gSize, gSize);
+      // White body
+      ctx.fillStyle = '#FFF';
+      ctx.fillRect(-1, 0, 3, 2);
+      // Dark wing strokes
+      ctx.strokeStyle = '#2A2A30';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-8, wingFlap); ctx.lineTo(-3, -1);
+      ctx.lineTo(0, 1); ctx.lineTo(3, -1); ctx.lineTo(8, wingFlap);
+      ctx.stroke();
+      // White wing highlights
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-7, wingFlap - 1); ctx.lineTo(-3, -2);
+      ctx.moveTo(3, -2); ctx.lineTo(7, wingFlap - 1);
+      ctx.stroke();
+      ctx.restore();
+    }
   } else {
-    // Fallback solid color while loading
     ctx.fillStyle = '#4A9FD8';
     ctx.fillRect(0, 0, GW, GH);
   }
 
-  // ═══════════════════════════════════════
-  // ANIMATED ELEMENTS — waves, boats, seagulls
-  // ═══════════════════════════════════════
-
-  // Wave shimmer — moving light bands across the water
-  const waterTop = GH * 0.58;
-  ctx.save();
-  for (let i = 0; i < 8; i++) {
-    const wy = waterTop + 10 + i * 16;
-    // Waves scroll left-to-right continuously
-    const scrollX = (tick * 0.3 + i * 90) % (GW + 60) - 30;
-    const ww = 40 + Math.sin(t * 0.5 + i) * 20;
-    const wobble = Math.sin(t * 0.9 + i * 2.1) * 4;
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    ctx.fillRect(scrollX, wy + wobble, ww, 2);
-    ctx.fillStyle = 'rgba(180,230,255,0.2)';
-    ctx.fillRect(scrollX + 10, wy + wobble + 4, ww * 0.7, 2);
-  }
-  ctx.restore();
-
-  // Subtle vignette overlay
+  // Subtle vignette
   const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.3, GW/2, GH/2, GW*0.75);
   vig.addColorStop(0, 'rgba(0,0,0,0)');
-  vig.addColorStop(1, 'rgba(0,0,0,0.15)');
+  vig.addColorStop(1, 'rgba(0,0,0,0.12)');
   ctx.fillStyle = vig;
   ctx.fillRect(0, 0, GW, GH);
 
