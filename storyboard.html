@@ -41,8 +41,9 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(180deg, rgba(10,21,32,0.7) 0%, rgba(13,31,51,0.6) 40%, rgba(26,42,58,0.6) 70%, rgba(138,106,32,0.7) 100%),
-                url('assets/title-bg.jpg') center/cover no-repeat;
+    background: linear-gradient(180deg, rgba(10,21,32,0.7) 0%, rgba(13,31,51,0.5) 30%, rgba(26,42,58,0.5) 60%, rgba(138,106,32,0.6) 100%),
+                url('assets/title-bg.png') center/cover no-repeat;
+    image-rendering: pixelated;
     padding: 40px 20px;
     position: relative;
     overflow: hidden;
@@ -63,7 +64,7 @@
     font-weight: 700;
     color: var(--gold);
     letter-spacing: 3px;
-    text-shadow: 0 2px 20px rgba(212,160,60,0.3);
+    text-shadow: 0 2px 20px rgba(212,160,60,0.5), 0 0 40px rgba(0,0,0,0.8);
     margin-bottom: 10px;
   }
 
@@ -491,6 +492,7 @@
     10 σκηνές. Ένας θησαυρός. Μια πράσινη πέτρα. Ένα φάντασμα που θυμάται.<br>
     <em>10 scenes. One treasure. One green stone. One ghost who remembers.</em>
   </div>
+
   <div class="characters-row">
     <div class="char-card">
       <img class="char-sprite" src="assets/char-ntemis-final.png" alt="Ntemis">
