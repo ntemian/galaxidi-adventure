@@ -22,73 +22,127 @@
 
   /* ── ACTION LINE ── */
   #action-line {
-    height: 22px; background: #12100e; display: none; align-items: center; justify-content: center;
-    font-size: .55rem; color: #D4A03C; border-top: 2px solid #2a2218;
+    height: 32px; display: none; align-items: center; justify-content: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: .65rem; color: #F0C860; letter-spacing: 1px;
+    background: linear-gradient(180deg, #1a1610 0%, #0e0c08 100%);
+    border-top: 3px solid #3a3020;
+    border-bottom: 1px solid #1a1408;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 0 0 8px rgba(212,160,60,0.15);
   }
   #action-line.on { display: flex; }
 
   /* ── UI PANEL — Classic SCUMM layout ── */
   #ui-panel {
-    background: #0a0806;
-    border-top: 2px solid #2a2218;
+    background: linear-gradient(180deg, #14120e 0%, #0c0a06 40%, #080604 100%);
+    border-top: 3px solid #3a3020;
     display: none; flex-direction: column;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
   }
   #ui-panel.on { display: flex; }
 
   /* Bottom row: verbs LEFT, inventory RIGHT */
   #ui-bottom {
-    display: flex; height: 100px;
+    display: flex; height: 150px; padding: 6px 8px;
   }
 
   /* ── VERB GRID (left side, 2x2) ── */
   #verb-panel {
     display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
-    gap: 2px; padding: 4px; width: 240px; flex-shrink: 0;
+    gap: 4px; width: 300px; flex-shrink: 0;
   }
   .vb {
-    font-family: 'Press Start 2P', monospace; font-size: .5rem; color: #8a7a60;
-    background: #1a1610; border: 1px solid #2a2418;
-    cursor: pointer; transition: all .1s;
+    font-family: 'Press Start 2P', monospace; font-size: .6rem; color: #9a8a68;
+    background: linear-gradient(180deg, #201c14 0%, #181410 50%, #141008 100%);
+    border: 2px solid #2e2618;
+    border-top-color: #3a3228; border-left-color: #3a3228;
+    border-bottom-color: #1a1408; border-right-color: #1a1408;
+    cursor: pointer; transition: all .15s;
     display: flex; align-items: center; justify-content: center;
-    padding: 2px 4px; text-align: center;
+    padding: 4px 8px; text-align: center;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 2px rgba(0,0,0,0.3);
   }
-  .vb:hover { color: #D4A03C; border-color: #D4A03C; }
-  .vb:active { transform: scale(.95); }
-  .vb.on { color: #D4A03C; background: #221e18; border-color: #D4A03C; }
+  .vb:hover {
+    color: #F0C860; border-color: #D4A03C;
+    background: linear-gradient(180deg, #2a2418 0%, #221e14 50%, #1a1610 100%);
+    text-shadow: 0 0 6px rgba(240,200,96,0.3);
+  }
+  .vb:active { transform: scale(.97); }
+  .vb.on {
+    color: #F0C860;
+    background: linear-gradient(180deg, #2e2818 0%, #261e10 50%, #201a0c 100%);
+    border: 2px solid #D4A03C;
+    border-top-color: #e0b050; border-left-color: #e0b050;
+    border-bottom-color: #a08030; border-right-color: #a08030;
+    text-shadow: 0 0 8px rgba(240,200,96,0.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 6px rgba(212,160,60,0.15);
+  }
 
   /* ── INVENTORY GRID (right side) ── */
   #inv-panel {
-    flex: 1; display: flex; align-items: center; padding: 4px;
-    border-left: 2px solid #2a2218; gap: 0;
+    flex: 1; display: flex; align-items: stretch;
+    margin-left: 8px;
+    border: 2px solid #2e2618;
+    border-top-color: #1a1408; border-left-color: #1a1408;
+    border-bottom-color: #3a3228; border-right-color: #3a3228;
+    background: linear-gradient(180deg, #0e0c08 0%, #121010 50%, #0e0c08 100%);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    border-radius: 2px;
+    padding: 0;
   }
   #inv-label { display: none; }
   #inv-arrows {
-    display: flex; flex-direction: column; gap: 2px; padding: 0 2px; flex-shrink: 0;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 6px; padding: 4px 6px; flex-shrink: 0;
+    border-right: 1px solid #2a2218;
   }
   #inv-arrows button {
-    font-size: .7rem; color: #6a5a40; background: #1a1610; border: 1px solid #2a2418;
-    cursor: pointer; padding: 4px 6px; line-height: 1;
+    font-size: .8rem; color: #7a6a48; background: linear-gradient(180deg, #1e1a12 0%, #161208 100%);
+    border: 2px solid #2e2618;
+    border-top-color: #3a3228; border-left-color: #3a3228;
+    border-bottom-color: #1a1408; border-right-color: #1a1408;
+    cursor: pointer; padding: 8px 10px; line-height: 1;
+    transition: all .15s;
   }
-  #inv-arrows button:hover { color: #D4A03C; border-color: #D4A03C; }
+  #inv-arrows button:hover {
+    color: #F0C860; border-color: #D4A03C;
+    text-shadow: 0 0 6px rgba(240,200,96,0.3);
+  }
   #inv-grid {
     flex: 1; display: grid;
-    grid-template-columns: repeat(auto-fill, 46px);
-    grid-template-rows: repeat(2, 46px);
+    grid-template-columns: repeat(auto-fill, 60px);
+    grid-template-rows: repeat(2, 60px);
     grid-auto-flow: column;
-    gap: 2px; padding: 0 4px;
+    gap: 4px; padding: 6px;
     overflow: hidden;
+    align-content: center;
   }
   .inv-slot {
-    width: 46px; height: 46px;
-    background: #1a1610; border: 1px solid #2a2418;
+    width: 60px; height: 60px;
+    background: linear-gradient(180deg, #181410 0%, #121008 100%);
+    border: 2px solid #2a2218;
+    border-top-color: #1a1408; border-left-color: #1a1408;
+    border-bottom-color: #322a1c; border-right-color: #322a1c;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all .1s;
+    cursor: pointer; transition: all .15s;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
   }
-  .inv-slot:hover { border-color: #D4A03C; }
-  .inv-slot.on { border-color: #D4A03C; background: #221e18; }
+  .inv-slot:hover {
+    border-color: #D4A03C;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.3), 0 0 4px rgba(212,160,60,0.15);
+  }
+  .inv-slot.on {
+    border: 2px solid #D4A03C;
+    border-top-color: #e0b050; border-left-color: #e0b050;
+    border-bottom-color: #a08030; border-right-color: #a08030;
+    background: linear-gradient(180deg, #221e14 0%, #1a1610 100%);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 8px rgba(212,160,60,0.2);
+  }
   .inv-slot .inv-text {
-    font-family: 'Press Start 2P', monospace; font-size: .3rem; color: #8a7a60;
-    text-align: center; line-height: 1.2;
+    font-family: 'Press Start 2P', monospace; font-size: .35rem; color: #9a8a68;
+    text-align: center; line-height: 1.3;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
   }
 
   /* ── TITLE (canvas-rendered, no HTML overlay) ── */
@@ -143,7 +197,7 @@
   </div>
 </div>
 
-<audio id="title-music" loop preload="auto"><source src="music/the-sea-remembers-title-theme-1.mp3" type="audio/mpeg"></audio>
+<audio id="title-music" loop preload="auto"><source src="music/sun-arrives-in-chora-1.mp3" type="audio/mpeg"></audio>
 <audio id="bgm" loop preload="auto"><source src="music/scene1-music.mp3" type="audio/mpeg"></audio>
 
 <script>
@@ -934,8 +988,8 @@ function renderInvUI() {
     slot.onclick = () => invClick(item.id);
     if (INV_ICONS[item.id]) {
       const cvs = document.createElement('canvas');
-      cvs.width = 42; cvs.height = 42;
-      cvs.style.cssText = 'width:42px;height:42px;image-rendering:pixelated';
+      cvs.width = 52; cvs.height = 52;
+      cvs.style.cssText = 'width:52px;height:52px;image-rendering:pixelated';
       INV_ICONS[item.id](cvs.getContext('2d'));
       slot.appendChild(cvs);
     } else {
@@ -1289,436 +1343,471 @@ function toggleMusic() {
 }
 
 // ════════════════════════════════════════════════════════════
-// TITLE SCREEN — LucasArts-style cinematic canvas title
+// TITLE SCREEN — Indiana Jones / LucasArts style
 // ════════════════════════════════════════════════════════════
 const titleMusic = document.getElementById('title-music');
 titleMusic.volume = 0.35;
 let titleFadeOut = 0;
 
-// Pre-generate starfield (fixed positions)
-const stars = [];
-for (let i = 0; i < 40; i++) {
-  stars.push({ x: Math.random() * GW, y: Math.random() * 55, s: 0.5 + Math.random() * 1.5, b: Math.random() });
-}
-
 function drawTitleScreen(tick) {
   const t = tick * 0.02;
 
-  // ── SUNSET SKY — dramatic gradient like a movie poster ──
-  const skyGrad = ctx.createLinearGradient(0, 0, 0, 100);
-  skyGrad.addColorStop(0, '#0B0E2A');
-  skyGrad.addColorStop(0.25, '#1B2854');
-  skyGrad.addColorStop(0.5, '#2A4A7A');
-  skyGrad.addColorStop(0.7, '#4A6A90');
-  skyGrad.addColorStop(0.85, '#7A6848');
-  skyGrad.addColorStop(1, '#C47020');
+  // ── SKY — clear blue gradient like Indy's desert sky ──
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 85);
+  skyGrad.addColorStop(0, '#2848A0');
+  skyGrad.addColorStop(0.3, '#3868B8');
+  skyGrad.addColorStop(0.6, '#5088CC');
+  skyGrad.addColorStop(0.85, '#70A0D8');
+  skyGrad.addColorStop(1, '#88B4E0');
   ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, GW, 100);
+  ctx.fillRect(0, 0, GW, 85);
 
-  // Stars twinkling in the deep blue portion
+  // Distant mountains / headland silhouette (like Indy's horizon)
   ctx.save();
-  for (const star of stars) {
-    const twinkle = 0.3 + Math.sin(t * 2 + star.b * 10) * 0.7;
-    ctx.globalAlpha = twinkle * 0.6;
-    ctx.fillStyle = '#C0D0FF';
-    ctx.fillRect(Math.floor(star.x), Math.floor(star.y), star.s > 1 ? 2 : 1, star.s > 1 ? 2 : 1);
-  }
+  ctx.fillStyle = '#4A6888';
+  ctx.beginPath();
+  ctx.moveTo(0, 85);
+  ctx.lineTo(0, 72);
+  ctx.quadraticCurveTo(80, 55, 160, 68);
+  ctx.quadraticCurveTo(220, 75, 280, 62);
+  ctx.quadraticCurveTo(350, 50, 420, 65);
+  ctx.quadraticCurveTo(500, 72, 560, 58);
+  ctx.quadraticCurveTo(610, 68, GW, 70);
+  ctx.lineTo(GW, 85);
+  ctx.closePath();
+  ctx.fill();
   ctx.restore();
 
-  // Sunset glow on horizon
-  ctx.save();
-  const glowGrad = ctx.createRadialGradient(GW/2, 95, 10, GW/2, 95, 280);
-  glowGrad.addColorStop(0, 'rgba(220,140,40,0.4)');
-  glowGrad.addColorStop(0.4, 'rgba(180,80,20,0.15)');
-  glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = glowGrad;
-  ctx.fillRect(0, 20, GW, 80);
-  ctx.restore();
+  // ═══════════════════════════════════════════════════
+  // SHIP HULL — fills most of the screen (the "boxcar")
+  // Exact same role as the train car in Indy
+  // ═══════════════════════════════════════════════════
+  const hullTop = 75;
+  const hullBot = 350;
+  const hullL = -8;
+  const hullR = GW + 8;
+  const hullH = hullBot - hullTop;
 
-  // ── SHIP HULL — fills the screen like the Indy boxcar ──
-  const hullTop = 62;
-  const hullBot = 345;
-  const hullL = -5;  // bleeds off edges for more impact
-  const hullR = GW + 5;
-
-  // Hull path
   function hullPath() {
     ctx.beginPath();
-    ctx.moveTo(hullL + 25, hullTop);
-    ctx.lineTo(hullR - 15, hullTop);
-    ctx.lineTo(hullR, hullTop + 25);
-    ctx.lineTo(hullR + 8, hullBot - 25);
-    ctx.quadraticCurveTo(hullR - 30, hullBot + 15, GW * 0.6, hullBot + 8);
-    ctx.quadraticCurveTo(GW * 0.3, hullBot + 5, hullL - 8, hullBot - 45);
-    ctx.lineTo(hullL, hullTop + 35);
+    // Flat top deck line — edge to edge
+    ctx.moveTo(hullL, hullTop + 8);
+    ctx.lineTo(hullR, hullTop + 8);
+    // Right side (stern) — slight inward curve at bottom
+    ctx.lineTo(hullR + 4, hullBot - 20);
+    ctx.quadraticCurveTo(hullR - 50, hullBot + 12, GW * 0.55, hullBot + 6);
+    // Bottom keel curve
+    ctx.quadraticCurveTo(GW * 0.25, hullBot + 2, hullL - 4, hullBot - 35);
+    // Left side (bow)
     ctx.closePath();
   }
 
-  // Hull base fill with rich wood tones
+  // ── Hull fill ──
   ctx.save();
   hullPath();
   const woodGrad = ctx.createLinearGradient(0, hullTop, 0, hullBot);
-  woodGrad.addColorStop(0, '#7A4422');
-  woodGrad.addColorStop(0.08, '#8B5530');
-  woodGrad.addColorStop(0.2, '#7A4825');
-  woodGrad.addColorStop(0.4, '#6B3B1C');
-  woodGrad.addColorStop(0.55, '#7A4422');
-  woodGrad.addColorStop(0.7, '#5E3018');
-  woodGrad.addColorStop(0.85, '#4A2410');
+  woodGrad.addColorStop(0, '#8B5A30');
+  woodGrad.addColorStop(0.05, '#7A4C28');
+  woodGrad.addColorStop(0.15, '#8B5530');
+  woodGrad.addColorStop(0.35, '#7A4422');
+  woodGrad.addColorStop(0.5, '#6E3C1E');
+  woodGrad.addColorStop(0.65, '#7A4422');
+  woodGrad.addColorStop(0.8, '#5E3018');
+  woodGrad.addColorStop(0.92, '#4A2410');
   woodGrad.addColorStop(1, '#3A1A0C');
   ctx.fillStyle = woodGrad;
   ctx.fill();
-
-  // Clip to hull for all details
   ctx.clip();
 
-  // Horizontal plank lines
-  ctx.lineWidth = 1;
-  for (let y = hullTop + 8; y < hullBot; y += 14) {
-    // Dark groove
-    ctx.strokeStyle = `rgba(30,14,5,${0.35 + Math.sin(y*0.3)*0.1})`;
+  // ── Wood planks — horizontal lines with varying darkness ──
+  for (let y = hullTop + 6; y < hullBot; y += 12) {
+    // Dark groove line
+    const groove = 0.3 + Math.sin(y * 0.2) * 0.12;
+    ctx.strokeStyle = `rgba(25,12,4,${groove})`;
+    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(hullL - 10, y);
     ctx.lineTo(hullR + 10, y);
     ctx.stroke();
-    // Subtle highlight below groove
-    ctx.strokeStyle = 'rgba(160,110,60,0.07)';
+    // Light edge below (wood catch light)
+    ctx.strokeStyle = `rgba(180,130,75,${0.06 + Math.sin(y * 0.15) * 0.03})`;
     ctx.beginPath();
     ctx.moveTo(hullL - 10, y + 1);
     ctx.lineTo(hullR + 10, y + 1);
     ctx.stroke();
   }
 
-  // Vertical plank joints (staggered)
-  ctx.strokeStyle = 'rgba(30,14,5,0.2)';
-  for (let y = hullTop; y < hullBot; y += 14) {
-    const off = ((Math.floor(y / 14)) % 3) * 55;
-    for (let x = hullL + off; x < hullR; x += 160) {
+  // Vertical plank seams — staggered like real planking
+  ctx.strokeStyle = 'rgba(25,12,4,0.18)';
+  for (let row = 0; row < Math.ceil(hullH / 12); row++) {
+    const y = hullTop + 6 + row * 12;
+    const offset = (row % 3) * 70 + 30;
+    for (let x = hullL + offset; x < hullR; x += 200) {
       ctx.beginPath();
       ctx.moveTo(x, y);
-      ctx.lineTo(x, y + 14);
+      ctx.lineTo(x, y + 12);
       ctx.stroke();
     }
   }
 
-  // ── Heavy iron bands (like the Indy train rails) ──
-  // Top band
-  const band1Y = hullTop + 18;
-  ctx.fillStyle = '#2A1408';
-  ctx.fillRect(hullL, band1Y, hullR - hullL, 10);
-  ctx.fillStyle = 'rgba(120,80,40,0.15)';
-  ctx.fillRect(hullL, band1Y, hullR - hullL, 2);
-  // Rivets on top band
-  for (let x = 30; x < GW; x += 45) {
+  // ── KNOT HOLES — random wood details ──
+  const knots = [[85, 140], [310, 200], [480, 165], [180, 280], [540, 310], [390, 120]];
+  for (const [kx, ky] of knots) {
     ctx.beginPath();
-    ctx.arc(x, band1Y + 5, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#3A2010';
+    ctx.ellipse(kx, ky, 4, 3, 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(50,25,10,0.25)';
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x - 0.5, band1Y + 4, 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(140,100,50,0.3)';
+    ctx.ellipse(kx, ky, 2, 1.5, 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(30,15,5,0.2)';
     ctx.fill();
   }
 
-  // Middle band (thinner)
-  const band2Y = hullTop + 32;
-  ctx.fillStyle = '#221008';
-  ctx.fillRect(hullL, band2Y, hullR - hullL, 4);
+  // ═══════════════════════════════════════
+  // IRON BANDS with rivets (like train rails)
+  // ═══════════════════════════════════════
 
-  // Lower band
-  const band3Y = hullBot - 55;
-  ctx.fillStyle = '#2A1408';
-  ctx.fillRect(hullL, band3Y, hullR - hullL, 8);
-  ctx.fillStyle = 'rgba(120,80,40,0.12)';
-  ctx.fillRect(hullL, band3Y, hullR - hullL, 2);
+  // Top gunwale band (thick)
+  ctx.fillStyle = '#2E1408';
+  ctx.fillRect(hullL, hullTop + 8, hullR - hullL, 14);
+  // Highlight on top edge
+  ctx.fillStyle = 'rgba(140,90,45,0.2)';
+  ctx.fillRect(hullL, hullTop + 8, hullR - hullL, 2);
+  // Dark bottom edge
+  ctx.fillStyle = 'rgba(10,4,0,0.3)';
+  ctx.fillRect(hullL, hullTop + 20, hullR - hullL, 2);
+  // Rivets
+  for (let x = 20; x < GW; x += 38) {
+    ctx.beginPath();
+    ctx.arc(x, hullTop + 15, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#3A1E0C';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x - 1, hullTop + 14, 2, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(160,110,55,0.25)';
+    ctx.fill();
+  }
+
+  // Upper wale band
+  const wale1Y = hullTop + 38;
+  ctx.fillStyle = '#281008';
+  ctx.fillRect(hullL, wale1Y, hullR - hullL, 6);
+  ctx.fillStyle = 'rgba(130,85,40,0.12)';
+  ctx.fillRect(hullL, wale1Y, hullR - hullL, 1);
+
+  // Lower wale band
+  const wale2Y = hullBot - 68;
+  ctx.fillStyle = '#281008';
+  ctx.fillRect(hullL, wale2Y, hullR - hullL, 8);
+  ctx.fillStyle = 'rgba(130,85,40,0.1)';
+  ctx.fillRect(hullL, wale2Y, hullR - hullL, 1);
   // Rivets on lower band
-  for (let x = 15; x < GW; x += 45) {
+  for (let x = 35; x < GW; x += 42) {
     ctx.beginPath();
-    ctx.arc(x, band3Y + 4, 3, 0, Math.PI * 2);
-    ctx.fillStyle = '#3A2010';
+    ctx.arc(x, wale2Y + 4, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#3A1E0C';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x - 0.5, wale2Y + 3, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(150,100,50,0.2)';
     ctx.fill();
   }
 
-  // ── Portholes with glass reflection ──
+  // Copper sheathing at bottom (greenish tint — authentic detail)
+  const copperY = hullBot - 30;
+  const copperGrad = ctx.createLinearGradient(0, copperY, 0, hullBot + 10);
+  copperGrad.addColorStop(0, 'rgba(60,75,55,0.3)');
+  copperGrad.addColorStop(1, 'rgba(45,60,45,0.5)');
+  ctx.fillStyle = copperGrad;
+  ctx.fillRect(hullL, copperY, hullR - hullL, hullBot - copperY + 15);
+
+  // ── PORTHOLES (7 across) ──
   for (let i = 0; i < 7; i++) {
-    const px = 55 + i * 82;
-    const py = hullBot - 32;
-    // Shadow
+    const px = 60 + i * 80;
+    const py = hullBot - 90;
+    // Cast shadow
     ctx.beginPath();
-    ctx.arc(px + 1, py + 1, 10, 0, Math.PI * 2);
-    ctx.fillStyle = '#1A0A04';
+    ctx.arc(px + 2, py + 2, 11, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(10,4,0,0.3)';
     ctx.fill();
-    // Outer brass ring
+    // Brass ring
     ctx.beginPath();
-    ctx.arc(px, py, 10, 0, Math.PI * 2);
-    ctx.fillStyle = '#4A2810';
+    ctx.arc(px, py, 11, 0, Math.PI * 2);
+    ctx.fillStyle = '#4A2A10';
     ctx.fill();
-    // Inner ring
+    // Inner recess
     ctx.beginPath();
-    ctx.arc(px, py, 7, 0, Math.PI * 2);
+    ctx.arc(px, py, 8, 0, Math.PI * 2);
     ctx.fillStyle = '#1a0e05';
     ctx.fill();
-    // Glass with subtle sea reflection
+    // Glass
     ctx.beginPath();
-    ctx.arc(px, py, 5, 0, Math.PI * 2);
-    const glassGrad = ctx.createRadialGradient(px - 2, py - 2, 0, px, py, 5);
-    glassGrad.addColorStop(0, 'rgba(80,120,160,0.3)');
-    glassGrad.addColorStop(1, 'rgba(10,20,40,0.5)');
-    ctx.fillStyle = glassGrad;
+    ctx.arc(px, py, 6, 0, Math.PI * 2);
+    const glassG = ctx.createRadialGradient(px - 2, py - 2, 0, px, py, 6);
+    glassG.addColorStop(0, 'rgba(80,120,170,0.25)');
+    glassG.addColorStop(1, 'rgba(15,25,45,0.4)');
+    ctx.fillStyle = glassG;
     ctx.fill();
-    // Specular highlight
+    // Specular
     ctx.beginPath();
-    ctx.arc(px - 2, py - 2, 2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(200,220,255,0.15)';
+    ctx.arc(px - 2, py - 2, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200,220,255,0.2)';
     ctx.fill();
   }
 
-  // Warm light patch (like sunset hitting the hull)
-  const lightGrad = ctx.createRadialGradient(GW * 0.4, hullTop + 80, 20, GW * 0.4, hullTop + 80, 250);
-  lightGrad.addColorStop(0, 'rgba(220,160,60,0.08)');
-  lightGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = lightGrad;
-  ctx.fillRect(hullL, hullTop, hullR - hullL, hullBot - hullTop);
+  // ── Warm sunlight patch on hull ──
+  const sunGrad = ctx.createRadialGradient(GW * 0.35, hullTop + 100, 30, GW * 0.35, hullTop + 100, 300);
+  sunGrad.addColorStop(0, 'rgba(240,180,70,0.06)');
+  sunGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = sunGrad;
+  ctx.fillRect(hullL, hullTop, hullR - hullL, hullH);
 
   ctx.restore(); // un-clip
 
-  // Hull outline — thick dark edge
+  // ── Hull outline ──
   ctx.save();
   hullPath();
-  ctx.strokeStyle = '#1A0C04';
+  ctx.strokeStyle = '#140804';
   ctx.lineWidth = 4;
   ctx.stroke();
   ctx.restore();
 
-  // ── Deck railing with detail ──
+  // ── DECK RAILING ──
   ctx.save();
-  ctx.strokeStyle = '#5A3018';
+  // Main rail
+  ctx.strokeStyle = '#5E3418';
   ctx.lineWidth = 3;
-  // Bottom rail
   ctx.beginPath();
-  ctx.moveTo(30, hullTop - 1);
-  ctx.lineTo(GW - 20, hullTop - 1);
+  ctx.moveTo(0, hullTop + 6);
+  ctx.lineTo(GW, hullTop + 6);
   ctx.stroke();
-  // Posts
+  // Stanchions
   ctx.lineWidth = 2;
-  for (let x = 45; x < GW - 10; x += 32) {
+  for (let x = 18; x < GW; x += 28) {
     ctx.beginPath();
-    ctx.moveTo(x, hullTop - 1);
-    ctx.lineTo(x, hullTop - 16);
+    ctx.moveTo(x, hullTop + 6);
+    ctx.lineTo(x, hullTop - 10);
     ctx.stroke();
-    // Post cap
     ctx.fillStyle = '#6A3820';
-    ctx.fillRect(x - 2, hullTop - 17, 4, 3);
+    ctx.fillRect(x - 2, hullTop - 12, 4, 3);
   }
   // Top rail
+  ctx.strokeStyle = '#5E3418';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(40, hullTop - 15);
-  ctx.lineTo(GW - 15, hullTop - 15);
+  ctx.moveTo(0, hullTop - 10);
+  ctx.lineTo(GW, hullTop - 10);
   ctx.stroke();
   ctx.restore();
 
-  // ── MASTS — two for a proper brig ──
+  // ── MASTS with detailed rigging ──
   ctx.save();
-  // Foremast (left)
-  const m1x = GW * 0.3;
-  ctx.fillStyle = '#4A2812';
-  ctx.fillRect(m1x - 3, hullTop - 52, 6, 55);
-  ctx.fillStyle = '#3A1E0E';
-  ctx.fillRect(m1x - 35, hullTop - 40, 70, 4);
-  // Mainmast (right)
-  const m2x = GW * 0.7;
-  ctx.fillStyle = '#4A2812';
-  ctx.fillRect(m2x - 3, hullTop - 58, 6, 60);
-  ctx.fillStyle = '#3A1E0E';
-  ctx.fillRect(m2x - 40, hullTop - 45, 80, 4);
-  // Rigging
-  ctx.strokeStyle = 'rgba(90,60,25,0.4)';
+  const m1 = GW * 0.28, m2 = GW * 0.72;
+  // Mast poles
+  ctx.fillStyle = '#4E2A14';
+  ctx.fillRect(m1 - 4, hullTop - 60, 8, 68);
+  ctx.fillRect(m2 - 4, hullTop - 68, 8, 76);
+  // Yards (cross beams)
+  ctx.fillStyle = '#3E1E0E';
+  ctx.fillRect(m1 - 42, hullTop - 48, 84, 5);
+  ctx.fillRect(m1 - 30, hullTop - 35, 60, 4);
+  ctx.fillRect(m2 - 48, hullTop - 55, 96, 5);
+  ctx.fillRect(m2 - 36, hullTop - 40, 72, 4);
+  // Furled sails (rolled tubes on yards)
+  ctx.fillStyle = 'rgba(200,185,155,0.35)';
+  ctx.fillRect(m1 - 38, hullTop - 50, 76, 4);
+  ctx.fillRect(m2 - 44, hullTop - 57, 88, 4);
+  // Rigging lines
+  ctx.strokeStyle = 'rgba(80,55,25,0.35)';
   ctx.lineWidth = 1;
-  const rigging = [
-    [m1x, hullTop-50, 35, hullTop], [m1x, hullTop-50, m1x+120, hullTop],
-    [m2x, hullTop-56, m2x-130, hullTop], [m2x, hullTop-56, GW-20, hullTop],
-    [m1x, hullTop-50, m2x, hullTop-56], // connects masts
-  ];
-  for (const [x1,y1,x2,y2] of rigging) {
+  [[m1,hullTop-58, 10,hullTop+6], [m1,hullTop-58, m1+110,hullTop+6],
+   [m2,hullTop-66, m2-120,hullTop+6], [m2,hullTop-66, GW-8,hullTop+6],
+   [m1,hullTop-58, m2,hullTop-66],
+   [m1-40,hullTop-48, m1-40,hullTop+6], [m1+40,hullTop-48, m1+40,hullTop+6],
+   [m2-46,hullTop-55, m2-46,hullTop+6], [m2+46,hullTop-55, m2+46,hullTop+6],
+  ].forEach(([x1,y1,x2,y2]) => {
     ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-  }
+  });
   // Crow's nests
   ctx.fillStyle = '#3A1E0E';
-  ctx.fillRect(m1x - 8, hullTop - 54, 16, 4);
-  ctx.fillRect(m2x - 9, hullTop - 60, 18, 4);
+  ctx.fillRect(m1 - 10, hullTop - 62, 20, 4);
+  ctx.fillRect(m2 - 11, hullTop - 70, 22, 4);
   // Greek flag on mainmast
-  const flagY = hullTop - 56;
-  const fw = 18, fh = 11;
-  ctx.fillStyle = '#1A4A8A';
-  ctx.fillRect(m2x + 4, flagY - fh, fw, fh);
+  const fX = m2 + 5, fY = hullTop - 68;
+  // Flag waves gently
+  const flagWave = Math.sin(t * 2) * 2;
+  ctx.fillStyle = '#1848A0';
+  ctx.fillRect(fX, fY - 11, 20, 12);
   ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(m2x + 4, flagY - fh + 2, fw, 2);
-  ctx.fillRect(m2x + 4, flagY - fh + 6, fw, 2);
-  ctx.fillRect(m2x + 4, flagY - fh, 6, fh);
-  ctx.fillRect(m2x + 6, flagY - fh, 2, 6);
+  ctx.fillRect(fX, fY - 9, 20, 2);
+  ctx.fillRect(fX, fY - 4, 20, 2);
+  ctx.fillRect(fX, fY - 11, 7, 7);
+  ctx.fillRect(fX + 2, fY - 11, 3, 7);
+  ctx.fillRect(fX, fY - 9, 7, 2);
   ctx.restore();
 
-  // ══════════════════════════════════════════
-  // TITLE TEXT — massive, embossed on the hull
-  // ══════════════════════════════════════════
+  // ── ANCHOR on bow side ──
+  ctx.save();
+  ctx.strokeStyle = '#3A2010';
+  ctx.lineWidth = 2;
+  const ax = 42, ay = hullBot - 55;
+  // Shank
+  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax, ay + 22); ctx.stroke();
+  // Crown
+  ctx.beginPath();
+  ctx.moveTo(ax - 10, ay + 18);
+  ctx.quadraticCurveTo(ax, ay + 28, ax + 10, ay + 18);
+  ctx.stroke();
+  // Ring
+  ctx.beginPath(); ctx.arc(ax, ay - 3, 4, 0, Math.PI * 2); ctx.stroke();
+  // Flukes
+  ctx.beginPath(); ctx.moveTo(ax - 10, ay + 18); ctx.lineTo(ax - 13, ay + 14); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ax + 10, ay + 18); ctx.lineTo(ax + 13, ay + 14); ctx.stroke();
+  ctx.restore();
+
+  // ── ROPE LADDER (right side — like Indy's boxcar ladder!) ──
+  ctx.save();
+  ctx.strokeStyle = '#5A3418';
+  ctx.lineWidth = 2;
+  const ladX = GW - 35;
+  // Verticals
+  ctx.beginPath(); ctx.moveTo(ladX, hullTop - 8); ctx.lineTo(ladX, hullBot - 50); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ladX + 14, hullTop - 8); ctx.lineTo(ladX + 14, hullBot - 50); ctx.stroke();
+  // Rungs
+  ctx.lineWidth = 2;
+  for (let ry = hullTop + 10; ry < hullBot - 55; ry += 18) {
+    ctx.beginPath(); ctx.moveTo(ladX, ry); ctx.lineTo(ladX + 14, ry); ctx.stroke();
+  }
+  ctx.restore();
+
+  // ══════════════════════════════════════════════════
+  // TITLE TEXT — "Το Μυστήριο του Γαλαξειδίου"
+  // Layout: big / small / HUGE (like Indy Jones style)
+  // ══════════════════════════════════════════════════
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  const glow = 0.3 + Math.sin(t * 1.2) * 0.15;
 
-  const glowPulse = 0.35 + Math.sin(t * 1.2) * 0.15;
-
-  // Helper: draw embossed text with multi-layer shadows
-  function embossedText(text, cx, cy, size) {
+  // Multi-layer embossed text renderer
+  function paintText(text, cx, cy, size) {
     ctx.font = `bold ${size}px "Press Start 2P", monospace`;
-    // Layer 1: deep black shadow (furthest)
-    ctx.fillStyle = '#0A0402';
-    ctx.fillText(text, cx + 5, cy + 5);
-    // Layer 2: dark brown
-    ctx.fillStyle = '#1A0A04';
-    ctx.fillText(text, cx + 4, cy + 4);
-    // Layer 3: medium shadow
-    ctx.fillStyle = '#2E1508';
-    ctx.fillText(text, cx + 3, cy + 3);
-    // Layer 4: warm shadow
-    ctx.fillStyle = '#4A2010';
-    ctx.fillText(text, cx + 2, cy + 2);
-    // Layer 5: edge highlight (dark gold)
-    ctx.fillStyle = '#8B6020';
-    ctx.fillText(text, cx + 1, cy + 1);
-    // Main text — bright gold with glow
-    ctx.shadowColor = `rgba(255,180,40,${glowPulse})`;
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
+    // 6-layer depth shadow
+    const shadows = [
+      ['#060200', 6, 6],
+      ['#0E0604', 5, 5],
+      ['#1A0A04', 4, 4],
+      ['#2E1508', 3, 3],
+      ['#4A2010', 2, 2],
+      ['#8B6020', 1, 1],
+    ];
+    for (const [col, dx, dy] of shadows) {
+      ctx.fillStyle = col;
+      ctx.fillText(text, cx + dx, cy + dy);
+    }
+    // Gold main fill with warm glow
+    ctx.shadowColor = `rgba(255,180,40,${glow})`;
+    ctx.shadowBlur = 25;
     ctx.fillStyle = '#D4A03C';
     ctx.fillText(text, cx, cy);
-    // Top-edge specular highlight
+    // Specular highlight (top-left edge catch)
     ctx.shadowBlur = 0;
-    ctx.fillStyle = 'rgba(255,230,160,0.3)';
+    ctx.fillStyle = 'rgba(255,235,170,0.35)';
     ctx.fillText(text, cx, cy - 1);
-    ctx.fillStyle = 'rgba(255,240,200,0.12)';
-    ctx.fillText(text, cx - 1, cy - 1);
+    ctx.fillStyle = 'rgba(255,245,200,0.15)';
+    ctx.fillText(text, cx - 1, cy - 2);
   }
 
-  // "Η ΘΑΛΑΣΣΑ" — HUGE top line
-  embossedText('Η ΘΑΛΑΣΣΑ', GW / 2, hullTop + 95, 48);
+  // ── "ΤΟ ΜΥΣΤΗΡΙΟ" — large first line ──
+  const y1 = hullTop + 80;
+  paintText('ΤΟ ΜΥΣΤΗΡΙΟ', GW / 2, y1, 36);
 
-  // "ΘΥΜΑΤΑΙ" — HUGE second line
-  embossedText('ΘΥΜΑΤΑΙ', GW / 2, hullTop + 160, 48);
-
-  // Decorative line between title and subtitle
+  // ── "του" — small connector (like "and the") ──
+  const y2 = y1 + 48;
   ctx.shadowBlur = 0;
-  const lineW = 200;
-  const lineY = hullTop + 200;
-  ctx.strokeStyle = '#8B6020';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(GW/2 - lineW, lineY);
-  ctx.lineTo(GW/2 - 20, lineY);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(GW/2 + 20, lineY);
-  ctx.lineTo(GW/2 + lineW, lineY);
-  ctx.stroke();
-  // Center diamond ornament
-  ctx.fillStyle = '#D4A03C';
-  ctx.save();
-  ctx.translate(GW/2, lineY);
-  ctx.rotate(Math.PI / 4);
-  ctx.fillRect(-4, -4, 8, 8);
-  ctx.restore();
-
-  // "ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ" — subtitle
-  ctx.font = '11px "Press Start 2P", monospace';
-  ctx.shadowBlur = 0;
+  ctx.font = 'bold 14px "Press Start 2P", monospace';
   ctx.fillStyle = '#1A0A04';
-  ctx.fillText('ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2 + 2, hullTop + 225 + 2);
-  ctx.fillStyle = '#B8842C';
-  ctx.fillText('ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, hullTop + 225);
+  ctx.fillText('του', GW / 2 + 2, y2 + 2);
+  ctx.fillStyle = '#9A7028';
+  ctx.fillText('του', GW / 2, y2);
+
+  // ── "ΓΑΛΑΞΕΙΔΙΟΥ" — MASSIVE bottom line ──
+  const y3 = y2 + 55;
+  paintText('ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, y3, 40);
 
   ctx.restore();
 
-  // ── SEA — rich animated waves ──
-  const seaTop = 340;
+  // ── SEA with animated waves ──
+  const seaTop = 342;
   const seaGrad = ctx.createLinearGradient(0, seaTop, 0, GH);
   seaGrad.addColorStop(0, '#1B3A5C');
-  seaGrad.addColorStop(0.2, '#15304D');
-  seaGrad.addColorStop(0.5, '#102540');
-  seaGrad.addColorStop(1, '#081828');
+  seaGrad.addColorStop(0.3, '#153050');
+  seaGrad.addColorStop(1, '#0A1A30');
   ctx.fillStyle = seaGrad;
-  ctx.fillRect(0, seaTop - 5, GW, GH - seaTop + 5);
+  ctx.fillRect(0, seaTop - 3, GW, GH - seaTop + 3);
 
-  // Multi-layer animated waves
+  // Wave layers
   ctx.save();
-  for (let layer = 0; layer < 4; layer++) {
-    const waveY = seaTop + layer * 12;
-    const speed = 0.6 + layer * 0.25;
-    const amp = 3 + layer * 1.5;
-    const alpha = 0.35 - layer * 0.07;
+  for (let l = 0; l < 4; l++) {
+    const wy = seaTop + 2 + l * 10;
+    const sp = 0.5 + l * 0.2;
+    const am = 2.5 + l * 1.2;
     ctx.beginPath();
     for (let x = 0; x <= GW; x += 3) {
-      const y = waveY + Math.sin(x * 0.012 + t * speed) * amp
-                       + Math.sin(x * 0.006 - t * speed * 0.6) * (amp * 0.6)
-                       + Math.sin(x * 0.025 + t * speed * 1.4) * (amp * 0.2);
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      const y = wy + Math.sin(x*0.013 + t*sp) * am + Math.sin(x*0.007 - t*sp*0.7) * am*0.5;
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     }
-    ctx.lineTo(GW, GH);
-    ctx.lineTo(0, GH);
-    ctx.closePath();
-    ctx.fillStyle = `rgba(20,55,90,${alpha})`;
+    ctx.lineTo(GW, GH); ctx.lineTo(0, GH); ctx.closePath();
+    ctx.fillStyle = `rgba(18,50,85,${0.3 - l*0.06})`;
     ctx.fill();
   }
-  // Foam crests
-  ctx.strokeStyle = 'rgba(180,210,240,0.12)';
+  // Foam
+  ctx.strokeStyle = 'rgba(160,200,230,0.1)';
   ctx.lineWidth = 1;
-  for (let layer = 0; layer < 3; layer++) {
+  for (let l = 0; l < 2; l++) {
     ctx.beginPath();
     for (let x = 0; x <= GW; x += 3) {
-      const y = seaTop + layer * 12 + Math.sin(x * 0.012 + t * (0.6 + layer * 0.25)) * (3 + layer * 1.5);
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      const y = seaTop + 2 + l*10 + Math.sin(x*0.013 + t*(0.5+l*0.2)) * (2.5+l*1.2);
+      if (x === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
     }
     ctx.stroke();
   }
-  // Moonlight reflection on water
-  const moonGrad = ctx.createRadialGradient(GW*0.5, seaTop + 10, 5, GW*0.5, seaTop + 20, 120);
-  moonGrad.addColorStop(0, 'rgba(180,160,100,0.08)');
-  moonGrad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = moonGrad;
-  ctx.fillRect(0, seaTop, GW, GH - seaTop);
   ctx.restore();
 
-  // ── Bottom bar — dark ground/dock ──
-  ctx.fillStyle = '#1A100A';
-  ctx.fillRect(0, GH - 28, GW, 28);
-  ctx.fillStyle = '#2A1A0E';
-  ctx.fillRect(0, GH - 28, GW, 2);
+  // ── Bottom ground strip (like Indy's brown earth) ──
+  const groundGrad = ctx.createLinearGradient(0, GH - 30, 0, GH);
+  groundGrad.addColorStop(0, '#3A2A18');
+  groundGrad.addColorStop(0.1, '#2E1E10');
+  groundGrad.addColorStop(1, '#1A100A');
+  ctx.fillStyle = groundGrad;
+  ctx.fillRect(0, GH - 30, GW, 30);
+  // Ground top edge
+  ctx.fillStyle = '#4A3420';
+  ctx.fillRect(0, GH - 30, GW, 2);
 
-  // ── Credits line ──
+  // ── Credits (like "TM & © 1990 LucasArts") ──
   ctx.save();
   ctx.font = '7px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
-  ctx.textBaseline = 'bottom';
-  ctx.fillStyle = '#4A3A28';
-  ctx.fillText('ΜΙΑ ΠΕΡΙΠΕΤΕΙΑ ΤΗΣ ΟΙΚΟΓΕΝΕΙΑΣ ΛΑΤΣΟΥΔΗ', GW / 2, GH - 6);
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#584830';
+  ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW / 2, GH - 10);
   ctx.restore();
 
-  // ── "CLICK TO START" ──
-  const blinkAlpha = 0.25 + Math.sin(tick * 0.06) * 0.4;
+  // ── Blinking start prompt ──
+  const blink = 0.2 + Math.sin(tick * 0.06) * 0.45;
   ctx.save();
   ctx.font = '8px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
-  ctx.textBaseline = 'bottom';
-  ctx.globalAlpha = Math.max(0, blinkAlpha);
+  ctx.textBaseline = 'middle';
+  ctx.globalAlpha = Math.max(0, blink);
   ctx.fillStyle = '#D4A03C';
-  ctx.shadowColor = 'rgba(212,160,60,0.4)';
-  ctx.shadowBlur = 8;
-  ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW / 2, GH - 32);
+  ctx.shadowColor = 'rgba(212,160,60,0.5)';
+  ctx.shadowBlur = 10;
+  ctx.fillText('► ΚΛΙΚ ΓΙΑ ΕΝΑΡΞΗ ◄', GW / 2, GH - 42);
   ctx.restore();
 
-  // ── Fade out overlay ──
+  // ── Fade overlay ──
   if (titleFadeOut > 0) {
     ctx.save();
     ctx.globalAlpha = titleFadeOut;
