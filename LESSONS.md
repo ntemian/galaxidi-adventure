@@ -33,6 +33,16 @@
 - Backgrounds: exactly match canvas resolution (640x400)
 - Portraits: ~200x200 is good for dialog box
 
+### Image Quality — Canvas Downscaling
+- **`imageSmoothingEnabled = false`** (nearest-neighbor) is for **upscaling** pixel art — keeps crisp edges
+- **`imageSmoothingEnabled = true`** with `imageSmoothingQuality = 'high'` is for **downscaling** — preserves detail via bilinear interpolation
+- 1024x1024 backgrounds drawn to 640x400 canvas: MUST use `true` or detail is destroyed
+- 1024x1024 portraits drawn to 52x52 dialog box: MUST use `true` (20:1 reduction)
+- After drawing backgrounds/portraits with smoothing, switch back to `false` for sprites/UI
+- CSS `image-rendering: pixelated` handles the final browser upscale (canvas → screen) correctly
+- **Never use JPG** for pixel art backgrounds — JPEG compression adds artifacts. Always PNG
+- All scene backgrounds should be 1024x1024 PNG for consistent quality
+
 ## Architecture
 
 ### Monolith vs Split
