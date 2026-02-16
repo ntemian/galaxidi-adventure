@@ -6,9 +6,9 @@
 
 Family adventure starring Ntemis, Ajax, and Clio in Galaxidi, Greece. A gift to Galaxidi and the world — free, bilingual (Greek/English), historically accurate. Chapter 1 of an expandable saga.
 
-**Definitive design document**: `GAME-BIBLE.md` — 10 scenes + epilogue, full story, all puzzles, NPCs, music direction.
+**Definitive design document**: `storyboard.html` — the visual pilot storyboard. Open in browser to review. 12 scenes + epilogue, full dialog, all puzzles, NPCs, music direction. `STORY.md` is the text companion (aligned with storyboard). `GAME-BIBLE.md` is **obsolete** (old 12-token version, do NOT use).
 
-**Core mystery**: Find 12 captain's tokens hidden across Galaxidi to unlock the original αλληλασφάλεια ledger and a letter from the founding captains.
+**Core mystery**: Find Captain Visvikis's green jade stone in the Karkaros cave, summon his ghost at the graveyard, discover the nautical chart in Agios Nikolaos church, cross to Agios Georgios island, and unearth the treasure — the original αλληλασφάλεια ledger and Visvikis's final letter.
 
 **Two lessons**: (1) The power of solidarity — αλληλεγγύη. (2) The danger of not adapting — the captains who mastered sail but refused steam. **Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.**
 
@@ -71,50 +71,55 @@ The game is one `<script>` block with these sections (in order):
 | **Game Loop** | `requestAnimationFrame` loop with delta time |
 | **Title/Intro** | Title screen, intro sequence, game start |
 
-## Game Scenes (10 planned, 3 implemented)
+## Game Scenes (12 + epilogue, 3 implemented)
 
-See `GAME-BIBLE.md` for full scene details.
+See `storyboard.html` (open in browser) and `STORY.md` for full scene details.
 
 | # | Scene | Label | Status |
 |---|-------|-------|--------|
-| 1 | **house** (exterior/terrace/kitchen) | ΤΟ ΣΠΙΤΙ | Done (3 sub-scenes) |
-| 2 | **port** | ΤΟ ΛΙΜΑΝΙ | TODO |
-| 3 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | TODO |
-| 4 | **liotrivi** | ΛΙΟΤΡΙΒΙ | TODO |
-| 5 | **cave** | ΤΟ ΣΠΗΛΑΙΟ (ΠΛΑΤΕΙΑ ΜΑΜΑ) | TODO |
-| 6 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
+| 1 | **harbor** | ΑΦΙΞΗ | Done (exterior) |
+| 2 | **house** | ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ | Done (kitchen/interior) |
+| 3 | **port** | ΤΟ ΛΙΜΑΝΙ | TODO |
+| 4 | **waterfront** | Η ΠΑΡΕΑ | TODO |
+| 5 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | TODO |
+| 6 | **liotrivi** | ΛΙΟΤΡΙΒΙ | TODO |
 | 7 | **windmill** | Ο ΜΥΛΟΣ | TODO |
-| 8 | **boat** | ΤΟ ΚΑΡΑΒΙ | TODO |
+| 8 | **cave** | ΤΟ ΣΠΗΛΑΙΟ (ΚΑΡΚΑΡΟΣ) | TODO |
 | 9 | **graveyard** | ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ | TODO |
-| 10 | **cave_final** | ΤΟ ΣΠΗΛΑΙΟ — ΤΕΛΙΚΗ ΕΠΙΣΤΡΟΦΗ | TODO |
-| E | **epilogue** | Η ΓΙΟΡΤΗ | TODO |
+| 10 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
+| 11 | **boat** | ΤΟ ΚΑΡΑΒΙ (ΕΛΠΙΔΑ) | TODO |
+| 12 | **treasure** | Ο ΘΗΣΑΥΡΟΣ | TODO |
+| E | **epilogue** | ΕΠΙΛΟΓΟΣ | TODO |
 
-## Puzzle Chain (12 captain's tokens)
+## Puzzle Chain (Visvikis treasure hunt)
 
 ```
-Scene 1 (house): find loose terrace tile → first captain's token
-Scene 2 (port): talk to Stavros → quest hook, explore harbor
-Scene 3 (museum): model ship puzzle → second token
-Scene 4 (liotrivi): Fotini's history test → third token
-Scene 5 (cave): place tokens, discover vote inscription
-Scene 6 (church): architecture puzzle → token
-Scene 7 (windmill): map puzzle → ship pattern eureka
-Scene 8 (boat): coastal chapel → token + logbook
-Scene 9 (graveyard): find captain's grave → ghost encounter → token
-Scene 10 (cave): place all 12 → open door → ledger + letter
+Scene 2 (house): open shutters → find locked drawer → key in pot → Visvikis's letter (quest hook)
+Scene 3 (port): show letter to NPCs → Stavros points to Karkaros cave
+Scene 4 (waterfront): reunion with Akis & Stathis → Akis points to museum, Stathis points to Athos
+Scene 5 (museum): curator explains golden age + decline → learn αλληλασφάλεια history
+Scene 6 (liotrivi): Athos confirms cave → "prove you're worthy" → mentions Visvikis's will
+Scene 7 (windmill): Giannis shows cave entrance from above → gives LANTERN
+Scene 8 (cave): explore cave → find "Λ.Β. 1887" → Clio finds GREEN STONE (jade)
+Scene 9 (graveyard): place stone on Visvikis's grave → GHOST appears → points to church
+Scene 10 (church): Clio finds floor tile "Λ.Β." → NAUTICAL CHART (X marks Agios Georgios)
+Scene 11 (boat): Chrysostomos crosses to island → find rock → cross → 5 steps → dig
+Scene 12 (treasure): open chest → gold + jade necklace + αλληλασφάλεια ledger + final letter
 ```
 
 ## NPCs
 
 | NPC | Scene | Role |
 |-----|-------|------|
-| **Σταύρος / Stavros** | Port | Fisherman, quest hook, grandfather's bitterness |
-| **Επιμελητής / Curator** | Museum | Educator, the big history lesson |
-| **Φωτεινή / Fotini** | Liotrivi | Bartender, captain's descendant, token test |
-| **Ειρήνη / Eirini** | Liotrivi (outside) | Tech entrepreneur, future voice |
-| **Παπάς / Papas** | Church | Warm, mischievous, faith+maritime link |
-| **Χρυσόστομος / Chrysostomos** | Boat | Old sailor, wisdom about change |
-| **Ghost Captain** | Graveyard | Silent, shows visions, finds peace |
+| **Σταύρος / Stavros** | Port | Fisherman, mends nets. Grandfather knew Visvikis. Points to cave |
+| **Άκης / Akis** | Waterfront | Flute player (φλογέρα), friend of Ntemis. Knows history. Points to museum |
+| **Στάθης / Stathis** | Waterfront | Guitar player, friend of Ntemis. Points to Athos at Liotrivi |
+| **Επιμελητής / Curator** | Museum | Passionate educator. Golden age, 300 ships, fatal refusal of steam |
+| **Άθος / Athos** | Liotrivi | Lawyer and owner. Knows every old family. Read Visvikis's will |
+| **Γιάννης / Giannis** | Windmill | Owner of old windmill. Quiet, sees everything from above. Gives lantern |
+| **Παπάς / Papas** | Church | Warm, mischievous. Visvikis was greatest benefactor |
+| **Χρυσόστομος / Chrysostomos** | Boat | Old sailor. Knew Ntemis's father. Boats family to island |
+| **Ghost of Visvikis** | Graveyard | Silent, weathered, proud. Waited 120 years. Points to church |
 
 ## Historical Research
 
@@ -179,11 +184,12 @@ Scene 10 (cave): place all 12 → open door → ledger + letter
 
 ## Key Documents
 
-- **`storyboard.html`** — **Living pilot storyboard** — the visual script, refine continuously. Open in browser to review
-- **`ROADMAP.md`** — **Development roadmap** — 8-phase plan from prototype to release (LOSC: `thought:2026-02-16-galaxidi-adventure-game-develo`)
-- `PILOT-STORY.md` — Pilot story text (8-scene Visvikis treasure hunt)
-- `GAME-BIBLE.md` — Definitive game bible (v3, 10 scenes + epilogue, full story — MAIN version)
+- **`storyboard.html`** — **THE definitive design document** — visual pilot storyboard, single source of truth. Open in browser to review
+- **`STORY.md`** — Story bible (text companion, aligned with storyboard)
+- **`ROADMAP.md`** — Development roadmap — 8-phase plan from prototype to release (LOSC: `thought:2026-02-16-galaxidi-adventure-game-develo`)
 - `CHARACTER-LORE.md` — Deep character profiles (Ntemis, Ajax, Clio) — personality, voice, relationships, arcs
+- `GAME-BIBLE.md` — **OBSOLETE** (old 12-token version, do NOT use for new work)
+- `PILOT-STORY.md` — **OBSOLETE** (old 8-scene version)
 - `inspiration/galaxidi-history.md` — Verified Galaxidi history timeline
 - `HANDOFF.md` — Session handoff state
 - `DEVLOG.md` — Development log
