@@ -820,114 +820,49 @@ function drawSeagulls() {
   }
 }
 
-// ── Drifting Clouds ──
-const clouds = [];
-function initClouds() {
-  clouds.length = 0;
-  for (let i = 0; i < 4; i++) {
-    clouds.push({
-      x: Math.random() * GW,
-      y: 5 + Math.random() * 25,
-      vx: 0.04 + Math.random() * 0.06,
-      width: 40 + Math.random() * 60,
-      height: 10 + Math.random() * 8,
-      puffs: Math.floor(3 + Math.random() * 3),
-      alpha: 0.08 + Math.random() * 0.06,
-      seed: Math.random() * 1000,
-    });
+// ── Painted Boat Bobbing (extract boats from background, animate) ──
+let boatCutout = null; // offscreen canvas with boat region
+let boatWaterPatch = null; // water to paint over original position
+const boatRegion = { x: 385, y: 95, w: 155, h: 50 }; // boat area in background
+let boatPhase = 0;
+
+function initPaintedBoats() {
+  boatPhase = 0;
+  boatCutout = null;
+  boatWaterPatch = null;
+  // Extract boat region from background image when available
+  const bgImg = images['pixel-exterior'];
+  if (!bgImg || !bgImg.complete) return;
+  // Cut out the boat region
+  const cut = document.createElement('canvas');
+  cut.width = boatRegion.w;
+  cut.height = boatRegion.h;
+  const cctx = cut.getContext('2d');
+  cctx.drawImage(bgImg, boatRegion.x, boatRegion.y, boatRegion.w, boatRegion.h, 0, 0, boatRegion.w, boatRegion.h);
+  boatCutout = cut;
+  // Create water patch by sampling water row just below boats
+  const patch = document.createElement('canvas');
+  patch.width = boatRegion.w;
+  patch.height = boatRegion.h + 4; // extra for bob displacement
+  const pctx = patch.getContext('2d');
+  // Fill with water from row just below the boat area
+  for (let row = 0; row < patch.height; row++) {
+    pctx.drawImage(bgImg, boatRegion.x, boatRegion.y + boatRegion.h - 2, boatRegion.w, 1, 0, row, boatRegion.w, 1);
   }
-}
-function updateClouds(dt) {
-  for (const c of clouds) {
-    c.x += c.vx;
-    if (c.x > GW + c.width) {
-      c.x = -c.width - Math.random() * 60;
-      c.y = 3 + Math.random() * 28;
-      c.alpha = 0.08 + Math.random() * 0.06;
-    }
-  }
-}
-function drawClouds() {
-  for (const c of clouds) {
-    ctx.save();
-    ctx.globalAlpha = c.alpha;
-    ctx.fillStyle = '#FFF8F0';
-    // Draw cloud as overlapping ellipses
-    const pw = c.width / c.puffs;
-    for (let p = 0; p < c.puffs; p++) {
-      const px = c.x + p * pw * 0.7;
-      const py = c.y + Math.sin(c.seed + p * 1.3) * 3;
-      const pr = pw * 0.5 + Math.sin(c.seed + p) * 3;
-      const ph = c.height * (0.6 + Math.sin(c.seed + p * 0.7) * 0.3);
-      ctx.beginPath();
-      ctx.ellipse(px, py, pr, ph, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
+  boatWaterPatch = patch;
 }
 
-// ── Harbor Boats (pixel art, bobbing) ──
-const boats = [];
-function initBoats() {
-  boats.length = 0;
-  // Small fishing boats in the harbor area
-  boats.push({ x: 410, baseY: 128, size: 1.0, phase: 0, drift: 0, color: '#B83030', mast: true });
-  boats.push({ x: 460, baseY: 132, size: 0.7, phase: 1.8, drift: 0, color: '#2060A0', mast: false });
-  boats.push({ x: 510, baseY: 126, size: 0.85, phase: 3.5, drift: 0, color: '#F0E8D0', mast: true });
+function updatePaintedBoats(dt) {
+  boatPhase += dt * 1.2;
 }
-function updateBoats(dt) {
-  for (const b of boats) {
-    b.phase += dt * 0.8;
-    b.drift += dt * 0.1;
-  }
-}
-function drawBoats(tick) {
-  for (const b of boats) {
-    const bob = Math.sin(b.phase) * 1.5;
-    const rock = Math.sin(b.phase * 0.7 + 0.5) * 0.03;
-    const sway = Math.sin(b.drift) * 0.3;
-    const bx = b.x + sway;
-    const by = b.baseY + bob;
-    const s = b.size;
-    ctx.save();
-    ctx.translate(bx, by);
-    ctx.rotate(rock);
-    // Hull
-    ctx.fillStyle = b.color;
-    ctx.beginPath();
-    ctx.moveTo(-12 * s, 0);
-    ctx.lineTo(-14 * s, -3 * s);
-    ctx.lineTo(14 * s, -3 * s);
-    ctx.lineTo(12 * s, 0);
-    ctx.closePath();
-    ctx.fill();
-    // Hull stripe
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fillRect(-11 * s, -2 * s, 22 * s, 1);
-    // Cabin bump
-    ctx.fillStyle = '#E8D8C0';
-    ctx.fillRect(-3 * s, -6 * s, 6 * s, 3 * s);
-    if (b.mast) {
-      // Mast
-      ctx.fillStyle = '#8B7355';
-      ctx.fillRect(-0.5, -16 * s, 1, 13 * s);
-      // Flag
-      const flagWave = Math.sin(tick * 0.03 + b.phase) * 2;
-      ctx.fillStyle = b.color === '#B83030' ? '#FFD700' : '#FF6030';
-      ctx.beginPath();
-      ctx.moveTo(0.5, -16 * s);
-      ctx.lineTo(6 * s + flagWave, -14 * s);
-      ctx.lineTo(0.5, -12 * s);
-      ctx.closePath();
-      ctx.fill();
-    }
-    // Water reflection
-    ctx.globalAlpha = 0.15;
-    ctx.fillStyle = b.color;
-    ctx.fillRect(-10 * s, 2, 20 * s, 2);
-    ctx.restore();
-  }
+
+function drawPaintedBoats() {
+  if (!boatCutout || !boatWaterPatch) return;
+  const bob = Math.sin(boatPhase) * 1.5;
+  // Paint water over original boat position
+  ctx.drawImage(boatWaterPatch, boatRegion.x, boatRegion.y);
+  // Re-draw boats at bobbing offset
+  ctx.drawImage(boatCutout, boatRegion.x, boatRegion.y + bob);
 }
 
 // ── Sea Shimmer ──
@@ -1004,18 +939,6 @@ function drawPetals() {
   }
 }
 
-// ── Boat Bobbing (water reflections around harbor boats) ──
-function drawBoatBob(tick) {
-  const bob = Math.sin(tick * 0.015) * 1.5;
-  ctx.save();
-  ctx.globalAlpha = 0.06;
-  ctx.fillStyle = '#D4A03C';
-  for (let rx = 390; rx < 540; rx += 3) {
-    const wave = Math.sin(rx * 0.06 + tick * 0.02) * 2 + bob;
-    ctx.fillRect(rx, 138 + wave, 2, 1);
-  }
-  ctx.restore();
-}
 
 // ── Orange Cat ──
 const cat = { x: 95, y: 243, phase: 0, blinkTimer: 0, blinking: false, tailPhase: 0 };
@@ -1312,8 +1235,7 @@ function startSceneAmbience(sceneId) {
       }
     } catch (e) { /* Web Audio not available */ }
     initSeagulls();
-    initClouds();
-    initBoats();
+    initPaintedBoats();
     initPetals();
     ambientSounds.active = true;
   } else {
@@ -1333,8 +1255,8 @@ function stopSceneAmbience() {
     ambientSounds.cicadasNode = null;
   }
   seagulls.length = 0;
-  clouds.length = 0;
-  boats.length = 0;
+  boatCutout = null;
+  boatWaterPatch = null;
   petals.length = 0;
   ambientSounds.active = false;
 }
@@ -1354,31 +1276,26 @@ function updateAmbientSound(dt) {
 function updateSceneAmbience(dt) {
   if (state.scene === 'exterior') {
     updateSeagulls(dt);
-    updateClouds(dt);
-    updateBoats(dt);
+    updatePaintedBoats(dt);
     updatePetals();
     updateCat(dt);
     updateAmbientSound(dt);
   } else if (state.scene === 'terrace') {
     updateSeagulls(dt);
-    updateClouds(dt);
     updateAmbientSound(dt);
   }
 }
 
 function drawSceneAmbience(tick) {
   if (state.scene === 'exterior') {
-    drawClouds();
+    drawPaintedBoats();
     drawSeaShimmer(tick);
-    drawBoats(tick);
-    drawBoatBob(tick);
     drawLightShaft(tick);
     drawSeagulls();
     drawPetals();
     drawCat();
     drawHeatHaze(tick);
   } else if (state.scene === 'terrace') {
-    drawClouds();
     drawSeaShimmer(tick);
     drawLightShaft(tick);
     drawSeagulls();
@@ -2345,6 +2262,7 @@ const sceneMusic = {
   exterior: 'music/arrival-at-galaxidi-scene-1-1.mp3',
   terrace:  'music/arrival-at-galaxidi-scene-1-1.mp3',
   kitchen:  'music/the-grandfather-s-house-1.mp3',
+  port:     'music/the-harbor-at-dusk-1.mp3',
 };
 
 let currentMusicSrc = '';
@@ -2419,6 +2337,112 @@ function drawTitleScreen(tick) {
     ctx.fillStyle = '#4A9FD8';
     ctx.fillRect(0, 0, GW, GH);
   }
+
+  // ═══════════════════════════════════════
+  // ANIMATED ELEMENTS — waves, boats, seagulls
+  // ═══════════════════════════════════════
+
+  // Wave shimmer — moving light bands across the water
+  const waterTop = GH * 0.58;
+  ctx.save();
+  for (let i = 0; i < 8; i++) {
+    const wy = waterTop + 10 + i * 16;
+    // Waves scroll left-to-right continuously
+    const scrollX = (tick * 0.3 + i * 90) % (GW + 60) - 30;
+    const ww = 40 + Math.sin(t * 0.5 + i) * 20;
+    const wobble = Math.sin(t * 0.9 + i * 2.1) * 4;
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillRect(scrollX, wy + wobble, ww, 2);
+    ctx.fillStyle = 'rgba(180,230,255,0.2)';
+    ctx.fillRect(scrollX + 10, wy + wobble + 4, ww * 0.7, 2);
+  }
+  ctx.restore();
+
+  // Bobbing boats — visible colored boats on the water
+  ctx.save();
+  const boats = [
+    { x: 100, y: GH * 0.70, size: 1.2, phase: 0, color: '#8B4513' },
+    { x: 350, y: GH * 0.74, size: 0.9, phase: 2.1, color: '#A0522D' },
+    { x: 540, y: GH * 0.67, size: 1.0, phase: 4.2, color: '#6B3410' },
+  ];
+  for (const b of boats) {
+    const by = b.y + Math.sin(t * 0.6 + b.phase) * 3;
+    const brot = Math.sin(t * 0.4 + b.phase + 1) * 0.06;
+    ctx.save();
+    ctx.translate(b.x, by);
+    ctx.rotate(brot);
+    ctx.scale(b.size, b.size);
+    // Hull shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.beginPath();
+    ctx.moveTo(-16, 3); ctx.lineTo(-13, 8); ctx.lineTo(13, 8);
+    ctx.lineTo(16, 3); ctx.closePath(); ctx.fill();
+    // Hull
+    ctx.fillStyle = b.color;
+    ctx.beginPath();
+    ctx.moveTo(-15, 0); ctx.lineTo(-12, 6); ctx.lineTo(12, 6);
+    ctx.lineTo(15, 0); ctx.lineTo(11, -3); ctx.lineTo(-11, -3);
+    ctx.closePath(); ctx.fill();
+    // Hull trim
+    ctx.fillStyle = '#DDD';
+    ctx.fillRect(-10, -1, 20, 1);
+    // Mast
+    ctx.fillStyle = '#5A3A1A';
+    ctx.fillRect(-1, -18, 2, 18);
+    // Sail
+    ctx.fillStyle = '#FFF8EC';
+    ctx.globalAlpha = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(1, -17); ctx.lineTo(1, -4); ctx.lineTo(11, -4);
+    ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // Seagulls — visible pixel birds flying across the sky
+  ctx.save();
+  const gulls = [
+    { speed: 0.35, y0: 30, amp: 6, phase: 0 },
+    { speed: 0.25, y0: 55, amp: 10, phase: 150 },
+    { speed: 0.45, y0: 20, amp: 5, phase: 300 },
+    { speed: 0.30, y0: 70, amp: 8, phase: 220 },
+    { speed: 0.20, y0: 42, amp: 12, phase: 400 },
+  ];
+  for (const gull of gulls) {
+    const cycle = GW + 100;
+    const gx = ((tick * gull.speed + gull.phase * 2) % cycle) - 50;
+    const gy = gull.y0 + Math.sin(t * 1.2 + gull.phase) * gull.amp;
+    const wingFlap = Math.sin(tick * 0.15 + gull.phase) * 6;
+    const gSize = 0.8 + gull.speed * 0.6;
+    ctx.save();
+    ctx.translate(gx, gy);
+    ctx.scale(gSize, gSize);
+    // Seagull body
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(-2, 0, 4, 2);
+    // Wings — thick "V" shape with flap
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-8, wingFlap);
+    ctx.lineTo(-4, -1);
+    ctx.lineTo(0, 1);
+    ctx.lineTo(4, -1);
+    ctx.lineTo(8, wingFlap);
+    ctx.stroke();
+    // White wing highlights
+    ctx.strokeStyle = '#FFF';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(-7, wingFlap - 1);
+    ctx.lineTo(-4, -2);
+    ctx.moveTo(4, -2);
+    ctx.lineTo(7, wingFlap - 1);
+    ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
 
   // Subtle vignette overlay
   const vig = ctx.createRadialGradient(GW/2, GH/2, GW*0.3, GW/2, GH/2, GW*0.75);
@@ -2509,16 +2533,6 @@ function drawTitleScreen(tick) {
   }
   ctx.restore();
 
-  // Credits
-  if (elapsed > l3End) {
-    const ca = Math.min(1, (elapsed - l3End) / 40);
-    ctx.save(); ctx.globalAlpha = ca;
-    ctx.font = '7px "Press Start 2P", monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#8A6828';
-    ctx.fillText('Μια Περιπέτεια της Οικογένειας Λατσούδη', GW/2, GH - 12);
-    ctx.restore();
-  }
 
   // Blinking start prompt
   if (elapsed > promptAt) {
