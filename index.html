@@ -5542,13 +5542,21 @@ function render() {
   ctx.fillText(sc.label, GW / 2, 8);
   ctx.restore();
 
-  // Music toggle icon
+  // Top-right toolbar: Help | Map | Music
   ctx.save();
-  ctx.globalAlpha = state.musicOn ? 0.5 : 0.2;
   ctx.fillStyle = '#D4A03C';
-  ctx.font = '14px sans-serif';
+  ctx.font = '8px "Press Start 2P", monospace';
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
+  // Help icon
+  ctx.globalAlpha = 0.35;
+  ctx.fillText('?', GW - 52, 8);
+  // Map icon
+  ctx.globalAlpha = 0.35;
+  ctx.fillText('M', GW - 32, 8);
+  // Music icon
+  ctx.globalAlpha = state.musicOn ? 0.5 : 0.2;
+  ctx.font = '14px sans-serif';
   ctx.fillText('♪', GW - 8, 8);
   ctx.restore();
 
@@ -5812,8 +5820,12 @@ CVS.addEventListener('click', (e) => {
   // Block all interaction during sequences (dialog already handled above)
   if (state.seq.active) return;
 
-  // Music toggle (top-right corner)
-  if (g.x > GW - 30 && g.y < 25) { toggleMusic(); return; }
+  // Top-right toolbar clicks (y < 25)
+  if (g.y < 25) {
+    if (g.x > GW - 20) { toggleMusic(); return; }
+    if (g.x > GW - 42 && g.x <= GW - 22) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.mapHover = null; return; }
+    if (g.x > GW - 62 && g.x <= GW - 42) { state.helpOpen = !state.helpOpen; state.mapOpen = false; return; }
+  }
 
   // Check exit zones
   const exit = hitTestExit(g.x, g.y);
