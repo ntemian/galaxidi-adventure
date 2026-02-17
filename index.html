@@ -180,6 +180,8 @@
 const CVS = document.getElementById('game-canvas');
 const ctx = CVS.getContext('2d');
 const GW = 640, GH = 400; // internal game resolution
+const GAME_VERSION = 'v0.1-pilot';
+const GAME_BUILD = '2026-02-17';
 CVS.width = GW; CVS.height = GH;
 
 // ── Layer cache: offscreen buffers for static content ──
@@ -794,10 +796,8 @@ const scenes = {
     ],
     exits: [{ side:'right', target:'graveyard', label:'Νεκροταφείο →' }, { side:'left', target:'terrace', label:'← Βεράντα' }],
     entry: [
-      {s:'',t:'Η κορυφή του λόφου. Αέρας, φως, και θέα που δεν τελειώνει.'},
-      {s:'ΑΙΑΣ',t:'ΤΕΛΕΙΟ! Βλέπω τα πάντα από εδώ!'},
-      {s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα — ένα τηλεσκόπιο!'},
-      {s:'ΝΤΕΜΗΣ',t:'Ένα σημείο παρατήρησης. Κάποιος παρακολουθούσε τα πλοία από εδώ.'},
+      {s:'',t:'Ο αέρας σφυρίζει στα ερείπια του μύλου.'},
+      {s:'ΝΤΕΜΗΣ',t:'Ο Γιάννης μας έδειξε τον δρόμο. Ώρα να ψάξουμε.'},
     ],
   },
 
@@ -5103,7 +5103,7 @@ function saveGame(slot = 'auto') {
     flags: state.flags,
     visited: [...state.visited],
     timestamp: new Date().toISOString(),
-    version: 1,
+    version: GAME_VERSION,
   };
   try {
     localStorage.setItem('galaxidi-save-' + slot, JSON.stringify(saveData));
@@ -6812,7 +6812,7 @@ function drawTitleScreen(tick) {
   ctx.textBaseline = 'bottom';
   ctx.fillStyle = '#666';
   ctx.globalAlpha = 0.6;
-  ctx.fillText('v0.1-pilot \u2022 2026-02-17', 6, GH - 4);
+  ctx.fillText(GAME_VERSION + ' \u2022 ' + GAME_BUILD, 6, GH - 4);
   ctx.restore();
 
   // Fade overlay

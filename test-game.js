@@ -1441,6 +1441,148 @@ test('Debug hotspot overlay mode exists (D key toggle)', () => {
 });
 
 // ════════════════════════════════════════════════════════════
+console.log('\n11. DIALOG / CUTSCENE OVERLAP DETECTION');
+// ════════════════════════════════════════════════════════════
+
+// Extract dialog text from a scene entry array
+function extractEntryDialogTexts(sceneId) {
+  const block = getScenesBlock();
+  // Find the scene's entry array
+  const sceneRegex = new RegExp(`^\\s{2}${sceneId}:\\s*\\{`, 'gm');
+  const sm = sceneRegex.exec(block);
+  if (!sm) return [];
+  const sceneChunk = block.substring(sm.index, sm.index + 8000);
+  // Find entry: [ ... ]
+  const entryMatch = sceneChunk.match(/entry:\s*\[([\s\S]*?)\],/);
+  if (!entryMatch) return [];
+  const texts = [];
+  const dlgRegex = /t:\s*'([^']+)'/g;
+  let dm;
+  while ((dm = dlgRegex.exec(entryMatch[1])) !== null) {
+    texts.push(dm[1]);
+  }
+  return texts;
+}
+
+// Extract dialog text from cutscene frames
+function extractCutsceneDialogTexts(cutsceneId) {
+  const csStart = js.indexOf('const cutscenes = {');
+  if (csStart === -1) return [];
+  const csChunk = js.substring(csStart, csStart + 80000);
+  // Find cutscene by ID
+  const csRegex = new RegExp(`^\\s{2}${cutsceneId}:\\s*\\{\\s*\\n\\s*frames:`, 'gm');
+  const cm = csRegex.exec(csChunk);
+  if (!cm) return [];
+  // Extract a reasonable block for this cutscene (until next top-level key)
+  const remaining = csChunk.substring(cm.index);
+  const endMatch = remaining.match(/\n\s{2}\w+:\s*\{\s*\n\s*frames:/);
+  const cutsceneBlock = endMatch ? remaining.substring(0, endMatch.index) : remaining.substring(0, 3000);
+  const texts = [];
+  const dlgRegex = /t:\s*'([^']+)'/g;
+  let dm;
+  while ((dm = dlgRegex.exec(cutsceneBlock)) !== null) {
+    texts.push(dm[1]);
+  }
+  return texts;
+}
+
+// Normalize text for comparison (strip punctuation, lowercase)
+function normalizeForCompare(text) {
+  return text.replace(/[«».,;:!?…\-—'"]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+// Check for similar phrases (shared 4+ word sequences)
+function findSharedPhrases(textsA, textsB, minWords) {
+  minWords = minWords || 4;
+  const overlaps = [];
+  for (const a of textsA) {
+    const normA = normalizeForCompare(a);
+    const wordsA = normA.split(' ');
+    for (const b of textsB) {
+      const normB = normalizeForCompare(b);
+      // Check if any sequence of minWords+ consecutive words from A appears in B
+      for (let i = 0; i <= wordsA.length - minWords; i++) {
+        const phrase = wordsA.slice(i, i + minWords).join(' ');
+        if (normB.includes(phrase)) {
+          overlaps.push({ entry: a, cutscene: b, shared: phrase });
+          break;
+        }
+      }
+    }
+  }
+  return overlaps;
+}
+
+// Also check verb handlers that trigger cutscenes
+function extractVerbCutsceneDialogs() {
+  const results = [];
+  // Find all startCutscene calls in scene verb handlers
+  const regex = /startCutscene\('(\w+)'\)/g;
+  let m;
+  while ((m = regex.exec(js)) !== null) {
+    const cutsceneId = m[1];
+    // Get surrounding context (look back ~2000 chars for the return[ dialog)
+    const contextStart = Math.max(0, m.index - 3000);
+    const context = js.substring(contextStart, m.index);
+    // Find the last return[ ... ] before this startCutscene
+    const returnMatch = context.match(/return\s*\[([\s\S]*?)\]\s*;[^;]*$/);
+    if (returnMatch) {
+      const texts = [];
+      const dlgRegex = /t:\s*'([^']+)'/g;
+      let dm;
+      while ((dm = dlgRegex.exec(returnMatch[1])) !== null) {
+        texts.push(dm[1]);
+      }
+      if (texts.length > 0) {
+        results.push({ cutsceneId, dialogTexts: texts });
+      }
+    }
+  }
+  return results;
+}
+
+const sceneCutscenes = extractSceneCutscenes();
+
+test('No dialog overlap between scene entries and their cutscenes', () => {
+  const issues = [];
+  for (const [sceneId, cutsceneId] of Object.entries(sceneCutscenes)) {
+    const entryTexts = extractEntryDialogTexts(sceneId);
+    const cutsceneTexts = extractCutsceneDialogTexts(cutsceneId);
+    if (entryTexts.length === 0 || cutsceneTexts.length === 0) continue;
+    const overlaps = findSharedPhrases(entryTexts, cutsceneTexts, 4);
+    for (const o of overlaps) {
+      issues.push(`${sceneId}→${cutsceneId}: "${o.shared}" found in entry ("${o.entry.substring(0,50)}...") AND cutscene ("${o.cutscene.substring(0,50)}...")`);
+    }
+  }
+  assert(issues.length === 0, `Dialog/cutscene overlaps found:\n    ${issues.join('\n    ')}`);
+});
+
+test('No dialog overlap between verb handlers and their triggered cutscenes', () => {
+  const issues = [];
+  const verbCutscenes = extractVerbCutsceneDialogs();
+  for (const { cutsceneId, dialogTexts } of verbCutscenes) {
+    const cutsceneTexts = extractCutsceneDialogTexts(cutsceneId);
+    if (cutsceneTexts.length === 0) continue;
+    const overlaps = findSharedPhrases(dialogTexts, cutsceneTexts, 4);
+    for (const o of overlaps) {
+      issues.push(`verb→${cutsceneId}: "${o.shared}" found in dialog ("${o.entry.substring(0,50)}...") AND cutscene ("${o.cutscene.substring(0,50)}...")`);
+    }
+  }
+  assert(issues.length === 0, `Verb/cutscene overlaps found:\n    ${issues.join('\n    ')}`);
+});
+
+test('Entry dialogs for cutscene scenes are brief (max 4 lines)', () => {
+  const verbose = [];
+  for (const [sceneId, cutsceneId] of Object.entries(sceneCutscenes)) {
+    const entryTexts = extractEntryDialogTexts(sceneId);
+    if (entryTexts.length > 4) {
+      verbose.push(`${sceneId}: ${entryTexts.length} lines (max 4 recommended when cutscene follows)`);
+    }
+  }
+  assert(verbose.length === 0, `Entry dialogs too long:\n    ${verbose.join('\n    ')}`);
+});
+
+// ════════════════════════════════════════════════════════════
 // SUMMARY
 // ════════════════════════════════════════════════════════════
 
