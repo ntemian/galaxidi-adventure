@@ -595,7 +595,8 @@ const scenes = {
     objects: [
       { id:'door', x:115, y:40, w:70, h:120, label:'Πόρτα',
         verbs: { look:[{s:'',t:'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.'}],
-                 open:[{s:'ΝΤΕΜΗΣ',t:'Ας μπούμε μέσα.'}], walk:'kitchen', use:'kitchen' }},
+                 open:() => { showDlg([{s:'ΝΤΕΜΗΣ',t:'Ας μπούμε μέσα.'}], () => changeScene('kitchen')); return; },
+                 walk:'kitchen', use:'kitchen' }},
       { id:'bougainvillea', x:175, y:-88, w:150, h:120, label:'Μπουκαμβίλιες',
         verbs: { look:[{s:'',t:'Ροζ μπουκαμβίλιες σκαρφαλώνουν στον τοίχο. Εδώ το καλοκαίρι αρνείται να φύγει.'}],
                  pick:[{s:'ΚΛΕΙΩ',t:'Μπαμπά, μην τις κόβεις! Είναι τέλειες έτσι.'}] }},
@@ -2936,6 +2937,110 @@ function playCaveDrip() {
   osc.stop(now + 0.4);
 }
 
+// ── SFX — procedural sound effects ──────────────────────────
+const sceneSurface = {
+  exterior: 'stone', terrace: 'stone', kitchen: 'wood',
+  port: 'stone', museum: 'wood', liotrivi: 'stone',
+  cave: 'stone', church: 'stone', church_interior: 'stone',
+  windmill: 'dirt', boat: 'wood', graveyard: 'dirt',
+  treasure: 'sand', new_era: 'stone',
+};
+let sfxStepAcc = 0;   // accumulator for footstep timing
+let sfxStepLR = 0;    // alternates L/R foot
+
+function playSFX(type) {
+  const ctx = getAudioCtx();
+  if (!ctx || !state.musicOn) return;
+  const now = ctx.currentTime;
+
+  if (type === 'step') {
+    // Short noise burst, LP-filtered — pitch varies by L/R and surface
+    const surface = sceneSurface[state.scene] || 'stone';
+    const cutoff = surface === 'wood' ? 1800 : surface === 'sand' ? 600 : surface === 'dirt' ? 800 : 1200;
+    const vol = surface === 'sand' ? 0.04 : surface === 'wood' ? 0.06 : 0.05;
+    const dur = surface === 'sand' ? 0.06 : 0.04;
+    const len = Math.ceil(ctx.sampleRate * dur);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    // Alternate pitch for L/R foot
+    src.playbackRate.value = sfxStepLR ? 1.1 : 0.9;
+    sfxStepLR ^= 1;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = cutoff + (Math.random() - 0.5) * 200;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(vol, now);
+    g.gain.linearRampToValueAtTime(0, now + dur);
+    src.connect(lp); lp.connect(g); g.connect(ambientSounds.masterGain);
+    src.start(now); src.stop(now + dur);
+
+  } else if (type === 'pickup') {
+    // Rising two-tone chime C5→E5
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(523, now);         // C5
+    osc.frequency.setValueAtTime(659, now + 0.08);  // E5
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.10, now);
+    g.gain.linearRampToValueAtTime(0.12, now + 0.08);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc.connect(g); g.connect(ambientSounds.masterGain);
+    osc.start(now); osc.stop(now + 0.35);
+
+  } else if (type === 'whoosh') {
+    // Filtered noise sweep for scene transition
+    const len = Math.ceil(ctx.sampleRate * 0.4);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.setValueAtTime(400, now);
+    bp.frequency.exponentialRampToValueAtTime(2000, now + 0.15);
+    bp.frequency.exponentialRampToValueAtTime(300, now + 0.4);
+    bp.Q.value = 1.5;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.08, now + 0.1);
+    g.gain.linearRampToValueAtTime(0, now + 0.4);
+    src.connect(bp); bp.connect(g); g.connect(ambientSounds.masterGain);
+    src.start(now); src.stop(now + 0.4);
+
+  } else if (type === 'tick') {
+    // Tiny 1ms noise burst — typewriter click
+    const len = Math.ceil(ctx.sampleRate * 0.003);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 2000;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.06, now);
+    g.gain.linearRampToValueAtTime(0, now + 0.003);
+    src.connect(hp); hp.connect(g); g.connect(ambientSounds.masterGain);
+    src.start(now); src.stop(now + 0.005);
+
+  } else if (type === 'click') {
+    // Short square wave blip for UI verb click
+    const osc = ctx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = 800;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.05, now);
+    g.gain.linearRampToValueAtTime(0, now + 0.03);
+    osc.connect(g); g.connect(ambientSounds.masterGain);
+    osc.start(now); osc.stop(now + 0.03);
+  }
+}
+
 function initAmbientSound() {
   ambientSounds.gullTimer = 0;
   ambientSounds.gullInterval = 8 + Math.random() * 7;
@@ -3800,6 +3905,7 @@ function startWalk(who, targetX, cb) {
   c.walkT = 0;
   c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0));
   c.frame = 0;
+  if (who === 'ntemis') sfxStepAcc = 0;
   walkDoneCallback = cb;
 }
 
@@ -3816,6 +3922,15 @@ function updateWalking(dt) {
 
     // Store raw walk time for smooth interpolation in drawSprite
     c.frame = c.walkT;
+
+    // Footstep SFX — only for ntemis, every ~0.3s
+    if (who === 'ntemis') {
+      sfxStepAcc += dt;
+      if (sfxStepAcc >= 0.3) {
+        sfxStepAcc -= 0.3;
+        playSFX('step');
+      }
+    }
 
     if (p >= 1) {
       c.x = c.targetX;
@@ -4300,6 +4415,7 @@ function updateDlg(dt) {
       state.dlg.timer -= 0.03;
       state.dlg.charIdx++;
       state.dlg.displayed = state.dlg.text.substring(0, state.dlg.charIdx);
+      if (state.dlg.charIdx % 2 === 0) playSFX('tick');
     }
   }
 }
@@ -4785,6 +4901,7 @@ const verbFallbacks = { use: ['pick','push','close','open'], open: ['use'] };
 
 function setVerb(v) {
   state.verb = v;
+  playSFX('click');
   document.querySelectorAll('.vb').forEach(b => b.classList.remove('on'));
   document.querySelector(`[data-v="${v}"]`)?.classList.add('on');
   updateActionLine();
@@ -4832,6 +4949,7 @@ function objClick(obj) {
 function addInv(item) {
   if (state.inv.find(i => i.id === item.id)) return;
   state.inv.push(item);
+  playSFX('pickup');
   renderInvUI();
 }
 
@@ -5614,6 +5732,7 @@ function scheduleClio(sceneId) {
 
 function changeScene(id) {
   if (clioTimer) { clearTimeout(clioTimer); clioTimer = null; }
+  playSFX('whoosh');
   // Iris wipe centered on Ntemis
   state.fade.active = true;
   state.fade.alpha = 0;
