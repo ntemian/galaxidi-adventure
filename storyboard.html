@@ -475,12 +475,370 @@
     flex: 1;
   }
 
+  /* ── STATUS BADGES ── */
+  .status-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  .status-done {
+    background: rgba(42,138,90,0.25);
+    color: var(--jade-glow);
+    border: 1px solid rgba(64,204,128,0.3);
+  }
+
+  .status-wip {
+    background: rgba(212,160,60,0.2);
+    color: var(--gold-light);
+    border: 1px solid rgba(212,160,60,0.3);
+  }
+
+  .status-todo {
+    background: rgba(42,90,140,0.2);
+    color: var(--sea-light);
+    border: 1px solid rgba(42,90,140,0.3);
+  }
+
+  /* ── TIMING BOX ── */
+  .timing-box {
+    background: rgba(20,35,50,0.5);
+    border: 1px solid rgba(42,90,140,0.2);
+    padding: 12px 18px;
+    margin: 15px 0;
+    border-radius: 6px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .timing-box .timing-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cream-dim);
+    letter-spacing: 1px;
+  }
+
+  .timing-box .timing-item strong {
+    color: var(--gold);
+    margin-right: 4px;
+  }
+
+  /* ── SCENE TRANSITION ── */
+  .scene-transition {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px 30px;
+    text-align: center;
+  }
+
+  .transition-arrow {
+    color: var(--gold-dim);
+    font-size: 1.2rem;
+    letter-spacing: 8px;
+    margin-bottom: 5px;
+  }
+
+  .transition-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--cream-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* ── CUTSCENE MARKER ── */
+  .cutscene-marker {
+    background: linear-gradient(90deg, rgba(106,74,138,0.3) 0%, rgba(42,90,140,0.15) 100%);
+    border-left: 3px solid #6a4a8a;
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cutscene-marker .cutscene-icon {
+    font-size: 1rem;
+    color: #8a6aaa;
+  }
+
+  .cutscene-marker .cutscene-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: #b8a0d0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .cutscene-marker .cutscene-desc {
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    font-style: italic;
+  }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 30px 40px;
+  }
+
+  .toc h2 {
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 25px;
+    letter-spacing: 3px;
+    font-weight: 700;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--cream);
+    transition: background 0.2s;
+  }
+
+  .toc-item:hover {
+    background: rgba(212,160,60,0.1);
+  }
+
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold-dim);
+    width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .toc-name {
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .toc-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .toc-status.done { color: var(--jade-glow); }
+  .toc-status.wip { color: var(--gold-light); }
+  .toc-status.todo { color: var(--sea-light); }
+
+  /* ── OVERVIEW STATS ── */
+  .overview-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px 0 30px;
+    padding: 15px 0;
+    border-top: 1px solid rgba(212,160,60,0.15);
+    border-bottom: 1px solid rgba(212,160,60,0.15);
+  }
+
+  .stat-card {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .stat-card .stat-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-card .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--cream-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+
+  /* ── EMOTIONAL ARC ── */
+  .emotional-arc {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 30px;
+  }
+
+  .emotional-arc h2 {
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 25px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .arc-graph {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 200px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(212,160,60,0.2);
+    margin-bottom: 15px;
+  }
+
+  .arc-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    position: relative;
+  }
+
+  .arc-fill {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease;
+    position: relative;
+  }
+
+  .arc-bar .arc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: var(--cream-dim);
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 8px;
+    line-height: 1.2;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    height: 60px;
+  }
+
+  .arc-bar .arc-emotion {
+    font-size: 0.55rem;
+    color: var(--gold-light);
+    text-align: center;
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-style: italic;
+  }
+
+  /* ── CUTSCENE IMAGE ── */
+  .cutscene-img {
+    width: 100%;
+    border-radius: 8px;
+    margin: 10px 0;
+    border: 2px solid rgba(106,74,138,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
+  /* ── NPC CARD ROW ── */
+  .npc-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin: 15px 0;
+    padding: 12px 15px;
+    background: rgba(15,25,35,0.4);
+    border-radius: 8px;
+    border: 1px solid rgba(212,160,60,0.1);
+  }
+
+  .npc-row img.npc-sprite {
+    height: 80px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    flex-shrink: 0;
+  }
+
+  .npc-row img.npc-portrait {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-dim);
+    flex-shrink: 0;
+  }
+
+  .npc-row .npc-info {
+    flex: 1;
+  }
+
+  .npc-row .npc-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+
+  .npc-row .npc-role {
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* ── NPC GALLERY (for hero section) ── */
+  .npc-gallery {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 20px 0 10px;
+  }
+
+  .npc-gallery .char-card img.char-sprite {
+    height: 80px;
+  }
+
+  /* ── GAME ID TAG ── */
+  .game-id-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--sea-light);
+    letter-spacing: 1px;
+    opacity: 0.6;
+    margin-left: 8px;
+  }
+
   /* Responsive */
   @media (max-width: 600px) {
     .scene { padding: 50px 20px; }
     body { font-size: 16px; }
     .characters-row { gap: 15px; }
     .char-card img.char-sprite { height: 80px; }
+    .timing-box { flex-direction: column; gap: 8px; }
+    .overview-stats { flex-direction: column; }
+    .arc-graph { height: 150px; }
+    .arc-bar .arc-label { font-size: 0.45rem; height: 50px; }
+    .toc-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -498,34 +856,179 @@
   <div class="characters-row">
     <div class="char-card">
       <img class="char-sprite" src="assets/char-ntemis-final.png" alt="Ntemis">
-      <img class="char-portrait" src="assets/portrait-ntemis.png" alt="Ntemis portrait">
+      <img class="char-portrait" src="assets/portrait-ntemis.webp" alt="Ntemis portrait">
       <div class="char-name">ΝΤΕΜΗΣ</div>
     </div>
     <div class="char-card">
       <img class="char-sprite" src="assets/char-ajax-final.png" alt="Ajax">
-      <img class="char-portrait" src="assets/portrait-ajax.png" alt="Ajax portrait">
+      <img class="char-portrait" src="assets/portrait-ajax.webp" alt="Ajax portrait">
       <div class="char-name">ΑΙΑΣ</div>
     </div>
     <div class="char-card">
       <img class="char-sprite" src="assets/char-clio-final.png" alt="Clio">
-      <img class="char-portrait" src="assets/portrait-clio.png" alt="Clio portrait">
+      <img class="char-portrait" src="assets/portrait-clio.webp" alt="Clio portrait">
       <div class="char-name">ΚΛΕΙΩ</div>
     </div>
   </div>
+
+  <div class="npc-gallery">
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-akis-final.png" alt="Akis">
+      <img class="char-portrait" src="assets/portrait-akis.webp" alt="Akis portrait">
+      <div class="char-name">ΑΚΗΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-stathis-final.png" alt="Stathis">
+      <img class="char-portrait" src="assets/portrait-stathis.webp" alt="Stathis portrait">
+      <div class="char-name">ΣΤΑΘΗΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-curator-final.png" alt="Curator">
+      <img class="char-portrait" src="assets/portrait-curator.webp" alt="Curator portrait">
+      <div class="char-name">ΕΠΙΜΕΛΗΤΗΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-athos-final.png" alt="Athos">
+      <img class="char-portrait" src="assets/portrait-athos.webp" alt="Athos portrait">
+      <div class="char-name">ΑΘΟΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-giannis-final.png" alt="Giannis">
+      <img class="char-portrait" src="assets/portrait-giannis.webp" alt="Giannis portrait">
+      <div class="char-name">ΓΙΑΝΝΗΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-papas-final.png" alt="Papas">
+      <img class="char-portrait" src="assets/portrait-papas.webp" alt="Papas portrait">
+      <div class="char-name">ΠΑΠΑΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-chrysostomos-final.png" alt="Chrysostomos">
+      <img class="char-portrait" src="assets/portrait-chrysostomos.webp" alt="Chrysostomos portrait">
+      <div class="char-name">ΧΡΥΣΟΣΤΟΜΟΣ</div>
+    </div>
+    <div class="char-card">
+      <img class="char-sprite" src="assets/char-ghost-final.png" alt="Ghost">
+      <img class="char-portrait" src="assets/portrait-ghost.webp" alt="Ghost portrait">
+      <div class="char-name">ΦΑΝΤΑΣΜΑ</div>
+    </div>
+  </div>
+
   <div class="scroll-hint">↓ Scroll to begin ↓</div>
 </div>
 
+<!-- ═══════════════ TABLE OF CONTENTS ═══════════════ -->
+<div class="toc" id="toc">
+  <h2>ΣΚΗΝΕΣ / SCENES</h2>
+
+  <div class="overview-stats">
+    <div class="stat-card">
+      <div class="stat-number">12</div>
+      <div class="stat-label">Scenes + Epilogue</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">~80</div>
+      <div class="stat-label">Minutes Playtime</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">10</div>
+      <div class="stat-label">Scenes Done</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Remaining</div>
+    </div>
+  </div>
+
+  <div class="toc-grid">
+    <a class="toc-item" href="#scene1">
+      <span class="toc-num">01</span>
+      <span class="toc-name">Αφίξη — Arrival</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene2">
+      <span class="toc-num">02</span>
+      <span class="toc-name">Το Σπίτι — The House</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene3">
+      <span class="toc-num">03</span>
+      <span class="toc-name">Η Παρέα — The Friends</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene4">
+      <span class="toc-num">04</span>
+      <span class="toc-name">Το Μουσείο — Museum</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene5">
+      <span class="toc-num">05</span>
+      <span class="toc-name">Λιοτρίβι — Olive Press</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene6">
+      <span class="toc-num">06</span>
+      <span class="toc-name">Ο Μύλος — Windmill</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene7">
+      <span class="toc-num">07</span>
+      <span class="toc-name">Το Σπήλαιο — The Cave</span>
+      <span class="toc-status wip">WIP</span>
+    </a>
+    <a class="toc-item" href="#scene8">
+      <span class="toc-num">08</span>
+      <span class="toc-name">Νεκροταφείο — Graveyard</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene9">
+      <span class="toc-num">09</span>
+      <span class="toc-name">Άγιος Νικόλαος — Church</span>
+      <span class="toc-status wip">WIP</span>
+    </a>
+    <a class="toc-item" href="#scene10">
+      <span class="toc-num">10</span>
+      <span class="toc-name">Το Καράβι — The Boat</span>
+      <span class="toc-status done">DONE</span>
+    </a>
+    <a class="toc-item" href="#scene11">
+      <span class="toc-num">11</span>
+      <span class="toc-name">Ο Θησαυρός — Treasure</span>
+      <span class="toc-status todo">TODO</span>
+    </a>
+    <a class="toc-item" href="#scene12">
+      <span class="toc-num">12</span>
+      <span class="toc-name">Η Νέα Εποχή — New Era</span>
+      <span class="toc-status todo">TODO</span>
+    </a>
+    <a class="toc-item" href="#epilogue">
+      <span class="toc-num">E</span>
+      <span class="toc-name">Επίλογος — Epilogue</span>
+      <span class="toc-status todo">TODO</span>
+    </a>
+  </div>
+</div>
+
 <!-- ═══════════════ SCENE 1 ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 1 / Scene 1</div>
-  <div class="scene-title">ΑΦΙΞΗ</div>
+<div class="scene" id="scene1">
+  <div class="scene-number">Σκηνή 1 / Scene 1 <span class="game-id-tag">exterior</span></div>
+  <div class="scene-title">ΑΦΙΞΗ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"Arrival"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 5-8 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Gentle — tutorial, mood-setting</div>
+    <div class="timing-item"><strong>Arc:</strong> Wonder → Warmth</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-exterior.png" alt="Galaxidi exterior — golden hour arrival">
+    <img class="scene-bg" src="assets/pixel-exterior.webp" alt="Galaxidi exterior — golden hour arrival">
     <p>The crescent harbor at golden hour. Stone houses climbing the hill, blue shutters, bougainvillea. Oversized bollards holding tiny fishing boats. A cat watches from a doorstep. The family walks in from the left.</p>
   </div>
+
+  <img class="cutscene-img" src="assets/cutscene-road.png" alt="The road to Galaxidi — the family drives through olive groves">
+  <img class="cutscene-img" src="assets/cutscene-descent.png" alt="Descending toward Galaxidi — first glimpse of the harbor">
 
   <div class="story">The family arrives at Galaxidi by car. Late afternoon, the light turning everything to honey. The town stretches along its crescent harbor — beautiful, quiet, full of ghosts it doesn't know about yet.</div>
 
@@ -572,13 +1075,22 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Walk up narrow lane → Blue door → Key turns</div>
+</div>
 
 <!-- ═══════════════ SCENE 2 ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 2 / Scene 2</div>
-  <div class="scene-title">ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ</div>
+<div class="scene" id="scene2">
+  <div class="scene-number">Σκηνή 2 / Scene 2 <span class="game-id-tag">exterior (kitchen sub-scene)</span></div>
+  <div class="scene-title">ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Grandfather's House"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 8-10 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Building — discovery, quest begins</div>
+    <div class="timing-item"><strong>Arc:</strong> Curiosity → Excitement</div>
+  </div>
 
   <div class="music-box">
     <div class="label">Music — Crossfade</div>
@@ -587,7 +1099,7 @@
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-kitchen-v2.png" alt="Grandfather's house interior">
+    <img class="scene-bg" src="assets/pixel-kitchen.webp" alt="Grandfather's house interior">
     <p>Dark interior, shutters closed. As each shutter opens, golden light floods in to reveal: model ships on shelves, nautical instruments on walls, a faded photograph of Captain Visvikis. A captain's house frozen in 1903.</p>
   </div>
 
@@ -632,6 +1144,16 @@
     </div>
   </div>
 
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — Letter Reading</div>
+      <div class="cutscene-desc">45 sec — Zoom on letter, Ntemis reads aloud, children react, adventure theme enters</div>
+    </div>
+  </div>
+
+  <img class="cutscene-img" src="assets/cutscene-letter.png" alt="The family reads Visvikis's letter by lamplight">
+
   <div class="story">Ajax looks at the letter again: <em>"εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο."</em> A cave. They need to find a cave. But first — someone in town might know.</div>
 
   <span class="item-acquired">+ Γράμμα Βισβίκη</span>
@@ -654,18 +1176,47 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Iris wipe → Walk down to harbor at golden hour</div>
+</div>
 
 <!-- ═══════════════ SCENE 3 — Η ΠΑΡΕΑ ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 3 / Scene 3</div>
-  <div class="scene-title">Η ΠΑΡΕΑ</div>
+<div class="scene" id="scene3">
+  <div class="scene-number">Σκηνή 3 / Scene 3 <span class="game-id-tag">port</span></div>
+  <div class="scene-title">Η ΠΑΡΕΑ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Friends"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 6-8 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Engaging — NPCs, humor, direction</div>
+    <div class="timing-item"><strong>Arc:</strong> Reunion → Nostalgia → Direction</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-waterfront.png" alt="Galaxidi waterfront — anchor monument, bench, captain's house">
+    <img class="scene-bg" src="assets/pixel-port.webp" alt="Galaxidi waterfront — anchor monument, bench, captain's house">
     <p>The waterfront promenade at golden hour. A green bench facing the harbor. Beside it, the old anchor monument — massive, rusted iron, chained to the stone quay. An ornate double lamp post. Behind them, a classic Galaxidi captain's house rises: warm stone walls, blue shutters, iron balconies, an arched blue door. Across the water: the town, the boats, the mountains. On the bench: two men with instruments — Akis with a wooden flute (φλογέρα), Stathis with a guitar. They play a slow, beautiful melody.</p>
+  </div>
+
+  <img class="cutscene-img" src="assets/cutscene-reunion.png" alt="Reunion at the harbor — Ntemis meets Akis and Stathis">
+
+  <div class="npc-row">
+    <img class="npc-sprite" src="assets/char-akis-final.png" alt="Akis">
+    <img class="npc-portrait" src="assets/portrait-akis.webp" alt="Akis portrait">
+    <div class="npc-info">
+      <div class="npc-name">ΑΚΗΣ</div>
+      <div class="npc-role">Flute player (φλογέρα) and documentarist. Old friend of Ntemis. Knows the Visvikis legend.</div>
+    </div>
+  </div>
+
+  <div class="npc-row">
+    <img class="npc-sprite" src="assets/char-stathis-final.png" alt="Stathis">
+    <img class="npc-portrait" src="assets/portrait-stathis.webp" alt="Stathis portrait">
+    <div class="npc-info">
+      <div class="npc-name">ΣΤΑΘΗΣ</div>
+      <div class="npc-role">Guitar player, old friend of Ntemis. Plays the sailors' melody. Points to Athos.</div>
+    </div>
   </div>
 
   <div class="story">The harbor at golden hour. The anchor monument. A blue bench overlooking the quay. Akis and Stathis sit playing music — φλογέρα and guitar. A slow sailors' melody. The harbor listens. A fisherman stops pulling nets to listen.</div>
@@ -725,6 +1276,8 @@
     </div>
   </div>
 
+  <img class="cutscene-img" src="assets/cutscene-reunion-music.png" alt="Akis and Stathis play music on the harbor bench at sunset">
+
   <div class="story"><em>Clio draws the two musicians on the bench.</em></div>
 
   <div class="dialog">
@@ -756,18 +1309,38 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Fade through gold → Walk from harbor bench to museum entrance</div>
+</div>
 
 <!-- ═══════════════ SCENE 4 — MUSEUM ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 4 / Scene 4</div>
-  <div class="scene-title">ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ</div>
+<div class="scene" id="scene4">
+  <div class="scene-number">Σκηνή 4 / Scene 4 <span class="game-id-tag">museum</span></div>
+  <div class="scene-title">ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Maritime Museum"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 8-10 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Educational — golden age, then the fall</div>
+    <div class="timing-item"><strong>Arc:</strong> Learning → Understanding</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-museum.png" alt="Galaxidi Maritime Museum interior">
+    <img class="scene-bg" src="assets/pixel-museum.webp" alt="Galaxidi Maritime Museum interior">
     <p>Warm wood, naval flags, model ships in glass cases. Captain portraits on the walls — proud men with beards and dress coats. A telescope, brass instruments, maps. And in one corner, almost apologetic: a single model steamship. Smaller. Less polished. The room's afterthought.</p>
+  </div>
+
+  <img class="cutscene-img" src="assets/cutscene-museum.png" alt="Inside the Nautical Museum — model ships, flags, captain portraits">
+
+  <div class="npc-row">
+    <img class="npc-sprite" src="assets/char-curator-final.png" alt="Curator">
+    <img class="npc-portrait" src="assets/portrait-curator.webp" alt="Curator portrait">
+    <div class="npc-info">
+      <div class="npc-name">ΕΠΙΜΕΛΗΤΗΣ</div>
+      <div class="npc-role">~55, thin, reading glasses always crooked. Passionate museum educator. Tells the story of the 300 ships.</div>
+    </div>
   </div>
 
   <div class="story">The Nautical Museum of Galaxidi. Small but dense with history. The <strong>Curator</strong> — ~55, thin, reading glasses always crooked, passion that could fill the harbor — lights up when they mention Visvikis. He leads them to his portrait — the same face as the photograph in the house, but younger.</div>
@@ -787,6 +1360,8 @@
       <span class="dialog-text greek">Βάλ' το κάτω.</span>
     </div>
   </div>
+
+  <img class="cutscene-img" src="assets/cutscene-museum-steam.png" alt="The steamship corner — the model that changed everything">
 
   <div class="story">He walks them to the steamship corner — a small, iron, ugly model next to the graceful schooners:</div>
 
@@ -838,17 +1413,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Iris wipe → Evening falls, walk to Liotrivi bar</div>
+</div>
 
 <!-- ═══════════════ SCENE 5 — LIOTRIVI ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 5 / Scene 5</div>
-  <div class="scene-title">ΛΙΟΤΡΙΒΙ</div>
+<div class="scene" id="scene5">
+  <div class="scene-number">Σκηνή 5 / Scene 5 <span class="game-id-tag">liotrivi</span></div>
+  <div class="scene-title">ΛΙΟΤΡΙΒΙ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Old Olive Press"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 6-8 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Intimate — challenge and deepening</div>
+    <div class="timing-item"><strong>Arc:</strong> Deepening → Challenge</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-liotrivi.png" alt="Liotrivi bar — stone walls, olive press, amber warmth">
+    <img class="scene-bg" src="assets/pixel-liotrivi.webp" alt="Liotrivi bar — stone walls, olive press, amber warmth">
     <p>Stone walls, amber lanterns, the old olive press preserved as decor. Wooden bar, checkered floor, bottles glowing. Through the blue-shuttered window: the moonlit harbor with a sail. Athos behind the bar — 50, brown hair, sharp features, reading glasses at his collar. A lawyer's precision in a barman's setting.</p>
   </div>
 
@@ -927,17 +1511,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Iris wipe → Climb path uphill to windmill</div>
+</div>
 
 <!-- ═══════════════ SCENE 6 — WINDMILL ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 6 / Scene 6</div>
-  <div class="scene-title">Ο ΜΥΛΟΣ</div>
+<div class="scene" id="scene6">
+  <div class="scene-number">Σκηνή 6 / Scene 6 <span class="game-id-tag">windmill</span></div>
+  <div class="scene-title">Ο ΜΥΛΟΣ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Windmill"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 5-7 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Calm — panoramic, preparation</div>
+    <div class="timing-item"><strong>Arc:</strong> Panoramic calm → Preparation</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-windmill.png" alt="The old windmill above Galaxidi — panoramic view of gulf and town">
+    <img class="scene-bg" src="assets/pixel-windmill.webp" alt="The old windmill above Galaxidi — panoramic view of gulf and town">
     <p>The old stone windmill on the hill above town. Round tower, conical roof, wooden blades. A cobblestone terrace with a telescope pointing toward the islands. A panoramic view: the gulf stretching west, the mountains catching sunset light, Galaxidi's red roofs and harbor below. Cypress trees frame the scene.</p>
   </div>
 
@@ -1018,17 +1611,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Fade to black → Descend to Plateia Mama → Enter cave with lantern</div>
+</div>
 
 <!-- ═══════════════ SCENE 7 — CAVE ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 7 / Scene 7</div>
-  <div class="scene-title">ΤΟ ΣΠΗΛΑΙΟ</div>
+<div class="scene" id="scene7">
+  <div class="scene-number">Σκηνή 7 / Scene 7 <span class="game-id-tag">cave</span></div>
+  <div class="scene-title">ΤΟ ΣΠΗΛΑΙΟ <span class="status-badge status-wip">WIP — needs rework (old stone door)</span></div>
   <div class="scene-subtitle">"The Cave of Karkaros"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 8-10 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Tense — dark, mysterious, the find</div>
+    <div class="timing-item"><strong>Arc:</strong> Awe → Revelation → Triumph</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-cave.png" alt="Karkaros cave interior">
+    <img class="scene-bg" src="assets/pixel-cave.webp" alt="Karkaros cave interior">
     <p>Dark cave interior. Lantern light casting long shadows. Dripping water. Ancient markings scratched into stone walls — ship names, captain initials, dates. Deep in the chamber, a crack in the wall glows faintly green.</p>
   </div>
 
@@ -1112,17 +1714,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Fade to black → Emerge from cave at dusk → Walk uphill to cemetery</div>
+</div>
 
 <!-- ═══════════════ SCENE 8 — GRAVEYARD ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 8 / Scene 8</div>
-  <div class="scene-title">ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ</div>
+<div class="scene" id="scene8">
+  <div class="scene-number">Σκηνή 8 / Scene 8 <span class="game-id-tag">graveyard</span></div>
+  <div class="scene-title">ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Captain's Rest"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 10-12 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Emotional peak — ghost encounter, silence</div>
+    <div class="timing-item"><strong>Arc:</strong> Reverence → Supernatural wonder → Tenderness</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-graveyard-moon.png" alt="Galaxidi cemetery at dusk">
+    <img class="scene-bg" src="assets/pixel-graveyard.webp" alt="Galaxidi cemetery at dusk">
     <p>Dusk. The old cemetery above town. Marble headstones with carved ships. Cypress trees. Wild thyme. The sea visible beyond. Visvikis's grave: marble captain's headstone, carved schooner (the Ελπίδα), 1841–1903. Epitaph: <strong>«Η θάλασσα θυμάται.»</strong></p>
   </div>
 
@@ -1131,6 +1742,14 @@
   <div class="story">Ntemis places the green stone on the headstone. <em>Silence.</em></div>
 
   <div class="story">The air changes. Not cold — <em>different</em>. Clio grabs Ntemis's hand. Ajax steps back. He reaches for his phone, then puts it away.</div>
+
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — Ghost Appears</div>
+      <div class="cutscene-desc">60 sec — Green stone glows, air shimmers, ghost fades in, silence, lyra enters</div>
+    </div>
+  </div>
 
   <div class="story"><strong class="ghost-text">The ghost of Captain Visvikis appears.</strong></div>
 
@@ -1145,6 +1764,14 @@
       <span class="speaker speaker-clio">ΚΛΕΙΩ</span>
       <span class="dialog-text greek" style="font-style:italic;">(ψιθυριστά)</span>
       <span class="dialog-text greek">Ο χάρτης. Θέλει να βρούμε τον χάρτη. Είναι στον Άγιο Νικόλαο.</span>
+    </div>
+  </div>
+
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — Ghost Fades</div>
+      <div class="cutscene-desc">30 sec — Clio waves, ghost waves back, particles rise, lyra resolves to peace</div>
     </div>
   </div>
 
@@ -1180,17 +1807,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Fade to black → Walk downhill in twilight → Enter church</div>
+</div>
 
 <!-- ═══════════════ SCENE 9 — CHURCH ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 9 / Scene 9</div>
-  <div class="scene-title">ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ</div>
+<div class="scene" id="scene9">
+  <div class="scene-number">Σκηνή 9 / Scene 9 <span class="game-id-tag">church</span></div>
+  <div class="scene-title">ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ <span class="status-badge status-wip">WIP — exterior only, interior needed</span></div>
   <div class="scene-subtitle">"The Map in the Church"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 6-8 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Warm — sacred, family, puzzle</div>
+    <div class="timing-item"><strong>Arc:</strong> Sacred discovery → Anticipation</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-church.jpg" alt="Agios Nikolaos church interior">
+    <img class="scene-bg" src="assets/pixel-church-interior.webp" alt="Agios Nikolaos church interior">
     <p>Church interior at candlelight. Icons gleaming gold. The famous wooden iconostasis. Silence and beeswax. The Papas — ~65, warm, slightly mischievous.</p>
   </div>
 
@@ -1283,17 +1919,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Fade to black → Time skip to dawn → Harbor, the Ελπίδα awaits</div>
+</div>
 
 <!-- ═══════════════ SCENE 10 — BOAT ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 10 / Scene 10</div>
-  <div class="scene-title">ΤΟ ΚΑΡΑΒΙ</div>
+<div class="scene" id="scene10">
+  <div class="scene-number">Σκηνή 10 / Scene 10 <span class="game-id-tag">boat</span></div>
+  <div class="scene-title">ΤΟ ΚΑΡΑΒΙ <span class="status-badge status-done">DONE</span></div>
   <div class="scene-subtitle">"The Crossing"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 8-10 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Beautiful — scenic, stories, perspective</div>
+    <div class="timing-item"><strong>Arc:</strong> Beauty → Tension → Acceptance</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-boat.png" alt="The boat Elpida crossing to Agios Georgios">
+    <img class="scene-bg" src="assets/pixel-boat.webp" alt="The boat Elpida crossing to Agios Georgios">
     <p>Dawn. The boat Ελπίδα on the gulf. Galaxidi receding behind them, glowing in first light. Mountains rising. The tiny island of Agios Georgios ahead — rocky, a small white chapel, wild herbs. Chrysostomos at the helm, effortless.</p>
   </div>
 
@@ -1303,6 +1948,14 @@
     <div class="dialog-line">
       <span class="speaker speaker-chrysostomos">ΧΡΥΣΟΣΤΟΜΟΣ</span>
       <span class="dialog-text greek">Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν. Δεν πίστευα ότι θα ζούσα να το δω.</span>
+    </div>
+  </div>
+
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — The Crossing</div>
+      <div class="cutscene-desc">60 sec — Pan across gulf, landmarks highlighted, sunrise, the most beautiful music in the game</div>
     </div>
   </div>
 
@@ -1346,18 +1999,35 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Dissolve → Land on rocky islet → Find the spot → Dig</div>
+</div>
 
 <!-- ═══════════════ SCENE 11 — TREASURE ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 11 / Scene 11</div>
-  <div class="scene-title">Ο ΘΗΣΑΥΡΟΣ</div>
+<div class="scene" id="scene11">
+  <div class="scene-number">Σκηνή 11 / Scene 11 <span class="game-id-tag">treasure</span></div>
+  <div class="scene-title">Ο ΘΗΣΑΥΡΟΣ <span class="status-badge status-todo">TODO</span></div>
   <div class="scene-subtitle">"The Treasure"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 10-12 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Climax — reveal, letter, resolution</div>
+    <div class="timing-item"><strong>Arc:</strong> Revelation → Emotion → Peace</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-treasure.png" alt="Agios Georgios island — treasure chest unearthed at dawn, chapel, Galaxidi across the water">
+    <img class="scene-bg" src="assets/pixel-treasure.webp" alt="Agios Georgios island — treasure chest unearthed at dawn, chapel, Galaxidi across the water">
     <p>Dawn on the rocky islet of Agios Georgios. An old iron-bound sea chest half unearthed from the rocky ground, a shovel beside it. The tiny white chapel with its blue dome. Wild thyme and purple wildflowers between the rocks. Seagulls wheeling. Across the turquoise water: Galaxidi, small and beautiful, waiting. Mountains catching the first sunrise light.</p>
+  </div>
+
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — Chest Opens</div>
+      <div class="cutscene-desc">45 sec — Items revealed one by one, each adds an instrument, silence before the letter</div>
+    </div>
   </div>
 
   <div class="story">A sea chest. Old, iron-bound, the lock rusted but the wood sound. Visvikis built things to last. They open it.</div>
@@ -1369,6 +2039,14 @@
   <div class="story"><strong class="jade-highlight">A jade necklace</strong> — matching the green stone. From the same journey east.</div>
 
   <div class="story"><strong>The original αλληλασφάλεια ledger</strong> — the mutual insurance pact of 1860, with the signatures of 104 captains. Visvikis kept it. The real one.</div>
+
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — Captain's Final Letter</div>
+      <div class="cutscene-desc">90 sec — Full text scroll, bilingual, music climax, family reactions interspersed</div>
+    </div>
+  </div>
 
   <div class="story">And <strong>a letter</strong>:</div>
 
@@ -1419,17 +2097,26 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Fade through white → Time skip: "Weeks later..." → Harbor at sunset</div>
+</div>
 
 <!-- ═══════════════ SCENE 12 — THE NEW ERA ═══════════════ -->
-<div class="scene">
-  <div class="scene-number">Σκηνή 12 / Scene 12</div>
-  <div class="scene-title">Η ΝΕΑ ΕΠΟΧΗ</div>
+<div class="scene" id="scene12">
+  <div class="scene-number">Σκηνή 12 / Scene 12 <span class="game-id-tag">new_era</span></div>
+  <div class="scene-title">Η ΝΕΑ ΕΠΟΧΗ <span class="status-badge status-todo">TODO</span></div>
   <div class="scene-subtitle">"The New Era"</div>
+
+  <div class="timing-box">
+    <div class="timing-item"><strong>Duration:</strong> 10-12 min</div>
+    <div class="timing-item"><strong>Pacing:</strong> Catharsis — speech, vision, unity</div>
+    <div class="timing-item"><strong>Arc:</strong> Vision → Pride → Unity → Hope</div>
+  </div>
 
   <div class="visual-box">
     <div class="label">Εικόνα / Visual</div>
-    <img class="scene-bg" src="assets/pixel-new-era.png" alt="Η Νέα Εποχή — The whole town gathered at the harbor for the documentary screening and new pact signing">
+    <img class="scene-bg" src="assets/pixel-new-era.webp" alt="Η Νέα Εποχή — The whole town gathered at the harbor for the documentary screening and new pact signing">
     <p>Weeks later. The harbor of Galaxidi at sunset. The whole town gathered — fishermen, taverna owners, old women in black, children running between chairs. Benches and chairs form a natural amphitheater facing the water. A projection screen flickers against the old harbor wall showing documentary footage of a sailing ship. Akis stands beside a camera on a tripod, his φλογέρα tucked in his belt. The treasure chest sits open on a table, gold coins catching the last light. The αλληλασφάλεια ledger open beside it. Musicians play on the right — guitar and φλογέρα. String lights hang between lamp posts. Clio wears the jade necklace.</p>
   </div>
 
@@ -1457,6 +2144,14 @@
     <div class="dialog-line">
       <span class="speaker speaker-akis">ΑΚΗΣ</span>
       <span class="dialog-text greek">Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Το Γαλαξίδι δεν θα σβήσει. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή.</span>
+    </div>
+  </div>
+
+  <div class="cutscene-marker">
+    <div class="cutscene-icon">▶</div>
+    <div>
+      <div class="cutscene-label">Cutscene — Akis's Documentary</div>
+      <div class="cutscene-desc">60 sec — Projection screen footage: harbor at dawn, Ελπίδα, cave, nets, gravestones. The town sees itself.</div>
     </div>
   </div>
 
@@ -1557,13 +2252,16 @@
   </div>
 </div>
 
-<div class="scene-divider">· · ·</div>
+<div class="scene-transition">
+  <div class="transition-arrow">→ → →</div>
+  <div class="transition-note">Sailors' melody swells → Dissolve to epilogue text</div>
+</div>
 
 <!-- ═══════════════ ENDING ═══════════════ -->
-<div class="ending">
-  <div class="scene-number">Επίλογος / Epilogue</div>
+<div class="ending" id="epilogue">
+  <div class="scene-number">Επίλογος / Epilogue <span class="status-badge status-todo">TODO</span></div>
 
-  <img class="scene-bg" src="assets/pixel-epilogue.png" alt="Η Γιορτή — The Festival at Galaxidi harbor" style="max-width:700px; margin: 0 auto 30px; display:block;">
+  <img class="scene-bg" src="assets/cutscene-epilogue.png" alt="Η Γιορτή — The Festival at Galaxidi harbor" style="max-width:700px; margin: 0 auto 30px; display:block;">
 
   <div class="final-text">
     <em>Ο Καπετάν Βισβίκης ταξίδεψε στην Ανατολή, γύρισε πλούσιος, κι έκρυψε τον θησαυρό του για κάποιον που θα αγαπούσε το Γαλαξίδι αρκετά για να τον βρει.</em>
@@ -1592,6 +2290,89 @@
   <div class="game-title">ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ</div>
 
   <div class="pact">Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.</div>
+</div>
+
+<!-- ═══════════════ EMOTIONAL ARC ═══════════════ -->
+<div class="emotional-arc">
+  <h2>ΣΥΝΑΙΣΘΗΜΑΤΙΚΟ ΤΟΞΟ / EMOTIONAL ARC</h2>
+
+  <div class="arc-graph">
+    <div class="arc-bar">
+      <div class="arc-emotion">Wonder</div>
+      <div class="arc-fill" style="height:40%; background: linear-gradient(0deg, #D4A03C, #F0D080);"></div>
+      <div class="arc-label">1 ΑΦΙΞΗ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Curiosity</div>
+      <div class="arc-fill" style="height:50%; background: linear-gradient(0deg, #8A6A20, #D4A03C);"></div>
+      <div class="arc-label">2 ΣΠΙΤΙ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Nostalgia</div>
+      <div class="arc-fill" style="height:45%; background: linear-gradient(0deg, #D4A03C, #F0D080);"></div>
+      <div class="arc-label">3 ΠΑΡΕΑ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Learning</div>
+      <div class="arc-fill" style="height:55%; background: linear-gradient(0deg, #2a5a8c, #4a8acc);"></div>
+      <div class="arc-label">4 ΜΟΥΣΕΙΟ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Challenge</div>
+      <div class="arc-fill" style="height:60%; background: linear-gradient(0deg, #8A6A20, #D4A03C);"></div>
+      <div class="arc-label">5 ΛΙΟΤΡΙΒΙ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Calm</div>
+      <div class="arc-fill" style="height:35%; background: linear-gradient(0deg, #2a8a5a, #40cc80);"></div>
+      <div class="arc-label">6 ΜΥΛΟΣ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Awe</div>
+      <div class="arc-fill" style="height:70%; background: linear-gradient(0deg, #2a8a5a, #40cc80);"></div>
+      <div class="arc-label">7 ΣΠΗΛΑΙΟ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Reverence</div>
+      <div class="arc-fill" style="height:85%; background: linear-gradient(0deg, #6a4a8a, #b8a0d0);"></div>
+      <div class="arc-label">8 ΝΕΚΡΟΤΑΦ.</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Sacred</div>
+      <div class="arc-fill" style="height:65%; background: linear-gradient(0deg, #D4A03C, #F0D080);"></div>
+      <div class="arc-label">9 ΕΚΚΛΗΣΙΑ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Beauty</div>
+      <div class="arc-fill" style="height:75%; background: linear-gradient(0deg, #2a5a8c, #88bbcc);"></div>
+      <div class="arc-label">10 ΚΑΡΑΒΙ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Catharsis</div>
+      <div class="arc-fill" style="height:95%; background: linear-gradient(0deg, #D4A03C, #F0D080);"></div>
+      <div class="arc-label">11 ΘΗΣΑΥΡΟΣ</div>
+    </div>
+    <div class="arc-bar">
+      <div class="arc-emotion">Hope</div>
+      <div class="arc-fill" style="height:90%; background: linear-gradient(0deg, #2a8a5a, #40cc80);"></div>
+      <div class="arc-label">12 ΝΕΑ ΕΠΟΧΗ</div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--cream-dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px;">Puzzle Chain / Key Items</div>
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;">
+      <span class="item-acquired">Γράμμα Βισβίκη</span>
+      <span style="color: var(--gold-dim); align-self: center;">→</span>
+      <span class="item-acquired">Φανάρι</span>
+      <span style="color: var(--gold-dim); align-self: center;">→</span>
+      <span class="item-acquired jade">Πράσινη Πέτρα</span>
+      <span style="color: var(--gold-dim); align-self: center;">→</span>
+      <span class="item-acquired">Ναυτικός Χάρτης</span>
+      <span style="color: var(--gold-dim); align-self: center;">→</span>
+      <span class="item-acquired jade">Θησαυρός</span>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════ POST-CREDITS ═══════════════ -->
