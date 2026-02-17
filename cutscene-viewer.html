@@ -52,6 +52,8 @@ Promise.all([
   loadImg('cutscene-crossing-island', 'assets/cutscene-crossing-island.png'),
   loadImg('cutscene-treasure-open', 'assets/cutscene-treasure-open.png'),
   loadImg('cutscene-treasure-letter', 'assets/cutscene-treasure-letter.png'),
+  loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
+  loadImg('cutscene-epilogue-signing', 'assets/cutscene-epilogue-signing.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -134,12 +136,12 @@ function drawTreasureFamily(t, p, tick) {
   ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.015; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawEpilogueHarbor(t, p, tick) {
-  drawKenBurns('cutscene-epilogue', 1.12 - p * 0.06, p * 8, 0);
-  ctx.save(); ctx.globalAlpha = 0.06 + Math.sin(tick * 0.03) * 0.02; ctx.fillStyle = '#FFB860'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  drawKenBurns('cutscene-epilogue-speech', 1.08 + p * 0.08, p * 6, 0);
+  ctx.save(); ctx.globalAlpha = 0.06 + Math.sin(tick * 0.03) * 0.025; ctx.fillStyle = '#FFB860'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawEpilogueClose(t, p, tick) {
-  drawKenBurns('cutscene-epilogue', 1.06 + p * 0.14, -p * 10, p * -15);
-  ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  drawKenBurns('cutscene-epilogue-signing', 1.06 + p * 0.12, -p * 6, p * -10);
+  ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.025) * 0.02; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawMuseumGolden(t, p, tick) {
   drawKenBurns('cutscene-museum', 1.08 + p * 0.10, p * 6, p * -8);
@@ -315,14 +317,15 @@ const allCutscenes = [
     ]},
   ]},
   { title: '12. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
-    { duration: 8, draw: drawEpilogueHarbor, dialogue: [
-      { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι.', at: 1.5 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Μας άφησε μια ιδέα. Την αλληλεγγύη.', at: 4.0 },
+    { duration: 10, draw: drawEpilogueHarbor, dialogue: [
+      { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι. Μας άφησε μια ιδέα.', at: 1.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Την αλληλεγγύη. Κράτα τον διπλανό σου. Άλλαξε το πλοίο.', at: 4.5 },
+      { s: 'ΑΚΗΣ', t: 'Γυρνάω την κάμερα. Αυτό πρέπει να το δει ο κόσμος.', at: 8.0 },
     ]},
-    { duration: 8, draw: drawEpilogueClose, dialogue: [
-      { s: 'ΑΚΗΣ', t: 'Γυρνάω την κάμερα. Αυτό πρέπει να το δει ο κόσμος.', at: 1.0 },
-      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... η θάλασσα θυμάται;', at: 4.0 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.', at: 5.8 },
+    { duration: 10, draw: drawEpilogueClose, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Εκατόν τρεις... Μένει μία ακόμα υπογραφή.', at: 1.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Εγώ! Θέλω να υπογράψω εγώ!', at: 4.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.', at: 7.5 },
     ]},
   ]},
 ];
