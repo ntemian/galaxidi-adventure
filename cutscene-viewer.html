@@ -38,6 +38,8 @@ Promise.all([
   loadImg('cutscene-epilogue', 'assets/cutscene-epilogue.png'),
   loadImg('cutscene-reunion', 'assets/cutscene-reunion.png'),
   loadImg('cutscene-reunion-music', 'assets/cutscene-reunion-music.png'),
+  loadImg('cutscene-windmill', 'assets/cutscene-windmill.png'),
+  loadImg('cutscene-windmill-view', 'assets/cutscene-windmill-view.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -127,6 +129,14 @@ function drawEpilogueClose(t, p, tick) {
   drawKenBurns('cutscene-epilogue', 1.06 + p * 0.14, -p * 10, p * -15);
   ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
+function drawWindmillPanorama(t, p, tick) {
+  drawKenBurns('cutscene-windmill', 1.14 - p * 0.06, -15 + p * 30, 0);
+  ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.018) * 0.015; ctx.fillStyle = '#FFE0A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawWindmillTelescope(t, p, tick) {
+  drawKenBurns('cutscene-windmill-view', 1.06 + p * 0.10, p * 8, p * -12);
+  ctx.save(); ctx.globalAlpha = 0.03; ctx.fillStyle = '#C0E0FF'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
 function drawReunionMeet(t, p, tick) {
   drawKenBurns('cutscene-reunion', 1.12 - p * 0.08, p * 8, p * -10);
   ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.02) * 0.02; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
@@ -176,14 +186,26 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Η μελωδία των ναυτικών. Χρόνια δεν την άκουσα.', at: 5.5 },
     ]},
   ]},
-  { title: '4. ΤΟ ΣΠΗΛΑΙΟ — The Cave', frames: [
+  { title: '4. Ο ΜΥΛΟΣ — The Windmill', frames: [
+    { duration: 8, draw: drawWindmillPanorama, dialogue: [
+      { s: 'ΓΙΑΝΝΗΣ', t: 'Από εδώ βλέπεις τα πάντα. Όλο το Γαλαξείδι.', at: 1.2 },
+      { s: 'ΓΙΑΝΝΗΣ', t: 'Εκεί κάτω. Βλέπεις τη σκοτεινή τρύπα στα βράχια;', at: 4.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Ο Κάρκαρος...', at: 6.5 },
+    ]},
+    { duration: 7, draw: drawWindmillTelescope, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Βλέπω ένα νησάκι! Με ένα εκκλησάκι!', at: 1.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Αυτός ήθελε να μείνει κάτι.', at: 3.5 },
+      { s: 'ΓΙΑΝΝΗΣ', t: 'Πάρτε αυτό. Θα το χρειαστείτε εκεί κάτω.', at: 5.5 },
+    ]},
+  ]},
+  { title: '5. ΤΟ ΣΠΗΛΑΙΟ — The Cave', frames: [
     { duration: 8, draw: drawCaveEntrance, dialogue: [
       { s: 'ΑΙΑΣ', t: 'Σκοτεινά... Μπαμπά, κράτα ψηλά το φανάρι!', at: 1.0 },
       { s: 'ΚΛΕΙΩ', t: 'Κοίτα στον τοίχο! Ονόματα πλοίων!', at: 3.2 },
       { s: 'ΝΤΕΜΗΣ', t: 'Οι καπεταναίοι σημάδευαν το πέρασμά τους εδώ.', at: 5.5 },
     ]},
   ]},
-  { title: '5. Ο ΚΑΠΕΤΑΝΙΟΣ — The Captain', frames: [
+  { title: '6. Ο ΚΑΠΕΤΑΝΙΟΣ — The Captain', frames: [
     { duration: 8, draw: drawGhostAppear, dialogue: [
       { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί.', at: 1.5 },
       { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη...', at: 3.5 },
@@ -194,7 +216,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
     ]},
   ]},
-  { title: '6. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
+  { title: '7. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
     { duration: 8, draw: drawCrossingWide, dialogue: [
       { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω.', at: 1.5 },
       { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη;', at: 4.0 },
@@ -206,7 +228,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Αλλιώς πνίγεσαι.', at: 5.8 },
     ]},
   ]},
-  { title: '7. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
+  { title: '8. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
     { duration: 7, draw: drawTreasureReveal, dialogue: [
       { s: 'ΑΙΑΣ', t: 'Χρυσάφι... Κοίτα, μπαμπά!', at: 1.5 },
       { s: 'ΚΛΕΙΩ', t: 'Και ένα κολιέ. Πράσινο σαν το πέτρωμα!', at: 3.5 },
@@ -218,7 +240,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 5.8 },
     ]},
   ]},
-  { title: '8. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
+  { title: '9. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
     { duration: 8, draw: drawEpilogueHarbor, dialogue: [
       { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι.', at: 1.5 },
       { s: 'ΝΤΕΜΗΣ', t: 'Μας άφησε μια ιδέα. Την αλληλεγγύη.', at: 4.0 },
