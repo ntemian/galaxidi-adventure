@@ -593,7 +593,7 @@ const scenes = {
       clio:   { x: 210, y: 378 },
     },
     objects: [
-      { id:'door', x:115, y:40, w:70, h:120, label:'Πόρτα',
+      { id:'door', x:100, y:30, w:90, h:165, label:'Πόρτα',
         verbs: { look:[{s:'',t:'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.'}],
                  open:() => { showDlg([{s:'ΝΤΕΜΗΣ',t:'Ας μπούμε μέσα.'}], () => changeScene('kitchen')); return; },
                  walk:'kitchen', use:'kitchen' }},
@@ -3906,7 +3906,7 @@ function startWalk(who, targetX, cb) {
   c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0));
   c.frame = 0;
   if (who === 'ntemis') sfxStepAcc = 0;
-  walkDoneCallback = cb;
+  if (who === 'ntemis') walkDoneCallback = cb;
 }
 
 function updateWalking(dt) {
