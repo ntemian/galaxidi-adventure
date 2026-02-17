@@ -2,7 +2,7 @@
 
 Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3 = future
 
-**Last audit: 2026-02-17 (post-swarm)**
+**Last audit: 2026-02-17 (evening)**
 
 ---
 
@@ -11,11 +11,11 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 | Area | Status | Details |
 |------|--------|---------|
 | **Scenes** | 13 of 13 (ALL DONE) | exterior, terrace, kitchen, port, museum, liotrivi, cave, church, church_interior, windmill, boat, graveyard, treasure, new_era + epilogue |
-| **Code** | 6,011 lines | Single monolithic index.html |
-| **Backgrounds** | 13 webp files | All scenes covered (treasure + new_era generated) |
-| **Character Sprites** | 11 (3 family + 8 NPC) | All with idle animation |
+| **Code** | 6,875 lines | Single monolithic index.html |
+| **Backgrounds** | 14 webp files | All scenes covered incl. church interior |
+| **Character Sprites** | 11 (3 family + 8 NPC) | All with idle animation + Chrysostomos added |
 | **Portraits** | 8 NPC + 3 family | All dialog portraits exist |
-| **Music** | 40+ tracks | 2 variants per scene + title themes |
+| **Music** | 41 tracks | 2 variants per scene + title themes |
 | **Cutscenes** | 12 scripted | arrival, letter, reunion, museum, liotrivi, windmill, cave_enter, ghost, church_tile, crossing, treasure, epilogue |
 | **Cutscene Images** | 26 anime stills | Ken Burns rendering |
 | **Ghost Sequence** | DONE | Full environmental effects, arm raise, wave, fade |
@@ -23,36 +23,29 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 | **Save/Load** | DONE | Auto-save on scene change, manual save (S key), Continue on title |
 | **Quest Gating** | DONE | Jade→ghost, candle→tile, chart→boat, letter→new_era |
 | **Epilogue** | DONE | 4 pages, click-to-advance, returns to title |
+| **Quest Status** | DONE | Q key panel, 14 tracked steps, progress bar |
+| **Map** | DONE | M key fast-travel between visited scenes |
+| **Custom Cursor** | DONE | Canvas-drawn cursor with verb-aware icons |
+| **Y-Depth Sorting** | DONE | Characters + NPCs sorted by Y for proper overlap |
+| **Version Stamp** | DONE | v0.1-pilot on title screen |
 
 ---
 
-## P0 — MUST HAVE FOR FIRST PILOT
+## P0 — MUST HAVE FOR FIRST PILOT — ALL COMPLETE
 
-### Story Alignment Issues — ALL FIXED
+All P0 items resolved. Game is pilot-ready pending hands-on browser playtest.
 
-- [x] ~~**Cave puzzle mismatch**~~: Reworked — vote inscription "9 to 3", jade stone discovery, lantern-lit, "Λ.Β. 1887" markings
-- [x] ~~**Church scene is EXTERIOR**~~: Added `church_interior` sub-scene with icons, candles, iconostasis, Papas NPC, floor tile "Λ.Β." puzzle, nautical chart
-- [x] ~~**Navigation routing**~~: Full quest path verified: exterior→port→museum→liotrivi→church→cave→windmill→graveyard→(ghost)→church_interior→port/dock→boat→treasure→new_era→epilogue
-- [x] ~~**Windmill → lantern**~~: Giannis gives lantern with `addInv()` + `lantern_given` flag
-- [x] ~~**Green stone inventory**~~: Cave adds `green_stone` to inventory (Clio's discovery)
-- [x] ~~**Quest chain gating**~~: Jade required for ghost, candle required for floor tile, nautical chart required for boat (via dock object), letter required for new_era exit
-
-### Missing Scenes — ALL ADDED
-
-- [x] ~~**Treasure scene**~~: Sea chest opening, final letter "Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.", family reactions
-- [x] ~~**New Era scene**~~: Crowd, podium speech, Akis documentary, signing sequence (104th signature), "ΕΛΠΙΔΑ"
-- [x] ~~**Epilogue**~~: 4-page narration, "Η θάλασσα θυμάται. Κι εμείς τώρα, αλλάζουμε μαζί της.", returns to title
-
-### Critical Systems — ALL DONE
-
-- [x] ~~NPC portraits~~ — All 8 NPCs have portraits
-- [x] ~~Scene-specific music~~ — 40+ tracks exist
-- [x] ~~Ghost sequence~~ — Fully implemented
-- [x] ~~Cutscene engine~~ — Timeline-based, working
-- [x] ~~Walk animation~~ — Procedural two-leg, working
-- [x] ~~Dialog system~~ — Typewriter with portraits, working
-- [x] ~~Save/load~~ — Auto-save at scene transitions + manual save (S key) + Continue on title
-- [x] ~~**End-to-end playthrough**~~: Code-level audit complete (2026-02-17). CRITICAL BUG FIXED: candle gated behind ghost_summoned. Needs browser hands-on test
+- [x] Story alignment (cave puzzle, church interior, navigation routing)
+- [x] All 13 scenes implemented with objects, NPCs, dialog
+- [x] Quest chain gating (jade→ghost, candle→tile, chart→boat, letter→new_era)
+- [x] Treasure + New Era + Epilogue scenes
+- [x] All critical systems (portraits, music, ghost sequence, cutscenes, walk animation, dialog, save/load)
+- [x] Church candle puzzle ungated from ghost_summoned
+- [x] Debug G-key warp removed
+- [x] Treasure scene music key fixed (cave_final → treasure)
+- [x] Quest panel contrast WCAG fix (#4a3a20 → #8a7a50)
+- [x] Interactive ledger object in New Era scene
+- [x] Backup asset files cleaned up
 
 ---
 
@@ -60,14 +53,14 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 
 - [ ] **Bilingual system**: Greek/English toggle for all text
 - [ ] Sound effects: footsteps (sand/stone/wood), door, item pickup
-- [x] ~~Hotspot highlights on hover~~ (already implemented — pulsing gold glow)
 - [ ] Clio's notebook: journal/inventory hybrid
 - [ ] NPC dialog trees: branching conversations (currently linear)
-- [x] ~~Cat companion: follows Clio between scenes~~ (2026-02-17 — catScenePos in 10 scenes)
 - [ ] Comedy beats: Ajax's phone autocorrect, echo gag in cave
-- [x] ~~Right-click default verb (SCUMM-style)~~ (2026-02-17 — contextmenu handler)
-- [x] ~~Church interior needs its own background image~~ (2026-02-17 — pixel-church-interior.png)
-- [x] ~~Cicadas ambient sound~~ (2026-02-17 — wired createCicadasLoop into exterior/terrace/liotrivi/windmill/graveyard/church)
+- [x] ~~Hotspot highlights on hover~~ (pulsing gold glow)
+- [x] ~~Cat companion~~ (catScenePos in 10 scenes)
+- [x] ~~Right-click default verb (SCUMM-style)~~ (contextmenu handler)
+- [x] ~~Church interior background~~ (pixel-church-interior.webp)
+- [x] ~~Cicadas ambient sound~~ (createCicadasLoop in 6 scenes)
 
 ---
 
@@ -75,7 +68,7 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 
 - [ ] Character-specific puzzle actions (Ajax climbs, Clio observes)
 - [ ] Item combinations in inventory
-- [ ] Map screen for fast-travel between visited scenes
+- [x] ~~Map screen for fast-travel~~ (M key, implemented)
 - [ ] Historical accuracy tags (VERIFIED / BASED ON / DRAMATIZED)
 - [ ] Encyclopedia system (unlockable entries)
 
@@ -94,11 +87,12 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 
 ## Technical Debt
 
-- [ ] Clean up unused walk-frames-b64.json loading
-- [ ] Add error handling for failed image loads
-- [ ] File is 6,011 lines — consider modular structure if it grows past 8K
-- [ ] Add version/build date on title screen
-- [ ] Church interior reuses `bg-church` (exterior) background — needs dedicated interior art
+- [x] ~~Clean up unused walk-frames-b64.json loading~~ (removed)
+- [x] ~~Add error handling for failed image loads~~ (onerror handlers on img, audio, voice)
+- [ ] File is 6,875 lines — consider modular structure if it grows past 8K
+- [x] ~~Add version/build date on title screen~~ (v0.1-pilot stamp)
+- [x] ~~Church interior background~~ (pixel-church-interior.webp)
+- [x] ~~Debug console.log in cutscene chain~~ (removed)
 
 ---
 
@@ -115,13 +109,14 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 | liotrivi | pixel-liotrivi.webp | Done |
 | cave | pixel-cave.webp | Done |
 | church | pixel-church.webp | Done |
+| church_interior | pixel-church-interior.webp | Done |
 | windmill | pixel-windmill.webp | Done |
 | boat | pixel-boat.webp | Done |
 | graveyard | pixel-graveyard.webp | Done |
 | treasure | pixel-treasure.webp | Done |
 | new_era | pixel-new-era.webp | Done |
 
-### Music (Mostly Done)
+### Music (All Done)
 | Scene | Tracks | Status |
 |-------|--------|--------|
 | Title | galaxidi-title-theme, the-sea-remembers-title-theme, the-mystery-of-galaxidi | Done (6 variants) |

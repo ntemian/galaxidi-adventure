@@ -1766,7 +1766,6 @@ function playAllCutscenes() {
     if (i >= ids.length) {
       // Restore original onComplete handlers
       ids.forEach(id => { cutscenes[id].onComplete = savedCompletes[id]; });
-      console.log('All cutscenes played!');
       state.phase = 'playing';
       startScene('exterior');
       return;
