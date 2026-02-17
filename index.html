@@ -599,7 +599,8 @@ async function loadAllAssets() {
 const scenes = {
   exterior: {
     label: 'ΤΟ ΣΠΙΤΙ — ΓΑΛΑΞΙΔΙ', bg: 'bg-exterior',
-    walkLine: [[30, 378], [200, 375], [400, 378], [610, 380]],
+    walkLine: [[30, 378], [200, 375], [400, 378], [530, 380]],
+    walkBounds: [30, 530], // cobblestone ends before waterfront
     charPos: {
       ntemis: { x: 290, y: 375 },
       ajax:   { x: 370, y: 378 },
@@ -705,7 +706,8 @@ const scenes = {
   // ── SCENE 2: THE PORT ──
   port: {
     label: 'ΤΟ ΛΙΜΑΝΙ', bg: 'bg-port',
-    walkLine: [[30, 378], [320, 375], [500, 378], [610, 380]],
+    walkLine: [[30, 378], [320, 375], [500, 378], [520, 380]],
+    walkBounds: [30, 520], // stone quay ends before water
     charPos: { ntemis: { x: 320, y: 375 }, ajax: { x: 400, y: 378 }, clio: { x: 240, y: 377 } },
     objects: [
       { id:'boats_port', x:120, y:8, w:200, h:100, label:'Ψαρόβαρκες',
@@ -981,7 +983,8 @@ const scenes = {
   // ── SCENE 7: THE WINDMILL ──
   windmill: {
     label: 'Ο ΜΥΛΟΣ', bg: 'bg-windmill',
-    walkLine: [[30, 380], [350, 377], [610, 380]],
+    walkLine: [[30, 380], [350, 377], [530, 380]],
+    walkBounds: [30, 530], // stone path narrows before hill edge
     charPos: { ntemis: { x: 350, y: 377 }, ajax: { x: 440, y: 379 }, clio: { x: 260, y: 378 } },
     objects: [
       { id:'telescope', x:430, y:140, w:80, h:120, label:'Τηλεσκόπιο',
@@ -1016,7 +1019,8 @@ const scenes = {
   // ── SCENE 8: THE BOAT (ELPIDA) ──
   boat: {
     label: 'ΤΟ ΚΑΡΑΒΙ — ΕΛΠΙΔΑ', bg: 'bg-boat',
-    walkLine: [[30, 378], [350, 375], [610, 378]],
+    walkLine: [[50, 378], [250, 375], [430, 378]],
+    walkBounds: [50, 430], // deck ends before open sea
     charPos: { ntemis: { x: 350, y: 375 }, ajax: { x: 430, y: 377 }, clio: { x: 270, y: 377 } },
     objects: [
       { id:'nameplate', x:50, y:376, w:120, h:40, label:'ΕΛΠΙΔΑ',
@@ -1045,7 +1049,8 @@ const scenes = {
   // ── SCENE 9: THE GRAVEYARD ──
   graveyard: {
     label: 'ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ', bg: 'bg-graveyard',
-    walkLine: [[30, 380], [300, 377], [610, 380]],
+    walkLine: [[30, 380], [300, 377], [500, 380]],
+    walkBounds: [30, 500], // cemetery path ends before sea overlook
     charPos: { ntemis: { x: 250, y: 377 }, ajax: { x: 340, y: 379 }, clio: { x: 160, y: 378 } },
     objects: [
       { id:'visvikis_grave', x:390, y:248, w:150, h:90, label:'Τάφος Βισβίκη',
@@ -1100,7 +1105,8 @@ const scenes = {
   // ── SCENE 10: THE TREASURE ──
   treasure: {
     label: 'Ο ΘΗΣΑΥΡΟΣ', bg: 'bg-treasure',
-    walkLine: [[30, 380], [320, 377], [610, 380]],
+    walkLine: [[50, 380], [320, 377], [560, 380]],
+    walkBounds: [50, 560], // island terrain bounds
     charPos: { ntemis: { x: 320, y: 377 }, ajax: { x: 410, y: 379 }, clio: { x: 230, y: 378 } },
     objects: [
       { id:'sea_chest', x:220, y:200, w:200, h:130, label:'Θαλασσινό κιβώτιο',
@@ -1180,7 +1186,8 @@ const scenes = {
   // ── SCENE 11: THE NEW ERA ──
   new_era: {
     label: 'Η ΝΕΑ ΕΠΟΧΗ', bg: 'bg-new-era',
-    walkLine: [[30, 378], [320, 375], [610, 380]],
+    walkLine: [[30, 378], [320, 375], [520, 380]],
+    walkBounds: [30, 520], // harbor walkway before water
     charPos: { ntemis: { x: 320, y: 375 }, ajax: { x: 400, y: 377 }, clio: { x: 240, y: 377 } },
     objects: [
       { id:'crowd', x:0, y:200, w:300, h:150, label:'Κόσμος',
@@ -3774,11 +3781,24 @@ function getGroundY(sceneId, x) {
 // ════════════════════════════════════════════════════════════
 // WALKING SYSTEM
 // ════════════════════════════════════════════════════════════
+// Returns [minX, maxX] walkable bounds for a scene.
+// Uses explicit walkBounds if set, otherwise derives from walkLine endpoints.
+function getWalkBounds(sceneId) {
+  const sc = scenes[sceneId];
+  if (!sc) return [30, GW - 30];
+  if (sc.walkBounds) return sc.walkBounds;
+  if (sc.walkLine && sc.walkLine.length >= 2) {
+    return [sc.walkLine[0][0], sc.walkLine[sc.walkLine.length - 1][0]];
+  }
+  return [30, GW - 30];
+}
+
 function startWalk(who, targetX, cb) {
   const c = chars[who];
   const dist = Math.abs(targetX - c.x);
   if (dist < 5) { if (cb) cb(); return; }
-  targetX = Math.max(30, Math.min(GW - 30, targetX));
+  const bounds = getWalkBounds(state.scene);
+  targetX = Math.max(bounds[0], Math.min(bounds[1], targetX));
   c.dir = targetX > c.x ? 1 : -1;
   c.walking = true;
   c.startX = c.x;
@@ -3823,10 +3843,11 @@ function updateWalking(dt) {
 
 // Family follow: Ajax and Clio follow Ntemis with offset
 function familyFollow(targetX) {
+  const bounds = getWalkBounds(state.scene);
   const nX = targetX;
-  // Ajax follows to the right, Clio to the left
-  const ajaxTarget = Math.min(GW - 30, nX + 70);
-  const clioTarget = Math.max(30, nX - 70);
+  // Ajax follows to the right, Clio to the left — clamped to walk bounds
+  const ajaxTarget = Math.min(bounds[1], nX + 70);
+  const clioTarget = Math.max(bounds[0], nX - 70);
   setTimeout(() => startWalk('ajax', ajaxTarget), 150);
   setTimeout(() => startWalk('clio', clioTarget), 280);
 }
