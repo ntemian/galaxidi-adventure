@@ -521,7 +521,7 @@ async function loadAllAssets() {
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
     loadImg('bg-cave', 'assets/pixel-cave.webp'),
     loadImg('bg-church', 'assets/pixel-church.webp'),
-    loadImg('bg-church-interior', 'assets/pixel-church-interior.png'),
+    loadImg('bg-church-interior', 'assets/pixel-church-interior.webp'),
     loadImg('bg-windmill', 'assets/pixel-windmill.webp'),
     loadImg('bg-boat', 'assets/pixel-boat.webp'),
     loadImg('bg-graveyard', 'assets/pixel-graveyard.webp'),
@@ -933,7 +933,6 @@ const scenes = {
           look:[{s:'',t:'Μανουάλι με κεριά. Μερικά καίνε ακόμα — κάποιος πέρασε πρόσφατα.'}],
           use: () => {
             if (state.flags.candle_lit) return [{s:'',t:'Το κερί της Κλειώς καίει ήσυχα.'}];
-            if (!state.flags.ghost_summoned) return [{s:'ΚΛΕΙΩ',t:'Θέλω να ανάψω ένα κερί.'},{s:'ΝΤΕΜΗΣ',t:'Αργότερα, αγάπη μου. Ας εξερευνήσουμε πρώτα.'}];
             state.flags.candle_lit = 1;
             const sc = scenes.church_interior;
             const tile = sc.objects.find(o => o.id === 'floor_tile');
@@ -953,19 +952,13 @@ const scenes = {
             addInv({id:'nautical_chart', label:'Ναυτικός Χάρτης', desc: 'Χειρόγραφος χάρτης του Κορινθιακού Κόλπου. Ένα X σημαδεύει τον Άγιο Γεώργιο. «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'});
             return [{s:'',t:'Κάτω από την πλάκα — ένα δερμάτινο κύλινδρο. Μέσα, ένας χειρόγραφος χάρτης.'},{s:'ΝΤΕΜΗΣ',t:'Χειρόγραφος χάρτης του Κορινθιακού. X σημαδεύει τον Άγιο Γεώργιο.'},{s:'ΚΛΕΙΩ',t:'Υπάρχει σημείωμα: «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'},{s:'ΑΙΑΣ',t:'ΘΗΣΑΥΡΟΣ!'}];
           },
-          open: () => {
-            if (!state.flags.candle_lit) return [{s:'ΝΤΕΜΗΣ',t:'Δεν βλέπω τίποτα εδώ κάτω.'}];
-            if (state.inv.find(i => i.id === 'nautical_chart')) return [{s:'',t:'Η κρυψώνα κάτω από την πλάκα είναι άδεια τώρα.'}];
-            addInv({id:'nautical_chart', label:'Ναυτικός Χάρτης', desc: 'Χειρόγραφος χάρτης του Κορινθιακού Κόλπου. Ένα X σημαδεύει τον Άγιο Γεώργιο. «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'});
-            return [{s:'',t:'Κάτω από την πλάκα — ένα δερμάτινο κύλινδρο. Μέσα, ένας χειρόγραφος χάρτης.'},{s:'ΝΤΕΜΗΣ',t:'Χειρόγραφος χάρτης του Κορινθιακού. X σημαδεύει τον Άγιο Γεώργιο.'},{s:'ΚΛΕΙΩ',t:'Υπάρχει σημείωμα: «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'},{s:'ΑΙΑΣ',t:'ΘΗΣΑΥΡΟΣ!'}];
-          },
+          open: function() { return scenes.church_interior.objects.find(o => o.id === 'floor_tile').verbs.use(); },
         }},
       { id:'floor', x:100, y:340, w:400, h:55, label:'Πάτωμα',
         verbs: {
           look: () => {
             if (state.flags.candle_lit) return [{s:'',t:'Πέτρινες πλάκες στο πάτωμα. Μια φαίνεται... διαφορετική. Με χαραγμένα γράμματα.'}];
-            if (state.flags.ghost_summoned) return [{s:'',t:'Πέτρινες πλάκες στο πάτωμα. Με περισσότερο φως ίσως φανεί κάτι...'},{s:'ΚΛΕΙΩ',t:'Ας ανάψουμε ένα κερί!'}];
-            return [{s:'',t:'Πέτρινες πλάκες, λειασμένες από αιώνες βημάτων.'}];
+            return [{s:'',t:'Πέτρινες πλάκες στο πάτωμα. Με περισσότερο φως ίσως φανεί κάτι...'},{s:'ΚΛΕΙΩ',t:'Ας ανάψουμε ένα κερί!'}];
           },
         }},
       { id:'papas_npc', x:450, y:280, w:80, h:110, label:'Παπά Νικόλα',
@@ -3884,6 +3877,7 @@ function hitTestExit(gx, gy) {
 // ════════════════════════════════════════════════════════════
 const voiceAudio = new Audio();
 voiceAudio.volume = 0.8;
+voiceAudio.onerror = () => console.error('Failed to load voice:', voiceAudio.src);
 
 const VOICE_MAP = {
   'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.': 'voice/narrator/001.mp3',
@@ -5761,16 +5755,23 @@ function render() {
     }
   }
 
-  // NPCs in current scene
+  // Collect all visible characters + NPCs and sort by Y for proper depth
+  const drawOrder = [];
+  for (const who of ['ntemis', 'ajax', 'clio']) {
+    if (chars[who].visible) drawOrder.push({ type: 'char', id: who, y: chars[who].y });
+  }
   for (const npcId of Object.keys(npcChars)) {
-    drawNPC(npcId, state.tick);
+    const npc = npcChars[npcId];
+    const isMaterializing = npcId === 'ghost' && state.seq.active && state.seq.ghostMat.active;
+    if (npc.scene === state.scene && (npc.visible || isMaterializing))
+      drawOrder.push({ type: 'npc', id: npcId, y: npc.y });
+  }
+  drawOrder.sort((a, b) => a.y - b.y);
+  for (const entry of drawOrder) {
+    if (entry.type === 'char') drawCharacter(entry.id, state.tick);
+    else drawNPC(entry.id, state.tick);
   }
   drawGhostArm();
-
-  // Characters — back to front for depth
-  drawCharacter('clio', state.tick);
-  drawCharacter('ajax', state.tick);
-  drawCharacter('ntemis', state.tick);
 
   // Scene label
   ctx.save();
@@ -6190,6 +6191,7 @@ document.addEventListener('keydown', e => {
 // ════════════════════════════════════════════════════════════
 const bgm = document.getElementById('bgm');
 bgm.volume = 0.25;
+bgm.onerror = () => console.error('Failed to load music:', bgm.src);
 
 // Per-scene music map
 const sceneMusic = {
@@ -6571,6 +6573,16 @@ function drawTitleScreen(tick) {
       ctx.restore();
     }
   }
+
+  // Version stamp
+  ctx.save();
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillStyle = '#666';
+  ctx.globalAlpha = 0.6;
+  ctx.fillText('v0.1-pilot \u2022 2026-02-17', 6, GH - 4);
+  ctx.restore();
 
   // Fade overlay
   if (titleFadeOut > 0) {
