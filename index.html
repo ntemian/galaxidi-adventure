@@ -521,6 +521,8 @@ async function loadAllAssets() {
     loadImg('cutscene-liotrivi-sketch', 'assets/cutscene-liotrivi-sketch.png'),
     loadImg('cutscene-museum', 'assets/cutscene-museum.png'),
     loadImg('cutscene-museum-steam', 'assets/cutscene-museum-steam.png'),
+    loadImg('cutscene-ghost-appear', 'assets/cutscene-ghost-appear.png'),
+    loadImg('cutscene-ghost-farewell', 'assets/cutscene-ghost-farewell.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -1170,20 +1172,21 @@ const cutscenes = {
   ghost: {
     frames: [
       {
-        duration: 8,
+        duration: 9,
         draw: drawGhostAppear,
         dialogue: [
-          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί.', at: 1.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη...', at: 3.5 },
-          { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι.', at: 5.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί. Στο φως.', at: 1.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη... Εκατόν είκοσι χρόνια περίμενες.', at: 4.0 },
+          { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι. Μοιάζει... χαρούμενος.', at: 7.0 },
         ],
       },
       {
-        duration: 6,
+        duration: 8,
         draw: drawGhostFade,
         dialogue: [
-          { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε!', at: 1.0 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε! Γεια σου!', at: 1.0 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Τον Άγιο Νικόλαο.', at: 3.5 },
+          { s: 'ΑΙΑΣ', t: 'Η θάλασσα θυμάται...', at: 6.0 },
         ],
       },
     ],
@@ -1739,9 +1742,8 @@ function drawCaveEntrance(t, p, tick) {
 // ═══════════════════════════════════════════════════════════
 
 function drawGhostAppear(t, p, tick) {
-  // Slow zoom, jade-green ethereal pulse
-  drawKenBurns('cutscene-ghost', 1.08 + p * 0.08, 0, p * -10);
-  // Jade green ethereal glow
+  drawKenBurns('cutscene-ghost-appear', 1.06 + p * 0.10, 0, p * -8);
+  // Jade green ethereal pulse
   ctx.save();
   ctx.globalAlpha = 0.04 + Math.sin(tick * 0.04) * 0.03;
   ctx.fillStyle = '#40D8A0';
@@ -1749,23 +1751,23 @@ function drawGhostAppear(t, p, tick) {
   ctx.restore();
   // Dusk vignette
   ctx.save();
-  ctx.globalAlpha = 0.15;
+  ctx.globalAlpha = 0.12;
   ctx.fillStyle = '#1a0a2e';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
 
 function drawGhostFade(t, p, tick) {
-  // Slow pull back as ghost fades
-  drawKenBurns('cutscene-ghost', 1.16 - p * 0.08, 0, -10 + p * 10);
-  // Fading jade light
+  drawKenBurns('cutscene-ghost-farewell', 1.10 + p * 0.06, -p * 4, p * -6);
+  // Fading jade light particles
   ctx.save();
-  ctx.globalAlpha = (1 - p) * 0.06;
+  ctx.globalAlpha = (1 - p) * 0.06 + Math.sin(tick * 0.05) * 0.02;
   ctx.fillStyle = '#40D8A0';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
+  // Deepening twilight
   ctx.save();
-  ctx.globalAlpha = 0.12 + p * 0.08;
+  ctx.globalAlpha = 0.10 + p * 0.10;
   ctx.fillStyle = '#1a0a2e';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();

@@ -46,6 +46,8 @@ Promise.all([
   loadImg('cutscene-liotrivi-sketch', 'assets/cutscene-liotrivi-sketch.png'),
   loadImg('cutscene-museum', 'assets/cutscene-museum.png'),
   loadImg('cutscene-museum-steam', 'assets/cutscene-museum-steam.png'),
+  loadImg('cutscene-ghost-appear', 'assets/cutscene-ghost-appear.png'),
+  loadImg('cutscene-ghost-farewell', 'assets/cutscene-ghost-farewell.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -102,14 +104,14 @@ function drawCaveEntrance(t, p, tick) {
   ctx.fillStyle = v; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawGhostAppear(t, p, tick) {
-  drawKenBurns('cutscene-ghost', 1.08 + p * 0.08, 0, p * -10);
+  drawKenBurns('cutscene-ghost-appear', 1.06 + p * 0.10, 0, p * -8);
   ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.04) * 0.03; ctx.fillStyle = '#40D8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
-  ctx.save(); ctx.globalAlpha = 0.15; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawGhostFade(t, p, tick) {
-  drawKenBurns('cutscene-ghost', 1.16 - p * 0.08, 0, -10 + p * 10);
-  ctx.save(); ctx.globalAlpha = (1 - p) * 0.06; ctx.fillStyle = '#40D8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
-  ctx.save(); ctx.globalAlpha = 0.12 + p * 0.08; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  drawKenBurns('cutscene-ghost-farewell', 1.10 + p * 0.06, -p * 4, p * -6);
+  ctx.save(); ctx.globalAlpha = (1 - p) * 0.06 + Math.sin(tick * 0.05) * 0.02; ctx.fillStyle = '#40D8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.10 + p * 0.10; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawCrossingWide(t, p, tick) {
   drawKenBurns('cutscene-crossing', 1.12 - p * 0.06, -10 + p * 20, 0);
@@ -260,14 +262,15 @@ const allCutscenes = [
     ]},
   ]},
   { title: '8. Ο ΚΑΠΕΤΑΝΙΟΣ — The Captain', frames: [
-    { duration: 8, draw: drawGhostAppear, dialogue: [
-      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί.', at: 1.5 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη...', at: 3.5 },
-      { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι.', at: 5.5 },
+    { duration: 9, draw: drawGhostAppear, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί. Στο φως.', at: 1.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη... Εκατόν είκοσι χρόνια περίμενες.', at: 4.0 },
+      { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι. Μοιάζει... χαρούμενος.', at: 7.0 },
     ]},
-    { duration: 6, draw: drawGhostFade, dialogue: [
-      { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε!', at: 1.0 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
+    { duration: 8, draw: drawGhostFade, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε! Γεια σου!', at: 1.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Τον Άγιο Νικόλαο.', at: 3.5 },
+      { s: 'ΑΙΑΣ', t: 'Η θάλασσα θυμάται...', at: 6.0 },
     ]},
   ]},
   { title: '9. Ο ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ — The Church', frames: [
