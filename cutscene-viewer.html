@@ -36,6 +36,8 @@ Promise.all([
   loadImg('cutscene-crossing', 'assets/cutscene-crossing.png'),
   loadImg('cutscene-treasure', 'assets/cutscene-treasure.png'),
   loadImg('cutscene-epilogue', 'assets/cutscene-epilogue.png'),
+  loadImg('cutscene-reunion', 'assets/cutscene-reunion.png'),
+  loadImg('cutscene-reunion-music', 'assets/cutscene-reunion-music.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -125,6 +127,14 @@ function drawEpilogueClose(t, p, tick) {
   drawKenBurns('cutscene-epilogue', 1.06 + p * 0.14, -p * 10, p * -15);
   ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
+function drawReunionMeet(t, p, tick) {
+  drawKenBurns('cutscene-reunion', 1.12 - p * 0.08, p * 8, p * -10);
+  ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.02) * 0.02; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawReunionMusic(t, p, tick) {
+  drawKenBurns('cutscene-reunion-music', 1.08 + p * 0.06, -5 + p * 10, 0);
+  ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.015; ctx.fillStyle = '#FFB860'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
 
 // All cutscenes with titles
 const allCutscenes = [
@@ -154,14 +164,26 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Μας ζητάει να βρούμε την αλήθεια.', at: 3.2 },
     ]},
   ]},
-  { title: '3. ΤΟ ΣΠΗΛΑΙΟ — The Cave', frames: [
+  { title: '3. Η ΠΑΡΕΑ — The Reunion', frames: [
+    { duration: 7, draw: drawReunionMeet, dialogue: [
+      { s: 'ΑΚΗΣ', t: 'Ντέμη! Πόσα χρόνια, ρε παιδί μου!', at: 1.2 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Άκη! Στάθη! Δεν αλλάξατε καθόλου!', at: 3.0 },
+      { s: 'ΣΤΑΘΗΣ', t: 'Εμείς όχι. Εσύ έφερες ολόκληρο στρατό!', at: 5.0 },
+    ]},
+    { duration: 8, draw: drawReunionMusic, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Τι παίζουν; Είναι τέλειο!', at: 1.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Σσσ... Ζωγραφίζω τους.', at: 3.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Η μελωδία των ναυτικών. Χρόνια δεν την άκουσα.', at: 5.5 },
+    ]},
+  ]},
+  { title: '4. ΤΟ ΣΠΗΛΑΙΟ — The Cave', frames: [
     { duration: 8, draw: drawCaveEntrance, dialogue: [
       { s: 'ΑΙΑΣ', t: 'Σκοτεινά... Μπαμπά, κράτα ψηλά το φανάρι!', at: 1.0 },
       { s: 'ΚΛΕΙΩ', t: 'Κοίτα στον τοίχο! Ονόματα πλοίων!', at: 3.2 },
       { s: 'ΝΤΕΜΗΣ', t: 'Οι καπεταναίοι σημάδευαν το πέρασμά τους εδώ.', at: 5.5 },
     ]},
   ]},
-  { title: '4. Ο ΚΑΠΕΤΑΝΙΟΣ — The Captain', frames: [
+  { title: '5. Ο ΚΑΠΕΤΑΝΙΟΣ — The Captain', frames: [
     { duration: 8, draw: drawGhostAppear, dialogue: [
       { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί.', at: 1.5 },
       { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη...', at: 3.5 },
@@ -172,7 +194,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
     ]},
   ]},
-  { title: '5. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
+  { title: '6. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
     { duration: 8, draw: drawCrossingWide, dialogue: [
       { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω.', at: 1.5 },
       { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη;', at: 4.0 },
@@ -184,7 +206,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Αλλιώς πνίγεσαι.', at: 5.8 },
     ]},
   ]},
-  { title: '6. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
+  { title: '7. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
     { duration: 7, draw: drawTreasureReveal, dialogue: [
       { s: 'ΑΙΑΣ', t: 'Χρυσάφι... Κοίτα, μπαμπά!', at: 1.5 },
       { s: 'ΚΛΕΙΩ', t: 'Και ένα κολιέ. Πράσινο σαν το πέτρωμα!', at: 3.5 },
@@ -196,7 +218,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 5.8 },
     ]},
   ]},
-  { title: '7. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
+  { title: '8. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
     { duration: 8, draw: drawEpilogueHarbor, dialogue: [
       { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι.', at: 1.5 },
       { s: 'ΝΤΕΜΗΣ', t: 'Μας άφησε μια ιδέα. Την αλληλεγγύη.', at: 4.0 },

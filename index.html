@@ -511,6 +511,8 @@ async function loadAllAssets() {
     loadImg('cutscene-crossing', 'assets/cutscene-crossing.png'),
     loadImg('cutscene-treasure', 'assets/cutscene-treasure.png'),
     loadImg('cutscene-epilogue', 'assets/cutscene-epilogue.png'),
+    loadImg('cutscene-reunion', 'assets/cutscene-reunion.png'),
+    loadImg('cutscene-reunion-music', 'assets/cutscene-reunion-music.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -1028,6 +1030,33 @@ const cutscenes = {
     },
   },
 
+  // ── THE REUNION — Meeting Akis & Stathis (triggered entering harbor_friends scene)
+  reunion: {
+    frames: [
+      {
+        duration: 7,
+        draw: drawReunionMeet,
+        dialogue: [
+          { s: 'ΑΚΗΣ', t: 'Ντέμη! Πόσα χρόνια, ρε παιδί μου!', at: 1.2 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Άκη! Στάθη! Δεν αλλάξατε καθόλου!', at: 3.0 },
+          { s: 'ΣΤΑΘΗΣ', t: 'Εμείς όχι. Εσύ έφερες ολόκληρο στρατό!', at: 5.0 },
+        ],
+      },
+      {
+        duration: 8,
+        draw: drawReunionMusic,
+        dialogue: [
+          { s: 'ΑΙΑΣ', t: 'Τι παίζουν; Είναι τέλειο!', at: 1.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Σσσ... Ζωγραφίζω τους.', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Η μελωδία των ναυτικών. Χρόνια δεν την άκουσα.', at: 5.5 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
   // ── THE CAVE — Entering Karkaros (triggered at cave entrance)
   cave_enter: {
     frames: [
@@ -1256,7 +1285,7 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','cave_enter','ghost','crossing','treasure','epilogue'];
+  const ids = ['arrival','letter','reunion','cave_enter','ghost','crossing','treasure','epilogue'];
   let i = 0;
   const savedCompletes = {};
   ids.forEach(id => { savedCompletes[id] = cutscenes[id].onComplete; });
@@ -1660,6 +1689,32 @@ function drawTreasureFamily(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.04;
   ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE REUNION — Meeting Akis & Stathis at the harbor
+// ═══════════════════════════════════════════════════════════
+
+function drawReunionMeet(t, p, tick) {
+  // Wide shot of the reunion, slow zoom in toward the embrace
+  drawKenBurns('cutscene-reunion', 1.12 - p * 0.08, p * 8, p * -10);
+  // Golden hour warmth
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.02) * 0.02;
+  ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawReunionMusic(t, p, tick) {
+  // Intimate shot of the music moment, gentle drift
+  drawKenBurns('cutscene-reunion-music', 1.08 + p * 0.06, -5 + p * 10, 0);
+  // Warm taverna lantern glow
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.015;
+  ctx.fillStyle = '#FFB860';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
