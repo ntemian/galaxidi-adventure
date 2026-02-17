@@ -71,25 +71,24 @@ The game is one `<script>` block with these sections (in order):
 | **Game Loop** | `requestAnimationFrame` loop with delta time |
 | **Title/Intro** | Title screen, intro sequence, game start |
 
-## Game Scenes (12 + epilogue, 3 implemented)
+## Game Scenes (12 + epilogue — 10 implemented, 2 + epilogue remaining)
 
 See `storyboard.html` (open in browser) and `STORY.md` for full scene details.
 
-| # | Scene | Label | Status |
-|---|-------|-------|--------|
-| 1 | **harbor** | ΑΦΙΞΗ | Done (exterior) |
-| 2 | **house** | ΤΟ ΣΠΙΤΙ ΤΟΥ ΠΑΠΠΟΥ | Done (kitchen/interior) |
-| 3 | **harbor_friends** | Η ΠΑΡΕΑ | TODO |
-| 4 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | TODO |
-| 5 | **liotrivi** | ΛΙΟΤΡΙΒΙ | TODO |
-| 6 | **windmill** | Ο ΜΥΛΟΣ | TODO |
-| 7 | **cave** | ΤΟ ΣΠΗΛΑΙΟ (ΚΑΡΚΑΡΟΣ) | TODO |
-| 8 | **graveyard** | ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ | TODO |
-| 9 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | TODO |
-| 10 | **boat** | ΤΟ ΚΑΡΑΒΙ (ΕΛΠΙΔΑ) | TODO |
-| 11 | **treasure** | Ο ΘΗΣΑΥΡΟΣ | TODO |
-| 12 | **new_era** | Η ΝΕΑ ΕΠΟΧΗ | TODO |
-| E | **epilogue** | ΕΠΙΛΟΓΟΣ | TODO |
+| # | Scene ID | Label | Status | Notes |
+|---|----------|-------|--------|-------|
+| 1 | **exterior** | ΤΟ ΣΠΙΤΙ — ΓΑΛΑΞΙΔΙ | Done | + terrace + kitchen sub-scenes |
+| 2 | **port** | ΤΟ ΛΙΜΑΝΙ | Done | Akis & Stathis NPCs, 8 objects |
+| 3 | **museum** | ΤΟ ΝΑΥΤΙΚΟ ΜΟΥΣΕΙΟ | Done | Curator NPC, steamship corner |
+| 4 | **liotrivi** | ΛΙΟΤΡΙΒΙ | Done | Athos NPC, 7 objects |
+| 5 | **windmill** | Ο ΜΥΛΟΣ | Done | Giannis NPC, telescope, lantern |
+| 6 | **cave** | ΤΟ ΣΠΗΛΑΙΟ ΤΟΥ ΚΑΡΚΑΡΟΥ | Done | **Needs rework**: still has old 12-token stone door |
+| 7 | **church** | ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ | Done | **EXTERIOR only** — needs interior sub-scene |
+| 8 | **graveyard** | ΤΟ ΝΕΚΡΟΤΑΦΕΙΟ | Done | Ghost sequence fully implemented |
+| 9 | **boat** | ΤΟ ΚΑΡΑΒΙ — ΕΛΠΙΔΑ | Done | Scenic, 6 objects |
+| 10 | **treasure** | Ο ΘΗΣΑΥΡΟΣ | **TODO** | Chest opening, final letter |
+| 11 | **new_era** | Η ΝΕΑ ΕΠΟΧΗ | **TODO** | Harbor celebration, 104 signatures |
+| E | **epilogue** | ΕΠΙΛΟΓΟΣ | **TODO** | Final narration + credits |
 
 ## Puzzle Chain (Visvikis treasure hunt)
 
