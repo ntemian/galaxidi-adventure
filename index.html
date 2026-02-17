@@ -6148,15 +6148,15 @@ function drawCustomCursor() {
   const isExit = mode === 'w-resize' || mode === 'e-resize';
 
   if (isExit) {
-    // Exit: clean pixel arrow
+    // Exit: MI2-style pixel arrow
     const pattern = mode === 'w-resize' ? CURSOR_ARROW_L : CURSOR_ARROW_R;
-    drawPixelCursor(mx, my, pattern, '#FFE8A0', '#000');
+    drawPixelCursor(mx, my, pattern, '#39d52e', '#000');
   } else if (isHot) {
-    // Interactive: enhanced cross with arrow tips
-    drawPixelCursor(mx, my, CURSOR_INTERACT, '#FFD700', '#000');
+    // Interactive: MI2 cross with widened tips
+    drawPixelCursor(mx, my, CURSOR_INTERACT, '#fff', '#000');
   } else {
-    // Default: clean SCUMM crosshair with gap in center
-    drawPixelCursor(mx, my, CURSOR_CROSS, '#FFE8A0', '#000');
+    // Default: MI2 exact crosshair — white thin cross, black outline
+    drawPixelCursor(mx, my, CURSOR_CROSS, '#fff', '#000');
   }
   ctx.restore();
 }
