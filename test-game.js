@@ -1541,11 +1541,11 @@ function extractVerbCutsceneDialogs() {
   return results;
 }
 
-const sceneCutscenes = extractSceneCutscenes();
+const sceneCutsceneMap = extractSceneCutscenes();
 
 test('No dialog overlap between scene entries and their cutscenes', () => {
   const issues = [];
-  for (const [sceneId, cutsceneId] of Object.entries(sceneCutscenes)) {
+  for (const [sceneId, cutsceneId] of Object.entries(sceneCutsceneMap)) {
     const entryTexts = extractEntryDialogTexts(sceneId);
     const cutsceneTexts = extractCutsceneDialogTexts(cutsceneId);
     if (entryTexts.length === 0 || cutsceneTexts.length === 0) continue;
@@ -1573,7 +1573,7 @@ test('No dialog overlap between verb handlers and their triggered cutscenes', ()
 
 test('Entry dialogs for cutscene scenes are brief (max 4 lines)', () => {
   const verbose = [];
-  for (const [sceneId, cutsceneId] of Object.entries(sceneCutscenes)) {
+  for (const [sceneId, cutsceneId] of Object.entries(sceneCutsceneMap)) {
     const entryTexts = extractEntryDialogTexts(sceneId);
     if (entryTexts.length > 4) {
       verbose.push(`${sceneId}: ${entryTexts.length} lines (max 4 recommended when cutscene follows)`);
