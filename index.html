@@ -482,8 +482,8 @@ const chars = {
 const npcChars = {
   ghost:   { scene: 'graveyard', x: 460, y: 280, dir: -1, visible: false, tilt: 0, wave: 0, scale: 1.0 },
   athos:   { scene: 'liotrivi', x: 510, y: 375, dir: -1, visible: true, scale: 0.85 },
-  stathis: { scene: 'port', x: 80, y: 336, dir: 1, visible: true, scale: 0.85 },
-  akis:    { scene: 'port', x: 150, y: 335, dir: 1, visible: true, scale: 0.85 },
+  stathis: { scene: 'port', x: 80, y: 280, dir: 1, visible: true, scale: 0.85 },
+  akis:    { scene: 'port', x: 150, y: 281, dir: 1, visible: true, scale: 0.85 },
   giannis: { scene: 'windmill', x: 150, y: 340, dir: 1, visible: true, scale: 0.85 },
   curator: { scene: 'museum', x: 100, y: 340, dir: 1, visible: true, scale: 0.85 },
   papas:   { scene: 'church_interior', x: 480, y: 375, dir: -1, visible: true, scale: 0.85 },
@@ -707,9 +707,9 @@ const scenes = {
   // ── SCENE 2: THE PORT ──
   port: {
     label: 'ΤΟ ΛΙΜΑΝΙ', bg: 'bg-port',
-    walkLine: [[30, 338], [180, 335], [350, 332], [450, 336]],
+    walkLine: [[30, 278], [180, 282], [350, 285], [450, 280]],
     walkBounds: [30, 450], // stone quay ends before water
-    charPos: { ntemis: { x: 280, y: 335 }, ajax: { x: 350, y: 333 }, clio: { x: 200, y: 336 } },
+    charPos: { ntemis: { x: 280, y: 283 }, ajax: { x: 350, y: 285 }, clio: { x: 200, y: 281 } },
     objects: [
       { id:'boats_port', x:120, y:8, w:200, h:100, label:'Ψαρόβαρκες',
         verbs: { look:[{s:'',t:'Χρωματιστά καΐκια δεμένα στα μπαλόνια. Η μπογιά ξεφλουδίζει — αλμύρα και χρόνια.'},{s:'ΑΙΑΣ',t:'Μπαμπά, μπορώ να πηδήξω σε κάποιο;'},{s:'ΝΤΕΜΗΣ',t:'Μπορείς να κοιτάξεις. Από εδώ.'}] }},
@@ -722,7 +722,7 @@ const scenes = {
         verbs: { look:[{s:'',t:'Πέτρινες αποθήκες με σιδερένιες πόρτες. Κάποτε γεμάτες σταφίδα και λάδι για εξαγωγή. Τώρα σιωπή.'}] }},
       { id:'seagulls', x:300, y:-104, w:150, h:50, label:'Γλάροι',
         verbs: { look:[{s:'',t:'Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.'},{s:'ΚΛΕΙΩ',t:'Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...'}] }},
-      { id:'cats', x:350, y:310, w:60, h:30, label:'Γάτες',
+      { id:'cats', x:350, y:260, w:60, h:30, label:'Γάτες',
         verbs: { look:[{s:'',t:'Τρεις γάτες ξαπλωμένες στον ήλιο. Σε κοιτάνε με αδιαφορία.'},{s:'ΚΛΕΙΩ',t:'Πόσο τέλεια! Αυτή η πορτοκαλί μου αρέσει πολύ.'}] }},
       { id:'stathis', x:55, y:312, w:70, h:100, label:'Στάθης',
         verbs: { look:[{s:'',t:'Ο Στάθης με την κιθάρα του. Φίλος από τα παλιά.'}],
@@ -981,7 +981,7 @@ const scenes = {
     walkBounds: [30, 530], // stone path narrows before hill edge
     charPos: { ntemis: { x: 350, y: 377 }, ajax: { x: 440, y: 379 }, clio: { x: 260, y: 378 } },
     objects: [
-      { id:'telescope', x:430, y:140, w:80, h:120, label:'Τηλεσκόπιο',
+      { id:'telescope', x:480, y:250, w:65, h:130, label:'Τηλεσκόπιο',
         verbs: { look:[{s:'',t:'Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;'},{s:'ΚΛΕΙΩ',t:'Αφήστε με να κοιτάξω!'}],
                  use:[{s:'ΚΛΕΙΩ',t:'Βλέπω... το λιμάνι! Και κάτι στο νερό...'},{s:'ΑΙΑΣ',t:'Τι; Τι βλέπεις;'},{s:'ΚΛΕΙΩ',t:'Ένα σημάδι στην προβλήτα. Σαν αστέρι.'},{s:'ΝΤΕΜΗΣ',t:'Σημείωσέ το, Κλειώ.'}] }},
       { id:'panorama', x:0, y:-88, w:640, h:100, label:'Πανόραμα',
@@ -2576,7 +2576,7 @@ function drawPetals() {
 const catScenePos = {
   exterior:  { x: 95, y: 269 },
   terrace:   { x: 180, y: 372 },
-  port:      { x: 420, y: 330 },
+  port:      { x: 420, y: 275 },
   church:    { x: 190, y: 370, bgHasCat: true },
   church_interior: { x: 380, y: 370 },
   liotrivi:  { x: 450, y: 372 },
