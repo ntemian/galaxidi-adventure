@@ -187,6 +187,7 @@ Scene 12 (harbor): Ntemis's speech → Akis's documentary → new αλληλασ
 - **`STORY.md`** — Story bible (text companion, aligned with storyboard)
 - **`ROADMAP.md`** — Development roadmap — 8-phase plan from prototype to release (LOSC: `thought:2026-02-16-galaxidi-adventure-game-develo`)
 - `CHARACTER-LORE.md` — Deep character profiles (Ntemis, Ajax, Clio) — personality, voice, relationships, arcs
+- `CHARACTER-VISUAL-GUIDE.md` — **Canonical visual appearance** for all characters (outfits, colors, hex palettes). Source of truth for sprites, portraits, cutscenes
 - `GAME-BIBLE.md` — **OBSOLETE** (old 12-token version, do NOT use for new work)
 - `PILOT-STORY.md` — **OBSOLETE** (old 8-scene version)
 - `inspiration/galaxidi-history.md` — Verified Galaxidi history timeline
