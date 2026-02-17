@@ -683,7 +683,7 @@ const scenes = {
       { id:'satchel', x:340, y:149, w:80, h:85, label:'Δερμάτινη τσάντα',
         verbs: {
           look:()=>{if(!state.flags.note)return[{s:'',t:'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.'}];return[{s:'',t:'Η τσάντα είναι άδεια τώρα.'}];},
-          open:()=>{if(!state.flags.note){state.flags.note=1;addInv({id:'note',label:'Σημείωμα'});return[{s:'',t:'Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.'},{s:'ΚΛΕΙΩ',t:'Διάβασέ το!'},{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'ΑΙΑΣ',t:'Ποιος είναι ο «Γ.»;'},{s:'ΝΤΕΜΗΣ',t:'Και πώς ξέρει ότι είμαστε τρεις;'}];}return[{s:'',t:'Η τσάντα είναι πλέον άδεια.'}];},
+          open:()=>{if(!state.flags.note){state.flags.note=1;addInv({id:'note',label:'Σημείωμα',desc:'Ένα παλιό σημείωμα. «Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.» Μυρίζει θάλασσα.'});return[{s:'',t:'Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.'},{s:'ΚΛΕΙΩ',t:'Διάβασέ το!'},{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'ΑΙΑΣ',t:'Ποιος είναι ο «Γ.»;'},{s:'ΝΤΕΜΗΣ',t:'Και πώς ξέρει ότι είμαστε τρεις;'}];}return[{s:'',t:'Η τσάντα είναι πλέον άδεια.'}];},
           pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.'}] }},
       { id:'window', x:455, y:-40, w:95, h:115, label:'Παράθυρο',
         verbs: { look:[{s:'',t:'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.'}],
@@ -860,7 +860,7 @@ const scenes = {
             if (state.inv.find(i => i.id === 'green_stone')) return [{s:'',t:'Ήδη βρήκατε την πράσινη πέτρα.'}];
             if (state.flags.jade_found) return [{s:'',t:'Η ρωγμή είναι άδεια τώρα.'}];
             state.flags.jade_found = true;
-            addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα' });
+            addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίζη.' });
             return [
               {s:'',t:'Η Κλειώ δείχνει ψηλά. Σφηνωμένη σε μια ρωγμή πάνω από το ύψος των ματιών: μια πέτρα. Σκούρα πράσινη, λεία, ζεστή στο χέρι.'},
               {s:'ΚΛΕΙΩ',t:'Σας. Το. Είπα.'},
@@ -888,13 +888,13 @@ const scenes = {
     walkLine: [[30, 378], [300, 375], [610, 378]],
     charPos: { ntemis: { x: 300, y: 375 }, ajax: { x: 390, y: 377 }, clio: { x: 210, y: 377 } },
     objects: [
-      { id:'fountain', x:200, y:168, w:130, h:140, label:'Σιντριβάνι',
+      { id:'fountain', x:108, y:305, w:44, h:45, label:'Σιντριβάνι',
         verbs: { look:[{s:'',t:'Πέτρινο σιντριβάνι στην πλατεία. Το νερό τρέχει αθόρυβα.'},{s:'ΚΛΕΙΩ',t:'Ρίχνω ένα νόμισμα;'},{s:'ΝΤΕΜΗΣ',t:'Γιατί όχι; Κάνε μια ευχή.'}] }},
       { id:'church_dome', x:250, y:-104, w:160, h:120, label:'Εκκλησία',
         verbs: { look:[{s:'',t:'Ο Άγιος Νικόλαος — προστάτης των ναυτικών. Ο τρούλος λάμπει κόκκινος στον ήλιο.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.'}] }},
       { id:'bougainvillea_ch', x:0, y:-24, w:90, h:180, label:'Μπουκαμβίλιες',
         verbs: { look:[{s:'',t:'Φούξια μπουκαμβίλιες σκεπάζουν τον τοίχο. Χρώμα που αψηφά τον χρόνο.'}] }},
-      { id:'cat_church', x:420, y:360, w:60, h:40, label:'Γάτα',
+      { id:'cat_church', x:165, y:345, w:70, h:45, label:'Γάτα',
         verbs: { look:[{s:'',t:'Μια πορτοκαλί γάτα κοιμάται αράχτη στα πλακάκια.'},{s:'ΚΛΕΙΩ',t:'Την ξαναβρήκα! Αυτή είναι η ίδια από το λιμάνι.'}],
                  talk:[{s:'ΚΛΕΙΩ',t:'Γεια σου, μικρούλα. Με ακολουθείς;'},{s:'',t:'Η γάτα νιαουρίζει απαλά.'}] }},
       { id:'benches', x:50, y:312, w:120, h:50, label:'Παγκάκια',
@@ -947,13 +947,13 @@ const scenes = {
           use: () => {
             if (!state.flags.candle_lit) return [{s:'ΝΤΕΜΗΣ',t:'Δεν βλέπω τίποτα εδώ κάτω.'}];
             if (state.inv.find(i => i.id === 'nautical_chart')) return [{s:'',t:'Η κρυψώνα κάτω από την πλάκα είναι άδεια τώρα.'}];
-            addInv({id:'nautical_chart', label:'Ναυτικός Χάρτης'});
+            addInv({id:'nautical_chart', label:'Ναυτικός Χάρτης', desc: 'Χειρόγραφος χάρτης του Κορινθιακού Κόλπου. Ένα X σημαδεύει τον Άγιο Γεώργιο. «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'});
             return [{s:'',t:'Κάτω από την πλάκα — ένα δερμάτινο κύλινδρο. Μέσα, ένας χειρόγραφος χάρτης.'},{s:'ΝΤΕΜΗΣ',t:'Χειρόγραφος χάρτης του Κορινθιακού. X σημαδεύει τον Άγιο Γεώργιο.'},{s:'ΚΛΕΙΩ',t:'Υπάρχει σημείωμα: «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'},{s:'ΑΙΑΣ',t:'ΘΗΣΑΥΡΟΣ!'}];
           },
           open: () => {
             if (!state.flags.candle_lit) return [{s:'ΝΤΕΜΗΣ',t:'Δεν βλέπω τίποτα εδώ κάτω.'}];
             if (state.inv.find(i => i.id === 'nautical_chart')) return [{s:'',t:'Η κρυψώνα κάτω από την πλάκα είναι άδεια τώρα.'}];
-            addInv({id:'nautical_chart', label:'Ναυτικός Χάρτης'});
+            addInv({id:'nautical_chart', label:'Ναυτικός Χάρτης', desc: 'Χειρόγραφος χάρτης του Κορινθιακού Κόλπου. Ένα X σημαδεύει τον Άγιο Γεώργιο. «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'});
             return [{s:'',t:'Κάτω από την πλάκα — ένα δερμάτινο κύλινδρο. Μέσα, ένας χειρόγραφος χάρτης.'},{s:'ΝΤΕΜΗΣ',t:'Χειρόγραφος χάρτης του Κορινθιακού. X σημαδεύει τον Άγιο Γεώργιο.'},{s:'ΚΛΕΙΩ',t:'Υπάρχει σημείωμα: «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»'},{s:'ΑΙΑΣ',t:'ΘΗΣΑΥΡΟΣ!'}];
           },
         }},
@@ -992,7 +992,7 @@ const scenes = {
                  talk:()=>{
                    if(state.flags.lantern_given) return [{s:'ΓΙΑΝΝΗΣ',t:'Προσοχή εκεί κάτω. Το σπήλαιο έχει μυστικά.'}];
                    state.flags.lantern_given=1;
-                   addInv({id:'lantern',label:'Φανάρι'});
+                   addInv({id:'lantern',label:'Φανάρι',desc:'Ένα ορειχάλκινο ναυτικό φανάρι. Παλιό αλλά καλοσυντηρημένο. Δώρο του Γιάννη.'});
                    return [{s:'ΓΙΑΝΝΗΣ',t:'...'},{s:'ΝΤΕΜΗΣ',t:'Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.'},{s:'ΓΙΑΝΝΗΣ',t:'Το ξέρω. Σε βλέπω από εδώ πάνω.'},{s:'ΓΙΑΝΝΗΣ',t:'Πάρε αυτό. Θα το χρειαστείς.'},{s:'',t:'Ο Γιάννης σου δίνει ένα ορειχάλκινο φανάρι. Παλιό, ναυτικό, καλοσυντηρημένο.'}];
                  } }},
     ],
@@ -2568,7 +2568,7 @@ const catScenePos = {
   exterior:  { x: 95, y: 269 },
   terrace:   { x: 180, y: 372 },
   port:      { x: 510, y: 370 },
-  church:    { x: 420, y: 366 },
+  church:    { x: 190, y: 370, bgHasCat: true },
   church_interior: { x: 380, y: 370 },
   liotrivi:  { x: 450, y: 372 },
   windmill:  { x: 340, y: 374 },
@@ -3035,8 +3035,9 @@ function updateSceneAmbience(dt) {
 }
 
 function drawSceneAmbience(tick) {
-  // Draw cat in any scene that has a position for it
-  if (catScenePos[state.scene]) drawCat();
+  // Draw cat in any scene that has a position for it (skip if background already has cat art)
+  const csp = catScenePos[state.scene];
+  if (csp && !csp.bgHasCat) drawCat();
   if (state.scene === 'exterior') {
     drawBoatBob();
     drawSeaShimmer(tick);
@@ -3059,6 +3060,8 @@ function drawSceneAmbience(tick) {
   } else if (state.scene === 'graveyard') {
     drawGraveyardAmbience(tick);
   } else if (state.scene === 'church') {
+    drawChurchExteriorAmbience(tick);
+  } else if (state.scene === 'church_interior') {
     drawChurchAmbience(tick);
   } else if (state.scene === 'boat') {
     drawBoatAmbience(tick);
@@ -3249,6 +3252,83 @@ function drawGraveyardAmbience(tick) {
 }
 
 // Church ambience: candle flicker, incense wisps, stained glass light, dust
+// Church EXTERIOR ambience: stone fountain with animated water, warm plaza light
+function drawChurchExteriorAmbience(tick) {
+  ctx.save();
+  // ── STONE FOUNTAIN (centered ~x:130, base at y:345) ──
+  const fx = 130, fy = 345;
+  // Base platform
+  ctx.fillStyle = '#7A6C5A';
+  ctx.fillRect(fx - 22, fy, 44, 6);
+  ctx.fillStyle = '#8B7D6B';
+  ctx.fillRect(fx - 18, fy - 3, 36, 3);
+  // Lower basin
+  ctx.fillStyle = '#6A5C4A';
+  ctx.fillRect(fx - 16, fy - 14, 32, 11);
+  ctx.fillStyle = '#7A6C5A';
+  ctx.fillRect(fx - 14, fy - 12, 28, 8);
+  // Basin rim highlight
+  ctx.fillStyle = '#9A8C7A';
+  ctx.fillRect(fx - 16, fy - 15, 32, 2);
+  // Central column
+  ctx.fillStyle = '#8B7D6B';
+  ctx.fillRect(fx - 3, fy - 30, 6, 16);
+  ctx.fillStyle = '#9A8C7A';
+  ctx.fillRect(fx - 2, fy - 28, 4, 14);
+  // Upper small bowl
+  ctx.fillStyle = '#7A6C5A';
+  ctx.fillRect(fx - 8, fy - 34, 16, 4);
+  ctx.fillStyle = '#9A8C7A';
+  ctx.fillRect(fx - 7, fy - 35, 14, 2);
+  // Finial knob
+  ctx.fillStyle = '#8B7D6B';
+  ctx.fillRect(fx - 2, fy - 38, 4, 3);
+  ctx.fillRect(fx - 1, fy - 39, 2, 1);
+  // Water in lower basin (shimmering)
+  const wa = 0.35 + Math.sin(tick * 0.04) * 0.08;
+  ctx.fillStyle = `rgba(100,160,210,${wa})`;
+  ctx.fillRect(fx - 13, fy - 10, 26, 5);
+  // Water shimmer highlight
+  const ha = 0.15 + Math.sin(tick * 0.07 + 1) * 0.08;
+  ctx.fillStyle = `rgba(180,220,255,${ha})`;
+  ctx.fillRect(fx - 8 + Math.sin(tick * 0.02) * 3, fy - 9, 8, 1);
+  // Water drops falling from upper bowl
+  for (let d = 0; d < 4; d++) {
+    const dp = (tick * 0.06 + d * 1.6) % 2.5;
+    const dy = fy - 30 + dp * 7;
+    const dx = fx - 3 + d * 2 + Math.sin(tick * 0.04 + d * 1.5) * 2;
+    if (dy < fy - 14) {
+      const da = 0.5 - dp * 0.15;
+      ctx.fillStyle = `rgba(150,200,240,${Math.max(0, da)})`;
+      ctx.fillRect(dx, dy, 1, 2);
+    }
+  }
+  // Tiny splash sparkles at water surface
+  for (let s = 0; s < 3; s++) {
+    const sp = (tick * 0.08 + s * 1.3) % 2;
+    if (sp < 0.3) {
+      const sx = fx - 10 + Math.sin(tick * 0.12 + s * 2.7) * 10;
+      ctx.fillStyle = `rgba(220,240,255,${0.4 - sp})`;
+      ctx.fillRect(sx, fy - 11, 1, 1);
+    }
+  }
+  // ── WARM PLAZA LIGHT (golden hour glow on cobblestones) ──
+  const glow = 0.02 + Math.sin(tick * 0.003) * 0.005;
+  ctx.fillStyle = `rgba(255,200,120,${glow})`;
+  ctx.fillRect(50, 300, 200, 80);
+  // ── LIGHT SHAFT from church door ──
+  const la = 0.025 + Math.sin(tick * 0.005) * 0.008;
+  ctx.fillStyle = `rgba(255,220,160,${la})`;
+  ctx.beginPath();
+  ctx.moveTo(270, 200);
+  ctx.lineTo(220, 370);
+  ctx.lineTo(350, 370);
+  ctx.lineTo(340, 200);
+  ctx.fill();
+  ctx.restore();
+}
+
+// Church INTERIOR ambience: candle flicker, incense, stained glass
 function drawChurchAmbience(tick) {
   ctx.save();
   // ── CANDLE FLAME FLICKER (warm glow points) ──
@@ -3443,6 +3523,8 @@ const CHAR_HEIGHTS = { ntemis: 118, ajax: 84, clio: 92 };
 
 // Scale factor: sprites are small relative to 640x400 canvas — scale up to MI2 proportions
 const CHAR_SCALE = 1.5;
+// Per-character scale multiplier: Ajax (12yo) must be taller than Clio (6yo)
+const CHAR_SCALE_MULT = { ntemis: 1.0, ajax: 1.11, clio: 0.80 };
 
 // Per-character anatomy: waist split ratio & max leg stride (pixels, in sprite space)
 const WALK_ANATOMY = {
@@ -3466,7 +3548,7 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
   const sprW = img.naturalWidth;
   const sprH = img.naturalHeight;
   const anat = WALK_ANATOMY[who] || { waist: 0.60, stride: 6 };
-  const S = CHAR_SCALE;
+  const S = CHAR_SCALE * (CHAR_SCALE_MULT[who] || 1.0);
 
   if (walking) {
     // ── WALK PHASE (slower cycle for natural cadence) ──
@@ -3505,13 +3587,13 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     );
 
     // ── BACK LEG (drawn first, darker, shifted opposite, lifted) ──
-    const bandH = 2;
+    const bandH = 1;
     ctx.save();
     ctx.globalAlpha = 0.7;
     for (let y = 0; y < legH; y += bandH) {
       const progress = y / Math.max(1, legH - 1);
-      const backOff = Math.round(-strideDir * maxStride * 0.7 * (0.3 + 0.7 * progress));
-      const lift = Math.round(Math.abs(strideDir) * 3 * progress);
+      const backOff = -strideDir * maxStride * 0.7 * (0.3 + 0.7 * progress);
+      const lift = Math.abs(strideDir) * 3 * progress;
       const h = Math.min(bandH, legH - y);
       ctx.drawImage(img,
         0, waistY + y, sprW, h,
@@ -3523,7 +3605,7 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     // ── FRONT LEG (on top, full brightness, shifted forward) ──
     for (let y = 0; y < legH; y += bandH) {
       const progress = y / Math.max(1, legH - 1);
-      const frontOff = Math.round(strideDir * maxStride * (0.3 + 0.7 * progress));
+      const frontOff = strideDir * maxStride * (0.3 + 0.7 * progress);
       const h = Math.min(bandH, legH - y);
       ctx.drawImage(img,
         0, waistY + y, sprW, h,
@@ -3709,8 +3791,8 @@ function updateWalking(dt) {
     const p = Math.min(1, c.walkT / c.walkDur);
     const ep = easeInOutCubic(p);
     c.x = c.startX + (c.targetX - c.startX) * ep;
-    // Interpolate Y along the ground line for proper grounding
-    c.y = c.startY + (c.targetY - c.startY) * ep;
+    // Follow walkLine at every X position — prevents floating mid-walk
+    c.y = getGroundY(state.scene, c.x);
 
     // Store raw walk time for smooth interpolation in drawSprite
     c.frame = c.walkT;
@@ -4865,8 +4947,9 @@ function scrollInv(dir) {
 }
 
 function invClick(id) {
-  if (id === 'note' && state.verb === 'look') {
-    showDlg([{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'',t:'Το χαρτί μυρίζει θάλασσα. Παλιομοδίτικο γράψιμο.'}]);
+  const item = state.inv.find(i => i.id === id);
+  if (item && item.desc) {
+    showDlg([{s:'',t:item.desc}]);
   }
   document.querySelectorAll('.inv-slot').forEach(s => s.classList.remove('on'));
   document.querySelector(`[data-id="${id}"]`)?.classList.add('on');
@@ -5542,22 +5625,35 @@ function render() {
   ctx.fillText(sc.label, GW / 2, 8);
   ctx.restore();
 
-  // Top-right toolbar: Help | Map | Music
+  // Top-right toolbar: Help | Map | Music — with visible button backgrounds
   ctx.save();
-  ctx.fillStyle = '#D4A03C';
-  ctx.font = '8px "Press Start 2P", monospace';
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'top';
-  // Help icon
-  ctx.globalAlpha = 0.35;
-  ctx.fillText('?', GW - 52, 8);
-  // Map icon
-  ctx.globalAlpha = 0.35;
-  ctx.fillText('M', GW - 32, 8);
-  // Music icon
-  ctx.globalAlpha = state.musicOn ? 0.5 : 0.2;
-  ctx.font = '14px sans-serif';
-  ctx.fillText('♪', GW - 8, 8);
+  const tbY = 5, tbH = 18, tbW = 22, tbGap = 4;
+  const tbIcons = [
+    { label: '?', x: GW - 72, key: 'help' },
+    { label: 'M', x: GW - 72 + tbW + tbGap, key: 'map' },
+    { label: '\u266A', x: GW - 72 + (tbW + tbGap) * 2, key: 'music' },
+  ];
+  for (const btn of tbIcons) {
+    const active = (btn.key === 'map' && state.mapOpen) || (btn.key === 'help' && state.helpOpen) || (btn.key === 'music' && state.musicOn);
+    // Button background
+    ctx.globalAlpha = active ? 0.55 : 0.3;
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath();
+    ctx.roundRect(btn.x, tbY, tbW, tbH, 3);
+    ctx.fill();
+    // Border
+    ctx.strokeStyle = '#D4A03C';
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = active ? 0.8 : 0.45;
+    ctx.stroke();
+    // Label
+    ctx.globalAlpha = active ? 0.95 : 0.7;
+    ctx.fillStyle = '#D4A03C';
+    ctx.font = btn.key === 'music' ? '12px sans-serif' : '8px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(btn.label, btn.x + tbW / 2, tbY + tbH / 2 + 1);
+  }
   ctx.restore();
 
   // ── Sequence overlays (between scene and dialogue) ──
@@ -5820,11 +5916,12 @@ CVS.addEventListener('click', (e) => {
   // Block all interaction during sequences (dialog already handled above)
   if (state.seq.active) return;
 
-  // Top-right toolbar clicks (y < 25)
-  if (g.y < 25) {
-    if (g.x > GW - 20) { toggleMusic(); return; }
-    if (g.x > GW - 42 && g.x <= GW - 22) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.mapHover = null; return; }
-    if (g.x > GW - 62 && g.x <= GW - 42) { state.helpOpen = !state.helpOpen; state.mapOpen = false; return; }
+  // Top-right toolbar clicks — matches button positions (tbY=5, tbH=18, tbW=22, tbGap=4)
+  if (g.y >= 5 && g.y <= 23) {
+    const bx0 = GW - 72; // help button left edge
+    if (g.x >= bx0 && g.x <= bx0 + 22) { state.helpOpen = !state.helpOpen; state.mapOpen = false; return; }
+    if (g.x >= bx0 + 26 && g.x <= bx0 + 48) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.mapHover = null; return; }
+    if (g.x >= bx0 + 52 && g.x <= bx0 + 74) { toggleMusic(); return; }
   }
 
   // Check exit zones
@@ -5905,7 +6002,7 @@ document.addEventListener('keydown', e => {
       document.getElementById('ui-panel').classList.add('on');
       document.getElementById('action-line').classList.add('on');
     }
-    addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα' });
+    addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίζη.' });
     setVerb('use');
     startScene('graveyard');
   }
