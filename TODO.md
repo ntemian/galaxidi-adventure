@@ -52,21 +52,22 @@ Priority: P0 = must have for pilot, P1 = important polish, P2 = nice to have, P3
 - [x] ~~Walk animation~~ — Procedural two-leg, working
 - [x] ~~Dialog system~~ — Typewriter with portraits, working
 - [x] ~~Save/load~~ — Auto-save at scene transitions + manual save (S key) + Continue on title
-- [ ] **End-to-end playthrough**: Verify full game flow start → treasure → epilogue without bugs
+- [x] ~~**End-to-end playthrough**~~: Code-level audit complete (2026-02-17). CRITICAL BUG FIXED: candle gated behind ghost_summoned. Needs browser hands-on test
 
 ---
 
 ## P1 — Important Polish (After Pilot Plays Through)
 
 - [ ] **Bilingual system**: Greek/English toggle for all text
-- [ ] Sound effects: footsteps (sand/stone/wood), door, item pickup, sea ambience
-- [ ] Hotspot highlights on hover
+- [ ] Sound effects: footsteps (sand/stone/wood), door, item pickup
+- [x] ~~Hotspot highlights on hover~~ (already implemented — pulsing gold glow)
 - [ ] Clio's notebook: journal/inventory hybrid
 - [ ] NPC dialog trees: branching conversations (currently linear)
-- [ ] Cat companion: follows Clio between scenes
+- [x] ~~Cat companion: follows Clio between scenes~~ (2026-02-17 — catScenePos in 10 scenes)
 - [ ] Comedy beats: Ajax's phone autocorrect, echo gag in cave
-- [ ] Right-click default verb (SCUMM-style)
-- [ ] Church interior needs its own background image (currently reuses exterior bg)
+- [x] ~~Right-click default verb (SCUMM-style)~~ (2026-02-17 — contextmenu handler)
+- [x] ~~Church interior needs its own background image~~ (2026-02-17 — pixel-church-interior.png)
+- [x] ~~Cicadas ambient sound~~ (2026-02-17 — wired createCicadasLoop into exterior/terrace/liotrivi/windmill/graveyard/church)
 
 ---
 

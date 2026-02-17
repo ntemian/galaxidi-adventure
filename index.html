@@ -520,6 +520,7 @@ async function loadAllAssets() {
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
     loadImg('bg-cave', 'assets/pixel-cave.webp'),
     loadImg('bg-church', 'assets/pixel-church.webp'),
+    loadImg('bg-church-interior', 'assets/pixel-church-interior.png'),
     loadImg('bg-windmill', 'assets/pixel-windmill.webp'),
     loadImg('bg-boat', 'assets/pixel-boat.webp'),
     loadImg('bg-graveyard', 'assets/pixel-graveyard.webp'),
@@ -915,7 +916,7 @@ const scenes = {
 
   // ── SCENE 6b: CHURCH INTERIOR — AGIOS NIKOLAOS ──
   church_interior: {
-    label: 'ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ — ΕΣΩΤΕΡΙΚΟ', bg: 'bg-church',
+    label: 'ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ — ΕΣΩΤΕΡΙΚΟ', bg: 'bg-church-interior',
     walkLine: [[30, 378], [300, 375], [610, 378]],
     charPos: { ntemis: { x: 300, y: 375 }, ajax: { x: 390, y: 377 }, clio: { x: 210, y: 377 } },
     objects: [
@@ -929,6 +930,7 @@ const scenes = {
           look:[{s:'',t:'Μανουάλι με κεριά. Μερικά καίνε ακόμα — κάποιος πέρασε πρόσφατα.'}],
           use: () => {
             if (state.flags.candle_lit) return [{s:'',t:'Το κερί της Κλειώς καίει ήσυχα.'}];
+            if (!state.flags.ghost_summoned) return [{s:'ΚΛΕΙΩ',t:'Θέλω να ανάψω ένα κερί.'},{s:'ΝΤΕΜΗΣ',t:'Αργότερα, αγάπη μου. Ας εξερευνήσουμε πρώτα.'}];
             state.flags.candle_lit = 1;
             const sc = scenes.church_interior;
             const tile = sc.objects.find(o => o.id === 'floor_tile');
@@ -1262,20 +1264,20 @@ const HELP_GENERAL = [
   'Space/Enter → προχώρα τον διάλογο.',
 ];
 const HELP_HINTS = {
-  exterior: 'Εξερεύνησε το σπίτι. Πήγαινε στη βεράντα ή στο λιμάνι.',
-  terrace: 'Η θέα αποκαλύπτει τα πάντα. Κοιτάξτε γύρω σας.',
-  kitchen: 'Κάποιος σας περίμενε. Ψάξτε τι σας άφησε.',
-  port: 'Μιλήστε στους ντόπιους. Κοιτάξτε τα πάντα.',
-  museum: 'Ο επιμελητής ξέρει την ιστορία. Ρωτήστε τον.',
-  liotrivi: 'Ο Άθος ξέρει για τον Βισβίκη. Μιλήστε του.',
-  cave: 'Ψάξτε τους τοίχους. Κοιτάξτε ψηλά!',
-  church: 'Η εκκλησία κρύβει μυστικά. Μπείτε μέσα.',
-  church_interior: 'Το φως αποκαλύπτει κρυμμένα. Ανάψτε κεριά.',
-  windmill: 'Ο Γιάννης βλέπει τα πάντα από εδώ. Μιλήστε του.',
-  graveyard: 'Βρείτε τον τάφο του Βισβίκη. Αν έχετε κάτι δικό του...',
-  boat: 'Ο χάρτης δείχνει τον δρόμο. Απολαύστε το ταξίδι.',
-  treasure: 'Ανοίξτε το κιβώτιο. Διαβάστε το γράμμα.',
-  new_era: 'Μιλήστε από το βήμα. Πείτε την αλήθεια.',
+  exterior: 'Κοιτάξτε την πόρτα, το βαρέλι, τις γλάστρες. Αριστερά → Λιμάνι. Δεξιά → Βεράντα.',
+  terrace: 'Κοιτάξτε τη θέα: λιμάνι, σκεπές, βουνά. Δεξιά → Μύλος.',
+  kitchen: 'Ψάξτε την τσάντα στην καρέκλα. Κοιτάξτε τα σύκα και την εστία.',
+  port: 'Μιλήστε στον Άκη και τον Στάθη. Κοιτάξτε το πλοίο Ελπίδα στην προβλήτα. Αριστερά → Μουσείο.',
+  museum: 'Μιλήστε στον επιμελητή. Κοιτάξτε τα μοντέλα πλοίων και τον χάρτη. Αριστερά → Λιοτρίβι.',
+  liotrivi: 'Μιλήστε στον Άθο. Κοιτάξτε τις φωτογραφίες και το ελαιοτριβείο. Αριστερά → Εκκλησία.',
+  cave: 'Κοιτάξτε τις χαράξεις στους τοίχους. Κοιτάξτε ψηλά στη ρωγμή! Δεξιά → Εκκλησία.',
+  church: 'Κοιτάξτε το σιντριβάνι και τη γάτα. Ανοίξτε την πόρτα της εκκλησίας για να μπείτε μέσα.',
+  church_interior: 'Χρησιμοποιήστε τα κεριά πρώτα. Μετά ψάξτε το πάτωμα. Μιλήστε στον Παπά Νικόλα.',
+  windmill: 'Μιλήστε στον Γιάννη — θα σας δώσει κάτι. Κοιτάξτε από το τηλεσκόπιο. Δεξιά → Νεκροταφείο.',
+  graveyard: 'Βρείτε τον τάφο του Βισβίκη. Χρησιμοποιήστε ό,τι βρήκατε στο σπήλαιο πάνω του.',
+  boat: 'Κοιτάξτε γύρω σας — τα σχοινιά, το σωσίβιο, τη θέα. Δεξιά → Νησί.',
+  treasure: 'Ανοίξτε το κιβώτιο. Μετά κοιτάξτε το γράμμα και διαβάστε το. Δεξιά → Γαλαξίδι.',
+  new_era: 'Μιλήστε στο βήμα για να ξεκινήσει η ομιλία. Κοιτάξτε τον Άκη με την κάμερα.',
 };
 
 // ════════════════════════════════════════════════════════════
@@ -2561,7 +2563,19 @@ function drawPetals() {
 }
 
 
-// ── Orange Cat ──
+// ── Orange Cat — follows Clio between scenes ──
+const catScenePos = {
+  exterior:  { x: 95, y: 269 },
+  terrace:   { x: 180, y: 372 },
+  port:      { x: 510, y: 370 },
+  church:    { x: 420, y: 366 },
+  church_interior: { x: 380, y: 370 },
+  liotrivi:  { x: 450, y: 372 },
+  windmill:  { x: 340, y: 374 },
+  graveyard: { x: 120, y: 372 },
+  treasure:  { x: 190, y: 372 },
+  new_era:   { x: 200, y: 370 },
+};
 const cat = { x: 95, y: 269, phase: 0, blinkTimer: 0, blinking: false, tailPhase: 0 };
 function updateCat(dt) {
   cat.phase += dt;
@@ -2684,17 +2698,17 @@ const ambientSounds = {
 
 // Per-scene ambient config: which layers play and at what volume
 const sceneAmbientConfig = {
-  exterior:  { waves: 0.12, wind: 0.04, gulls: true,  gullFreq: [8,7] },
-  terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8] },
+  exterior:  { waves: 0.12, wind: 0.04, gulls: true,  gullFreq: [8,7], cicadas: 0.03 },
+  terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8], cicadas: 0.04 },
   kitchen:   { waves: 0.03, wind: 0.01 },
   port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4] },
   waterfront:{ waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6] },
   museum:    { waves: 0.02, wind: 0.01 },
-  liotrivi:  { waves: 0.04, wind: 0.02 },
+  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02 },
   cave:      { drips: true,  wind: 0.02 },
-  windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10] },
-  graveyard: { waves: 0.04, wind: 0.08 },
-  church:    { waves: 0.02, wind: 0.01 },
+  windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10], cicadas: 0.05 },
+  graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02 },
+  church:    { waves: 0.02, wind: 0.01, cicadas: 0.02 },
   church_interior: { waves: 0, wind: 0 },
   boat:      { waves: 0.22, wind: 0.10, gulls: true,  gullFreq: [6,5] },
   treasure:  { waves: 0.08, wind: 0.06 },
@@ -2948,6 +2962,11 @@ function startSceneAmbience(sceneId) {
       };
       ambientSounds.dripsInterval = setTimeout(dripFn, 500 + Math.random() * 1000);
     }
+    // Cicadas layer
+    if (cfg.cicadas) {
+      ambientSounds.cicadasNode = createCicadasLoop();
+      ambientSounds.cicadasNode.gain.gain.value = cfg.cicadas;
+    }
     // One-time church bell on first exterior visit
     if (!ambientSounds.bellPlayed && sceneId === 'exterior') {
       ambientSounds.bellPlayed = true;
@@ -3006,17 +3025,23 @@ function updateSceneAmbience(dt) {
   if (state.scene === 'exterior') {
     updateBoatBob(dt);
     updatePetals();
+  }
+  // Cat follows Clio everywhere she goes
+  if (catScenePos[state.scene]) {
+    const sp = catScenePos[state.scene];
+    cat.x = sp.x; cat.y = sp.y;
     updateCat(dt);
   }
 }
 
 function drawSceneAmbience(tick) {
+  // Draw cat in any scene that has a position for it
+  if (catScenePos[state.scene]) drawCat();
   if (state.scene === 'exterior') {
     drawBoatBob();
     drawSeaShimmer(tick);
     drawLightShaft(tick);
     drawPetals();
-    drawCat();
     drawHeatHaze(tick);
   } else if (state.scene === 'terrace') {
     drawSeaShimmer(tick);
@@ -5815,6 +5840,26 @@ CVS.addEventListener('click', (e) => {
     startWalk('ntemis', g.x);
     familyFollow(g.x);
   }
+});
+
+// Right-click — SCUMM-style default verb (Look for most, Talk for NPCs, Open for doors)
+CVS.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  if (state.phase !== 'playing' || state.dlg.active || state.seq.active) return;
+  const g = screenToGame(e.clientX, e.clientY);
+  const obj = hitTestObj(g.x, g.y);
+  if (!obj) return;
+  // Pick the best default verb for this object
+  const prevVerb = state.verb;
+  if (obj.verbs.talk && (obj.id.includes('npc') || obj.id.includes('akis') || obj.id.includes('stathis') || obj.id.includes('curator') || obj.id.includes('athos') || obj.id.includes('giannis') || obj.id.includes('papas') || obj.id.includes('chryso') || obj.id.includes('ghost'))) {
+    state.verb = 'talk';
+  } else if (obj.verbs.open && (obj.id.includes('door') || obj.id.includes('chest') || obj.id.includes('satchel') || obj.id.includes('barrel'))) {
+    state.verb = 'open';
+  } else {
+    state.verb = 'look';
+  }
+  objClick(obj);
+  state.verb = prevVerb;
 });
 
 // Keyboard
