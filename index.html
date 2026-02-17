@@ -20,65 +20,69 @@
     min-height: 0;
   }
 
-  /* ── ACTION LINE — Trunk wood strip ── */
+  /* ── ACTION LINE — MI2 exact style ── */
   #action-line {
-    height: 24px; display: none; align-items: center; justify-content: center;
+    height: 22px; display: none; align-items: center; justify-content: center;
     font-family: 'Press Start 2P', monospace;
-    font-size: .6rem; color: #c0e0c0; letter-spacing: 1px;
+    font-size: .6rem; color: #39d52e; letter-spacing: 1px;
     background: #000;
-    border-top: 1px solid #222;
+    border-bottom: 1px solid #1a1a1a;
   }
   #action-line.on { display: flex; }
 
-  /* ── UI PANEL — Monkey Island clean style ── */
+  /* ── UI PANEL — Monkey Island 2 exact style ── */
   #ui-panel {
     background: #000;
     display: none; flex-direction: column;
+    border-top: 2px solid #1a1a1a;
   }
   #ui-panel.on { display: flex; }
   #ui-panel::before, #ui-panel::after { display: none; }
 
   /* Bottom row: verbs LEFT, inventory RIGHT */
   #ui-bottom {
-    display: flex; height: 120px; padding: 6px 12px;
+    display: flex; height: 110px; padding: 0;
   }
 
-  /* ── VERB GRID — MI-style flat text buttons ── */
+  /* ── VERB GRID — MI2 exact flat text buttons ── */
   #verb-panel {
-    display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
-    gap: 2px; width: 260px; flex-shrink: 0;
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 0; width: 220px; flex-shrink: 0;
+    padding: 8px 0 8px 12px;
+    border-right: 1px solid #1a1a1a;
   }
   .vb {
-    font-family: 'Press Start 2P', monospace; font-size: .55rem; color: #60b060;
+    font-family: 'Press Start 2P', monospace; font-size: .58rem; color: #39d52e;
     background: none; border: none;
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    padding: 4px 8px; text-align: center;
+    display: flex; align-items: center; justify-content: flex-start;
+    padding: 4px 10px; text-align: left;
+    line-height: 1;
   }
-  .vb:hover { color: #a0e0a0; }
+  .vb:hover { color: #7fff7f; }
   .vb:active { color: #fff; }
   .vb.on { color: #fff; }
 
-  /* ── INVENTORY — MI-style flat dark strip ── */
+  /* ── INVENTORY — MI2 exact dark strip ── */
   #inv-panel {
     flex: 1; display: flex; align-items: stretch;
-    margin-left: 8px;
-    border: 1px solid #333;
-    background: #111;
+    margin: 0;
+    border: none;
+    background: #000;
     padding: 0;
   }
   #inv-label { display: none; }
   #inv-arrows {
     display: flex; flex-direction: column; justify-content: center;
-    gap: 4px; padding: 4px 6px; flex-shrink: 0;
-    border-right: 1px solid #222;
+    gap: 2px; padding: 6px 4px; flex-shrink: 0;
+    border-right: 1px solid #1a1a1a;
   }
   #inv-arrows button {
-    font-size: .7rem; color: #60b060;
+    font-size: .65rem; color: #39d52e;
     background: none; border: 1px solid #333;
-    cursor: pointer; padding: 6px 8px; line-height: 1;
+    cursor: pointer; padding: 5px 8px; line-height: 1;
   }
-  #inv-arrows button:hover { color: #a0e0a0; border-color: #555; }
+  #inv-arrows button:hover { color: #7fff7f; border-color: #39d52e; }
   #inv-grid {
     flex: 1; display: grid;
     grid-template-columns: repeat(auto-fill, 52px);
@@ -91,14 +95,14 @@
   .inv-slot {
     width: 52px; height: 52px;
     background: #0a0a0a;
-    border: 1px solid #333;
+    border: 1px solid #222;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
   }
-  .inv-slot:hover { border-color: #60b060; }
-  .inv-slot.on { border-color: #a0e0a0; background: #1a1a1a; }
+  .inv-slot:hover { border-color: #39d52e; }
+  .inv-slot.on { border-color: #7fff7f; background: #111; }
   .inv-slot .inv-text {
-    font-family: 'Press Start 2P', monospace; font-size: .32rem; color: #60b060;
+    font-family: 'Press Start 2P', monospace; font-size: .32rem; color: #39d52e;
     text-align: center; line-height: 1.3;
   }
 
@@ -1607,6 +1611,7 @@ function updateCutscene(dt) {
     if (state.cutscene.fadeAlpha >= 1) {
       if (state.cutscene.frameIdx >= cs.frames.length - 1) {
         state.cutscene.active = false;
+        stopVoice();
         cs.onComplete();
         return;
       }
@@ -1616,6 +1621,7 @@ function updateCutscene(dt) {
       state.cutscene.dlgDisplayed = '';
       state.cutscene.dlgSpeaker = '';
       state.cutscene.transitioning = false;
+      stopVoice();
     }
     return;
   }
@@ -1642,6 +1648,7 @@ function updateCutscene(dt) {
         state.cutscene.dlgDisplayed = '';
         state.cutscene.dlgCharIdx = 0;
         state.cutscene.dlgTimer = 0;
+        playVoice(frame.dialogue[i].t);
       }
     }
   }
@@ -6071,49 +6078,64 @@ function drawPixelCursor(cx, cy, pattern, fg, outline) {
   }
 }
 
-// Cursor bitmaps (1 = filled pixel, 0 = transparent)
+// Cursor bitmaps — Monkey Island 2 exact pixel patterns
+// MI2 crosshair: thin + shape, 1px arms, 5px each side, 1px gap from center
 const CURSOR_CROSS = [
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0],
-  [1,1,1,0,0,0,1,1,1],
-  [0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,0,0,0,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
 ];
 
+// MI2 interactive cursor: same cross but with small diamond tips
 const CURSOR_INTERACT = [
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,1,1,1,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0],
-  [1,1,0,0,0,0,0,1,1],
-  [0,1,0,0,0,0,0,1,0],
-  [0,0,0,0,1,0,0,0,0],
-  [0,0,0,1,1,1,0,0,0],
-  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,1,1,1,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [1,1,1,1,1,0,0,0,1,1,1,1,1],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,1,1,1,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0,0,0],
 ];
 
+// MI2 exit arrows — chunky pixel arrows
 const CURSOR_ARROW_L = [
-  [0,0,0,1,0,0,0,0,0],
-  [0,0,1,1,0,0,0,0,0],
-  [0,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,1],
-  [0,1,1,1,1,1,1,1,1],
-  [0,0,1,1,0,0,0,0,0],
-  [0,0,0,1,0,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0,0,0],
+  [0,0,0,1,1,0,0,0,0,0,0],
+  [0,0,1,1,1,0,0,0,0,0,0],
+  [0,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1],
+  [0,1,1,1,1,1,1,1,1,1,1],
+  [0,0,1,1,1,0,0,0,0,0,0],
+  [0,0,0,1,1,0,0,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0,0,0],
 ];
 
 const CURSOR_ARROW_R = [
-  [0,0,0,0,0,1,0,0,0],
-  [0,0,0,0,0,1,1,0,0],
-  [1,1,1,1,1,1,1,1,0],
-  [1,1,1,1,1,1,1,1,1],
-  [1,1,1,1,1,1,1,1,0],
-  [0,0,0,0,0,1,1,0,0],
-  [0,0,0,0,0,1,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,1,1,0,0,0],
+  [0,0,0,0,0,0,1,1,1,0,0],
+  [1,1,1,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,0],
+  [0,0,0,0,0,0,1,1,1,0,0],
+  [0,0,0,0,0,0,1,1,0,0,0],
+  [0,0,0,0,0,0,1,0,0,0,0],
 ];
 
 function drawCustomCursor() {

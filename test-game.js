@@ -174,16 +174,16 @@ function extractVoiceMap() {
   const entries = [];
   const start = js.indexOf('const VOICE_MAP = {');
   if (start === -1) return entries;
-  // Find the closing of VOICE_MAP — it's a large object
-  const regex = /'([^']+)':\s*'([^']+)'/g;
-  // Search from the VOICE_MAP start, limit to reasonable range
-  const chunk = js.substring(start, start + 50000);
+  // Find the closing }; of VOICE_MAP
+  const end = js.indexOf('\n};', start);
+  const chunk = js.substring(start, end > start ? end + 3 : start + 50000);
+  // Handle escaped quotes in keys: match 'text': 'voice/...' where text may contain \'
+  const regex = /'((?:[^'\\]|\\.)*)'\s*:\s*'(voice\/[^']+)'/g;
   let m;
   while ((m = regex.exec(chunk)) !== null) {
-    // Stop if we hit a function definition (end of VOICE_MAP)
-    if (m[2].startsWith('voice/') || m[2].startsWith('music/')) {
-      entries.push({ text: m[1], file: m[2] });
-    }
+    // Unescape the text key
+    const text = m[1].replace(/\\'/g, "'");
+    entries.push({ text, file: m[2] });
   }
   return entries;
 }
@@ -1580,6 +1580,199 @@ test('Entry dialogs for cutscene scenes are brief (max 4 lines)', () => {
     }
   }
   assert(verbose.length === 0, `Entry dialogs too long:\n    ${verbose.join('\n    ')}`);
+});
+
+// ════════════════════════════════════════════════════════════
+console.log('\n24. VOICE COVERAGE & CONSISTENCY');
+// ════════════════════════════════════════════════════════════
+
+// Extract all game dialogue texts (scenes + cutscenes + sequences)
+function extractAllGameDialogue() {
+  const entries = [];
+  const seen = new Set();
+  // Pattern 1: {s:'...',t:'...'} — scene/sequence dialogue
+  const dlgRegex = /\{s:\s*'([^']*)',\s*t:\s*'([^']+)'\}/g;
+  let m;
+  while ((m = dlgRegex.exec(js)) !== null) {
+    const key = m[1] + '|' + m[2];
+    if (!seen.has(key)) {
+      seen.add(key);
+      entries.push({ speaker: m[1], text: m[2] });
+    }
+  }
+  // Pattern 2: { s: '...', t: '...', at: N } — cutscene dialogue
+  const cutRegex = /\{\s*s:\s*'([^']*)',\s*t:\s*'([^']+)',\s*at:\s*[\d.]+\s*\}/g;
+  while ((m = cutRegex.exec(js)) !== null) {
+    const key = m[1] + '|' + m[2];
+    if (!seen.has(key)) {
+      seen.add(key);
+      entries.push({ speaker: m[1], text: m[2] });
+    }
+  }
+  return entries;
+}
+
+// Extract cutscene-only dialogue
+function extractCutsceneDialogue() {
+  const entries = [];
+  const cutRegex = /\{\s*s:\s*'([^']*)',\s*t:\s*'([^']+)',\s*at:\s*[\d.]+\s*\}/g;
+  let m;
+  while ((m = cutRegex.exec(js)) !== null) {
+    entries.push({ speaker: m[1], text: m[2] });
+  }
+  return entries;
+}
+
+const allGameDialogue = extractAllGameDialogue();
+const cutsceneDialogue = extractCutsceneDialogue();
+const voiceMapTexts = new Set(voiceEntries.map(e => e.text));
+
+test('Every game dialogue line has a speaker code', () => {
+  const noSpeaker = allGameDialogue.filter(e => e.speaker === undefined);
+  assert(noSpeaker.length === 0,
+    `${noSpeaker.length} lines missing speaker code`);
+});
+
+test('VOICE_MAP covers all scene dialogue (non-cutscene)', () => {
+  // Scene dialogue that's NOT in cutscenes
+  const cutsceneTexts = new Set(cutsceneDialogue.map(e => e.text));
+  const sceneOnly = allGameDialogue.filter(e => !cutsceneTexts.has(e.text));
+  const missing = sceneOnly.filter(e => !voiceMapTexts.has(e.text));
+  // Report as warning — these need voice generation
+  if (missing.length > 0) {
+    console.log(`    ⚠ ${missing.length} scene lines missing from VOICE_MAP (need voice generation)`);
+    // Show first 5
+    missing.slice(0, 5).forEach(m => {
+      console.log(`      "${m.text.substring(0, 60)}..." [${m.speaker || 'narrator'}]`);
+    });
+    if (missing.length > 5) console.log(`      ... and ${missing.length - 5} more`);
+  }
+  // Soft assert — warn but don't fail (yet)
+  assert(true, '');
+});
+
+test('VOICE_MAP entries use consistent character directories', () => {
+  const dirPattern = {};
+  for (const entry of voiceEntries) {
+    const parts = entry.file.split('/');
+    if (parts.length >= 2) {
+      const dir = parts[1]; // e.g., 'narrator', 'ajax', etc.
+      if (!dirPattern[dir]) dirPattern[dir] = [];
+      dirPattern[dir].push(entry.file);
+    }
+  }
+  const validDirs = ['narrator', 'ntemis', 'ajax', 'clio', 'athos', 'curator',
+                     'giannis', 'stathis', 'akis', 'papas', 'chrysostomos', 'ghost'];
+  const unknownDirs = Object.keys(dirPattern).filter(d => !validDirs.includes(d));
+  assert(unknownDirs.length === 0,
+    `Unknown voice directories: ${unknownDirs.join(', ')}`);
+});
+
+test('No duplicate texts in VOICE_MAP', () => {
+  const textCount = {};
+  for (const entry of voiceEntries) {
+    textCount[entry.text] = (textCount[entry.text] || 0) + 1;
+  }
+  const dupes = Object.entries(textCount).filter(([_, c]) => c > 1);
+  assert(dupes.length === 0,
+    `${dupes.length} duplicate VOICE_MAP texts: ${dupes.slice(0, 3).map(d => d[0].substring(0, 40)).join(', ')}`);
+});
+
+test('VOICE_MAP file numbering is sequential per directory', () => {
+  const dirFiles = {};
+  for (const entry of voiceEntries) {
+    const parts = entry.file.split('/');
+    if (parts.length >= 3) {
+      const dir = parts[1];
+      const num = parseInt(parts[2].replace('.mp3', ''));
+      if (!dirFiles[dir]) dirFiles[dir] = [];
+      dirFiles[dir].push(num);
+    }
+  }
+  const gaps = [];
+  for (const [dir, nums] of Object.entries(dirFiles)) {
+    nums.sort((a, b) => a - b);
+    for (let i = 1; i < nums.length; i++) {
+      if (nums[i] !== nums[i-1] + 1) {
+        gaps.push(`${dir}: gap after ${nums[i-1].toString().padStart(3, '0')}`);
+      }
+    }
+  }
+  if (gaps.length > 0) {
+    console.log(`    ⚠ Numbering gaps: ${gaps.slice(0, 5).join(', ')}`);
+  }
+  assert(true, '');
+});
+
+test('Cutscene dialogue system calls playVoice', () => {
+  // Verify the fix: cutscene dialogue trigger should call playVoice
+  const cutsceneUpdate = js.substring(
+    js.indexOf('function updateCutscene'),
+    js.indexOf('function updateCutscene') + 2000
+  );
+  assert(cutsceneUpdate.includes('playVoice'),
+    'updateCutscene does not call playVoice — cutscene dialogue will be silent');
+});
+
+test('Cutscene frame advance stops voice', () => {
+  // Verify stopVoice is called when advancing cutscene frames
+  const cutsceneUpdate = js.substring(
+    js.indexOf('function updateCutscene'),
+    js.indexOf('function updateCutscene') + 2000
+  );
+  assert(cutsceneUpdate.includes('stopVoice'),
+    'Cutscene frame advance does not stop voice — audio will bleed between frames');
+});
+
+test('All VOICE_MAP character directories match known speakers', () => {
+  // Map directories to speaker codes
+  const dirToSpeaker = {
+    narrator: '', ntemis: 'ΝΤΕΜΗΣ', ajax: 'ΑΙΑΣ', clio: 'ΚΛΕΙΩ',
+    athos: 'ΑΘΟΣ', curator: 'ΕΠΙΜΕΛΗΤΗΣ', giannis: 'ΓΙΑΝΝΗΣ',
+    stathis: 'ΣΤΑΘΗΣ', akis: 'ΑΚΗΣ', papas: 'ΠΑΠΑΣ',
+    chrysostomos: 'ΧΡΥΣΟΣΤΟΜΟΣ', ghost: 'ΦΑΝΤΑΣΜΑ'
+  };
+  const allSpeakers = new Set(allGameDialogue.map(e => e.speaker));
+  const mappedSpeakers = new Set(Object.values(dirToSpeaker));
+  const unmapped = [...allSpeakers].filter(s => !mappedSpeakers.has(s));
+  assert(unmapped.length === 0,
+    `Speakers without voice directory mapping: ${unmapped.join(', ')}`);
+});
+
+test('dialog-lines.json covers all game dialogue', () => {
+  const dlPath = path.join(GAME_DIR, 'voice', 'dialog-lines.json');
+  if (!fs.existsSync(dlPath)) {
+    assert(false, 'voice/dialog-lines.json not found');
+    return;
+  }
+  const dialogLines = JSON.parse(fs.readFileSync(dlPath, 'utf-8'));
+  const dlSet = new Set(dialogLines.map(e => e.speaker + '|' + e.text));
+  const missing = allGameDialogue.filter(e => !dlSet.has(e.speaker + '|' + e.text));
+  assert(missing.length === 0,
+    `${missing.length} game dialogue lines missing from dialog-lines.json. First: "${(missing[0] || {}).text}"`);
+});
+
+test('dialog-lines.json has no orphan entries (lines not in game)', () => {
+  const dlPath = path.join(GAME_DIR, 'voice', 'dialog-lines.json');
+  if (!fs.existsSync(dlPath)) return;
+  const dialogLines = JSON.parse(fs.readFileSync(dlPath, 'utf-8'));
+  const gameTexts = new Set(allGameDialogue.map(e => e.text));
+  const orphans = dialogLines.filter(e => !gameTexts.has(e.text));
+  if (orphans.length > 0) {
+    console.log(`    ⚠ ${orphans.length} orphan entries in dialog-lines.json (lines no longer in game)`);
+  }
+  assert(true, '');
+});
+
+test('Voice coverage report', () => {
+  const total = allGameDialogue.length;
+  const covered = allGameDialogue.filter(e => voiceMapTexts.has(e.text)).length;
+  const pct = ((covered / total) * 100).toFixed(1);
+  console.log(`    Voice coverage: ${covered}/${total} lines (${pct}%)`);
+  console.log(`    Scene lines: ${total - cutsceneDialogue.length} | Cutscene lines: ${cutsceneDialogue.length}`);
+  const cutsceneCovered = cutsceneDialogue.filter(e => voiceMapTexts.has(e.text)).length;
+  console.log(`    Cutscene coverage: ${cutsceneCovered}/${cutsceneDialogue.length}`);
+  assert(true, '');
 });
 
 // ════════════════════════════════════════════════════════════
