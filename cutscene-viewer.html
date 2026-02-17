@@ -48,6 +48,8 @@ Promise.all([
   loadImg('cutscene-museum-steam', 'assets/cutscene-museum-steam.png'),
   loadImg('cutscene-ghost-appear', 'assets/cutscene-ghost-appear.png'),
   loadImg('cutscene-ghost-farewell', 'assets/cutscene-ghost-farewell.png'),
+  loadImg('cutscene-crossing-dawn', 'assets/cutscene-crossing-dawn.png'),
+  loadImg('cutscene-crossing-island', 'assets/cutscene-crossing-island.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -114,12 +116,12 @@ function drawGhostFade(t, p, tick) {
   ctx.save(); ctx.globalAlpha = 0.10 + p * 0.10; ctx.fillStyle = '#1a0a2e'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawCrossingWide(t, p, tick) {
-  drawKenBurns('cutscene-crossing', 1.12 - p * 0.06, -10 + p * 20, 0);
+  drawKenBurns('cutscene-crossing-dawn', 1.08 + p * 0.08, -8 + p * 16, 0);
   ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.015) * 0.02; ctx.fillStyle = '#FFB8A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawCrossingClose(t, p, tick) {
-  drawKenBurns('cutscene-crossing', 1.06 + p * 0.14, p * 15, p * -20);
-  ctx.save(); ctx.globalAlpha = 0.03; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  drawKenBurns('cutscene-crossing-island', 1.06 + p * 0.12, p * 10, p * -12);
+  ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.02) * 0.015; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawTreasureReveal(t, p, tick) {
   drawKenBurns('cutscene-treasure', 1.08 + p * 0.12, 0, p * -25);
@@ -286,15 +288,15 @@ const allCutscenes = [
     ]},
   ]},
   { title: '10. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
-    { duration: 8, draw: drawCrossingWide, dialogue: [
-      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω.', at: 1.5 },
-      { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη;', at: 4.0 },
-      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η Ελπίδα. Το τελευταίο του ταξίδι.', at: 5.5 },
+    { duration: 9, draw: drawCrossingWide, dialogue: [
+      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω. Η Ελπίδα ξαναταξιδεύει.', at: 1.5 },
+      { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη; Είναι πανέμορφο!', at: 4.5 },
+      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Ήξερα τον πατέρα σου, Ντέμη. Θα ήταν περήφανος.', at: 7.0 },
     ]},
-    { duration: 7, draw: drawCrossingClose, dialogue: [
-      { s: 'ΚΛΕΙΩ', t: 'Βλέπω το νησάκι!', at: 1.5 },
-      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της.', at: 3.5 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Αλλιώς πνίγεσαι.', at: 5.8 },
+    { duration: 9, draw: drawCrossingClose, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Βλέπω το νησάκι! Με το εκκλησάκι!', at: 1.5 },
+      { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της. Αλλιώς πνίγεσαι.', at: 4.0 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Σχεδόν φτάσαμε. Κάτω από τον σταυρό, πέντε βήματα.', at: 7.0 },
     ]},
   ]},
   { title: '11. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
