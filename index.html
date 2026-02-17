@@ -6173,17 +6173,6 @@ document.addEventListener('keydown', e => {
   const vk = {'1':'look','2':'talk','3':'open','4':'use'};
   if (vk[e.key] && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) setVerb(vk[e.key]);
   if ((e.key === 's' || e.key === 'S') && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) { saveGame('manual'); }
-  // DEBUG: Press G to warp to graveyard with green stone + Use verb active
-  if (e.key === 'g' && !state.dlg.active && !state.mapOpen && !state.helpOpen) {
-    if (state.phase !== 'playing') {
-      state.phase = 'playing';
-      document.getElementById('ui-panel').classList.add('on');
-      document.getElementById('action-line').classList.add('on');
-    }
-    addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίζη.' });
-    setVerb('use');
-    startScene('graveyard');
-  }
 });
 
 // ════════════════════════════════════════════════════════════
@@ -6206,7 +6195,7 @@ const sceneMusic = {
   church:   'music/the-map-in-the-church-1.mp3',
   church_interior: 'music/the-map-in-the-church-1.mp3',
   boat:     'music/the-crossing-1.mp3',
-  cave_final:'music/the-treasure-1.mp3',
+  treasure:  'music/the-treasure-1.mp3',
   new_era:   'music/the-sea-remembers-1.mp3',
   epilogue:  'music/the-sea-remembers-1.mp3',
   _ghost:    'music/graveyard-veil-1.mp3',
