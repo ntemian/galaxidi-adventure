@@ -452,6 +452,9 @@ const state = {
   fade: { active: false, alpha: 0, dir: 0, cb: null },
   introPage: 0,
   epiloguePage: 0,
+  mapOpen: false,
+  mapHover: null,
+  helpOpen: false,
   cutscene: {
     active: false, id: null, frameIdx: 0, frameTime: 0, totalTime: 0,
     transitioning: false, fadeAlpha: 0,
@@ -1220,6 +1223,59 @@ const scenes = {
     ],
   },
 
+};
+
+// ════════════════════════════════════════════════════════════
+// FAST-TRAVEL MAP DATA
+// ════════════════════════════════════════════════════════════
+// Galaxidi: North shore of Corinthian Gulf, harbor crescent facing south
+// Layout: sea at bottom, town center-top, hills above
+const MAP_LOCATIONS = [
+  { id:'exterior', sceneIds:['exterior','terrace','kitchen'], label:'Το Σπίτι', x:310, y:155 },
+  { id:'port',     sceneIds:['port'],                        label:'Το Λιμάνι', x:290, y:210 },
+  { id:'museum',   sceneIds:['museum'],                      label:'Μουσείο',   x:230, y:195 },
+  { id:'liotrivi', sceneIds:['liotrivi'],                    label:'Λιοτρίβι',  x:195, y:160 },
+  { id:'church',   sceneIds:['church','church_interior'],    label:'Αγ. Νικόλαος', x:160, y:140 },
+  { id:'cave',     sceneIds:['cave'],                        label:'Σπήλαιο',   x:465, y:130 },
+  { id:'windmill', sceneIds:['windmill'],                    label:'Ο Μύλος',    x:390, y:85 },
+  { id:'graveyard',sceneIds:['graveyard'],                   label:'Νεκροταφείο',x:450, y:100 },
+  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:330, y:280 },
+  { id:'treasure', sceneIds:['treasure','new_era'],          label:'Αγ. Γεώργιος', x:340, y:350 },
+];
+
+// Path connections for drawing roads on map
+const MAP_PATHS = [
+  ['exterior','port'], ['exterior','liotrivi'], ['port','museum'],
+  ['museum','liotrivi'], ['liotrivi','church'], ['church','cave'],
+  ['exterior','windmill'], ['windmill','graveyard'],
+];
+
+// ════════════════════════════════════════════════════════════
+// HELP SYSTEM DATA
+// ════════════════════════════════════════════════════════════
+const HELP_GENERAL = [
+  'ΡΗΜΑΤΑ: 1=Κοίταξε 2=Μίλησε 3=Άνοιξε 4=Χρησιμοποίησε',
+  'ΠΛΗΚΤΡΑ: S=Αποθήκευση M=Χάρτης H=Βοήθεια',
+  'Κλικ σε αντικείμενα για αλληλεπίδραση.',
+  'Κλικ στο έδαφος για βάδισμα.',
+  'Βέλη στα άκρα → νέα τοποθεσία.',
+  'Space/Enter → προχώρα τον διάλογο.',
+];
+const HELP_HINTS = {
+  exterior: 'Εξερεύνησε το σπίτι. Πήγαινε στη βεράντα ή στο λιμάνι.',
+  terrace: 'Η θέα αποκαλύπτει τα πάντα. Κοιτάξτε γύρω σας.',
+  kitchen: 'Κάποιος σας περίμενε. Ψάξτε τι σας άφησε.',
+  port: 'Μιλήστε στους ντόπιους. Κοιτάξτε τα πάντα.',
+  museum: 'Ο επιμελητής ξέρει την ιστορία. Ρωτήστε τον.',
+  liotrivi: 'Ο Άθος ξέρει για τον Βισβίκη. Μιλήστε του.',
+  cave: 'Ψάξτε τους τοίχους. Κοιτάξτε ψηλά!',
+  church: 'Η εκκλησία κρύβει μυστικά. Μπείτε μέσα.',
+  church_interior: 'Το φως αποκαλύπτει κρυμμένα. Ανάψτε κεριά.',
+  windmill: 'Ο Γιάννης βλέπει τα πάντα από εδώ. Μιλήστε του.',
+  graveyard: 'Βρείτε τον τάφο του Βισβίκη. Αν έχετε κάτι δικό του...',
+  boat: 'Ο χάρτης δείχνει τον δρόμο. Απολαύστε το ταξίδι.',
+  treasure: 'Ανοίξτε το κιβώτιο. Διαβάστε το γράμμα.',
+  new_era: 'Μιλήστε από το βήμα. Πείτε την αλήθεια.',
 };
 
 // ════════════════════════════════════════════════════════════
@@ -4799,6 +4855,7 @@ function saveGame(slot = 'auto') {
     scene: state.scene,
     inventory: state.inv,
     flags: state.flags,
+    visited: [...state.visited],
     timestamp: new Date().toISOString(),
     version: 1,
   };
@@ -4816,6 +4873,7 @@ function loadGame(slot = 'auto') {
     state.inv = data.inventory || [];
     state.flags = data.flags || {};
     state.scene = data.scene;
+    state.visited = new Set(data.visited || []);
     return true;
   } catch(e) { console.warn('Load failed:', e); return false; }
 }
@@ -4826,6 +4884,299 @@ function hasSave(slot = 'auto') {
 
 function showSaveIndicator() {
   state.saveIndicator = { text: 'Αποθηκεύτηκε!', until: performance.now() + 1500 };
+}
+
+// ════════════════════════════════════════════════════════════
+// FAST-TRAVEL MAP
+// ════════════════════════════════════════════════════════════
+function getMapHoverLocation(gx, gy) {
+  for (let i = 0; i < MAP_LOCATIONS.length; i++) {
+    const loc = MAP_LOCATIONS[i];
+    const dx = gx - loc.x, dy = gy - loc.y;
+    if (dx * dx + dy * dy < 144) return i; // 12px radius
+  }
+  return null;
+}
+
+function drawMap() {
+  if (!state.mapOpen) return;
+  const mx = 30, my = 20, mw = GW - 60, mh = GH - 40;
+
+  // Dark backdrop
+  ctx.save();
+  ctx.globalAlpha = 0.9;
+  ctx.fillStyle = '#0a0806';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+
+  // Parchment frame
+  ctx.fillStyle = '#1a1610';
+  ctx.fillRect(mx, my, mw, mh);
+  ctx.strokeStyle = '#D4A03C';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, mw, mh);
+  ctx.strokeStyle = '#5a4a2a';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(mx + 3, my + 3, mw - 6, mh - 6);
+
+  // Title
+  ctx.save();
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '9px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
+  ctx.fillText('ΧΑΡΤΗΣ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, my + 14);
+  ctx.restore();
+
+  // Land mass (above coastline)
+  ctx.save();
+  ctx.fillStyle = '#221e14';
+  ctx.beginPath();
+  ctx.moveTo(mx + 8, my + 225);
+  ctx.quadraticCurveTo(mx + 80, my + 200, mx + 170, my + 218);
+  ctx.quadraticCurveTo(mx + 270, my + 245, mx + 370, my + 218);
+  ctx.quadraticCurveTo(mx + 450, my + 195, mx + mw - 8, my + 215);
+  ctx.lineTo(mx + mw - 8, my + 8);
+  ctx.lineTo(mx + 8, my + 8);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Hill contour lines
+  ctx.save();
+  ctx.strokeStyle = '#2e2a1e';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 4]);
+  ctx.beginPath();
+  ctx.moveTo(mx + 280, my + 70);
+  ctx.quadraticCurveTo(mx + 360, my + 52, mx + 460, my + 68);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(mx + 60, my + 95);
+  ctx.quadraticCurveTo(mx + 200, my + 78, mx + 340, my + 88);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Sea (below coastline)
+  ctx.save();
+  ctx.fillStyle = '#0c1624';
+  ctx.beginPath();
+  ctx.moveTo(mx + 8, my + 225);
+  ctx.quadraticCurveTo(mx + 80, my + 200, mx + 170, my + 218);
+  ctx.quadraticCurveTo(mx + 270, my + 245, mx + 370, my + 218);
+  ctx.quadraticCurveTo(mx + 450, my + 195, mx + mw - 8, my + 215);
+  ctx.lineTo(mx + mw - 8, my + mh - 8);
+  ctx.lineTo(mx + 8, my + mh - 8);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // Animated wave lines
+  ctx.save();
+  ctx.strokeStyle = '#162840';
+  ctx.lineWidth = 1;
+  for (let wy = 255; wy < mh - 15; wy += 22) {
+    ctx.beginPath();
+    for (let wx = 16; wx < mw - 16; wx += 3) {
+      const yOff = Math.sin((wx + state.tick * 0.4) * 0.05) * 2;
+      if (wx === 16) ctx.moveTo(mx + wx, my + wy + yOff);
+      else ctx.lineTo(mx + wx, my + wy + yOff);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Island blob (Agios Georgios)
+  ctx.save();
+  ctx.fillStyle = '#221e14';
+  ctx.beginPath();
+  ctx.ellipse(340, 342, 20, 10, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#2e2a1e';
+  ctx.stroke();
+  ctx.restore();
+
+  // Path connections (dotted lines between locations)
+  ctx.save();
+  ctx.strokeStyle = '#3a3020';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2, 3]);
+  for (const [a, b] of MAP_PATHS) {
+    const la = MAP_LOCATIONS.find(l => l.id === a);
+    const lb = MAP_LOCATIONS.find(l => l.id === b);
+    if (la && lb) {
+      ctx.beginPath();
+      ctx.moveTo(la.x, la.y);
+      ctx.lineTo(lb.x, lb.y);
+      ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Compass rose (bottom-right)
+  const crx = mx + mw - 30, cry = my + mh - 30;
+  ctx.save();
+  ctx.strokeStyle = '#5a4a2a';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(crx, cry - 10); ctx.lineTo(crx, cry + 10);
+  ctx.moveTo(crx - 10, cry); ctx.lineTo(crx + 10, cry);
+  ctx.stroke();
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = '5px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('B', crx, cry - 13);
+  ctx.restore();
+
+  // Location markers
+  for (let i = 0; i < MAP_LOCATIONS.length; i++) {
+    const loc = MAP_LOCATIONS[i];
+    const isVisited = loc.sceneIds.some(s => state.visited.has(s));
+    const isCurrent = loc.sceneIds.includes(state.scene);
+    const isHover = state.mapHover === i;
+
+    ctx.save();
+    if (isCurrent) {
+      // Current: pulsing gold
+      const pulse = 5 + Math.sin(state.tick * 0.08) * 2;
+      ctx.shadowColor = '#D4A03C';
+      ctx.shadowBlur = pulse;
+      ctx.fillStyle = '#D4A03C';
+      ctx.beginPath();
+      ctx.arc(loc.x, loc.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FFE8A0';
+      ctx.beginPath();
+      ctx.arc(loc.x, loc.y, 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (isVisited) {
+      // Visited: gold dot, bigger on hover
+      ctx.fillStyle = isHover ? '#FFE8A0' : '#D4A03C';
+      ctx.beginPath();
+      ctx.arc(loc.x, loc.y, isHover ? 5 : 4, 0, Math.PI * 2);
+      ctx.fill();
+      if (isHover) {
+        ctx.strokeStyle = '#FFE8A0';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    } else {
+      // Unvisited: dim
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = '#4a4a4a';
+      ctx.beginPath();
+      ctx.arc(loc.x, loc.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // Label for current + hover
+    if (isCurrent || (isHover && isVisited)) {
+      ctx.save();
+      ctx.fillStyle = isCurrent ? '#FFE8A0' : '#D4A03C';
+      ctx.font = '7px "Press Start 2P", monospace';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = '#000'; ctx.shadowBlur = 3;
+      ctx.fillText(loc.label, loc.x, loc.y - 10);
+      ctx.restore();
+    }
+  }
+
+  // Bottom hint
+  ctx.save();
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('Κλικ σε τοποθεσία | M ή ESC για κλείσιμο', GW / 2, GH - 8);
+  ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════════
+// HELP OVERLAY
+// ════════════════════════════════════════════════════════════
+function drawHelp() {
+  if (!state.helpOpen) return;
+  const mx = 50, my = 30, mw = GW - 100, mh = GH - 60;
+
+  // Dark backdrop
+  ctx.save();
+  ctx.globalAlpha = 0.9;
+  ctx.fillStyle = '#0a0806';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+
+  // Frame
+  ctx.fillStyle = '#1a1610';
+  ctx.fillRect(mx, my, mw, mh);
+  ctx.strokeStyle = '#D4A03C';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, mw, mh);
+
+  // Title
+  ctx.save();
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '9px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
+  ctx.fillText('ΒΟΗΘΕΙΑ', GW / 2, my + 16);
+  ctx.restore();
+
+  let y = my + 38;
+
+  // General section
+  ctx.save();
+  ctx.font = '7px "Press Start 2P", monospace';
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#8a6e42';
+  ctx.fillText('— Πώς παίζεται —', mx + 14, y);
+  y += 16;
+  ctx.fillStyle = '#c8b888';
+  for (const line of HELP_GENERAL) {
+    ctx.fillText(line, mx + 14, y);
+    y += 13;
+  }
+  ctx.restore();
+
+  y += 12;
+
+  // Scene hint section
+  const hint = HELP_HINTS[state.scene];
+  if (hint) {
+    ctx.save();
+    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#8a6e42';
+    const sc = scenes[state.scene];
+    ctx.fillText('— ' + (sc ? sc.label : 'Υπόδειξη') + ' —', mx + 14, y);
+    y += 16;
+    ctx.fillStyle = '#FFE8A0';
+    // Word-wrap hint
+    const words = hint.split(' ');
+    let line = '';
+    const maxW = mw - 28;
+    for (const word of words) {
+      const test = line + (line ? ' ' : '') + word;
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, mx + 14, y);
+        y += 13;
+        line = word;
+      } else {
+        line = test;
+      }
+    }
+    if (line) ctx.fillText(line, mx + 14, y);
+    ctx.restore();
+  }
+
+  // Dismiss hint
+  ctx.save();
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('H ή ESC για κλείσιμο', GW / 2, my + mh - 8);
+  ctx.restore();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -5231,6 +5582,10 @@ function render() {
     ctx.restore();
   }
 
+  // Map & Help overlays
+  drawMap();
+  drawHelp();
+
   // Transition overlay — iris wipe or flat fade
   if (state.fade.active && state.fade.alpha > 0) {
     ctx.save();
@@ -5352,6 +5707,23 @@ CVS.addEventListener('mousemove', (e) => {
     return;
   }
 
+  // Map hover
+  if (state.mapOpen) {
+    state.mapHover = getMapHoverLocation(g.x, g.y);
+    if (state.mapHover !== null) {
+      const loc = MAP_LOCATIONS[state.mapHover];
+      const isVisited = loc.sceneIds.some(s => state.visited.has(s));
+      const isCurrent = loc.sceneIds.includes(state.scene);
+      CVS.style.cursor = (isVisited && !isCurrent) ? 'pointer' : 'default';
+    } else {
+      CVS.style.cursor = 'default';
+    }
+    return;
+  }
+
+  // Help overlay — block hover
+  if (state.helpOpen) { CVS.style.cursor = 'default'; return; }
+
   // Check hotspots
   const obj = hitTestObj(g.x, g.y);
   state.hoverObj = obj;
@@ -5391,6 +5763,24 @@ CVS.addEventListener('click', (e) => {
   // Title clicks handled by dedicated handler
   if (state.phase !== 'playing') return;
 
+  // Map click — teleport
+  if (state.mapOpen) {
+    if (state.mapHover !== null) {
+      const loc = MAP_LOCATIONS[state.mapHover];
+      const isVisited = loc.sceneIds.some(s => state.visited.has(s));
+      const isCurrent = loc.sceneIds.includes(state.scene);
+      if (isVisited && !isCurrent) {
+        state.mapOpen = false;
+        state.mapHover = null;
+        changeScene(loc.sceneIds[0]);
+      }
+    }
+    return;
+  }
+
+  // Help click — dismiss
+  if (state.helpOpen) { state.helpOpen = false; return; }
+
   // Dialogue advance
   if (state.dlg.active) { advanceDlg(); return; }
 
@@ -5429,16 +5819,30 @@ CVS.addEventListener('click', (e) => {
 
 // Keyboard
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && state.phase === 'cutscene') { skipCutscene(); return; }
+  // Escape: close overlays first, then skip cutscene
+  if (e.key === 'Escape') {
+    if (state.mapOpen) { state.mapOpen = false; state.mapHover = null; return; }
+    if (state.helpOpen) { state.helpOpen = false; return; }
+    if (state.phase === 'cutscene') { skipCutscene(); return; }
+    return;
+  }
   if (e.key === ' ' || e.key === 'Enter') {
     e.preventDefault();
     if (state.dlg.active) advanceDlg();
   }
+  // Map toggle
+  if ((e.key === 'm' || e.key === 'M') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
+    state.mapOpen = !state.mapOpen; state.helpOpen = false; state.mapHover = null; return;
+  }
+  // Help toggle
+  if ((e.key === 'h' || e.key === 'H') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
+    state.helpOpen = !state.helpOpen; state.mapOpen = false; return;
+  }
   const vk = {'1':'look','2':'talk','3':'open','4':'use'};
-  if (vk[e.key] && state.phase === 'playing') setVerb(vk[e.key]);
-  if ((e.key === 's' || e.key === 'S') && state.phase === 'playing') { saveGame('manual'); }
+  if (vk[e.key] && state.phase === 'playing' && !state.mapOpen && !state.helpOpen) setVerb(vk[e.key]);
+  if ((e.key === 's' || e.key === 'S') && state.phase === 'playing' && !state.mapOpen && !state.helpOpen) { saveGame('manual'); }
   // DEBUG: Press G to warp to graveyard with green stone + Use verb active
-  if (e.key === 'g' && !state.dlg.active) {
+  if (e.key === 'g' && !state.dlg.active && !state.mapOpen && !state.helpOpen) {
     if (state.phase !== 'playing') {
       state.phase = 'playing';
       document.getElementById('ui-panel').classList.add('on');
