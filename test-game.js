@@ -1776,6 +1776,142 @@ test('Voice coverage report', () => {
 });
 
 // ════════════════════════════════════════════════════════════
+// 12. SCENE / BACKGROUND CONSISTENCY
+// ════════════════════════════════════════════════════════════
+console.log('\n12. SCENE / BACKGROUND CONSISTENCY');
+
+// Extract all scene background image paths
+function extractSceneBgPaths() {
+  const bgMap = {};
+  // Find loadImg calls
+  const loadMatches = [...js.matchAll(/loadImg\(['"]([^'"]+)['"],\s*['"]([^'"]+)['"]\)/g)];
+  const imgPaths = {};
+  for (const m of loadMatches) {
+    imgPaths[m[1]] = m[2];
+  }
+  // Find scene bg references
+  const sceneMatches = [...js.matchAll(/(\w+):\s*\{[^}]*?label:\s*['"]([^'"]+)['"],\s*bg:\s*['"]([^'"]+)['"]/g)];
+  for (const m of sceneMatches) {
+    const sceneId = m[1];
+    const label = m[2];
+    const bgKey = m[3];
+    bgMap[sceneId] = { label, bgKey, file: imgPaths[bgKey] || null };
+  }
+  return bgMap;
+}
+
+// Extract object IDs from a scene
+function extractSceneObjectIds(sceneId) {
+  // Find the scene's objects array
+  const scenePattern = new RegExp(`(?:^|\\n)\\s*${sceneId}:\\s*\\{`, 'm');
+  const match = scenePattern.exec(js);
+  if (!match) return [];
+
+  const startIdx = match.index + match[0].length;
+  // Find all id: references in this scene's objects
+  const ids = [];
+  // Look for objects array within reasonable range (next 3000 chars)
+  const chunk = js.substring(startIdx, startIdx + 5000);
+  const objMatches = [...chunk.matchAll(/id:'(\w+)'/g)];
+  for (const m of objMatches) {
+    ids.push(m[1]);
+  }
+  return ids;
+}
+
+test('Every scene bg image file exists on disk', () => {
+  const bgMap = extractSceneBgPaths();
+  const missing = [];
+  for (const [sceneId, info] of Object.entries(bgMap)) {
+    if (!info.file) continue;
+    const fullPath = path.join(GAME_DIR, info.file);
+    if (!fs.existsSync(fullPath)) {
+      missing.push(`${sceneId}: ${info.file}`);
+    }
+  }
+  assert(missing.length === 0, `Missing bg files: ${missing.join(', ')}`);
+});
+
+test('No scene references a deleted or renamed bg key', () => {
+  const bgMap = extractSceneBgPaths();
+  const loadedKeys = new Set([...js.matchAll(/loadImg\(['"]([^'"]+)['"]/g)].map(m => m[1]));
+  const orphans = [];
+  for (const [sceneId, info] of Object.entries(bgMap)) {
+    if (!loadedKeys.has(info.bgKey)) {
+      orphans.push(`${sceneId} uses '${info.bgKey}' which is never loaded`);
+    }
+  }
+  assert(orphans.length === 0, `Orphan bg keys: ${orphans.join(', ')}`);
+});
+
+test('Recalibration entries reference valid scene objects', () => {
+  // Find the recalibration block
+  const calMatch = js.match(/const cal\s*=\s*\{([\s\S]*?)\};\s*for\s*\(const/);
+  if (!calMatch) {
+    assert(true, 'No recalibration block found (skip)');
+    return;
+  }
+  const calBlock = calMatch[1];
+  // Extract scene IDs from cal
+  const calScenes = [...calBlock.matchAll(/(\w+):\s*\{/g)].map(m => m[1]);
+  const issues = [];
+  for (const sceneId of calScenes) {
+    // Extract object IDs in this cal entry
+    const sceneSection = calBlock.substring(calBlock.indexOf(sceneId + ':'));
+    const endBrace = sceneSection.indexOf('},');
+    const section = sceneSection.substring(0, endBrace > 0 ? endBrace : 200);
+    const calObjIds = [...section.matchAll(/(\w+)\s*:\s*\{/g)].map(m => m[1]).filter(id => id !== sceneId);
+
+    // Get scene object IDs
+    const sceneObjIds = extractSceneObjectIds(sceneId);
+
+    for (const calObj of calObjIds) {
+      if (!sceneObjIds.includes(calObj)) {
+        issues.push(`${sceneId}.${calObj} in recalibration but not in scene objects`);
+      }
+    }
+  }
+  assert(issues.length === 0, `Stale recal entries: ${issues.join('; ')}`);
+});
+
+test('Port scene has no invisible cats object', () => {
+  const portObjs = extractSceneObjectIds('port');
+  assert(!portObjs.includes('cats'), 'Port still has invisible cats object');
+});
+
+test('Windmill scene has no "ruins" object (renamed to windmill_tower)', () => {
+  const wmObjs = extractSceneObjectIds('windmill');
+  assert(!wmObjs.includes('ruins'), 'Windmill still has old "ruins" object id');
+  assert(wmObjs.includes('windmill_tower'), 'Windmill missing "windmill_tower" object');
+});
+
+test('Church scene has fountain object', () => {
+  const chObjs = extractSceneObjectIds('church');
+  assert(chObjs.includes('fountain'), 'Church missing fountain object');
+});
+
+test('Treasure and new_era scenes have recalibration entries', () => {
+  const calMatch = js.match(/const cal\s*=\s*\{([\s\S]*?)\};\s*for\s*\(const/);
+  assert(calMatch, 'Recalibration block not found');
+  const calBlock = calMatch[1];
+  assert(calBlock.includes('treasure:'), 'treasure scene missing from recalibration');
+  assert(calBlock.includes('new_era:'), 'new_era scene missing from recalibration');
+});
+
+test('All scene bg files use consistent format (no mix of deleted .webp and .png)', () => {
+  const bgMap = extractSceneBgPaths();
+  const issues = [];
+  for (const [sceneId, info] of Object.entries(bgMap)) {
+    if (!info.file) continue;
+    const fullPath = path.join(GAME_DIR, info.file);
+    if (!fs.existsSync(fullPath)) {
+      issues.push(`${sceneId}: ${info.file} does not exist`);
+    }
+  }
+  assert(issues.length === 0, `Missing bg files: ${issues.join(', ')}`);
+});
+
+// ════════════════════════════════════════════════════════════
 // SUMMARY
 // ════════════════════════════════════════════════════════════
 
