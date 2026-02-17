@@ -4225,12 +4225,24 @@ function playVoice(text) {
   if (src) {
     voiceAudio.src = src;
     voiceAudio.play().catch(() => {});
+  } else if ('speechSynthesis' in window) {
+    // Fallback: browser TTS for lines without pre-recorded audio
+    speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'el-GR';
+    utter.rate = 0.9;
+    utter.volume = 0.8;
+    const voices = speechSynthesis.getVoices();
+    const greek = voices.find(v => v.lang.startsWith('el'));
+    if (greek) utter.voice = greek;
+    speechSynthesis.speak(utter);
   }
 }
 
 function stopVoice() {
   voiceAudio.pause();
   voiceAudio.currentTime = 0;
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
 }
 
 // ════════════════════════════════════════════════════════════
