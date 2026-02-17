@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  .box {
+    width: 620px;
+    background: #0a0e2a;
+    border: 3px solid #1a2040;
+    box-shadow:
+      inset 0 0 30px rgba(0,0,0,0.5),
+      0 0 40px rgba(0,0,0,0.8),
+      0 4px 20px rgba(0,0,0,0.6);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Cardboard texture overlay */
+  .box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.008) 2px,
+        rgba(255,255,255,0.008) 4px
+      );
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Worn edge effect */
+  .box::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow:
+      inset 3px 3px 15px rgba(0,0,0,0.4),
+      inset -3px -3px 15px rgba(0,0,0,0.3);
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .title-area {
+    padding: 28px 30px 18px;
+    text-align: center;
+    background: linear-gradient(180deg, #0d1235 0%, #0a0e2a 100%);
+    border-bottom: 1px solid #1a2550;
+    position: relative;
+  }
+
+  /* Subtle gold line above title */
+  .title-area::before {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a843, transparent);
+    margin: 0 auto 16px;
+  }
+
+  .main-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 38px;
+    letter-spacing: 4px;
+    line-height: 1.15;
+    color: #d4a843;
+    text-shadow:
+      0 0 10px rgba(212, 168, 67, 0.3),
+      0 2px 4px rgba(0,0,0,0.8),
+      0 0 40px rgba(212, 168, 67, 0.1);
+    margin-bottom: 4px;
+  }
+
+  .main-title .line2 {
+    font-size: 42px;
+    letter-spacing: 5px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .subtitle {
+    font-family: 'EB Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #7a8cb8;
+    letter-spacing: 3px;
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+
+  /* Gold line below title */
+  .title-area::after {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a843, transparent);
+    margin: 14px auto 0;
+  }
+
+  .artwork {
+    position: relative;
+    border-top: 2px solid #1a2550;
+    border-bottom: 2px solid #1a2550;
+  }
+
+  .artwork img {
+    width: 100%;
+    display: block;
+    filter: saturate(1.1) contrast(1.05);
+  }
+
+  /* Vignette on artwork */
+  .artwork::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 0 0 60px rgba(10, 14, 42, 0.4);
+    pointer-events: none;
+  }
+
+  .bottom-strip {
+    padding: 14px 25px 16px;
+    background: linear-gradient(180deg, #0a0e2a 0%, #080b22 100%);
+    border-top: 1px solid #1a2550;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .specs {
+    font-family: 'EB Garamond', serif;
+    font-size: 10.5px;
+    color: #4a5a80;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .specs .line1 {
+    color: #6a7a9a;
+    font-size: 11px;
+  }
+
+  .floppy-icon {
+    width: 42px;
+    height: 42px;
+    border: 1.5px solid #3a4a6a;
+    border-radius: 3px;
+    background: #0d1235;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .floppy-icon .disk-label {
+    width: 28px;
+    height: 10px;
+    background: #2a3a5a;
+    border-radius: 1px;
+    margin-bottom: 3px;
+  }
+
+  .floppy-icon .disk-slot {
+    width: 18px;
+    height: 6px;
+    background: #1a2540;
+    border: 1px solid #2a3a5a;
+    border-radius: 1px;
+  }
+
+  .floppy-text {
+    font-family: 'EB Garamond', serif;
+    font-size: 9px;
+    color: #4a5a80;
+    text-align: center;
+    margin-top: 3px;
+    letter-spacing: 0.5px;
+  }
+
+  .right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .studio-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: #5a6a8a;
+    letter-spacing: 2px;
+  }
+
+  .made-in {
+    font-family: 'EB Garamond', serif;
+    font-size: 9px;
+    font-style: italic;
+    color: #3a4a6a;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="title-area">
+      <div class="main-title">
+        ΤΟ ΜΥΣΤΗΡΙΟ
+        <span class="line2">ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ</span>
+      </div>
+      <div class="subtitle">A Point &amp; Click Adventure</div>
+    </div>
+
+    <div class="artwork">
+      <img src="assets/box-art-painting.png" alt="Game artwork">
+    </div>
+
+    <div class="bottom-strip">
+      <div class="specs">
+        <div class="line1">IBM PC/Compatible &nbsp;·&nbsp; VGA 256 Colors &nbsp;·&nbsp; Sound Blaster</div>
+        <div>AdLib &nbsp;·&nbsp; Roland MT-32 &nbsp;·&nbsp; Mouse Required &nbsp;·&nbsp; 640K RAM</div>
+      </div>
+
+      <div class="right-section">
+        <div class="floppy-icon">
+          <div class="disk-label"></div>
+          <div class="disk-slot"></div>
+        </div>
+        <div class="floppy-text">3½" HD</div>
+      </div>
+
+      <div style="text-align: right;">
+        <div class="studio-logo">GALAXIDI STUDIOS</div>
+        <div class="made-in">Made in Greece &nbsp;·&nbsp; © 1992</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
