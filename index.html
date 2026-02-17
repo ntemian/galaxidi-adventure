@@ -279,7 +279,7 @@ async function loadAllAssets() {
     loadImg('bg-port', 'assets/pixel-port.webp'),
     loadImg('bg-museum', 'assets/pixel-museum.webp'),
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
-    loadImg('bg-cave', 'assets/pixel-cave.webp'),
+    loadImg('bg-cave', 'assets/pixel-cave-new.png'),
     loadImg('bg-church', 'assets/pixel-church.webp'),
     loadImg('bg-church-interior', 'assets/pixel-church-interior.webp'),
     loadImg('bg-windmill', 'assets/pixel-windmill.webp'),
@@ -611,7 +611,7 @@ const scenes = {
     walkLine: [[30, 383], [310, 380], [610, 383]],
     charPos: { ntemis: { x: 310, y: 380 }, ajax: { x: 390, y: 382 }, clio: { x: 230, y: 381 } },
     objects: [
-      { id:'vote_inscription', x:190, y:16, w:200, h:100, label:'Χαραγμένη επιγραφή',
+      { id:'vote_inscription', x:150, y:30, w:200, h:100, label:'Χαραγμένη επιγραφή',
         verbs: {
           look: () => {
             if (state.flags.vote_read) return [{s:'',t:'Η επιγραφή στον βράχο: «Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.»'},{s:'ΑΙΑΣ',t:'Τρεις ήξεραν. Και κανείς δεν τους άκουσε.'}];
@@ -629,13 +629,13 @@ const scenes = {
             ];
           },
         }},
-      { id:'captain_marks', x:10, y:64, w:80, h:70, label:'Σημάδια καπεταναίων',
+      { id:'captain_marks', x:10, y:100, w:100, h:120, label:'Σημάδια καπεταναίων',
         verbs: { look:[{s:'',t:'Χαραγμένα σύμβολα στον βράχο. Ονόματα πλοίων, αρχικά, ημερομηνίες.'},{s:'ΑΙΑΣ',t:'Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. «Λ.Β. 1887.»'},{s:'ΚΛΕΙΩ',t:'Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!'},{s:'ΝΤΕΜΗΣ',t:'Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα. Αυτοί οι τοίχοι θυμούνται.'}] }},
-      { id:'cave_water', x:130, y:296, w:250, h:75, label:'Νερό',
+      { id:'cave_water', x:100, y:260, w:350, h:100, label:'Νερό',
         verbs: { look:[{s:'',t:'Τυρκουάζ νερό λάμπει από το φως του φαναριού. Κρυστάλλινο.'},{s:'ΑΙΑΣ',t:'Μπορώ να κολυμπήσω;'},{s:'ΝΤΕΜΗΣ',t:'Όχι τώρα, Αία. Ποιος ξέρει πόσο βαθιά είναι.'}] }},
-      { id:'stalactites', x:50, y:-120, w:500, h:55, label:'Σταλακτίτες',
+      { id:'stalactites', x:50, y:0, w:500, h:60, label:'Σταλακτίτες',
         verbs: { look:[{s:'',t:'Σταλακτίτες κρέμονται σαν δάχτυλα γίγαντα. Χιλιάδες χρόνια σε κάθε σταγόνα.'},{s:'ΚΛΕΙΩ',t:'Ο Κάρκαρος. Λέγανε ότι η φωνή σου γυρίζει πίσω τρεις φορές.'}] }},
-      { id:'jade_stone', x:420, y:60, w:80, h:70, label:'Ρωγμή στον βράχο',
+      { id:'jade_stone', x:180, y:30, w:60, h:50, label:'Ρωγμή στον βράχο',
         verbs: {
           look: () => {
             if (state.inv.find(i => i.id === 'green_stone')) return [{s:'',t:'Η ρωγμή στον βράχο. Εκεί βρήκε η Κλειώ την πράσινη πέτρα.'}];
@@ -3247,96 +3247,121 @@ function drawBoatAmbience(tick) {
   ctx.restore();
 }
 
-// Cave ambience: god-rays, torch flicker, water shimmer, dripping water
+// Cave ambience: god-rays, lantern flicker, water shimmer, dripping water, glowing gem
 function drawCaveAmbience(tick) {
   ctx.save();
 
-  // ── GOD-RAYS from entrance (right side) ──
-  // Animated diagonal light beams streaming through the arch
-  const rayBase = 520; // x center of entrance arch
+  // ── GOD-RAYS from cave mouth (right side) ──
+  const rayBase = 480;
   for (let r = 0; r < 5; r++) {
     const phase = tick * 0.008 + r * 1.3;
-    const alpha = (Math.sin(phase) * 0.5 + 0.5) * 0.06 + 0.02;
-    const spread = r * 28 - 56;
-    ctx.fillStyle = `rgba(255,210,120,${alpha})`;
-    // Angled rays: narrow at top, spread toward floor
+    const alpha = (Math.sin(phase) * 0.5 + 0.5) * 0.05 + 0.02;
+    const spread = r * 24 - 48;
+    ctx.fillStyle = `rgba(180,210,255,${alpha})`;
     ctx.beginPath();
-    ctx.moveTo(rayBase + spread, 60 + r * 15);
-    ctx.lineTo(rayBase + spread - 30, 60 + r * 15);
-    ctx.lineTo(rayBase + spread - 120, 320);
-    ctx.lineTo(rayBase + spread - 80, 320);
+    ctx.moveTo(rayBase + spread, 50 + r * 12);
+    ctx.lineTo(rayBase + spread - 25, 50 + r * 12);
+    ctx.lineTo(rayBase + spread - 100, 300);
+    ctx.lineTo(rayBase + spread - 65, 300);
     ctx.closePath();
     ctx.fill();
   }
-  // Warm ambient glow near entrance
-  const entrGlow = Math.sin(tick * 0.012) * 0.01 + 0.04;
-  ctx.fillStyle = `rgba(255,200,100,${entrGlow})`;
-  ctx.fillRect(440, 40, 200, 280);
+  const entrGlow = Math.sin(tick * 0.012) * 0.01 + 0.03;
+  ctx.fillStyle = `rgba(160,200,255,${entrGlow})`;
+  ctx.fillRect(400, 30, 240, 250);
 
-  // ── TORCH FLICKER (two torches flanking the stone door) ──
-  const torchL = { x: 205, y: 150 }; // left torch
-  const torchR = { x: 345, y: 150 }; // right torch
-  [torchL, torchR].forEach((t, i) => {
-    const flicker = Math.sin(tick * 0.15 + i * 2.1) * 0.02
-                  + Math.sin(tick * 0.23 + i * 3.7) * 0.01;
-    // Warm glow pool around each torch
-    ctx.fillStyle = `rgba(255,160,50,${0.04 + flicker})`;
-    ctx.fillRect(t.x - 40, t.y - 35, 80, 70);
-    ctx.fillStyle = `rgba(255,180,80,${0.06 + flicker})`;
-    ctx.fillRect(t.x - 20, t.y - 18, 40, 36);
-    // Tiny bright core
-    ctx.fillStyle = `rgba(255,220,140,${0.08 + flicker * 2})`;
-    ctx.fillRect(t.x - 3, t.y - 4, 6, 8);
-  });
+  // ── LANTERN FLICKER (brass lantern on left side of cave floor) ──
+  const lx = 60, ly = 260;
+  const flicker = Math.sin(tick * 0.15) * 0.02 + Math.sin(tick * 0.23) * 0.01;
+  // Wide warm glow
+  ctx.fillStyle = `rgba(255,160,50,${0.03 + flicker})`;
+  ctx.fillRect(lx - 60, ly - 80, 160, 140);
+  // Inner glow
+  ctx.fillStyle = `rgba(255,180,80,${0.05 + flicker})`;
+  ctx.fillRect(lx - 25, ly - 40, 70, 60);
+  // Bright core
+  ctx.fillStyle = `rgba(255,220,140,${0.07 + flicker * 2})`;
+  ctx.fillRect(lx - 4, ly - 6, 8, 10);
+
+  // ── GLOWING GREEN GEM (jade stone in crack, upper-left area) ──
+  if (!state.flags.jade_found) {
+    const gemX = 210, gemY = 48;
+    // Outer pulsing glow
+    const pulse = Math.sin(tick * 0.04) * 0.5 + 0.5;
+    const glow2 = Math.sin(tick * 0.025) * 0.3 + 0.7;
+    ctx.fillStyle = `rgba(50,220,100,${0.03 + pulse * 0.04})`;
+    ctx.fillRect(gemX - 18, gemY - 18, 36, 36);
+    ctx.fillStyle = `rgba(80,255,120,${0.05 + pulse * 0.05})`;
+    ctx.fillRect(gemX - 10, gemY - 10, 20, 20);
+    // Inner bright gem
+    ctx.fillStyle = `rgba(100,255,140,${0.12 + glow2 * 0.08})`;
+    ctx.fillRect(gemX - 4, gemY - 4, 8, 8);
+    // Core sparkle
+    ctx.fillStyle = `rgba(200,255,200,${0.15 + pulse * 0.1})`;
+    ctx.fillRect(gemX - 2, gemY - 2, 4, 4);
+    // Tiny moving sparkle particles
+    for (let sp = 0; sp < 3; sp++) {
+      const spx = gemX + Math.sin(tick * 0.03 + sp * 2.1) * 12;
+      const spy = gemY + Math.cos(tick * 0.025 + sp * 1.7) * 10;
+      const spa = Math.sin(tick * 0.06 + sp * 3.3);
+      if (spa > 0.3) {
+        ctx.fillStyle = `rgba(150,255,180,${spa * 0.12})`;
+        ctx.fillRect(spx, spy, 1, 1);
+      }
+    }
+  }
 
   // ── TIDAL POOL SHIMMER ──
-  for (let wx = 140; wx < 370; wx += 6) {
+  for (let wx = 100; wx < 500; wx += 5) {
     const wave = Math.sin(tick * 0.035 + wx * 0.06);
     if (wave > 0.1) {
-      ctx.fillStyle = `rgba(80,200,200,${0.06 + wave * 0.08})`;
-      ctx.fillRect(wx, 272 + wave * 3, 5, 1);
+      ctx.fillStyle = `rgba(60,180,190,${0.05 + wave * 0.06})`;
+      ctx.fillRect(wx, 260 + wave * 3, 4, 1);
     }
-    // Bright reflections from torchlight on water
-    if (Math.sin(tick * 0.05 + wx * 0.15) > 0.7) {
-      ctx.fillStyle = `rgba(255,210,120,${0.08 + Math.sin(tick * 0.08 + wx) * 0.04})`;
-      ctx.fillRect(wx + 2, 278 + Math.sin(wx * 0.3) * 2, 2, 1);
+    // Lantern reflections on water
+    if (wx < 250 && Math.sin(tick * 0.05 + wx * 0.15) > 0.7) {
+      ctx.fillStyle = `rgba(255,200,100,${0.06 + Math.sin(tick * 0.08 + wx) * 0.03})`;
+      ctx.fillRect(wx + 2, 268 + Math.sin(wx * 0.3) * 2, 2, 1);
+    }
+    // Blue daylight reflections on water (right half)
+    if (wx > 350 && Math.sin(tick * 0.04 + wx * 0.12) > 0.6) {
+      ctx.fillStyle = `rgba(140,200,255,${0.05 + Math.sin(tick * 0.06 + wx) * 0.03})`;
+      ctx.fillRect(wx, 265 + Math.sin(wx * 0.25) * 2, 3, 1);
     }
   }
 
   // ── DRIPPING WATER (from stalactites) ──
-  // Drip 1: from center stalactite
   const drip1 = tick % 110;
   if (drip1 < 22) {
-    const dy = drip1 * 3.2 + 45;
-    if (dy < 268) {
+    const dy = drip1 * 3.5 + 40;
+    if (dy < 255) {
       ctx.fillStyle = 'rgba(100,200,220,0.5)';
-      ctx.fillRect(280, dy, 1, 2);
-      if (drip1 > 8) ctx.fillRect(280, dy + 2, 1, 1);
+      ctx.fillRect(250, dy, 1, 2);
+      if (drip1 > 8) ctx.fillRect(250, dy + 2, 1, 1);
     }
   }
   if (drip1 >= 22 && drip1 < 27) {
     const sp = drip1 - 22;
     ctx.fillStyle = `rgba(100,200,220,${0.3 - sp * 0.06})`;
-    ctx.fillRect(278 - sp * 2, 270, 1, 1);
-    ctx.fillRect(282 + sp * 2, 270, 1, 1);
+    ctx.fillRect(248 - sp * 2, 258, 1, 1);
+    ctx.fillRect(252 + sp * 2, 258, 1, 1);
   }
-  // Drip 2: offset timing, different stalactite
   const drip2 = (tick + 55) % 140;
   if (drip2 < 18) {
-    const dy2 = drip2 * 2.8 + 38;
-    if (dy2 < 265) {
+    const dy2 = drip2 * 3.0 + 35;
+    if (dy2 < 252) {
       ctx.fillStyle = 'rgba(80,180,200,0.4)';
-      ctx.fillRect(180, dy2, 1, 2);
+      ctx.fillRect(160, dy2, 1, 2);
     }
   }
 
   // ── DUST MOTES in god-ray beams ──
   for (let d = 0; d < 8; d++) {
-    const dx = 430 + Math.sin(tick * 0.012 + d * 1.9) * 80;
-    const dy = 80 + Math.sin(tick * 0.009 + d * 2.4) * 110 + d * 20;
+    const dx = 400 + Math.sin(tick * 0.012 + d * 1.9) * 80;
+    const dy = 60 + Math.sin(tick * 0.009 + d * 2.4) * 100 + d * 18;
     const da = Math.sin(tick * 0.04 + d * 3.1);
-    if (da > 0.2 && dx > 380) {
-      ctx.fillStyle = `rgba(255,220,150,${da * 0.15})`;
+    if (da > 0.2 && dx > 350) {
+      ctx.fillStyle = `rgba(200,220,255,${da * 0.12})`;
       ctx.fillRect(dx, dy, 1, 1);
     }
   }
@@ -5183,7 +5208,7 @@ function getMapHoverLocation(gx, gy) {
   for (let i = 0; i < MAP_LOCATIONS.length; i++) {
     const loc = MAP_LOCATIONS[i];
     const dx = gx - loc.x, dy = gy - loc.y;
-    if (dx * dx + dy * dy < 144) return i; // 12px radius
+    if (dx * dx + dy * dy < 625) return i; // 25px radius
   }
   return null;
 }
