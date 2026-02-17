@@ -285,7 +285,7 @@ async function loadAllAssets() {
     loadImg('bg-windmill', 'assets/pixel-windmill.webp'),
     loadImg('bg-boat', 'assets/pixel-boat.webp'),
     loadImg('bg-graveyard', 'assets/pixel-graveyard.webp'),
-    loadImg('bg-treasure', 'assets/pixel-treasure.webp'),
+    loadImg('bg-treasure', 'assets/pixel-treasure-new.png'),
     loadImg('bg-new-era', 'assets/pixel-new-era.webp'),
     // Cutscene backgrounds
     loadImg('cutscene-road', 'assets/cutscene-road.png'),
@@ -893,7 +893,7 @@ const scenes = {
     walkBounds: [50, 560], // island terrain bounds
     charPos: { ntemis: { x: 320, y: 377 }, ajax: { x: 410, y: 379 }, clio: { x: 230, y: 378 } },
     objects: [
-      { id:'sea_chest', x:220, y:200, w:200, h:130, label:'Θαλασσινό κιβώτιο',
+      { id:'sea_chest', x:80, y:260, w:180, h:110, label:'Θαλασσινό κιβώτιο',
         verbs: {
           look:()=>{
             if(state.flags.chest_opened) return [{s:'',t:'Το κιβώτιο ανοιχτό. Ο θησαυρός του Βισβίκη αποκαλύφθηκε.'}];
@@ -948,11 +948,11 @@ const scenes = {
             return [{s:'',t:'Κοίταξέ το πρώτα.'}];
           },
         }},
-      { id:'island_view', x:0, y:0, w:200, h:150, label:'Νησάκι',
+      { id:'island_view', x:200, y:40, w:260, h:120, label:'Νησάκι',
         verbs: { look:[{s:'',t:'Ο βράχος, ο σταυρός, τα πέντε βήματα. Ο Βισβίκης ήταν ακριβής μέχρι το τέλος.'},{s:'ΚΛΕΙΩ',t:'Μύριζε θυμάρι. Σαν να μας περίμενε.'}] }},
-      { id:'galaxidi_far', x:400, y:0, w:240, h:120, label:'Γαλαξίδι στον ορίζοντα',
+      { id:'galaxidi_far', x:200, y:100, w:240, h:100, label:'Γαλαξίδι στον ορίζοντα',
         verbs: { look:[{s:'',t:'Το Γαλαξίδι λάμπει στον πρωινό ήλιο. Σπίτια, εκκλησίες, το λιμάνι. Σπίτι.'},{s:'ΑΙΑΣ',t:'Γυρνάμε πίσω πλουσιότεροι. Αλλά όχι όπως νόμιζα.'}] }},
-      { id:'dig_site', x:150, y:310, w:150, h:80, label:'Σημείο ανασκαφής',
+      { id:'dig_site', x:80, y:300, w:160, h:70, label:'Σημείο ανασκαφής',
         verbs: { look:[{s:'',t:'Η τρύπα στη γη. Πέντε βήματα νοτιοδυτικά από τον σταυρό, ακριβώς όπως έγραψε ο Βισβίκης.'}] }},
     ],
     exits: [
