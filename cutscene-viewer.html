@@ -50,6 +50,8 @@ Promise.all([
   loadImg('cutscene-ghost-farewell', 'assets/cutscene-ghost-farewell.png'),
   loadImg('cutscene-crossing-dawn', 'assets/cutscene-crossing-dawn.png'),
   loadImg('cutscene-crossing-island', 'assets/cutscene-crossing-island.png'),
+  loadImg('cutscene-treasure-open', 'assets/cutscene-treasure-open.png'),
+  loadImg('cutscene-treasure-letter', 'assets/cutscene-treasure-letter.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -124,12 +126,12 @@ function drawCrossingClose(t, p, tick) {
   ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.02) * 0.015; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawTreasureReveal(t, p, tick) {
-  drawKenBurns('cutscene-treasure', 1.08 + p * 0.12, 0, p * -25);
-  ctx.save(); ctx.globalAlpha = p * 0.08; ctx.fillStyle = '#FFD040'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  drawKenBurns('cutscene-treasure-open', 1.06 + p * 0.12, 0, p * -15);
+  ctx.save(); ctx.globalAlpha = 0.03 + p * 0.06 + Math.sin(tick * 0.03) * 0.02; ctx.fillStyle = '#FFD040'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawTreasureFamily(t, p, tick) {
-  drawKenBurns('cutscene-treasure', 1.20 - p * 0.12, 0, -25 + p * 25);
-  ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+  drawKenBurns('cutscene-treasure-letter', 1.10 + p * 0.06, -p * 5, p * -8);
+  ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.015; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
 function drawEpilogueHarbor(t, p, tick) {
   drawKenBurns('cutscene-epilogue', 1.12 - p * 0.06, p * 8, 0);
@@ -300,15 +302,16 @@ const allCutscenes = [
     ]},
   ]},
   { title: '11. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
-    { duration: 7, draw: drawTreasureReveal, dialogue: [
-      { s: 'ΑΙΑΣ', t: 'Χρυσάφι... Κοίτα, μπαμπά!', at: 1.5 },
-      { s: 'ΚΛΕΙΩ', t: 'Και ένα κολιέ. Πράσινο σαν το πέτρωμα!', at: 3.5 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Το βιβλίο... Η αλληλασφάλεια. 104 υπογραφές.', at: 5.2 },
+    { duration: 9, draw: drawTreasureReveal, dialogue: [
+      { s: 'ΑΙΑΣ', t: 'Χρυσάφι! Και ένα βιβλίο... Κοίτα, μπαμπά!', at: 1.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Ένα κολιέ! Πράσινο σαν το πέτρωμα... Μπορώ να το φορέσω;', at: 4.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Η αλληλασφάλεια... 104 υπογραφές. Και ένα γράμμα.', at: 7.0 },
     ]},
-    { duration: 8, draw: drawTreasureFamily, dialogue: [
+    { duration: 10, draw: drawTreasureFamily, dialogue: [
       { s: 'ΝΤΕΜΗΣ', t: '«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»', at: 1.5 },
-      { s: 'ΑΙΑΣ', t: 'Τι εννοεί "άλλαξε το πλοίο";', at: 4.0 },
-      { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 5.8 },
+      { s: 'ΑΙΑΣ', t: 'Τι εννοεί "άλλαξε το πλοίο";', at: 4.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 6.5 },
+      { s: 'ΚΛΕΙΩ', t: 'Ο Καπετάνιος... ήξερε.', at: 9.0 },
     ]},
   ]},
   { title: '12. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
