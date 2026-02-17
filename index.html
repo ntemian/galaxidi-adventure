@@ -4537,6 +4537,14 @@ CVS.addEventListener('mousemove', (e) => {
     return;
   }
 
+  if (state.phase === 'cutscene' && state.cutscene.active) {
+    const skipW = 80, skipH = 18, skipX = GW - skipW - 8, skipY = 8;
+    const over = g.x >= skipX && g.x <= skipX + skipW && g.y >= skipY && g.y <= skipY + skipH;
+    state.cutscene.skipHover = over;
+    CVS.style.cursor = over ? 'pointer' : 'default';
+    return;
+  }
+
   if (state.phase !== 'playing' || state.dlg.active || state.seq.active) {
     CVS.style.cursor = (state.dlg.active || state.seq.active) ? 'pointer' : 'default';
     state.hoverObj = null;
@@ -4566,8 +4574,13 @@ CVS.addEventListener('mousemove', (e) => {
 CVS.addEventListener('click', (e) => {
   const g = screenToGame(e.clientX, e.clientY);
 
-  // Cutscene: click speeds up dialogue typewriter
+  // Cutscene: skip button or speed up dialogue
   if (state.phase === 'cutscene' && state.cutscene.active) {
+    const skipW = 80, skipH = 18, skipX = GW - skipW - 8, skipY = 8;
+    if (g.x >= skipX && g.x <= skipX + skipW && g.y >= skipY && g.y <= skipY + skipH) {
+      skipCutscene();
+      return;
+    }
     if (state.cutscene.dlgCharIdx < state.cutscene.dlgText.length) {
       state.cutscene.dlgDisplayed = state.cutscene.dlgText;
       state.cutscene.dlgCharIdx = state.cutscene.dlgText.length;
