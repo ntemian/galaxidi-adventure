@@ -5223,6 +5223,46 @@ const INV_ICONS = {
     c.strokeStyle='#8a6020';
     c.strokeRect(38,22,3,6); c.strokeRect(34,22,2,4);
   },
+  visvikis_letter: (c) => {
+    // Old sealed letter with wax seal
+    c.fillStyle='#c4a870'; c.fillRect(10,6,32,36);
+    c.fillStyle='#d8c490'; c.fillRect(12,8,28,32);
+    // Aged paper texture (dark spots)
+    c.fillStyle='rgba(120,90,40,0.15)';
+    c.fillRect(14,12,8,3); c.fillRect(28,22,6,2); c.fillRect(18,30,10,2);
+    // Handwritten text lines
+    c.fillStyle='#5a4a30';
+    for(let y=14;y<36;y+=4) c.fillRect(16,y,20,1.5);
+    // Wax seal (red, with anchor symbol)
+    c.fillStyle='#8a2020'; c.beginPath(); c.arc(34,36,6,0,Math.PI*2); c.fill();
+    c.fillStyle='#b03030'; c.beginPath(); c.arc(33,35,4,0,Math.PI*2); c.fill();
+    // Anchor on seal
+    c.strokeStyle='#e8c8c8'; c.lineWidth=1;
+    c.beginPath(); c.moveTo(33,32); c.lineTo(33,38); c.stroke();
+    c.beginPath(); c.arc(33,38,2,0,Math.PI); c.stroke();
+    c.beginPath(); c.moveTo(31,34); c.lineTo(35,34); c.stroke();
+    // Fold crease
+    c.strokeStyle='rgba(100,80,40,0.2)'; c.lineWidth=0.5;
+    c.beginPath(); c.moveTo(10,24); c.lineTo(42,24); c.stroke();
+  },
+  brass_key: (c) => {
+    // Small ornate brass key
+    c.fillStyle='#c49030'; c.strokeStyle='#8a6020'; c.lineWidth=1;
+    // Bow (oval head)
+    c.beginPath(); c.ellipse(18,22,8,9,0,0,Math.PI*2); c.fill(); c.stroke();
+    c.fillStyle='#1a1208'; c.beginPath(); c.ellipse(18,22,4,5,0,0,Math.PI*2); c.fill();
+    // Shaft
+    c.fillStyle='#c49030'; c.fillRect(25,20,16,3);
+    c.strokeStyle='#8a6020'; c.strokeRect(25,20,16,3);
+    // Teeth
+    c.fillStyle='#c49030';
+    c.fillRect(38,23,3,5); c.fillRect(35,23,2,3);
+    c.strokeStyle='#8a6020';
+    c.strokeRect(38,23,3,5); c.strokeRect(35,23,2,3);
+    // Highlight on bow
+    c.fillStyle='rgba(255,220,160,0.3)';
+    c.beginPath(); c.ellipse(16,19,4,3,-0.4,0,Math.PI*2); c.fill();
+  },
   lantern: (c) => {
     // Brass nautical lantern
     c.fillStyle='#8a6a30'; c.fillRect(20,6,12,4); // top cap
