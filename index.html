@@ -4344,15 +4344,21 @@ const VOICE_MAP = {
   'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.': 'voice/ntemis/113.mp3'
 };
 
+let voiceFinished = true;
+
 function playVoice(text) {
   voiceAudio.pause();
   voiceAudio.currentTime = 0;
+  voiceFinished = true;
   const src = VOICE_MAP[text];
   if (src) {
+    voiceFinished = false;
     voiceAudio.src = src;
-    voiceAudio.play().catch(() => {});
+    voiceAudio.onended = () => { voiceFinished = true; };
+    voiceAudio.play().catch(() => { voiceFinished = true; });
   } else if ('speechSynthesis' in window) {
     // Fallback: browser TTS for lines without pre-recorded audio
+    voiceFinished = false;
     speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'el-GR';
@@ -4361,6 +4367,7 @@ function playVoice(text) {
     const voices = speechSynthesis.getVoices();
     const greek = voices.find(v => v.lang.startsWith('el'));
     if (greek) utter.voice = greek;
+    utter.onend = () => { voiceFinished = true; };
     speechSynthesis.speak(utter);
   }
 }
@@ -4368,6 +4375,7 @@ function playVoice(text) {
 function stopVoice() {
   voiceAudio.pause();
   voiceAudio.currentTime = 0;
+  voiceFinished = true;
   if ('speechSynthesis' in window) speechSynthesis.cancel();
 }
 
@@ -4410,10 +4418,15 @@ function updateDlg(dt) {
 function advanceDlg() {
   if (!state.dlg.active) return;
   if (state.dlg.charIdx < state.dlg.text.length) {
-    // Skip typewriter
+    // Skip typewriter — show full text immediately
     state.dlg.charIdx = state.dlg.text.length;
     state.dlg.displayed = state.dlg.text;
+  } else if (voiceFinished) {
+    // Only advance to next line when voice is done
+    nextDlgLine();
   } else {
+    // Voice still playing — stop it and advance
+    stopVoice();
     nextDlgLine();
   }
 }
