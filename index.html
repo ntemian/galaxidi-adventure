@@ -519,6 +519,8 @@ async function loadAllAssets() {
     loadImg('cutscene-church-tile', 'assets/cutscene-church-tile.png'),
     loadImg('cutscene-liotrivi', 'assets/cutscene-liotrivi.png'),
     loadImg('cutscene-liotrivi-sketch', 'assets/cutscene-liotrivi-sketch.png'),
+    loadImg('cutscene-museum', 'assets/cutscene-museum.png'),
+    loadImg('cutscene-museum-steam', 'assets/cutscene-museum-steam.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -1065,6 +1067,33 @@ const cutscenes = {
     },
   },
 
+  // ── THE MUSEUM — Curator explains the golden age (triggered entering museum scene)
+  museum: {
+    frames: [
+      {
+        duration: 9,
+        draw: drawMuseumGolden,
+        dialogue: [
+          { s: 'ΕΠΙΜΕΛΗΤΗΣ', t: 'Τριακόσια πλοία! Φανταστείτε! Από αυτό το μικρό λιμάνι!', at: 1.2 },
+          { s: 'ΕΠΙΜΕΛΗΤΗΣ', t: 'Οι καπεταναίοι του Γαλαξειδίου ταξίδευαν ως τη Μαύρη Θάλασσα.', at: 4.0 },
+          { s: 'ΑΙΑΣ', t: 'Τριακόσια; Σαν ολόκληρο στόλο!', at: 7.0 },
+        ],
+      },
+      {
+        duration: 9,
+        draw: drawMuseumSteam,
+        dialogue: [
+          { s: 'ΕΠΙΜΕΛΗΤΗΣ', t: 'Και τότε ήρθε αυτό. Το ατμόπλοιο. Και αυτοί αρνήθηκαν.', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;', at: 4.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Εκατόν τέσσερις υπέγραψαν. Αλληλασφάλεια.', at: 7.0 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
   // ── THE LIOTRIVI — Athos challenges the family (triggered entering liotrivi scene)
   liotrivi: {
     frames: [
@@ -1375,7 +1404,7 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','reunion','liotrivi','windmill','cave_enter','ghost','church_tile','crossing','treasure','epilogue'];
+  const ids = ['arrival','letter','reunion','museum','liotrivi','windmill','cave_enter','ghost','church_tile','crossing','treasure','epilogue'];
   let i = 0;
   const savedCompletes = {};
   ids.forEach(id => { savedCompletes[id] = cutscenes[id].onComplete; });
@@ -1788,6 +1817,28 @@ function drawTreasureFamily(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.04;
   ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE MUSEUM — Curator explains the golden age
+// ═══════════════════════════════════════════════════════════
+
+function drawMuseumGolden(t, p, tick) {
+  drawKenBurns('cutscene-museum', 1.08 + p * 0.10, p * 6, p * -8);
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.035) * 0.02;
+  ctx.fillStyle = '#FFD070';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawMuseumSteam(t, p, tick) {
+  drawKenBurns('cutscene-museum-steam', 1.12 + p * 0.08, -p * 5, p * -6);
+  ctx.save();
+  ctx.globalAlpha = 0.07 + Math.sin(tick * 0.04) * 0.025;
+  ctx.fillStyle = '#8B6B40';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
