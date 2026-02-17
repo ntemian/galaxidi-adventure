@@ -40,6 +40,8 @@ Promise.all([
   loadImg('cutscene-reunion-music', 'assets/cutscene-reunion-music.png'),
   loadImg('cutscene-windmill', 'assets/cutscene-windmill.png'),
   loadImg('cutscene-windmill-view', 'assets/cutscene-windmill-view.png'),
+  loadImg('cutscene-church', 'assets/cutscene-church.png'),
+  loadImg('cutscene-church-tile', 'assets/cutscene-church-tile.png'),
 ]).then(() => {
   requestAnimationFrame(loop);
 });
@@ -129,6 +131,14 @@ function drawEpilogueClose(t, p, tick) {
   drawKenBurns('cutscene-epilogue', 1.06 + p * 0.14, -p * 10, p * -15);
   ctx.save(); ctx.globalAlpha = 0.04; ctx.fillStyle = '#FFD880'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
 }
+function drawChurchCandle(t, p, tick) {
+  drawKenBurns('cutscene-church', 1.08 + p * 0.10, 0, p * -12);
+  ctx.save(); ctx.globalAlpha = 0.06 + Math.sin(tick * 0.05) * 0.03; ctx.fillStyle = '#FFD060'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
+function drawChurchTile(t, p, tick) {
+  drawKenBurns('cutscene-church-tile', 1.06 + p * 0.14, 0, p * -18);
+  ctx.save(); ctx.globalAlpha = 0.05 + Math.sin(tick * 0.04) * 0.02; ctx.fillStyle = '#FFB840'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
+}
 function drawWindmillPanorama(t, p, tick) {
   drawKenBurns('cutscene-windmill', 1.14 - p * 0.06, -15 + p * 30, 0);
   ctx.save(); ctx.globalAlpha = 0.04 + Math.sin(tick * 0.018) * 0.015; ctx.fillStyle = '#FFE0A0'; ctx.fillRect(0, 0, GW, GH); ctx.restore();
@@ -216,7 +226,19 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Πάμε.', at: 3.5 },
     ]},
   ]},
-  { title: '7. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
+  { title: '7. Ο ΑΓΙΟΣ ΝΙΚΟΛΑΟΣ — The Church', frames: [
+    { duration: 7, draw: drawChurchCandle, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Θέλω να ανάψω ένα κερί. Για τους καπεταναίους.', at: 1.2 },
+      { s: 'ΠΑΠΑΣ', t: 'Αυτό το παιδί... Ο Βισβίκης θα χαμογελούσε.', at: 3.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Άναψέ το, κόρη μου.', at: 5.5 },
+    ]},
+    { duration: 8, draw: drawChurchTile, dialogue: [
+      { s: 'ΚΛΕΙΩ', t: 'Μπαμπά! Κοίτα! Γράμματα στο πάτωμα! «Λ.Β.»!', at: 1.5 },
+      { s: 'ΑΙΑΣ', t: 'Λάμβδα Βήτα... Λεωνίδας Βισβίκης!', at: 3.5 },
+      { s: 'ΝΤΕΜΗΣ', t: 'Ένας χάρτης... Δείχνει τον Άγιο Γεώργιο. Με ένα Χ.', at: 5.8 },
+    ]},
+  ]},
+  { title: '8. ΤΟ ΠΕΡΑΣΜΑ — The Crossing', frames: [
     { duration: 8, draw: drawCrossingWide, dialogue: [
       { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Δεν πίστευα ότι θα ζούσα να το δω.', at: 1.5 },
       { s: 'ΑΙΑΣ', t: 'Αυτό είναι το πλοίο του Βισβίκη;', at: 4.0 },
@@ -228,7 +250,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Αλλιώς πνίγεσαι.', at: 5.8 },
     ]},
   ]},
-  { title: '8. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
+  { title: '9. Ο ΘΗΣΑΥΡΟΣ — The Treasure', frames: [
     { duration: 7, draw: drawTreasureReveal, dialogue: [
       { s: 'ΑΙΑΣ', t: 'Χρυσάφι... Κοίτα, μπαμπά!', at: 1.5 },
       { s: 'ΚΛΕΙΩ', t: 'Και ένα κολιέ. Πράσινο σαν το πέτρωμα!', at: 3.5 },
@@ -240,7 +262,7 @@ const allCutscenes = [
       { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 5.8 },
     ]},
   ]},
-  { title: '9. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
+  { title: '10. ΕΠΙΛΟΓΟΣ — Epilogue', frames: [
     { duration: 8, draw: drawEpilogueHarbor, dialogue: [
       { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι.', at: 1.5 },
       { s: 'ΝΤΕΜΗΣ', t: 'Μας άφησε μια ιδέα. Την αλληλεγγύη.', at: 4.0 },

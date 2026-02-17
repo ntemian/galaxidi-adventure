@@ -515,6 +515,8 @@ async function loadAllAssets() {
     loadImg('cutscene-reunion-music', 'assets/cutscene-reunion-music.png'),
     loadImg('cutscene-windmill', 'assets/cutscene-windmill.png'),
     loadImg('cutscene-windmill-view', 'assets/cutscene-windmill-view.png'),
+    loadImg('cutscene-church', 'assets/cutscene-church.png'),
+    loadImg('cutscene-church-tile', 'assets/cutscene-church-tile.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -1132,6 +1134,33 @@ const cutscenes = {
     },
   },
 
+  // ── THE CHURCH — Clio finds the floor tile (triggered after candle scene in church)
+  church_tile: {
+    frames: [
+      {
+        duration: 7,
+        draw: drawChurchCandle,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Θέλω να ανάψω ένα κερί. Για τους καπεταναίους.', at: 1.2 },
+          { s: 'ΠΑΠΑΣ', t: 'Αυτό το παιδί... Ο Βισβίκης θα χαμογελούσε.', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Άναψέ το, κόρη μου.', at: 5.5 },
+        ],
+      },
+      {
+        duration: 8,
+        draw: drawChurchTile,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά! Κοίτα! Γράμματα στο πάτωμα! «Λ.Β.»!', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Λάμβδα Βήτα... Λεωνίδας Βισβίκης!', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Ένας χάρτης... Δείχνει τον Άγιο Γεώργιο. Με ένα Χ.', at: 5.8 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
   // ── THE CROSSING — Dawn on the Ελπίδα (triggered when boarding the boat)
   crossing: {
     frames: [
@@ -1230,6 +1259,7 @@ function startCutscene(id) {
   state.cutscene.dlgCharIdx = 0;
   state.cutscene.dlgTimer = 0;
   state.cutscene.dlgTriggered = new Set();
+  state.cutscene.skipHover = false;
   state.phase = 'cutscene';
   document.getElementById('ui-panel').classList.remove('on');
   document.getElementById('action-line').classList.remove('on');
@@ -1316,7 +1346,7 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','reunion','windmill','cave_enter','ghost','crossing','treasure','epilogue'];
+  const ids = ['arrival','letter','reunion','windmill','cave_enter','ghost','church_tile','crossing','treasure','epilogue'];
   let i = 0;
   const savedCompletes = {};
   ids.forEach(id => { savedCompletes[id] = cutscenes[id].onComplete; });
@@ -1407,14 +1437,23 @@ function renderCutscene() {
     ctx.restore();
   }
 
-  // Skip hint
+  // Skip button (top-right)
+  const skipW = 80, skipH = 18, skipX = GW - skipW - 8, skipY = 8;
   ctx.save();
-  ctx.globalAlpha = 0.25;
-  ctx.font = '5px "Press Start 2P", monospace';
-  ctx.fillStyle = '#888';
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'bottom';
-  ctx.fillText('ESC: Παράλειψη', GW - 8, GH - 4);
+  ctx.globalAlpha = state.cutscene.skipHover ? 0.85 : 0.5;
+  ctx.fillStyle = '#1a1a2e';
+  ctx.strokeStyle = '#D4A03C';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(skipX, skipY, skipW, skipH, 4);
+  ctx.fill();
+  ctx.stroke();
+  ctx.globalAlpha = state.cutscene.skipHover ? 1 : 0.7;
+  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.fillStyle = '#D4A03C';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Παράλειψη ▸▸', skipX + skipW / 2, skipY + skipH / 2 + 1);
   ctx.restore();
 
   // Fade overlay
@@ -1720,6 +1759,32 @@ function drawTreasureFamily(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.04;
   ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE CHURCH — Clio finds the floor tile
+// ═══════════════════════════════════════════════════════════
+
+function drawChurchCandle(t, p, tick) {
+  // Warm interior, slow zoom toward Clio lighting the candle
+  drawKenBurns('cutscene-church', 1.08 + p * 0.10, 0, p * -12);
+  // Beeswax candlelight warmth
+  ctx.save();
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.05) * 0.03;
+  ctx.fillStyle = '#FFD060';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawChurchTile(t, p, tick) {
+  // Low angle close-up, zoom into the discovery
+  drawKenBurns('cutscene-church-tile', 1.06 + p * 0.14, 0, p * -18);
+  // Sacred warm glow
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.04) * 0.02;
+  ctx.fillStyle = '#FFB840';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
