@@ -457,14 +457,14 @@ const chars = {
   clio:   { x: 0, y: 0, dir: 1, walking: false, frame: 0, targetX: null, startX: 0, walkT: 0, walkDur: 0, visible: true, fadeIn: 0 },
 };
 
-// NPC characters — static, scene-specific
+// NPC characters — static, scene-specific (scale adjusts relative to CHAR_SCALE)
 const npcChars = {
-  ghost:   { scene: 'graveyard', x: 460, y: 280, dir: -1, visible: false, tilt: 0, wave: 0 },
-  athos:   { scene: 'liotrivi', x: 120, y: 335, dir: 1, visible: true },
-  stathis: { scene: 'port', x: 80, y: 340, dir: 1, visible: true },
-  akis:    { scene: 'port', x: 150, y: 342, dir: 1, visible: true },
-  giannis: { scene: 'windmill', x: 150, y: 340, dir: 1, visible: true },
-  curator: { scene: 'museum', x: 100, y: 340, dir: 1, visible: true },
+  ghost:   { scene: 'graveyard', x: 460, y: 280, dir: -1, visible: false, tilt: 0, wave: 0, scale: 1.0 },
+  athos:   { scene: 'liotrivi', x: 120, y: 375, dir: 1, visible: true, scale: 0.85 },
+  stathis: { scene: 'port', x: 80, y: 340, dir: 1, visible: true, scale: 0.85 },
+  akis:    { scene: 'port', x: 150, y: 342, dir: 1, visible: true, scale: 0.85 },
+  giannis: { scene: 'windmill', x: 150, y: 340, dir: 1, visible: true, scale: 0.85 },
+  curator: { scene: 'museum', x: 100, y: 340, dir: 1, visible: true, scale: 0.85 },
 };
 
 let walkDoneCallback = null;
@@ -517,6 +517,8 @@ async function loadAllAssets() {
     loadImg('cutscene-windmill-view', 'assets/cutscene-windmill-view.png'),
     loadImg('cutscene-church', 'assets/cutscene-church.png'),
     loadImg('cutscene-church-tile', 'assets/cutscene-church-tile.png'),
+    loadImg('cutscene-liotrivi', 'assets/cutscene-liotrivi.png'),
+    loadImg('cutscene-liotrivi-sketch', 'assets/cutscene-liotrivi-sketch.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -751,7 +753,7 @@ const scenes = {
                  use:[{s:'ΝΤΕΜΗΣ',t:'Κάτσε. Ξεκουράσου. Η νύχτα είναι μακριά.'}] }},
       { id:'checkered_floor', x:100, y:300, w:400, h:80, label:'Πλακάκια',
         verbs: { look:[{s:'',t:'Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.'}] }},
-      { id:'athos_npc', x:95, y:265, w:65, h:100, label:'Άθος',
+      { id:'athos_npc', x:95, y:280, w:55, h:95, label:'Άθος',
         verbs: { look:[{s:'',t:'Ο Άθος. Δικηγόρος και ιδιοκτήτης του Λιοτριβιού. Τα μάτια του κρύβουν χίλια μυστικά.'}],
                  talk:[{s:'ΑΘΟΣ',t:'Λατσούδη! Περίμενα πότε θα φτάσεις.'},{s:'ΝΤΕΜΗΣ',t:'Με ξέρεις;'},{s:'ΑΘΟΣ',t:'Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.'},{s:'ΑΘΟΣ',t:'Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.'},{s:'ΚΛΕΙΩ',t:'Σπήλαιο; Θα πάμε σε σπήλαιο;!'}] }},
     ],
@@ -1063,6 +1065,33 @@ const cutscenes = {
     },
   },
 
+  // ── THE LIOTRIVI — Athos challenges the family (triggered entering liotrivi scene)
+  liotrivi: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawLiotriviChallenge,
+        dialogue: [
+          { s: 'ΑΘΟΣ', t: 'Τα άφησε όλα "στο Γαλαξίδι." Όχι σε πρόσωπο. Στην πόλη.', at: 1.2 },
+          { s: 'ΑΘΟΣ', t: 'Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ\' το.', at: 4.0 },
+          { s: 'ΑΘΟΣ', t: 'Ποιο είναι το ατμόπλοιο σήμερα;', at: 6.5 },
+        ],
+      },
+      {
+        duration: 7,
+        draw: drawLiotriviSketch,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Μοιάζεις με δικαστή.', at: 1.0 },
+          { s: 'ΑΘΟΣ', t: 'Χειρότερα. Δικηγόρος.', at: 2.8 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Θα βρούμε την απάντηση, Άθο. Υπόσχομαι.', at: 5.0 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+    },
+  },
+
   // ── THE WINDMILL — Giannis shows the cave from above (triggered entering windmill scene)
   windmill: {
     frames: [
@@ -1346,7 +1375,7 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','reunion','windmill','cave_enter','ghost','church_tile','crossing','treasure','epilogue'];
+  const ids = ['arrival','letter','reunion','liotrivi','windmill','cave_enter','ghost','church_tile','crossing','treasure','epilogue'];
   let i = 0;
   const savedCompletes = {};
   ids.forEach(id => { savedCompletes[id] = cutscenes[id].onComplete; });
@@ -1759,6 +1788,28 @@ function drawTreasureFamily(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.04;
   ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: THE LIOTRIVI — Athos challenges the family
+// ═══════════════════════════════════════════════════════════
+
+function drawLiotriviChallenge(t, p, tick) {
+  drawKenBurns('cutscene-liotrivi', 1.10 + p * 0.08, p * 5, p * -10);
+  ctx.save();
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.04) * 0.02;
+  ctx.fillStyle = '#FF9030';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawLiotriviSketch(t, p, tick) {
+  drawKenBurns('cutscene-liotrivi-sketch', 1.06 + p * 0.10, -p * 8, 0);
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.03) * 0.015;
+  ctx.fillStyle = '#FFB860';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
@@ -2719,16 +2770,15 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     ctx.restore();
 
     ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    ctx.translate(gx, gy + bob);
+    ctx.imageSmoothingEnabled = false;
+    ctx.translate(Math.round(gx), Math.round(gy + bob));
     // Apply character scale + horizontal flip
     if (dir < 0) ctx.scale(-S, S);
     else ctx.scale(S, S);
     ctx.rotate(lean);
 
     // ── UPPER BODY (slight counter-sway) ──
-    const counterSway = -strideDir * 1.5;
+    const counterSway = Math.round(-strideDir * 1.5);
     ctx.drawImage(img,
       0, 0, sprW, waistY,
       -sprW/2 + counterSway, -sprH, sprW, waistY
@@ -2740,8 +2790,8 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     ctx.globalAlpha = 0.7;
     for (let y = 0; y < legH; y += bandH) {
       const progress = y / Math.max(1, legH - 1);
-      const backOff = -strideDir * maxStride * 0.7 * (0.3 + 0.7 * progress);
-      const lift = Math.abs(strideDir) * 3 * progress;
+      const backOff = Math.round(-strideDir * maxStride * 0.7 * (0.3 + 0.7 * progress));
+      const lift = Math.round(Math.abs(strideDir) * 3 * progress);
       const h = Math.min(bandH, legH - y);
       ctx.drawImage(img,
         0, waistY + y, sprW, h,
@@ -2753,7 +2803,7 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     // ── FRONT LEG (on top, full brightness, shifted forward) ──
     for (let y = 0; y < legH; y += bandH) {
       const progress = y / Math.max(1, legH - 1);
-      const frontOff = strideDir * maxStride * (0.3 + 0.7 * progress);
+      const frontOff = Math.round(strideDir * maxStride * (0.3 + 0.7 * progress));
       const h = Math.min(bandH, legH - y);
       ctx.drawImage(img,
         0, waistY + y, sprW, h,
@@ -2783,9 +2833,8 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     ctx.restore();
 
     ctx.save();
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    ctx.translate(gx, gy + breathe);
+    ctx.imageSmoothingEnabled = false;
+    ctx.translate(Math.round(gx), Math.round(gy + breathe));
     // Apply character scale + horizontal flip
     if (dir < 0) ctx.scale(-S, S);
     else ctx.scale(S, S);
@@ -2850,8 +2899,11 @@ function drawNPC(who, tick) {
   const squashX = 1 + bc * 0.005;
   const squashY = 1 - bc * 0.005;
 
+  // Per-NPC scale (defaults to 1.0, multiplied with CHAR_SCALE)
+  const npcScale = npc.scale || 1.0;
+  const S = CHAR_SCALE * npcScale;
+
   // Ground shadow (scaled)
-  const S = CHAR_SCALE;
   ctx.save();
   ctx.globalAlpha = who === 'ghost' ? 0.06 : 0.18;
   ctx.fillStyle = '#4A3A28';
@@ -2861,8 +2913,7 @@ function drawNPC(who, tick) {
   ctx.restore();
 
   ctx.save();
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
+  ctx.imageSmoothingEnabled = false;
 
   // Ghost special effects
   if (who === 'ghost') {
@@ -2881,7 +2932,7 @@ function drawNPC(who, tick) {
   // Wave vertical oscillation
   const waveOffset = (npc.wave || 0) > 0 ? Math.sin(tick * 0.1) * npc.wave : 0;
 
-  ctx.translate(gx, gy + breathe + waveOffset);
+  ctx.translate(Math.round(gx), Math.round(gy + breathe + waveOffset));
   if (npc.dir < 0) ctx.scale(-S, S);
   else ctx.scale(S, S);
   ctx.rotate(sway + (npc.tilt || 0));
