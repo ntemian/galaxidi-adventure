@@ -554,6 +554,7 @@ async function loadAllAssets() {
     loadImg('cutscene-treasure-letter', 'assets/cutscene-treasure-letter.png'),
     loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
     loadImg('cutscene-epilogue-signing', 'assets/cutscene-epilogue-signing.png'),
+    loadImg('map-bg', 'assets/map-galaxidi.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -1303,12 +1304,12 @@ const scenes = {
 (function recalibrateHotspots() {
   const cal = {
     exterior: {
-      door:          { x:135, y:95,  w:70,  h:130 },
-      bougainvillea: { x:190, y:2,   w:160, h:108 },
-      flowerpots:    { x:78,  y:222, w:68,  h:48  },
-      barrel:        { x:248, y:172, w:55,  h:55  },
-      boats:         { x:362, y:78,  w:162, h:88  },
-      sea:           { x:350, y:0,   w:230, h:55  },
+      door:          { x:32,  y:108, w:55,  h:150 },
+      bougainvillea: { x:125, y:2,   w:190, h:130 },
+      flowerpots:    { x:25,  y:240, w:90,  h:50  },
+      barrel:        { x:185, y:225, w:55,  h:60  },
+      boats:         { x:350, y:99,  w:163, h:131 },
+      sea:           { x:344, y:2,   w:296, h:55  },
     },
     terrace: {
       harbor:     { x:130, y:60,  w:290, h:110 },
@@ -1318,11 +1319,8 @@ const scenes = {
       flowerpot:  { x:5,   y:210, w:72,  h:52  },
     },
     kitchen: {
-      figs:      { x:178, y:155, w:112, h:58  },
-      satchel:   { x:338, y:148, w:82,  h:88  },
-      window:    { x:420, y:10,  w:105, h:105 },
-      pots:      { x:148, y:0,   w:250, h:55  },
-      fireplace: { x:0,   y:2,   w:100, h:145 },
+      model_ships: { x:148, y:0,   w:245, h:55  },
+      photo:       { x:452, y:5,   w:98,  h:108 },
     },
     port: {
       boats_port:  { x:75,  y:22,  w:215, h:108 },
@@ -1413,16 +1411,16 @@ const scenes = {
 // Galaxidi: North shore of Corinthian Gulf, harbor crescent facing south
 // Layout: sea at bottom, town center-top, hills above
 const MAP_LOCATIONS = [
-  { id:'exterior', sceneIds:['exterior','terrace','kitchen'], label:'Το Σπίτι', x:310, y:155 },
-  { id:'port',     sceneIds:['port'],                        label:'Το Λιμάνι', x:290, y:210 },
-  { id:'museum',   sceneIds:['museum'],                      label:'Μουσείο',   x:230, y:195 },
-  { id:'liotrivi', sceneIds:['liotrivi'],                    label:'Λιοτρίβι',  x:195, y:160 },
-  { id:'church',   sceneIds:['church','church_interior'],    label:'Αγ. Νικόλαος', x:160, y:140 },
-  { id:'cave',     sceneIds:['cave'],                        label:'Σπήλαιο',   x:465, y:130 },
-  { id:'windmill', sceneIds:['windmill'],                    label:'Ο Μύλος',    x:390, y:85 },
-  { id:'graveyard',sceneIds:['graveyard'],                   label:'Νεκροταφείο',x:450, y:100 },
-  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:330, y:280 },
-  { id:'treasure', sceneIds:['treasure','new_era'],          label:'Αγ. Γεώργιος', x:340, y:350 },
+  { id:'exterior', sceneIds:['exterior','terrace','kitchen'], label:'Το Σπίτι', x:139, y:325 },
+  { id:'port',     sceneIds:['port'],                        label:'Το Λιμάνι', x:278, y:252 },
+  { id:'museum',   sceneIds:['museum'],                      label:'Μουσείο',   x:234, y:277 },
+  { id:'liotrivi', sceneIds:['liotrivi'],                    label:'Λιοτρίβι',  x:183, y:304 },
+  { id:'church',   sceneIds:['church','church_interior'],    label:'Αγ. Νικόλαος', x:221, y:285 },
+  { id:'cave',     sceneIds:['cave'],                        label:'Σπήλαιο',   x:481, y:171 },
+  { id:'windmill', sceneIds:['windmill'],                    label:'Ο Μύλος',    x:374, y:204 },
+  { id:'graveyard',sceneIds:['graveyard'],                   label:'Νεκροταφείο',x:418, y:179 },
+  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:323, y:220 },
+  { id:'treasure', sceneIds:['treasure','new_era'],          label:'Αγ. Γεώργιος', x:501, y:74 },
 ];
 
 // Path connections for drawing roads on map
@@ -5410,99 +5408,40 @@ function drawMap() {
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 
-  // Parchment frame
-  ctx.fillStyle = '#1a1610';
-  ctx.fillRect(mx, my, mw, mh);
+  // Draw real map background image
+  const mapImg = images['map-bg'];
+  if (mapImg && mapImg.complete) {
+    ctx.drawImage(mapImg, mx, my, mw, mh);
+  } else {
+    // Fallback: dark parchment fill
+    ctx.fillStyle = '#1a1610';
+    ctx.fillRect(mx, my, mw, mh);
+  }
+
+  // Gold border frame on top of map
   ctx.strokeStyle = '#D4A03C';
   ctx.lineWidth = 2;
   ctx.strokeRect(mx, my, mw, mh);
-  ctx.strokeStyle = '#5a4a2a';
+  ctx.strokeStyle = '#6a5a3a';
   ctx.lineWidth = 1;
   ctx.strokeRect(mx + 3, my + 3, mw - 6, mh - 6);
 
-  // Title
+  // Title banner with dark background for readability
   ctx.save();
+  ctx.fillStyle = 'rgba(20, 16, 8, 0.7)';
+  ctx.fillRect(mx + 4, my + 4, mw - 8, 18);
   ctx.fillStyle = '#D4A03C';
   ctx.font = '9px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
   ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
-  ctx.fillText('ΧΑΡΤΗΣ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, my + 14);
-  ctx.restore();
-
-  // Land mass (above coastline)
-  ctx.save();
-  ctx.fillStyle = '#221e14';
-  ctx.beginPath();
-  ctx.moveTo(mx + 8, my + 225);
-  ctx.quadraticCurveTo(mx + 80, my + 200, mx + 170, my + 218);
-  ctx.quadraticCurveTo(mx + 270, my + 245, mx + 370, my + 218);
-  ctx.quadraticCurveTo(mx + 450, my + 195, mx + mw - 8, my + 215);
-  ctx.lineTo(mx + mw - 8, my + 8);
-  ctx.lineTo(mx + 8, my + 8);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-
-  // Hill contour lines
-  ctx.save();
-  ctx.strokeStyle = '#2e2a1e';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([3, 4]);
-  ctx.beginPath();
-  ctx.moveTo(mx + 280, my + 70);
-  ctx.quadraticCurveTo(mx + 360, my + 52, mx + 460, my + 68);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(mx + 60, my + 95);
-  ctx.quadraticCurveTo(mx + 200, my + 78, mx + 340, my + 88);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.restore();
-
-  // Sea (below coastline)
-  ctx.save();
-  ctx.fillStyle = '#0c1624';
-  ctx.beginPath();
-  ctx.moveTo(mx + 8, my + 225);
-  ctx.quadraticCurveTo(mx + 80, my + 200, mx + 170, my + 218);
-  ctx.quadraticCurveTo(mx + 270, my + 245, mx + 370, my + 218);
-  ctx.quadraticCurveTo(mx + 450, my + 195, mx + mw - 8, my + 215);
-  ctx.lineTo(mx + mw - 8, my + mh - 8);
-  ctx.lineTo(mx + 8, my + mh - 8);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-
-  // Animated wave lines
-  ctx.save();
-  ctx.strokeStyle = '#162840';
-  ctx.lineWidth = 1;
-  for (let wy = 255; wy < mh - 15; wy += 22) {
-    ctx.beginPath();
-    for (let wx = 16; wx < mw - 16; wx += 3) {
-      const yOff = Math.sin((wx + state.tick * 0.4) * 0.05) * 2;
-      if (wx === 16) ctx.moveTo(mx + wx, my + wy + yOff);
-      else ctx.lineTo(mx + wx, my + wy + yOff);
-    }
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  // Island blob (Agios Georgios)
-  ctx.save();
-  ctx.fillStyle = '#221e14';
-  ctx.beginPath();
-  ctx.ellipse(340, 342, 20, 10, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#2e2a1e';
-  ctx.stroke();
+  ctx.fillText('ΧΑΡΤΗΣ ΓΑΛΑΞΕΙΔΙΟΥ', GW / 2, my + 16);
   ctx.restore();
 
   // Path connections (dotted lines between locations)
   ctx.save();
-  ctx.strokeStyle = '#3a3020';
+  ctx.strokeStyle = 'rgba(212, 160, 60, 0.4)';
   ctx.lineWidth = 1;
-  ctx.setLineDash([2, 3]);
+  ctx.setLineDash([3, 3]);
   for (const [a, b] of MAP_PATHS) {
     const la = MAP_LOCATIONS.find(l => l.id === a);
     const lb = MAP_LOCATIONS.find(l => l.id === b);
@@ -5519,16 +5458,27 @@ function drawMap() {
   // Compass rose (bottom-right)
   const crx = mx + mw - 30, cry = my + mh - 30;
   ctx.save();
-  ctx.strokeStyle = '#5a4a2a';
+  ctx.strokeStyle = '#8a7a4a';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(crx, cry - 10); ctx.lineTo(crx, cry + 10);
-  ctx.moveTo(crx - 10, cry); ctx.lineTo(crx + 10, cry);
+  ctx.moveTo(crx, cry - 12); ctx.lineTo(crx, cry + 12);
+  ctx.moveTo(crx - 12, cry); ctx.lineTo(crx + 12, cry);
   ctx.stroke();
-  ctx.fillStyle = '#5a4a2a';
+  // Diagonal arms
+  ctx.beginPath();
+  ctx.moveTo(crx - 7, cry - 7); ctx.lineTo(crx + 7, cry + 7);
+  ctx.moveTo(crx + 7, cry - 7); ctx.lineTo(crx - 7, cry + 7);
+  ctx.stroke();
+  // North arrow
+  ctx.fillStyle = '#D4A03C';
+  ctx.beginPath();
+  ctx.moveTo(crx, cry - 12); ctx.lineTo(crx - 3, cry - 6); ctx.lineTo(crx + 3, cry - 6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#8a7a4a';
   ctx.font = '5px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('B', crx, cry - 13);
+  ctx.fillText('B', crx, cry - 15);
   ctx.restore();
 
   // Location markers
@@ -5540,57 +5490,79 @@ function drawMap() {
 
     ctx.save();
     if (isCurrent) {
-      // Current: pulsing gold
-      const pulse = 5 + Math.sin(state.tick * 0.08) * 2;
+      // Current: pulsing gold with dark outline for contrast
+      const pulse = 6 + Math.sin(state.tick * 0.08) * 2;
       ctx.shadowColor = '#D4A03C';
       ctx.shadowBlur = pulse;
+      ctx.strokeStyle = '#1a1200';
+      ctx.lineWidth = 2;
       ctx.fillStyle = '#D4A03C';
       ctx.beginPath();
-      ctx.arc(loc.x, loc.y, 5, 0, Math.PI * 2);
+      ctx.arc(loc.x, loc.y, 6, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
       ctx.fillStyle = '#FFE8A0';
       ctx.beginPath();
-      ctx.arc(loc.x, loc.y, 2, 0, Math.PI * 2);
+      ctx.arc(loc.x, loc.y, 2.5, 0, Math.PI * 2);
       ctx.fill();
     } else if (isVisited) {
-      // Visited: gold dot, bigger on hover
+      // Visited: gold dot with dark outline
+      ctx.strokeStyle = '#1a1200';
+      ctx.lineWidth = 1.5;
       ctx.fillStyle = isHover ? '#FFE8A0' : '#D4A03C';
       ctx.beginPath();
       ctx.arc(loc.x, loc.y, isHover ? 5 : 4, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
       if (isHover) {
+        ctx.shadowColor = '#FFE8A0';
+        ctx.shadowBlur = 6;
         ctx.strokeStyle = '#FFE8A0';
         ctx.lineWidth = 1;
         ctx.stroke();
       }
     } else {
-      // Unvisited: dim
-      ctx.globalAlpha = 0.25;
-      ctx.fillStyle = '#4a4a4a';
+      // Unvisited: subtle marker
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = '#2a2a1a';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#6a6a5a';
       ctx.beginPath();
       ctx.arc(loc.x, loc.y, 3, 0, Math.PI * 2);
       ctx.fill();
+      ctx.stroke();
     }
     ctx.restore();
 
-    // Label for current + hover
+    // Label for current + hover (with dark background for readability on map)
     if (isCurrent || (isHover && isVisited)) {
       ctx.save();
-      ctx.fillStyle = isCurrent ? '#FFE8A0' : '#D4A03C';
+      const label = loc.label;
       ctx.font = '7px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
-      ctx.shadowColor = '#000'; ctx.shadowBlur = 3;
-      ctx.fillText(loc.label, loc.x, loc.y - 10);
+      const tw = ctx.measureText(label).width;
+      // Dark pill behind label
+      ctx.fillStyle = 'rgba(15, 12, 6, 0.75)';
+      const lx = loc.x - tw / 2 - 4, ly = loc.y - 20;
+      ctx.beginPath();
+      ctx.roundRect(lx, ly, tw + 8, 12, 3);
+      ctx.fill();
+      // Label text
+      ctx.fillStyle = isCurrent ? '#FFE8A0' : '#D4A03C';
+      ctx.shadowColor = '#000'; ctx.shadowBlur = 2;
+      ctx.fillText(label, loc.x, loc.y - 11);
       ctx.restore();
     }
   }
 
-  // Bottom hint
+  // Bottom hint with background
   ctx.save();
-  ctx.fillStyle = '#5a4a2a';
+  ctx.fillStyle = 'rgba(20, 16, 8, 0.7)';
+  ctx.fillRect(mx + 4, my + mh - 16, mw - 8, 12);
+  ctx.fillStyle = '#8a7a4a';
   ctx.font = '6px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('Κλικ σε τοποθεσία | M ή ESC για κλείσιμο', GW / 2, GH - 8);
+  ctx.fillText('Κλικ σε τοποθεσία | M ή ESC για κλείσιμο', GW / 2, GH - 26);
   ctx.restore();
 }
 
@@ -6324,102 +6296,98 @@ function drawDebugHotspots() {
 }
 
 // ════════════════════════════════════════════════════════════
-// CUSTOM CURSOR — large, visible, SCUMM-style
+// CUSTOM CURSOR — Monkey Island SCUMM-style pixel cursor
 // ════════════════════════════════════════════════════════════
+// Helper: draw a crisp pixel-art shape from a bitmap pattern
+function drawPixelCursor(cx, cy, pattern, fg, outline) {
+  const h = pattern.length, w = pattern[0].length;
+  const ox = -Math.floor(w / 2), oy = -Math.floor(h / 2);
+  // Pass 1: black outline (draw fg pixels expanded by 1 in all directions)
+  if (outline) {
+    ctx.fillStyle = outline;
+    for (let r = 0; r < h; r++) {
+      for (let c = 0; c < w; c++) {
+        if (pattern[r][c]) {
+          ctx.fillRect(cx + ox + c - 1, cy + oy + r - 1, 3, 3);
+        }
+      }
+    }
+  }
+  // Pass 2: foreground pixels
+  ctx.fillStyle = fg;
+  for (let r = 0; r < h; r++) {
+    for (let c = 0; c < w; c++) {
+      if (pattern[r][c]) {
+        ctx.fillRect(cx + ox + c, cy + oy + r, 1, 1);
+      }
+    }
+  }
+}
+
+// Cursor bitmaps (1 = filled pixel, 0 = transparent)
+const CURSOR_CROSS = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [1,1,1,0,0,0,1,1,1],
+  [0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+];
+
+const CURSOR_INTERACT = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0],
+  [1,1,0,0,0,0,0,1,1],
+  [0,1,0,0,0,0,0,1,0],
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,0,0,0,1,0,0,0,0],
+];
+
+const CURSOR_ARROW_L = [
+  [0,0,0,1,0,0,0,0,0],
+  [0,0,1,1,0,0,0,0,0],
+  [0,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1],
+  [0,1,1,1,1,1,1,1,1],
+  [0,0,1,1,0,0,0,0,0],
+  [0,0,0,1,0,0,0,0,0],
+];
+
+const CURSOR_ARROW_R = [
+  [0,0,0,0,0,1,0,0,0],
+  [0,0,0,0,0,1,1,0,0],
+  [1,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,0],
+  [0,0,0,0,0,1,1,0,0],
+  [0,0,0,0,0,1,0,0,0],
+];
+
 function drawCustomCursor() {
   const mx = state.mouseGX, my = state.mouseGY;
-  if (mx <= 0 && my <= 0) return; // mouse hasn't entered canvas yet
+  if (mx <= 0 && my <= 0) return;
   ctx.save();
+  ctx.imageSmoothingEnabled = false;
   const mode = state.cursorMode || 'default';
   const isHot = mode === 'pointer' || mode === 'zoom-in' || mode === 'help' || mode === 'grab';
   const isExit = mode === 'w-resize' || mode === 'e-resize';
 
   if (isExit) {
-    // Exit arrow — large pulsing directional arrow
-    const left = mode === 'w-resize';
-    const bob = Math.sin(state.tick * 0.1) * 2;
-    ctx.globalAlpha = 0.9;
-    ctx.fillStyle = '#FFE8A0';
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    if (left) {
-      ctx.moveTo(mx - 8 + bob, my);
-      ctx.lineTo(mx + 4, my - 7);
-      ctx.lineTo(mx + 4, my - 3);
-      ctx.lineTo(mx + 10, my - 3);
-      ctx.lineTo(mx + 10, my + 3);
-      ctx.lineTo(mx + 4, my + 3);
-      ctx.lineTo(mx + 4, my + 7);
-    } else {
-      ctx.moveTo(mx + 8 - bob, my);
-      ctx.lineTo(mx - 4, my - 7);
-      ctx.lineTo(mx - 4, my - 3);
-      ctx.lineTo(mx - 10, my - 3);
-      ctx.lineTo(mx - 10, my + 3);
-      ctx.lineTo(mx - 4, my + 3);
-      ctx.lineTo(mx - 4, my + 7);
-    }
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
+    // Exit: clean pixel arrow
+    const pattern = mode === 'w-resize' ? CURSOR_ARROW_L : CURSOR_ARROW_R;
+    drawPixelCursor(mx, my, pattern, '#FFE8A0', '#000');
   } else if (isHot) {
-    // Interaction cursor — bright golden pointer hand
-    const pulse = 0.8 + Math.sin(state.tick * 0.12) * 0.2;
-    ctx.globalAlpha = pulse;
-    // Outer glow
-    ctx.shadowColor = 'rgba(255,220,120,0.7)';
-    ctx.shadowBlur = 8;
-    // Draw a chunky pointing finger
-    ctx.fillStyle = '#FFE8A0';
-    ctx.strokeStyle = '#5a4228';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    // Finger pointing up-left
-    ctx.moveTo(mx, my);           // tip
-    ctx.lineTo(mx + 1, my + 6);
-    ctx.lineTo(mx + 4, my + 10);
-    ctx.lineTo(mx + 3, my + 13);
-    ctx.lineTo(mx + 6, my + 13);
-    ctx.lineTo(mx + 8, my + 10);
-    ctx.lineTo(mx + 10, my + 13);
-    ctx.lineTo(mx + 12, my + 13);
-    ctx.lineTo(mx + 12, my + 9);
-    ctx.lineTo(mx + 5, my + 6);
-    ctx.lineTo(mx + 3, my + 2);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    // Verb icon — small symbol next to cursor
-    ctx.shadowBlur = 0;
-    ctx.globalAlpha = 0.9;
-    ctx.font = '7px "Press Start 2P", monospace';
-    ctx.fillStyle = '#FFF';
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    const icon = mode === 'zoom-in' ? '?' : mode === 'help' ? '...' : mode === 'grab' ? '+' : '';
-    if (icon) {
-      ctx.strokeText(icon, mx + 13, my + 1);
-      ctx.fillText(icon, mx + 13, my + 1);
-    }
+    // Interactive: enhanced cross with arrow tips
+    drawPixelCursor(mx, my, CURSOR_INTERACT, '#FFD700', '#000');
   } else {
-    // Default / crosshair — large bright cross
-    const size = 7;
-    const thick = 1;
-    ctx.globalAlpha = 0.9;
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = 2;
-    // Vertical bar
-    ctx.fillStyle = '#FFE8A0';
-    ctx.fillRect(mx - thick, my - size, thick * 2 + 1, size * 2 + 1);
-    // Horizontal bar
-    ctx.fillRect(mx - size, my - thick, size * 2 + 1, thick * 2 + 1);
-    // Center dot
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(mx, my, 1, 1);
+    // Default: clean SCUMM crosshair with gap in center
+    drawPixelCursor(mx, my, CURSOR_CROSS, '#FFE8A0', '#000');
   }
   ctx.restore();
 }
