@@ -275,7 +275,7 @@ async function loadAllAssets() {
     loadImg('title-bg', 'assets/title-bg.webp'),
     loadImg('bg-exterior', 'assets/pixel-exterior.webp'),
     loadImg('bg-terrace', 'assets/pixel-terrace.webp'),
-    loadImg('bg-kitchen', 'assets/pixel-kitchen.webp'),
+    loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
     loadImg('bg-port', 'assets/pixel-port.webp'),
     loadImg('bg-museum', 'assets/pixel-museum.webp'),
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
@@ -425,14 +425,14 @@ const scenes = {
       clio:   { x: 100, y: 377 },
     },
     objects: [
-      { id:'model_ships', x:150, y:-64, w:240, h:65, label:'Μοντέλα πλοίων',
+      { id:'model_ships', x:20, y:0, w:200, h:70, label:'Μοντέλα πλοίων',
         verbs: { look:[{s:'',t:'Μοντέλα πλοίων σε ράφια — σκούνες, μπρίκια, τρικάταρτα. Μικρογραφίες μιας χαμένης αυτοκρατορίας.'}] }},
-      { id:'photo', x:455, y:-40, w:95, h:115, label:'Φωτογραφία',
+      { id:'photo', x:115, y:70, w:65, h:80, label:'Φωτογραφία',
         verbs: { look:()=>{
             if(!state.flags.photo_seen){state.flags.photo_seen=1;return[{s:'',t:'Μια ξεθωριασμένη φωτογραφία σε χρυσή κορνίζα. Ένας άντρας με καπετάνιος στολή, λευκά μουστάκια, περήφανο βλέμμα.'},{s:'ΚΛΕΙΩ',t:'Ποιος είναι αυτός;'},{s:'ΝΤΕΜΗΣ',t:'Ο Καπετάν Βισβίκης. Ο προπάππους μου.'}];}
             return[{s:'',t:'Ο Καπετάν Λουκάς Βισβίκης. Τα μάτια του σε ακολουθούν.'}];
           }}},
-      { id:'desk_drawer', x:250, y:225, w:90, h:30, label:'Κρυφό συρτάρι',
+      { id:'desk_drawer', x:210, y:230, w:210, h:35, label:'Κρυφό συρτάρι',
         verbs: {
           look:()=>{
             if(state.flags.drawer_open) return[{s:'',t:'Το συρτάρι είναι ανοιχτό. Άδειο πλέον.'}];
@@ -469,7 +469,7 @@ const scenes = {
             }
             return[{s:'',t:'Κλειδωμένο. Χρειάζεσαι κλειδί.'}];
           }}},
-      { id:'copper_pot', x:30, y:50, w:70, h:90, label:'Χάλκινο δοχείο',
+      { id:'copper_pot', x:0, y:100, w:80, h:90, label:'Χάλκινο δοχείο',
         verbs: {
           look:()=>{
             if(state.flags.key_found) return[{s:'',t:'Ένα χάλκινο δοχείο στο τζάκι. Τώρα άδειο.'}];
@@ -484,11 +484,11 @@ const scenes = {
           use:()=>{
             return scenes.kitchen.objects.find(o=>o.id==='copper_pot').verbs.open();
           }}},
-      { id:'fireplace', x:0, y:140, w:95, h:145, label:'Τζάκι',
+      { id:'fireplace', x:0, y:160, w:85, h:170, label:'Τζάκι',
         verbs: { look:[{s:'',t:'Πέτρινο τζάκι με στάχτες. Πάνω του — ένα χάλκινο δοχείο.'}] }},
-      { id:'instruments', x:340, y:40, w:100, h:100, label:'Ναυτικά όργανα',
+      { id:'instruments', x:500, y:120, w:120, h:100, label:'Ναυτικά όργανα',
         verbs: { look:[{s:'',t:'Ορειχάλκινα ναυτικά όργανα: πυξίδα, εξάντας, τηλεσκόπιο. Γυαλισμένα σαν χθες.'},{s:'ΑΙΑΣ',t:'Ποιου παππού;'},{s:'ΝΤΕΜΗΣ',t:'Του προπάππου μου. Κανένας δεν έχει μπει εδώ χρόνια. Κληρονομιά.'}] }},
-      { id:'charts', x:480, y:100, w:120, h:140, label:'Ναυτικοί χάρτες',
+      { id:'charts', x:250, y:10, w:180, h:110, label:'Ναυτικοί χάρτες',
         verbs: { look:[{s:'',t:'Χάρτες στους τοίχους. Δρομολόγια προς Σμύρνη, Αλεξάνδρεια, Βηρυτό. Με μελάνι σημειωμένα.'},{s:'ΚΛΕΙΩ',t:'Θα έχει φαντάσματα;'},{s:'ΝΤΕΜΗΣ',t:'...Όχι, Κλειώ. Θα έχει σκόνη.'}] }},
     ],
     exits: [{ side:'left', target:'exterior', label:'← Έξω' }],
