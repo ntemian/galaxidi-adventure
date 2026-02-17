@@ -22,330 +22,84 @@
 
   /* ── ACTION LINE — Trunk wood strip ── */
   #action-line {
-    height: 36px; display: none; align-items: center; justify-content: center;
+    height: 24px; display: none; align-items: center; justify-content: center;
     font-family: 'Press Start 2P', monospace;
-    font-size: .65rem; color: #FFE8A0; letter-spacing: 1px;
-    background:
-      /* Tree ring curves flowing through */
-      radial-gradient(ellipse 120px 200px at -10% 50%, transparent 65%, rgba(45,28,8,0.12) 66%, transparent 67%, transparent 72%, rgba(40,25,8,0.08) 73%, transparent 74%),
-      radial-gradient(ellipse 140px 220px at 110% 50%, transparent 60%, rgba(42,26,8,0.1) 61%, transparent 62%, transparent 68%, rgba(48,30,10,0.07) 69%, transparent 70%),
-      /* Grain lines */
-      repeating-linear-gradient(87deg, transparent 0px, transparent 5px, rgba(80,55,20,0.1) 5px, rgba(80,55,20,0.1) 6px, transparent 6px, transparent 18px),
-      repeating-linear-gradient(93deg, transparent 0px, transparent 11px, rgba(0,0,0,0.07) 11px, rgba(0,0,0,0.07) 12px, transparent 12px, transparent 30px),
-      /* Stains */
-      radial-gradient(ellipse 80px 20px at 25% 60%, rgba(90,60,20,0.12) 0%, transparent 100%),
-      radial-gradient(ellipse 60px 18px at 70% 30%, rgba(40,25,8,0.1) 0%, transparent 100%),
-      linear-gradient(180deg, #5a4228 0%, #4e3820 20%, #3e2c18 50%, #4a3620 75%, #2e1e0e 100%);
-    border-top: 3px solid #8a6e42;
-    border-bottom: 2px solid #1a0e04;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.9), 0 0 10px rgba(255,220,120,0.25);
-    box-shadow: inset 0 1px 0 rgba(255,220,160,0.12), inset 0 -1px 0 rgba(0,0,0,0.3);
+    font-size: .6rem; color: #c0e0c0; letter-spacing: 1px;
+    background: #000;
+    border-top: 1px solid #222;
   }
   #action-line.on { display: flex; }
 
-  /* ── UI PANEL — MI2 rough-hewn trunk wood ── */
+  /* ── UI PANEL — Monkey Island clean style ── */
   #ui-panel {
-    background:
-      /* === ETCHED ROSES — carved into the wood === */
-      /* Rose 1 — top-left, full bloom */
-      radial-gradient(ellipse 11px 10px at 8% 18%, rgba(90,25,15,0.22) 0%, rgba(65,18,10,0.12) 45%, transparent 100%),
-      radial-gradient(ellipse 14px 13px at 8% 18%, transparent 55%, rgba(75,20,12,0.1) 60%, transparent 68%),
-      radial-gradient(ellipse 18px 16px at 8% 18%, transparent 62%, rgba(60,16,8,0.07) 66%, transparent 74%),
-      radial-gradient(ellipse 8px 10px at 6% 15%, rgba(95,28,18,0.15) 0%, transparent 70%),
-      radial-gradient(ellipse 9px 7px at 10% 21%, rgba(85,22,14,0.13) 0%, transparent 65%),
-      radial-gradient(ellipse 7px 9px at 7% 22%, rgba(80,20,12,0.11) 0%, transparent 60%),
-      /* Rose 2 — center-right, bud */
-      radial-gradient(ellipse 9px 8px at 72% 28%, rgba(85,22,14,0.2) 0%, rgba(60,16,8,0.1) 50%, transparent 100%),
-      radial-gradient(ellipse 12px 11px at 72% 28%, transparent 50%, rgba(70,18,10,0.08) 56%, transparent 65%),
-      radial-gradient(ellipse 7px 8px at 70% 25%, rgba(90,25,16,0.12) 0%, transparent 65%),
-      radial-gradient(ellipse 6px 7px at 74% 31%, rgba(80,20,12,0.1) 0%, transparent 60%),
-      /* Rose 3 — bottom-center */
-      radial-gradient(ellipse 10px 9px at 45% 82%, rgba(88,24,15,0.18) 0%, rgba(62,17,9,0.09) 48%, transparent 100%),
-      radial-gradient(ellipse 14px 12px at 45% 82%, transparent 52%, rgba(68,18,10,0.07) 58%, transparent 68%),
-      radial-gradient(ellipse 8px 9px at 43% 79%, rgba(92,26,16,0.12) 0%, transparent 65%),
-      radial-gradient(ellipse 7px 8px at 47% 85%, rgba(82,21,13,0.1) 0%, transparent 60%),
-      /* Rose 4 — far right */
-      radial-gradient(ellipse 7px 6px at 92% 65%, rgba(80,20,12,0.18) 0%, rgba(55,14,7,0.08) 50%, transparent 100%),
-      radial-gradient(ellipse 10px 9px at 92% 65%, transparent 48%, rgba(65,16,8,0.07) 55%, transparent 65%),
-      /* === TWISTING VINES — carved S-curves === */
-      radial-gradient(ellipse 300px 180px at -5% -20%, transparent 96%, rgba(28,45,15,0.14) 96.5%, rgba(28,45,15,0.14) 97%, transparent 97.5%),
-      radial-gradient(ellipse 280px 200px at 35% 130%, transparent 93%, rgba(25,40,12,0.12) 93.5%, rgba(25,40,12,0.12) 94%, transparent 94.5%),
-      radial-gradient(ellipse 320px 160px at 70% -30%, transparent 95%, rgba(30,48,16,0.13) 95.5%, rgba(30,48,16,0.13) 96%, transparent 96.5%),
-      radial-gradient(ellipse 250px 180px at 105% 120%, transparent 94%, rgba(26,42,14,0.11) 94.5%, rgba(26,42,14,0.11) 95%, transparent 95.5%),
-      radial-gradient(ellipse 200px 120px at 15% 110%, transparent 95.5%, rgba(22,38,12,0.1) 96%, rgba(22,38,12,0.1) 96.3%, transparent 96.8%),
-      radial-gradient(ellipse 180px 140px at 85% -10%, transparent 94.5%, rgba(24,40,13,0.09) 95%, rgba(24,40,13,0.09) 95.3%, transparent 95.8%),
-      /* === THORNS === */
-      radial-gradient(ellipse 3px 6px at 12% 35%, rgba(30,48,16,0.16) 0%, transparent 100%),
-      radial-gradient(ellipse 3px 5px at 25% 72%, rgba(28,45,14,0.14) 0%, transparent 100%),
-      radial-gradient(ellipse 4px 6px at 38% 25%, rgba(32,50,18,0.13) 0%, transparent 100%),
-      radial-gradient(ellipse 3px 5px at 55% 80%, rgba(26,42,13,0.15) 0%, transparent 100%),
-      radial-gradient(ellipse 3px 6px at 65% 38%, rgba(30,48,16,0.12) 0%, transparent 100%),
-      radial-gradient(ellipse 4px 5px at 78% 70%, rgba(28,45,14,0.14) 0%, transparent 100%),
-      radial-gradient(ellipse 3px 6px at 88% 42%, rgba(32,50,18,0.11) 0%, transparent 100%),
-      /* === LEAVES along vines === */
-      radial-gradient(ellipse 10px 5px at 15% 30%, rgba(30,52,18,0.14) 0%, rgba(25,42,14,0.06) 50%, transparent 100%),
-      radial-gradient(ellipse 8px 4px at 22% 68%, rgba(28,48,16,0.12) 0%, transparent 100%),
-      radial-gradient(ellipse 9px 5px at 35% 22%, rgba(32,55,20,0.11) 0%, transparent 100%),
-      radial-gradient(ellipse 11px 5px at 52% 78%, rgba(26,45,15,0.13) 0%, transparent 100%),
-      radial-gradient(ellipse 8px 4px at 62% 35%, rgba(30,50,18,0.1) 0%, transparent 100%),
-      radial-gradient(ellipse 10px 5px at 75% 68%, rgba(28,48,16,0.12) 0%, transparent 100%),
-      radial-gradient(ellipse 9px 4px at 85% 40%, rgba(32,52,18,0.1) 0%, transparent 100%),
-      radial-gradient(ellipse 7px 4px at 48% 15%, rgba(26,44,14,0.11) 0%, transparent 100%),
-      /* === TREE RINGS === */
-      radial-gradient(ellipse 180px 300px at -20% 50%,
-        transparent 58%, rgba(45,28,8,0.12) 59%, transparent 60%,
-        transparent 63%, rgba(50,30,10,0.08) 64%, transparent 65%,
-        transparent 69%, rgba(40,25,8,0.1) 70%, transparent 71%,
-        transparent 76%, rgba(55,35,12,0.07) 77%, transparent 78%
-      ),
-      radial-gradient(ellipse 200px 350px at 110% 40%,
-        transparent 55%, rgba(40,25,8,0.1) 56%, transparent 57%,
-        transparent 61%, rgba(50,32,10,0.07) 62%, transparent 63%,
-        transparent 68%, rgba(42,26,8,0.09) 69%, transparent 70%
-      ),
-      /* === GRAIN LINES === */
-      repeating-linear-gradient(87deg, transparent 0px, transparent 4px, rgba(0,0,0,0.07) 4px, rgba(0,0,0,0.07) 5.5px, transparent 5.5px, transparent 10px, rgba(55,35,12,0.05) 10px, rgba(55,35,12,0.05) 11px, transparent 11px, transparent 18px),
-      repeating-linear-gradient(92deg, transparent 0px, transparent 6px, rgba(0,0,0,0.05) 6px, rgba(0,0,0,0.05) 7px, transparent 7px, transparent 15px, rgba(60,40,15,0.04) 15px, rgba(60,40,15,0.04) 16px, transparent 16px, transparent 25px),
-      /* === KNOTS === */
-      radial-gradient(ellipse 18px 14px at 18% 45%, rgba(20,10,2,0.3) 0%, rgba(35,20,5,0.15) 35%, transparent 60%),
-      radial-gradient(ellipse 12px 10px at 62% 60%, rgba(22,12,3,0.25) 0%, rgba(40,25,8,0.1) 40%, transparent 65%),
-      /* === WORN patches === */
-      radial-gradient(ellipse 80px 45px at 30% 50%, rgba(100,70,30,0.06) 0%, transparent 100%),
-      radial-gradient(ellipse 70px 40px at 78% 55%, rgba(90,62,25,0.05) 0%, transparent 100%),
-      /* === BASE wood === */
-      linear-gradient(180deg,
-        #6b5030 0%, #5e4528 5%, #523c22 12%, #5a4428 18%,
-        #4a3620 28%, #523e24 35%, #443018 45%, #4e3a22 55%,
-        #3e2c16 62%, #463420 70%, #382814 78%, #3e3018 85%,
-        #2e2010 93%, #241a0c 100%
-      );
-    border-top: 4px solid #7a5e38;
+    background: #000;
     display: none; flex-direction: column;
-    box-shadow:
-      inset 0 2px 0 rgba(255,200,120,0.1),
-      inset 0 -3px 6px rgba(0,0,0,0.5),
-      0 -2px 8px rgba(0,0,0,0.5);
-    position: relative;
-    overflow: hidden;
   }
   #ui-panel.on { display: flex; }
-  /* Vine + rosette border along top */
-  #ui-panel::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 8px;
-    background:
-      radial-gradient(ellipse 40px 12px at 10% 60%, rgba(30,50,18,0.18) 0%, transparent 80%),
-      radial-gradient(ellipse 35px 10px at 30% 40%, rgba(28,46,16,0.15) 0%, transparent 75%),
-      radial-gradient(ellipse 45px 12px at 50% 65%, rgba(32,52,20,0.17) 0%, transparent 80%),
-      radial-gradient(ellipse 38px 10px at 70% 35%, rgba(26,44,14,0.14) 0%, transparent 75%),
-      radial-gradient(ellipse 42px 12px at 90% 55%, rgba(30,48,18,0.16) 0%, transparent 80%),
-      radial-gradient(circle 3px at 20% 50%, rgba(90,25,15,0.2) 0%, rgba(70,18,10,0.08) 50%, transparent 100%),
-      radial-gradient(circle 3px at 50% 50%, rgba(85,22,14,0.18) 0%, transparent 100%),
-      radial-gradient(circle 3px at 80% 50%, rgba(88,24,15,0.2) 0%, transparent 100%),
-      linear-gradient(180deg, rgba(138,110,66,0.6) 0%, rgba(100,78,40,0.3) 40%, transparent 100%);
-    pointer-events: none; z-index: 1;
-  }
-  /* Bottom vine border */
-  #ui-panel::after {
-    content: '';
-    position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
-    background:
-      radial-gradient(ellipse 35px 10px at 15% 40%, rgba(28,46,16,0.15) 0%, transparent 75%),
-      radial-gradient(ellipse 40px 12px at 40% 60%, rgba(30,50,18,0.16) 0%, transparent 80%),
-      radial-gradient(ellipse 38px 10px at 65% 35%, rgba(26,44,14,0.14) 0%, transparent 75%),
-      radial-gradient(ellipse 42px 12px at 88% 55%, rgba(32,52,20,0.16) 0%, transparent 80%),
-      radial-gradient(circle 2.5px at 28% 50%, rgba(88,24,15,0.18) 0%, transparent 100%),
-      radial-gradient(circle 2.5px at 55% 50%, rgba(85,22,14,0.16) 0%, transparent 100%),
-      radial-gradient(circle 2.5px at 78% 50%, rgba(90,25,15,0.18) 0%, transparent 100%),
-      linear-gradient(180deg, transparent 0%, rgba(26,16,8,0.4) 60%, rgba(20,12,4,0.6) 100%);
-    pointer-events: none; z-index: 1;
-  }
+  #ui-panel::before, #ui-panel::after { display: none; }
 
   /* Bottom row: verbs LEFT, inventory RIGHT */
   #ui-bottom {
-    display: flex; height: 150px; padding: 8px 10px;
+    display: flex; height: 120px; padding: 6px 12px;
   }
 
-  /* ── VERB GRID — Rough carved buttons ── */
+  /* ── VERB GRID — MI-style flat text buttons ── */
   #verb-panel {
     display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr);
-    gap: 5px; width: 300px; flex-shrink: 0;
+    gap: 2px; width: 260px; flex-shrink: 0;
   }
   .vb {
-    font-family: 'Press Start 2P', monospace; font-size: .6rem; color: #c8a868;
-    background:
-      /* Tree ring arc through button */
-      radial-gradient(ellipse 80px 120px at -15% 50%,
-        transparent 55%, rgba(42,26,8,0.13) 56%, transparent 57%,
-        transparent 63%, rgba(38,22,6,0.09) 64%, transparent 65%
-      ),
-      /* Grain lines at angles */
-      repeating-linear-gradient(86deg, transparent 0px, transparent 4px, rgba(0,0,0,0.07) 4px, rgba(0,0,0,0.07) 5.5px, transparent 5.5px, transparent 11px),
-      repeating-linear-gradient(93deg, transparent 0px, transparent 8px, rgba(60,40,15,0.05) 8px, rgba(60,40,15,0.05) 9px, transparent 9px, transparent 20px),
-      /* Small knot */
-      radial-gradient(ellipse 8px 6px at 75% 35%, rgba(25,14,4,0.2) 0%, rgba(40,25,8,0.08) 50%, transparent 100%),
-      /* Uneven color patches */
-      radial-gradient(ellipse 40px 25px at 30% 40%, rgba(70,48,18,0.12) 0%, transparent 100%),
-      radial-gradient(ellipse 35px 20px at 70% 60%, rgba(40,25,8,0.1) 0%, transparent 100%),
-      linear-gradient(180deg, #4a3822 0%, #3e2e18 25%, #3a2a16 50%, #352814 75%, #2e2010 100%);
-    border: 3px solid #5a4428;
-    border-top-color: #7a6040; border-left-color: #6a5438;
-    border-bottom-color: #2a1c0c; border-right-color: #2a1c0c;
-    cursor: pointer; transition: all .12s;
+    font-family: 'Press Start 2P', monospace; font-size: .55rem; color: #60b060;
+    background: none; border: none;
+    cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     padding: 4px 8px; text-align: center;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.8), 0 1px 0 rgba(0,0,0,0.5);
-    box-shadow:
-      inset 0 1px 0 rgba(255,200,120,0.08),
-      inset -1px -1px 0 rgba(0,0,0,0.15),
-      2px 2px 4px rgba(0,0,0,0.45);
-    border-radius: 1px;
   }
-  .vb:hover {
-    color: #FFE090;
-    background:
-      radial-gradient(ellipse 80px 120px at -15% 50%, transparent 55%, rgba(52,34,12,0.13) 56%, transparent 57%, transparent 63%, rgba(48,30,10,0.09) 64%, transparent 65%),
-      repeating-linear-gradient(86deg, transparent 0px, transparent 4px, rgba(0,0,0,0.07) 4px, rgba(0,0,0,0.07) 5.5px, transparent 5.5px, transparent 11px),
-      repeating-linear-gradient(93deg, transparent 0px, transparent 8px, rgba(60,40,15,0.05) 8px, rgba(60,40,15,0.05) 9px, transparent 9px, transparent 20px),
-      radial-gradient(ellipse 8px 6px at 75% 35%, rgba(25,14,4,0.2) 0%, rgba(40,25,8,0.08) 50%, transparent 100%),
-      radial-gradient(ellipse 40px 25px at 30% 40%, rgba(90,60,22,0.12) 0%, transparent 100%),
-      linear-gradient(180deg, #5a4828 0%, #4e3e20 30%, #443418 60%, #3a2c14 100%);
-    border-top-color: #9a7848; border-left-color: #8a6840;
-    text-shadow: 0 0 8px rgba(255,224,144,0.3), 1px 1px 1px rgba(0,0,0,0.8);
-    box-shadow:
-      inset 0 1px 0 rgba(255,200,120,0.12),
-      inset -1px -1px 0 rgba(0,0,0,0.1),
-      2px 2px 5px rgba(0,0,0,0.35),
-      0 0 8px rgba(180,140,60,0.08);
-  }
-  .vb:active { transform: scale(.97); }
-  .vb.on {
-    color: #FFE8A0;
-    background:
-      radial-gradient(ellipse 80px 120px at -15% 50%, transparent 55%, rgba(55,38,14,0.12) 56%, transparent 57%, transparent 63%, rgba(50,32,12,0.08) 64%, transparent 65%),
-      repeating-linear-gradient(86deg, transparent 0px, transparent 4px, rgba(255,180,60,0.05) 4px, rgba(255,180,60,0.05) 5.5px, transparent 5.5px, transparent 11px),
-      radial-gradient(ellipse 8px 6px at 75% 35%, rgba(25,14,4,0.18) 0%, rgba(40,25,8,0.06) 50%, transparent 100%),
-      radial-gradient(ellipse 50px 30px at 50% 50%, rgba(100,70,25,0.12) 0%, transparent 100%),
-      linear-gradient(180deg, #5e4828 0%, #503c1e 30%, #483416 60%, #3e2c12 100%);
-    border: 3px solid #B8903C;
-    border-top-color: #D4A848; border-left-color: #C49840;
-    border-bottom-color: #705020; border-right-color: #705020;
-    text-shadow: 0 0 10px rgba(255,232,160,0.4), 1px 1px 1px rgba(0,0,0,0.8);
-    box-shadow:
-      inset 0 1px 0 rgba(255,200,120,0.15),
-      inset -1px -1px 0 rgba(0,0,0,0.08),
-      0 0 12px rgba(212,168,72,0.18),
-      2px 2px 4px rgba(0,0,0,0.3);
-  }
+  .vb:hover { color: #a0e0a0; }
+  .vb:active { color: #fff; }
+  .vb.on { color: #fff; }
 
-  /* ── INVENTORY — Dark recessed hold ── */
+  /* ── INVENTORY — MI-style flat dark strip ── */
   #inv-panel {
     flex: 1; display: flex; align-items: stretch;
-    margin-left: 10px;
-    border: 3px solid #3a2a16;
-    border-top-color: #221408; border-left-color: #221408;
-    border-bottom-color: #6a5438; border-right-color: #5a4428;
-    background:
-      /* Tree ring arcs inside the hold */
-      radial-gradient(ellipse 150px 250px at -5% 50%,
-        transparent 58%, rgba(35,20,5,0.1) 59%, transparent 60%,
-        transparent 66%, rgba(30,18,4,0.07) 67%, transparent 68%,
-        transparent 75%, rgba(32,19,5,0.06) 76%, transparent 77%
-      ),
-      radial-gradient(ellipse 130px 200px at 105% 40%,
-        transparent 55%, rgba(32,18,4,0.08) 56%, transparent 57%,
-        transparent 63%, rgba(28,16,4,0.06) 64%, transparent 65%
-      ),
-      /* Dark wood grain inside */
-      repeating-linear-gradient(87deg, transparent 0px, transparent 5px, rgba(0,0,0,0.08) 5px, rgba(0,0,0,0.08) 6.5px, transparent 6.5px, transparent 14px),
-      repeating-linear-gradient(92deg, transparent 0px, transparent 9px, rgba(40,25,8,0.06) 9px, rgba(40,25,8,0.06) 10px, transparent 10px, transparent 22px),
-      /* Dark knot */
-      radial-gradient(ellipse 14px 11px at 35% 45%, rgba(15,8,2,0.2) 0%, rgba(25,14,4,0.08) 50%, transparent 100%),
-      /* Wear stains */
-      radial-gradient(ellipse 60px 30px at 55% 50%, rgba(50,35,12,0.1) 0%, transparent 100%),
-      radial-gradient(ellipse 50px 25px at 80% 30%, rgba(30,18,5,0.08) 0%, transparent 100%),
-      linear-gradient(180deg, #1a1206 0%, #221a0a 15%, #201808 30%, #241c0c 45%, #1e1608 60%, #28200e 75%, #1a1408 90%, #161008 100%);
-    box-shadow:
-      inset 0 4px 8px rgba(0,0,0,0.6),
-      inset 0 -1px 0 rgba(255,200,120,0.04),
-      inset 4px 0 8px rgba(0,0,0,0.35),
-      inset -4px 0 8px rgba(0,0,0,0.35);
-    border-radius: 2px;
+    margin-left: 8px;
+    border: 1px solid #333;
+    background: #111;
     padding: 0;
   }
   #inv-label { display: none; }
   #inv-arrows {
     display: flex; flex-direction: column; justify-content: center;
-    gap: 8px; padding: 6px 8px; flex-shrink: 0;
-    border-right: 2px solid #1e1408;
-    background:
-      radial-gradient(ellipse 20px 40px at 50% 50%, rgba(50,35,12,0.1) 0%, transparent 100%),
-      linear-gradient(180deg, rgba(0,0,0,0.12) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.12) 100%);
+    gap: 4px; padding: 4px 6px; flex-shrink: 0;
+    border-right: 1px solid #222;
   }
   #inv-arrows button {
-    font-size: .8rem; color: #B89858;
-    background:
-      repeating-linear-gradient(89deg, transparent 0px, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 6px, transparent 6px, transparent 14px),
-      linear-gradient(180deg, #4a3822 0%, #3a2c18 40%, #352814 70%, #302410 100%);
-    border: 2px solid #5a4428;
-    border-top-color: #7a6040; border-left-color: #6a5438;
-    border-bottom-color: #2a1c0c; border-right-color: #2a1c0c;
-    cursor: pointer; padding: 8px 10px; line-height: 1;
-    transition: all .12s;
-    border-radius: 1px;
-    box-shadow: 1px 2px 3px rgba(0,0,0,0.4);
-    text-shadow: 0 1px 1px rgba(0,0,0,0.6);
+    font-size: .7rem; color: #60b060;
+    background: none; border: 1px solid #333;
+    cursor: pointer; padding: 6px 8px; line-height: 1;
   }
-  #inv-arrows button:hover {
-    color: #FFE090; border-top-color: #9a7848;
-    background:
-      repeating-linear-gradient(89deg, transparent 0px, transparent 5px, rgba(0,0,0,0.05) 5px, rgba(0,0,0,0.05) 6px, transparent 6px, transparent 14px),
-      linear-gradient(180deg, #5a4828 0%, #4a3820 40%, #403018 70%, #3a2c16 100%);
-    text-shadow: 0 0 6px rgba(255,224,144,0.25);
-    box-shadow: 1px 2px 3px rgba(0,0,0,0.3), 0 0 6px rgba(180,140,60,0.08);
-  }
+  #inv-arrows button:hover { color: #a0e0a0; border-color: #555; }
   #inv-grid {
     flex: 1; display: grid;
-    grid-template-columns: repeat(auto-fill, 60px);
-    grid-template-rows: repeat(2, 60px);
+    grid-template-columns: repeat(auto-fill, 52px);
+    grid-template-rows: repeat(2, 52px);
     grid-auto-flow: column;
-    gap: 5px; padding: 6px;
+    gap: 3px; padding: 4px;
     overflow: hidden;
     align-content: center;
   }
   .inv-slot {
-    width: 60px; height: 60px;
-    background:
-      /* Subtle grain inside slots */
-      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(0,0,0,0.04) 6px, rgba(0,0,0,0.04) 7px, transparent 7px, transparent 15px),
-      radial-gradient(ellipse 30px 30px at 50% 50%, rgba(40,28,10,0.1) 0%, transparent 100%),
-      linear-gradient(180deg, #141008 0%, #1c1608 35%, #181208 65%, #141008 100%);
-    border: 2px solid #3a2c18;
-    border-top-color: #1e1408; border-left-color: #1e1408;
-    border-bottom-color: #4a3822; border-right-color: #4a3822;
+    width: 52px; height: 52px;
+    background: #0a0a0a;
+    border: 1px solid #333;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: all .12s;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), inset 0 -1px 0 rgba(255,200,120,0.03);
-    border-radius: 1px;
+    cursor: pointer;
   }
-  .inv-slot:hover {
-    border-color: #7a5e38;
-    border-bottom-color: #9a7848; border-right-color: #8a6838;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.35), 0 0 6px rgba(180,140,60,0.12);
-  }
-  .inv-slot.on {
-    border: 2px solid #B8903C;
-    border-top-color: #D4A848; border-left-color: #C49840;
-    border-bottom-color: #705020; border-right-color: #705020;
-    background:
-      repeating-linear-gradient(90deg, transparent 0px, transparent 6px, rgba(255,180,60,0.03) 6px, rgba(255,180,60,0.03) 7px, transparent 7px, transparent 15px),
-      linear-gradient(180deg, #2a2010 0%, #322810 50%, #2a2010 100%);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 0 10px rgba(212,168,72,0.2);
-  }
+  .inv-slot:hover { border-color: #60b060; }
+  .inv-slot.on { border-color: #a0e0a0; background: #1a1a1a; }
   .inv-slot .inv-text {
-    font-family: 'Press Start 2P', monospace; font-size: .35rem; color: #c8a868;
+    font-family: 'Press Start 2P', monospace; font-size: .32rem; color: #60b060;
     text-align: center; line-height: 1.3;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
   }
 
   /* ── TITLE (canvas-rendered, no HTML overlay) ── */
@@ -672,7 +426,7 @@ const scenes = {
             if(!state.flags.photo_seen){state.flags.photo_seen=1;return[{s:'',t:'Μια ξεθωριασμένη φωτογραφία σε χρυσή κορνίζα. Ένας άντρας με καπετάνιος στολή, λευκά μουστάκια, περήφανο βλέμμα.'},{s:'ΚΛΕΙΩ',t:'Ποιος είναι αυτός;'},{s:'ΝΤΕΜΗΣ',t:'Ο Καπετάν Βισβίκης. Ο προπάππους μου.'}];}
             return[{s:'',t:'Ο Καπετάν Λουκάς Βισβίκης. Τα μάτια του σε ακολουθούν.'}];
           }}},
-      { id:'desk_drawer', x:180, y:160, w:130, h:70, label:'Συρτάρι γραφείου',
+      { id:'desk_drawer', x:250, y:225, w:90, h:30, label:'Κρυφό συρτάρι',
         verbs: {
           look:()=>{
             if(state.flags.drawer_open) return[{s:'',t:'Το συρτάρι είναι ανοιχτό. Άδειο πλέον.'}];
@@ -698,16 +452,8 @@ const scenes = {
             }, 800);
             return[
               {s:'',t:'Γυρίζεις το κλειδί. Κλικ. Το συρτάρι ανοίγει αργά...'},
-              {s:'',t:'Μέσα — ένα παλιό γράμμα, σφραγισμένο με κερί. Η γραφή είναι σχολαστική, αρχαϊκή.'},
+              {s:'',t:'Μέσα — ένα παλιό γράμμα, σφραγισμένο με κερί.'},
               {s:'ΚΛΕΙΩ',t:'Μπαμπά, διάβασέ το!'},
-              {s:'ΝΤΕΜΗΣ',t:'«Σε όποιον βρει αυτό το γράμμα — εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«Δεν τον δίνω σε κανέναν. Τον δίνω μόνο σε αυτόν που θα βρει την πράσινη πέτρα.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο και ο ήχος δεν φεύγει ποτέ.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«Φέρε τη σε μένα.»'},
-              {s:'ΑΙΑΣ',t:'«Φέρε τη σε μένα»... Είναι νεκρός εδώ και εκατό χρόνια.'},
-              {s:'ΚΛΕΙΩ',t:'Στο νεκροταφείο, βλάκα.'},
-              {s:'ΝΤΕΜΗΣ',t:'...Κλειώ.'},
-              {s:'ΚΛΕΙΩ',t:'Τι; Λογικό είναι.'},
             ];
           },
           use:()=>{
@@ -1323,13 +1069,13 @@ const scenes = {
       photo:       { x:452, y:5,   w:98,  h:108 },
     },
     port: {
-      boats_port:  { x:75,  y:22,  w:215, h:108 },
-      bollards:    { x:335, y:282, w:80,  h:55  },
-      nets:        { x:12,  y:328, w:125, h:68  },
-      warehouses:  { x:420, y:8,   w:160, h:125 },
-      seagulls:    { x:300, y:0,   w:150, h:28  },
-      cats:        { x:180, y:332, w:65,  h:28  },
-      elpida_dock: { x:350, y:8,   w:282, h:312 },
+      boats_port:  { x:55,  y:80,  w:210, h:100 },
+      bollards:    { x:330, y:235, w:50,  h:50  },
+      nets:        { x:30,  y:345, w:105, h:55  },
+      warehouses:  { x:0,   y:5,   w:160, h:110 },
+      seagulls:    { x:250, y:0,   w:180, h:25  },
+      cats:        { x:185, y:310, w:65,  h:30  },
+      elpida_dock: { x:370, y:30,  w:230, h:260 },
     },
     museum: {
       model_ship:    { x:18,  y:48,  w:182, h:152 },
@@ -1548,13 +1294,14 @@ const cutscenes = {
         ],
       },
       {
-        duration: 10,
+        duration: 14,
         draw: drawLetterRoom,
         dialogue: [
-          { s: 'ΑΙΑΣ', t: 'Πράσινο πέτρωμα; Σε σπήλαιο; Σοβαρά τώρα;', at: 1.0 },
-          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά, αυτός μας ζητάει να βρούμε κάτι!', at: 3.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Μας ζητάει να βρούμε την αλήθεια. Ας δούμε...', at: 5.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.', at: 7.5 },
+          { s: 'ΑΙΑΣ', t: '«Φέρε τη σε μένα»... Είναι νεκρός εδώ και εκατό χρόνια.', at: 1.0 },
+          { s: 'ΚΛΕΙΩ', t: 'Στο νεκροταφείο, βλάκα.', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: '...Κλειώ.', at: 5.0 },
+          { s: 'ΚΛΕΙΩ', t: 'Τι; Λογικό είναι.', at: 6.0 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.', at: 8.5 },
         ],
       },
     ],
