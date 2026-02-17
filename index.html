@@ -1161,16 +1161,16 @@ const scenes = {
 // Galaxidi: North shore of Corinthian Gulf, harbor crescent facing south
 // Layout: sea at bottom, town center-top, hills above
 const MAP_LOCATIONS = [
-  { id:'exterior', sceneIds:['exterior','terrace','kitchen'], label:'Το Σπίτι', x:139, y:325 },
-  { id:'port',     sceneIds:['port'],                        label:'Το Λιμάνι', x:278, y:252 },
-  { id:'museum',   sceneIds:['museum'],                      label:'Μουσείο',   x:234, y:277 },
-  { id:'liotrivi', sceneIds:['liotrivi'],                    label:'Λιοτρίβι',  x:183, y:304 },
-  { id:'church',   sceneIds:['church','church_interior'],    label:'Αγ. Νικόλαος', x:221, y:285 },
-  { id:'cave',     sceneIds:['cave'],                        label:'Σπήλαιο',   x:481, y:171 },
-  { id:'windmill', sceneIds:['windmill'],                    label:'Ο Μύλος',    x:374, y:204 },
-  { id:'graveyard',sceneIds:['graveyard'],                   label:'Νεκροταφείο',x:418, y:179 },
-  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:323, y:220 },
-  { id:'treasure', sceneIds:['treasure','new_era'],          label:'Αγ. Γεώργιος', x:501, y:74 },
+  { id:'exterior', sceneIds:['exterior','terrace','kitchen'], label:'Το Σπίτι', x:175, y:235 },
+  { id:'port',     sceneIds:['port'],                        label:'Το Λιμάνι', x:320, y:300 },
+  { id:'museum',   sceneIds:['museum'],                      label:'Μουσείο',   x:270, y:255 },
+  { id:'liotrivi', sceneIds:['liotrivi'],                    label:'Λιοτρίβι',  x:199, y:270 },
+  { id:'church',   sceneIds:['church','church_interior'],    label:'Αγ. Νικόλαος', x:245, y:175 },
+  { id:'cave',     sceneIds:['cave'],                        label:'Σπήλαιο',   x:390, y:235 },
+  { id:'windmill', sceneIds:['windmill'],                    label:'Ο Μύλος',    x:199, y:150 },
+  { id:'graveyard',sceneIds:['graveyard'],                   label:'Νεκροταφείο',x:280, y:150 },
+  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:220, y:330 },
+  { id:'treasure', sceneIds:['treasure','new_era'],          label:'Αγ. Γεώργιος', x:430, y:145 },
 ];
 
 // Path connections for drawing roads on map
@@ -5653,36 +5653,95 @@ function drawHelp() {
 }
 
 // ════════════════════════════════════════════════════════════
-// QUEST STATUS OVERLAY
+// SHIP'S LOG OVERLAY — ΗΜΕΡΟΛΟΓΙΟ
 // ════════════════════════════════════════════════════════════
 function drawStatus() {
   if (!state.statusOpen) return;
-  const mx = 40, my = 20, mw = GW - 80, mh = GH - 40;
+  const mx = 28, my = 10, mw = GW - 56, mh = GH - 20;
+  const pulse = Math.sin(state.tick * 0.06) * 0.5 + 0.5;
 
-  // Dark backdrop
+  // ── Full-screen dark backdrop ──
   ctx.save();
-  ctx.globalAlpha = 0.92;
-  ctx.fillStyle = '#0a0806';
+  ctx.globalAlpha = 0.94;
+  ctx.fillStyle = '#060402';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 
-  // Frame
-  ctx.fillStyle = '#1a1610';
+  // ── Parchment panel with gradient ──
+  const bgGrad = ctx.createLinearGradient(mx, my, mx, my + mh);
+  bgGrad.addColorStop(0, '#1c1608');
+  bgGrad.addColorStop(0.3, '#18120a');
+  bgGrad.addColorStop(0.7, '#14100a');
+  bgGrad.addColorStop(1, '#100c06');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(mx, my, mw, mh);
-  ctx.strokeStyle = '#D4A03C';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(mx, my, mw, mh);
 
-  // Title
+  // Subtle inner vignette
   ctx.save();
-  ctx.fillStyle = '#D4A03C';
-  ctx.font = '9px "Press Start 2P", monospace';
-  ctx.textAlign = 'center';
-  ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
-  ctx.fillText('ΤΟ ΤΑΞΙΔΙ ΜΑΣ', GW / 2, my + 16);
+  ctx.globalAlpha = 0.25;
+  const vig = ctx.createRadialGradient(GW / 2, GH / 2, mw * 0.15, GW / 2, GH / 2, mw * 0.65);
+  vig.addColorStop(0, 'transparent');
+  vig.addColorStop(1, '#000000');
+  ctx.fillStyle = vig;
+  ctx.fillRect(mx, my, mw, mh);
   ctx.restore();
 
-  // Build quest steps based on game state
+  // ── Double ornamental border ──
+  ctx.strokeStyle = '#C89830';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, mw, mh);
+  ctx.strokeStyle = '#6a5428';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(mx + 5, my + 5, mw - 10, mh - 10);
+
+  // Corner ornaments (L-brackets)
+  const cs = 14;
+  ctx.strokeStyle = '#D4A03C';
+  ctx.lineWidth = 2;
+  [[mx + 1, my + 1, 1, 1], [mx + mw - 1, my + 1, -1, 1],
+   [mx + 1, my + mh - 1, 1, -1], [mx + mw - 1, my + mh - 1, -1, -1]].forEach(([cx, cy, dx, dy]) => {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy + cs * dy);
+    ctx.lineTo(cx, cy);
+    ctx.lineTo(cx + cs * dx, cy);
+    ctx.stroke();
+  });
+
+  // ── Title: ΗΜΕΡΟΛΟΓΙΟ with anchor glyphs ──
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.shadowColor = '#D4A03C';
+  ctx.shadowBlur = 8;
+  ctx.fillStyle = '#E8C060';
+  ctx.font = '11px "Press Start 2P", monospace';
+  ctx.fillText('\u2693 ΗΜΕΡΟΛΟΓΙΟ \u2693', GW / 2, my + 24);
+  ctx.shadowBlur = 0;
+  ctx.restore();
+
+  // Decorative rule under title with center diamond
+  const ruleY = my + 30;
+  ctx.save();
+  ctx.strokeStyle = '#6a5428';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(mx + 20, ruleY);
+  ctx.lineTo(GW / 2 - 70, ruleY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(GW / 2 + 70, ruleY);
+  ctx.lineTo(mx + mw - 20, ruleY);
+  ctx.stroke();
+  ctx.fillStyle = '#D4A03C';
+  ctx.beginPath();
+  ctx.moveTo(GW / 2, ruleY - 3);
+  ctx.lineTo(GW / 2 + 3, ruleY);
+  ctx.lineTo(GW / 2, ruleY + 3);
+  ctx.lineTo(GW / 2 - 3, ruleY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // ── Build quest steps ──
   const steps = [
     { done: state.flags.drawer_open,    text: 'Βρήκαμε το γράμμα του Βισβίκη στο συρτάρι' },
     { done: state.visited.has('port'),  text: 'Φτάσαμε στο λιμάνι — γνωρίσαμε τον Άκη και τον Στάθη' },
@@ -5702,71 +5761,147 @@ function drawStatus() {
 
   const doneCount = steps.filter(s => s.done).length;
   const total = steps.length;
+  const nextIdx = steps.findIndex(s => !s.done);
 
-  // Progress bar
+  // ── Progress bar (brass gauge with notches) ──
   ctx.save();
-  const barX = mx + 14, barY = my + 30, barW = mw - 28, barH = 8;
-  ctx.fillStyle = '#2a2010';
+  const barX = mx + 20, barY = my + 38, barW = mw - 80, barH = 6;
+  ctx.fillStyle = '#1a1408';
   ctx.fillRect(barX, barY, barW, barH);
-  ctx.fillStyle = '#D4A03C';
-  ctx.fillRect(barX, barY, barW * (doneCount / total), barH);
-  ctx.strokeStyle = '#8a6e42';
+  if (doneCount > 0) {
+    const fillGrad = ctx.createLinearGradient(barX, barY, barX + barW * (doneCount / total), barY);
+    fillGrad.addColorStop(0, '#8a6e20');
+    fillGrad.addColorStop(0.5, '#D4A03C');
+    fillGrad.addColorStop(1, '#E8C060');
+    ctx.fillStyle = fillGrad;
+    ctx.fillRect(barX, barY, barW * (doneCount / total), barH);
+  }
+  ctx.strokeStyle = '#5a4a2a';
   ctx.lineWidth = 1;
   ctx.strokeRect(barX, barY, barW, barH);
-  // Progress text
+  for (let i = 1; i < total; i++) {
+    ctx.fillStyle = '#3a3018';
+    ctx.fillRect(barX + (barW / total) * i, barY, 1, barH);
+  }
   ctx.font = '6px "Press Start 2P", monospace';
-  ctx.fillStyle = '#c8b888';
-  ctx.textAlign = 'right';
-  ctx.fillText(doneCount + '/' + total, mx + mw - 14, barY + barH + 10);
+  ctx.fillStyle = '#E8C060';
+  ctx.textAlign = 'left';
+  ctx.fillText(doneCount + ' / ' + total, barX + barW + 8, barY + 6);
   ctx.restore();
 
-  // Quest steps list
-  let y = my + 54;
+  // ── Log entries ──
+  let y = my + 56;
+  const listFont = '6px "Press Start 2P", monospace';
+  const maxW = mw - 70;
   ctx.save();
-  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.font = listFont;
   ctx.textAlign = 'left';
-  const maxW = mw - 40;
-  for (const step of steps) {
-    const icon = step.done ? '\u2713' : '\u00B7';
-    ctx.fillStyle = step.done ? '#D4A03C' : '#8a7a50';
-    ctx.fillText(icon, mx + 14, y);
-    ctx.fillStyle = step.done ? '#c8b888' : '#8a7a50';
-    // Word-wrap
+
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    const isNext = (i === nextIdx);
+    const numStr = String(i + 1).padStart(2, ' ') + '.';
+
+    // Next step highlight bar (pulsing)
+    if (isNext) {
+      ctx.save();
+      ctx.globalAlpha = 0.12 + pulse * 0.08;
+      ctx.fillStyle = '#D4A03C';
+      const words = step.text.split(' ');
+      let testLine = '', lines = 1;
+      ctx.font = listFont;
+      for (const word of words) {
+        const test = testLine + (testLine ? ' ' : '') + word;
+        if (ctx.measureText(test).width > maxW && testLine) { lines++; testLine = word; }
+        else testLine = test;
+      }
+      ctx.fillRect(mx + 10, y - 8, mw - 20, lines * 11 + 4);
+      ctx.restore();
+      ctx.font = listFont;
+    }
+
+    // Entry number
+    ctx.fillStyle = step.done ? '#8a7840' : isNext ? '#E8C060' : '#3a3020';
+    ctx.fillText(numStr, mx + 14, y);
+
+    // Status icon
+    const iconX = mx + 38;
+    if (step.done) {
+      ctx.fillStyle = '#6aB050';
+      ctx.fillText('\u2713', iconX, y);
+    } else if (isNext) {
+      ctx.fillStyle = 'rgba(232,192,96,' + (0.6 + pulse * 0.4).toFixed(2) + ')';
+      ctx.fillText('\u25B6', iconX, y);
+    } else {
+      ctx.fillStyle = '#2a2418';
+      ctx.fillText('\u00B7', iconX + 1, y);
+    }
+
+    // Entry text with word-wrap
+    ctx.fillStyle = step.done ? '#b8a878' : isNext ? '#FFE8A0' : '#3a3020';
+    const textX = mx + 50;
     const words = step.text.split(' ');
     let line = '';
     for (const word of words) {
       const test = line + (line ? ' ' : '') + word;
       if (ctx.measureText(test).width > maxW && line) {
-        ctx.fillText(line, mx + 26, y);
+        ctx.fillText(line, textX, y);
         y += 11;
         line = word;
       } else {
         line = test;
       }
     }
-    if (line) { ctx.fillText(line, mx + 26, y); y += 11; }
-    y += 4; // spacing between steps
-    if (y > my + mh - 20) break; // don't overflow
+    if (line) { ctx.fillText(line, textX, y); y += 11; }
+
+    // Dashed separator between done and next
+    if (step.done && i + 1 === nextIdx) {
+      ctx.strokeStyle = '#3a3018';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath();
+      ctx.moveTo(mx + 14, y);
+      ctx.lineTo(mx + mw - 14, y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      y += 5;
+    } else {
+      y += 2;
+    }
+
+    if (y > my + mh - 40) break;
   }
   ctx.restore();
 
-  // Current objective hint
+  // ── Next objective box at bottom ──
   const nextStep = steps.find(s => !s.done);
   if (nextStep) {
+    const boxY = my + mh - 36;
     ctx.save();
+    ctx.strokeStyle = '#5a4a2a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(mx + 15, boxY - 2);
+    ctx.lineTo(mx + mw - 15, boxY - 2);
+    ctx.stroke();
+    ctx.font = '5px "Press Start 2P", monospace';
+    ctx.fillStyle = '#8a7840';
+    ctx.textAlign = 'left';
+    ctx.fillText('ΕΠΟΜΕΝΟ ΒΗΜΑ:', mx + 18, boxY + 8);
     ctx.font = '6px "Press Start 2P", monospace';
-    ctx.fillStyle = '#FFE8A0';
-    ctx.textAlign = 'center';
-    ctx.fillText('\u25B6 ' + nextStep.text.substring(0, 50) + (nextStep.text.length > 50 ? '...' : ''), GW / 2, my + mh - 20);
+    ctx.fillStyle = 'rgba(255,232,160,' + (0.7 + pulse * 0.3).toFixed(2) + ')';
+    ctx.textAlign = 'left';
+    const nextTxt = nextStep.text.length > 52 ? nextStep.text.substring(0, 52) + '...' : nextStep.text;
+    ctx.fillText(nextTxt, mx + 18, boxY + 20);
     ctx.restore();
   }
 
-  // Dismiss hint
+  // ── Dismiss hint ──
   ctx.save();
-  ctx.fillStyle = '#5a4a2a';
-  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.fillStyle = '#4a3a22';
+  ctx.font = '5px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('Q ή ESC για κλείσιμο', GW / 2, my + mh - 8);
+  ctx.fillText('Q  \u00B7  ESC', GW / 2, my + mh - 6);
   ctx.restore();
 }
 
