@@ -14,7 +14,7 @@
     display: block; background: #0a0812;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    cursor: crosshair;
+    cursor: none;
     flex: 1;
     width: 100%;
     min-height: 0;
@@ -445,7 +445,7 @@ const state = {
   flags: {},
   visited: new Set(),
   tick: 0,
-  mouseGX: 0, mouseGY: 0,
+  mouseGX: 0, mouseGY: 0, cursorMode: 'default',
   hoverObj: null,
   musicOn: false,
   dlg: { active: false, queue: [], text: '', displayed: '', charIdx: 0, timer: 0, speaker: '', cb: null },
@@ -487,6 +487,7 @@ const npcChars = {
   giannis: { scene: 'windmill', x: 150, y: 340, dir: 1, visible: true, scale: 0.85 },
   curator: { scene: 'museum', x: 100, y: 340, dir: 1, visible: true, scale: 0.85 },
   papas:   { scene: 'church_interior', x: 480, y: 375, dir: -1, visible: true, scale: 0.85 },
+  chrysostomos: { scene: 'boat', x: 100, y: 375, dir: 1, visible: true, scale: 0.85 },
 };
 
 let walkDoneCallback = null;
@@ -506,7 +507,6 @@ function loadImg(key, src) {
 
 // Character idle sprites
 const CHAR_IMGS = {};
-const WALK_FRAMES = { ntemis: [], ajax: [], clio: [] };
 const PORTRAITS = {};
 
 async function loadAllAssets() {
@@ -557,7 +557,7 @@ async function loadAllAssets() {
   ]);
 
   // Character idle sprites (family + NPCs)
-  const charPromises = ['ntemis','ajax','clio','ghost','athos','stathis','akis','giannis','curator','papas'].map(id =>
+  const charPromises = ['ntemis','ajax','clio','ghost','athos','stathis','akis','giannis','curator','papas','chrysostomos'].map(id =>
     loadImg(`char-${id}`, `assets/char-${id}-final.png`).then(img => { CHAR_IMGS[id] = img; })
   );
 
@@ -577,21 +577,6 @@ async function loadAllAssets() {
   ];
 
   await Promise.all([...charPromises, ...portPromises]);
-
-  // Walk frames from JSON
-  try {
-    const resp = await fetch('assets/walk-frames-b64.json');
-    const data = await resp.json();
-    for (const who of ['ntemis','ajax','clio']) {
-      if (data[who]) {
-        for (let i = 0; i < data[who].length; i++) {
-          const img = new Image();
-          img.src = 'data:image/png;base64,' + data[who][i];
-          WALK_FRAMES[who].push(img);
-        }
-      }
-    }
-  } catch(e) { console.warn('Walk frames load failed:', e); }
 }
 
 // ════════════════════════════════════════════════════════════
@@ -981,7 +966,7 @@ const scenes = {
     walkBounds: [30, 530], // stone path narrows before hill edge
     charPos: { ntemis: { x: 350, y: 377 }, ajax: { x: 440, y: 379 }, clio: { x: 260, y: 378 } },
     objects: [
-      { id:'telescope', x:480, y:250, w:65, h:130, label:'Τηλεσκόπιο',
+      { id:'telescope', x:470, y:220, w:80, h:160, label:'Τηλεσκόπιο',
         verbs: { look:[{s:'',t:'Ένα παλιό ορειχάλκινο τηλεσκόπιο. Κάποιος το άφησε εδώ;'},{s:'ΚΛΕΙΩ',t:'Αφήστε με να κοιτάξω!'}],
                  use:[{s:'ΚΛΕΙΩ',t:'Βλέπω... το λιμάνι! Και κάτι στο νερό...'},{s:'ΑΙΑΣ',t:'Τι; Τι βλέπεις;'},{s:'ΚΛΕΙΩ',t:'Ένα σημάδι στην προβλήτα. Σαν αστέρι.'},{s:'ΝΤΕΜΗΣ',t:'Σημείωσέ το, Κλειώ.'}] }},
       { id:'panorama', x:0, y:-88, w:640, h:100, label:'Πανόραμα',
@@ -1219,13 +1204,24 @@ const scenes = {
           },
           use:()=>{ return [{s:'ΝΤΕΜΗΣ',t:'Πρέπει να μιλήσω πρώτα.'}]; },
         }},
+      { id:'ledger_ne', x:280, y:200, w:100, h:60, label:'Βιβλίο Αλληλασφάλειας',
+        verbs: {
+          look: () => {
+            if (!state.flags.speech_done) return [{s:'',t:'Δερματόδετο βιβλίο πάνω στο βήμα. Η σελίδα είναι ανοιχτή, περιμένει υπογραφές.'}];
+            return [{s:'',t:'104 υπογραφές. Ο ίδιος αριθμός με το 1860. Η τελευταία — του Αίαντα.'},{s:'ΚΛΕΙΩ',t:'Σαν να μην πέρασε μια μέρα.'}];
+          },
+          open: () => {
+            if (!state.flags.speech_done) return [{s:'',t:'Πρώτα η ομιλία. Μετά οι υπογραφές.'}];
+            return [{s:'',t:'Σελίδες γεμάτες ονόματα. Ψαράδες, δάσκαλοι, ταβερνιάρηδες. Γαλαξειδιώτες.'},{s:'ΝΤΕΜΗΣ',t:'Ξέρεις τι σημαίνει αλληλασφάλεια; Ότι κανείς δεν βυθίζεται μόνος.'}];
+          },
+        }},
       { id:'akis_camera_ne', x:500, y:280, w:80, h:100, label:'Άκης με κάμερα',
         verbs: { look:[{s:'',t:'Ο Άκης με την κάμερά του. Καταγράφει τα πάντα.'}],
                  talk:[{s:'ΑΚΗΣ',t:'Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή.'}] }},
       { id:'sunset_ne', x:0, y:0, w:640, h:150, label:'Ηλιοβασίλεμα',
         verbs: { look:[{s:'',t:'Ο ήλιος βυθίζεται στον Κορινθιακό. Χρυσό φως λούζει τα πρόσωπα. Η θάλασσα θυμάται.'}] }},
     ],
-    exits: [],
+    exits: [{ side:'left', target:'port', label:'← Λιμάνι' }],
     entry: [
       {s:'',t:'Εβδομάδες αργότερα. Το λιμάνι του Γαλαξειδίου στο ηλιοβασίλεμα. Ολόκληρη η πόλη είναι εδώ.'},
       {s:'ΚΛΕΙΩ',t:'Μπαμπά, είναι ΟΛΟΙ εδώ!'},
@@ -3849,12 +3845,14 @@ function familyFollow(targetX) {
 // ════════════════════════════════════════════════════════════
 // HOTSPOT HIT TESTING
 // ════════════════════════════════════════════════════════════
+const HOTSPOT_PAD = 10; // extra click margin around every object
 function hitTestObj(gx, gy) {
   if (!state.scene) return null;
   const sc = scenes[state.scene];
   for (const obj of sc.objects) {
     if (obj._hidden) continue;
-    if (gx >= obj.x && gx <= obj.x + obj.w && gy >= obj.y && gy <= obj.y + obj.h) {
+    if (gx >= obj.x - HOTSPOT_PAD && gx <= obj.x + obj.w + HOTSPOT_PAD &&
+        gy >= obj.y - HOTSPOT_PAD && gy <= obj.y + obj.h + HOTSPOT_PAD) {
       return obj;
     }
   }
@@ -3866,8 +3864,8 @@ function hitTestExit(gx, gy) {
   const sc = scenes[state.scene];
   if (!sc.exits) return null;
   for (const exit of sc.exits) {
-    if (exit.side === 'left' && gx < 25) return exit;
-    if (exit.side === 'right' && gx > GW - 25) return exit;
+    if (exit.side === 'left' && gx < 35) return exit;
+    if (exit.side === 'right' && gx > GW - 35) return exit;
   }
   return null;
 }
@@ -5399,9 +5397,9 @@ function drawStatus() {
   const maxW = mw - 40;
   for (const step of steps) {
     const icon = step.done ? '\u2713' : '\u00B7';
-    ctx.fillStyle = step.done ? '#D4A03C' : '#4a3a20';
+    ctx.fillStyle = step.done ? '#D4A03C' : '#8a7a50';
     ctx.fillText(icon, mx + 14, y);
-    ctx.fillStyle = step.done ? '#c8b888' : '#4a3a20';
+    ctx.fillStyle = step.done ? '#c8b888' : '#8a7a50';
     // Word-wrap
     const words = step.text.split(' ');
     let line = '';
@@ -5441,6 +5439,17 @@ function drawStatus() {
   ctx.restore();
 }
 
+// Scene-entry cutscene triggers (play on first visit)
+const SCENE_CUTSCENES = {
+  port: 'reunion',
+  museum: 'museum',
+  liotrivi: 'liotrivi',
+  windmill: 'windmill',
+  cave: 'cave_enter',
+  boat: 'crossing',
+  treasure: 'treasure',
+};
+
 // ════════════════════════════════════════════════════════════
 // SCENE MANAGEMENT
 // ════════════════════════════════════════════════════════════
@@ -5477,12 +5486,31 @@ function startScene(id) {
   startSceneAmbience(id);
   changeSceneMusic(id);
 
-  // Entry dialogue (first visit only)
-  if (!state.visited.has(id) && sc.entry) {
+  // ── Restore dynamic object state from saved flags ──
+  if (id === 'church_interior' && state.flags.candle_lit) {
+    const tile = sc.objects.find(o => o.id === 'floor_tile');
+    if (tile) tile._hidden = false;
+  }
+
+  // Entry dialogue (first visit only) — with cutscene triggers
+  if (!state.visited.has(id)) {
     state.visited.add(id);
-    setTimeout(() => showDlg(sc.entry), 600);
+    const csId = SCENE_CUTSCENES[id];
+    if (csId && cutscenes[csId]) {
+      // Play scene-entry cutscene, then show entry dialog on complete
+      const origComplete = cutscenes[csId].onComplete;
+      cutscenes[csId].onComplete = () => {
+        if (origComplete) origComplete();
+        state.phase = 'playing';
+        document.getElementById('ui-panel').classList.add('on');
+        document.getElementById('action-line').classList.add('on');
+        if (sc.entry) setTimeout(() => showDlg(sc.entry), 600);
+      };
+      startCutscene(csId);
+      return;
+    }
+    if (sc.entry) setTimeout(() => showDlg(sc.entry), 600);
   } else {
-    state.visited.add(id);
     // Clio auto-comment on revisit (after a short delay)
     scheduleClio(id);
   }
@@ -5600,19 +5628,7 @@ function changeScene(id) {
   };
 }
 
-function checkEnd() {
-  if (state.flags.note && !state.flags.done) {
-    state.flags.done = 1;
-    setTimeout(() => showDlg([
-      {s:'ΝΤΕΜΗΣ',t:'«Σας περιμέναμε»... Ποιος μας περιμένει;'},
-      {s:'ΚΛΕΙΩ',t:'Ο «Γ.» ξέρει ότι είμαστε τρεις. Πρέπει να πάμε.'},
-      {s:'ΑΙΑΣ',t:'Πάμε στο λιμάνι!'},
-      {s:'',t:'Ο ήλιος βυθίζεται πίσω από τα βουνά. Το λιμάνι περιμένει.'},
-      {s:'',t:'— Τέλος Σκηνής 1 —'},
-      {s:'',t:'Συνέχεια στη Σκηνή 2: Το Γράμμα...'},
-    ]), 1500);
-  }
-}
+function checkEnd() {}
 
 // ════════════════════════════════════════════════════════════
 // RENDER — Main drawing function
@@ -5623,11 +5639,13 @@ function render() {
   // Canvas-rendered title screen
   if (state.phase === 'title') {
     drawTitleScreen(state.tick);
+    drawCustomCursor();
     return;
   }
 
   if (state.phase === 'cutscene') {
     renderCutscene();
+    drawCustomCursor();
     return;
   }
 
@@ -5704,16 +5722,16 @@ function render() {
     }
   }
 
-  // Hotspot highlight on hover — soft pulsing glow
+  // Hotspot highlight on hover — prominent pulsing glow
   if (state.hoverObj && state.hoverObj.w) {
     const obj = state.hoverObj;
-    const pulse = 0.35 + Math.sin(state.tick * 0.08) * 0.15;
+    const pulse = 0.5 + Math.sin(state.tick * 0.08) * 0.3;
     ctx.save();
-    ctx.shadowColor = 'rgba(255,220,120,0.6)';
-    ctx.shadowBlur = 6;
-    ctx.strokeStyle = `rgba(212,160,60,${pulse})`;
-    ctx.lineWidth = 1.5;
-    const r = 3, hx = obj.x - 2, hy = obj.y - 2, hw = obj.w + 4, hh = obj.h + 4;
+    // Soft fill glow behind the border
+    ctx.fillStyle = `rgba(255,220,120,${pulse * 0.12})`;
+    ctx.shadowColor = 'rgba(255,220,120,0.8)';
+    ctx.shadowBlur = 14;
+    const r = 4, hx = obj.x - 4, hy = obj.y - 4, hw = obj.w + 8, hh = obj.h + 8;
     ctx.beginPath();
     ctx.moveTo(hx + r, hy);
     ctx.lineTo(hx + hw - r, hy); ctx.arcTo(hx + hw, hy, hx + hw, hy + r, r);
@@ -5721,6 +5739,10 @@ function render() {
     ctx.lineTo(hx + r, hy + hh); ctx.arcTo(hx, hy + hh, hx, hy + hh - r, r);
     ctx.lineTo(hx, hy + r); ctx.arcTo(hx, hy, hx + r, hy, r);
     ctx.closePath();
+    ctx.fill();
+    // Bright border
+    ctx.strokeStyle = `rgba(255,220,120,${pulse})`;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
     ctx.restore();
   }
@@ -5730,25 +5752,25 @@ function render() {
     const arrowPulse = 0.6 + Math.sin(state.tick * 0.06) * 0.4;
     const arrowBob = Math.sin(state.tick * 0.08) * 2;
     for (const exit of sc.exits) {
-      const isHover = (exit.side === 'left' && state.mouseGX < 25) ||
-                      (exit.side === 'right' && state.mouseGX > GW - 25);
+      const isHover = (exit.side === 'left' && state.mouseGX < 35) ||
+                      (exit.side === 'right' && state.mouseGX > GW - 35);
       if (isHover) {
         ctx.save();
         const exGrad = exit.side === 'left'
-          ? ctx.createLinearGradient(0, 0, 30, 0)
-          : ctx.createLinearGradient(GW, 0, GW - 30, 0);
-        exGrad.addColorStop(0, `rgba(212,160,60,${0.12 + arrowPulse * 0.08})`);
+          ? ctx.createLinearGradient(0, 0, 40, 0)
+          : ctx.createLinearGradient(GW, 0, GW - 40, 0);
+        exGrad.addColorStop(0, `rgba(212,160,60,${0.15 + arrowPulse * 0.1})`);
         exGrad.addColorStop(1, 'rgba(212,160,60,0)');
         ctx.fillStyle = exGrad;
-        if (exit.side === 'left') ctx.fillRect(0, 0, 30, GH);
-        else ctx.fillRect(GW - 30, 0, 30, GH);
+        if (exit.side === 'left') ctx.fillRect(0, 0, 40, GH);
+        else ctx.fillRect(GW - 40, 0, 40, GH);
         // Pulsing bobbing arrow
         ctx.globalAlpha = arrowPulse;
         ctx.fillStyle = '#FFE8A0';
-        ctx.font = '16px sans-serif';
+        ctx.font = '20px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        const ax = exit.side === 'left' ? 12 + arrowBob : GW - 12 - arrowBob;
+        const ax = exit.side === 'left' ? 16 + arrowBob : GW - 16 - arrowBob;
         ctx.fillText(exit.side === 'left' ? '◀' : '▶', ax, GH / 2);
         ctx.restore();
       }
@@ -5900,6 +5922,110 @@ function render() {
     }
     ctx.restore();
   }
+
+  // ── Custom canvas cursor — always on top ──
+  drawCustomCursor();
+}
+
+// ════════════════════════════════════════════════════════════
+// CUSTOM CURSOR — large, visible, SCUMM-style
+// ════════════════════════════════════════════════════════════
+function drawCustomCursor() {
+  const mx = state.mouseGX, my = state.mouseGY;
+  if (mx <= 0 && my <= 0) return; // mouse hasn't entered canvas yet
+  ctx.save();
+  const mode = state.cursorMode || 'default';
+  const isHot = mode === 'pointer' || mode === 'zoom-in' || mode === 'help' || mode === 'grab';
+  const isExit = mode === 'w-resize' || mode === 'e-resize';
+
+  if (isExit) {
+    // Exit arrow — large pulsing directional arrow
+    const left = mode === 'w-resize';
+    const bob = Math.sin(state.tick * 0.1) * 2;
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = '#FFE8A0';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    if (left) {
+      ctx.moveTo(mx - 8 + bob, my);
+      ctx.lineTo(mx + 4, my - 7);
+      ctx.lineTo(mx + 4, my - 3);
+      ctx.lineTo(mx + 10, my - 3);
+      ctx.lineTo(mx + 10, my + 3);
+      ctx.lineTo(mx + 4, my + 3);
+      ctx.lineTo(mx + 4, my + 7);
+    } else {
+      ctx.moveTo(mx + 8 - bob, my);
+      ctx.lineTo(mx - 4, my - 7);
+      ctx.lineTo(mx - 4, my - 3);
+      ctx.lineTo(mx - 10, my - 3);
+      ctx.lineTo(mx - 10, my + 3);
+      ctx.lineTo(mx - 4, my + 3);
+      ctx.lineTo(mx - 4, my + 7);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  } else if (isHot) {
+    // Interaction cursor — bright golden pointer hand
+    const pulse = 0.8 + Math.sin(state.tick * 0.12) * 0.2;
+    ctx.globalAlpha = pulse;
+    // Outer glow
+    ctx.shadowColor = 'rgba(255,220,120,0.7)';
+    ctx.shadowBlur = 8;
+    // Draw a chunky pointing finger
+    ctx.fillStyle = '#FFE8A0';
+    ctx.strokeStyle = '#5a4228';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    // Finger pointing up-left
+    ctx.moveTo(mx, my);           // tip
+    ctx.lineTo(mx + 1, my + 6);
+    ctx.lineTo(mx + 4, my + 10);
+    ctx.lineTo(mx + 3, my + 13);
+    ctx.lineTo(mx + 6, my + 13);
+    ctx.lineTo(mx + 8, my + 10);
+    ctx.lineTo(mx + 10, my + 13);
+    ctx.lineTo(mx + 12, my + 13);
+    ctx.lineTo(mx + 12, my + 9);
+    ctx.lineTo(mx + 5, my + 6);
+    ctx.lineTo(mx + 3, my + 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // Verb icon — small symbol next to cursor
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 0.9;
+    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.fillStyle = '#FFF';
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    const icon = mode === 'zoom-in' ? '?' : mode === 'help' ? '...' : mode === 'grab' ? '+' : '';
+    if (icon) {
+      ctx.strokeText(icon, mx + 13, my + 1);
+      ctx.fillText(icon, mx + 13, my + 1);
+    }
+  } else {
+    // Default / crosshair — large bright cross
+    const size = 7;
+    const thick = 1;
+    ctx.globalAlpha = 0.9;
+    ctx.shadowColor = 'rgba(0,0,0,0.8)';
+    ctx.shadowBlur = 2;
+    // Vertical bar
+    ctx.fillStyle = '#FFE8A0';
+    ctx.fillRect(mx - thick, my - size, thick * 2 + 1, size * 2 + 1);
+    // Horizontal bar
+    ctx.fillRect(mx - size, my - thick, size * 2 + 1, thick * 2 + 1);
+    // Center dot
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(mx, my, 1, 1);
+  }
+  ctx.restore();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -5980,7 +6106,7 @@ CVS.addEventListener('mousemove', (e) => {
   state.mouseGY = g.y;
 
   if (state.phase === 'title') {
-    CVS.style.cursor = 'pointer';
+    state.cursorMode ='pointer';
     return;
   }
 
@@ -5988,12 +6114,12 @@ CVS.addEventListener('mousemove', (e) => {
     const skipW = 80, skipH = 18, skipX = GW - skipW - 8, skipY = 8;
     const over = g.x >= skipX && g.x <= skipX + skipW && g.y >= skipY && g.y <= skipY + skipH;
     state.cutscene.skipHover = over;
-    CVS.style.cursor = over ? 'pointer' : 'default';
+    state.cursorMode =over ? 'pointer' : 'default';
     return;
   }
 
   if (state.phase !== 'playing' || state.dlg.active || state.seq.active) {
-    CVS.style.cursor = (state.dlg.active || state.seq.active) ? 'pointer' : 'default';
+    state.cursorMode =(state.dlg.active || state.seq.active) ? 'pointer' : 'default';
     state.hoverObj = null;
     updateActionLine();
     return;
@@ -6006,15 +6132,15 @@ CVS.addEventListener('mousemove', (e) => {
       const loc = MAP_LOCATIONS[state.mapHover];
       const isVisited = loc.sceneIds.some(s => state.visited.has(s));
       const isCurrent = loc.sceneIds.includes(state.scene);
-      CVS.style.cursor = (isVisited && !isCurrent) ? 'pointer' : 'default';
+      state.cursorMode =(isVisited && !isCurrent) ? 'pointer' : 'default';
     } else {
-      CVS.style.cursor = 'default';
+      state.cursorMode ='default';
     }
     return;
   }
 
   // Help/Status overlay — block hover
-  if (state.helpOpen || state.statusOpen) { CVS.style.cursor = 'default'; return; }
+  if (state.helpOpen || state.statusOpen) { state.cursorMode ='default'; return; }
 
   // Check hotspots
   const obj = hitTestObj(g.x, g.y);
@@ -6023,14 +6149,14 @@ CVS.addEventListener('mousemove', (e) => {
   // Check exits for cursor change
   const exit = hitTestExit(g.x, g.y);
   if (exit) {
-    CVS.style.cursor = exit.side === 'left' ? 'w-resize' : 'e-resize';
+    state.cursorMode =exit.side === 'left' ? 'w-resize' : 'e-resize';
     state.hoverObj = { label: exit.label }; // fake obj for action line
   } else if (obj) {
     // Verb-aware cursor
     const verbCursors = { look: 'zoom-in', talk: 'help', open: 'grab', use: 'pointer' };
-    CVS.style.cursor = verbCursors[state.verb] || 'pointer';
+    state.cursorMode =verbCursors[state.verb] || 'pointer';
   } else {
-    CVS.style.cursor = g.y > 200 ? 'crosshair' : 'default';
+    state.cursorMode =g.y > 200 ? 'crosshair' : 'default';
   }
   updateActionLine();
 });
@@ -6190,6 +6316,7 @@ const sceneMusic = {
   port:     'music/the-harbor-at-dusk-1.mp3',
   museum:   'music/the-maritime-museum-1.mp3',
   liotrivi: 'music/the-old-olive-press-1.mp3',
+  windmill: 'music/the-view-from-the-windmill-1.mp3',
   cave:     'music/the-cave-of-karkaros-1.mp3',
   graveyard:'music/the-captain-s-rest-1.mp3',
   church:   'music/the-map-in-the-church-1.mp3',
