@@ -656,7 +656,7 @@ const scenes = {
     ],
   },
   kitchen: {
-    label: 'Η ΚΟΥΖΙΝΑ', bg: 'bg-kitchen',
+    label: 'ΤΟ ΓΡΑΦΕΙΟ ΤΟΥ ΚΑΠΕΤΑΝΙΟΥ', bg: 'bg-kitchen',
     walkLine: [[30, 378], [320, 375], [610, 378]],
     charPos: {
       ntemis: { x: 350, y: 375 },
@@ -664,28 +664,86 @@ const scenes = {
       clio:   { x: 100, y: 377 },
     },
     objects: [
-      { id:'figs', x:180, y:160, w:100, h:55, label:'Σύκα',
-        verbs: { look:[{s:'',t:'Φρέσκα σύκα σε πήλινο μπολ. Η μυρωδιά γεμίζει το δωμάτιο.'}],
-                 pick:[{s:'ΑΙΑΣ',t:'Μπαμπά, μπορώ να φάω ένα;'},{s:'ΝΤΕΜΗΣ',t:'Φυσικά.'}],
-                 use:[{s:'',t:'Τρως ένα σύκο. Γλυκό σαν μέλι.'}] }},
-      { id:'satchel', x:340, y:149, w:80, h:85, label:'Δερμάτινη τσάντα',
+      { id:'model_ships', x:150, y:-64, w:240, h:65, label:'Μοντέλα πλοίων',
+        verbs: { look:[{s:'',t:'Μοντέλα πλοίων σε ράφια — σκούνες, μπρίκια, τρικάταρτα. Μικρογραφίες μιας χαμένης αυτοκρατορίας.'}] }},
+      { id:'photo', x:455, y:-40, w:95, h:115, label:'Φωτογραφία',
+        verbs: { look:()=>{
+            if(!state.flags.photo_seen){state.flags.photo_seen=1;return[{s:'',t:'Μια ξεθωριασμένη φωτογραφία σε χρυσή κορνίζα. Ένας άντρας με καπετάνιος στολή, λευκά μουστάκια, περήφανο βλέμμα.'},{s:'ΚΛΕΙΩ',t:'Ποιος είναι αυτός;'},{s:'ΝΤΕΜΗΣ',t:'Ο Καπετάν Βισβίκης. Ο προπάππους μου.'}];}
+            return[{s:'',t:'Ο Καπετάν Λουκάς Βισβίκης. Τα μάτια του σε ακολουθούν.'}];
+          }}},
+      { id:'desk_drawer', x:180, y:160, w:130, h:70, label:'Συρτάρι γραφείου',
         verbs: {
-          look:()=>{if(!state.flags.note)return[{s:'',t:'Μια παλιά δερμάτινη τσάντα πάνω στην καρέκλα. Δεν είναι δική σας.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, κοίτα — υπάρχει κάτι μέσα.'}];return[{s:'',t:'Η τσάντα είναι άδεια τώρα.'}];},
-          open:()=>{if(!state.flags.note){state.flags.note=1;addInv({id:'note',label:'Σημείωμα',desc:'Ένα παλιό σημείωμα. «Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.» Μυρίζει θάλασσα.'});return[{s:'',t:'Ανοίγεις την τσάντα. Μέσα βρίσκεις ένα σημείωμα.'},{s:'ΚΛΕΙΩ',t:'Διάβασέ το!'},{s:'',t:'«Σας περιμέναμε. Ελάτε στο λιμάνι απόψε. Τραπέζι για τρεις. — Γ.»'},{s:'ΑΙΑΣ',t:'Ποιος είναι ο «Γ.»;'},{s:'ΝΤΕΜΗΣ',t:'Και πώς ξέρει ότι είμαστε τρεις;'}];}return[{s:'',t:'Η τσάντα είναι πλέον άδεια.'}];},
-          pick:[{s:'ΝΤΕΜΗΣ',t:'Δεν είναι δική μας. Ας κοιτάξω μέσα πρώτα.'}] }},
-      { id:'window', x:455, y:-40, w:95, h:115, label:'Παράθυρο',
-        verbs: { look:[{s:'',t:'Απογευματινό φως μέσα από γαλάζια πατζούρια. Σκιές χορεύουν στον τοίχο.'}],
-                 open:[{s:'',t:'Ανοίγεις τα πατζούρια. Μυρωδιά θυμαριού και τζιτζίκια.'}] }},
-      { id:'pots', x:150, y:-64, w:240, h:65, label:'Χάλκινα σκεύη',
-        verbs: { look:[{s:'',t:'Χάλκινα σκεύη κρεμασμένα στον τοίχο. Κάποτε τάιζαν οικογένειες ναυτικών.'}] }},
-      { id:'fireplace', x:0, y:0, w:95, h:145, label:'Τζάκι',
-        verbs: { look:[{s:'',t:'Πέτρινο τζάκι. Μέσα υπάρχουν ακόμα στάχτες από τον τελευταίο χειμώνα.'}] }},
+          look:()=>{
+            if(state.flags.drawer_open) return[{s:'',t:'Το συρτάρι είναι ανοιχτό. Άδειο πλέον.'}];
+            return[{s:'',t:'Ένα κλειδωμένο συρτάρι στο γραφείο. Χρειάζεται κλειδί.'},{s:'ΑΙΑΣ',t:'Μπαμπά, είναι κλειδωμένο! Πού είναι το κλειδί;'}];
+          },
+          open:()=>{
+            if(state.flags.drawer_open) return[{s:'',t:'Το συρτάρι είναι ήδη ανοιχτό.'}];
+            if(!state.inv.find(i=>i.id==='brass_key')) return[{s:'',t:'Κλειδωμένο. Χρειάζεσαι κλειδί.'},{s:'ΚΛΕΙΩ',t:'Ψάξτε γύρω! Πρέπει να είναι κάπου εδώ.'}];
+            state.flags.drawer_open=1;
+            removeInv('brass_key');
+            addInv({id:'visvikis_letter',label:'Γράμμα Βισβίκη',desc:'«Σε όποιον βρει αυτό το γράμμα — βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο και ο ήχος δεν φεύγει ποτέ.»'});
+            setTimeout(()=>{
+              document.getElementById('ui-panel').classList.remove('on');
+              document.getElementById('action-line').classList.remove('on');
+              const origComplete = cutscenes.letter.onComplete;
+              cutscenes.letter.onComplete = () => {
+                if(origComplete) origComplete();
+                state.phase = 'playing';
+                document.getElementById('ui-panel').classList.add('on');
+                document.getElementById('action-line').classList.add('on');
+              };
+              startCutscene('letter');
+            }, 800);
+            return[
+              {s:'',t:'Γυρίζεις το κλειδί. Κλικ. Το συρτάρι ανοίγει αργά...'},
+              {s:'',t:'Μέσα — ένα παλιό γράμμα, σφραγισμένο με κερί. Η γραφή είναι σχολαστική, αρχαϊκή.'},
+              {s:'ΚΛΕΙΩ',t:'Μπαμπά, διάβασέ το!'},
+              {s:'ΝΤΕΜΗΣ',t:'«Σε όποιον βρει αυτό το γράμμα — εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα.»'},
+              {s:'ΝΤΕΜΗΣ',t:'«Δεν τον δίνω σε κανέναν. Τον δίνω μόνο σε αυτόν που θα βρει την πράσινη πέτρα.»'},
+              {s:'ΝΤΕΜΗΣ',t:'«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο και ο ήχος δεν φεύγει ποτέ.»'},
+              {s:'ΝΤΕΜΗΣ',t:'«Φέρε τη σε μένα.»'},
+              {s:'ΑΙΑΣ',t:'«Φέρε τη σε μένα»... Είναι νεκρός εδώ και εκατό χρόνια.'},
+              {s:'ΚΛΕΙΩ',t:'Στο νεκροταφείο, βλάκα.'},
+              {s:'ΝΤΕΜΗΣ',t:'...Κλειώ.'},
+              {s:'ΚΛΕΙΩ',t:'Τι; Λογικό είναι.'},
+            ];
+          },
+          use:()=>{
+            if(state.flags.drawer_open) return[{s:'',t:'Το συρτάρι είναι ήδη ανοιχτό.'}];
+            if(state.inv.find(i=>i.id==='brass_key')){
+              return scenes.kitchen.objects.find(o=>o.id==='desk_drawer').verbs.open();
+            }
+            return[{s:'',t:'Κλειδωμένο. Χρειάζεσαι κλειδί.'}];
+          }}},
+      { id:'copper_pot', x:30, y:50, w:70, h:90, label:'Χάλκινο δοχείο',
+        verbs: {
+          look:()=>{
+            if(state.flags.key_found) return[{s:'',t:'Ένα χάλκινο δοχείο στο τζάκι. Τώρα άδειο.'}];
+            return[{s:'',t:'Ένα χάλκινο δοχείο στο τζάκι. Κάτι κουδουνίζει μέσα.'}];
+          },
+          open:()=>{
+            if(state.flags.key_found) return[{s:'',t:'Το δοχείο είναι άδειο.'}];
+            state.flags.key_found=1;
+            addInv({id:'brass_key',label:'Κλειδί',desc:'Ένα μικρό ορειχάλκινο κλειδί. Βρέθηκε στο χάλκινο δοχείο στο τζάκι.'});
+            return[{s:'',t:'Ανοίγεις το δοχείο. Μέσα — ένα μικρό ορειχάλκινο κλειδί!'},{s:'ΚΛΕΙΩ',t:'Εγώ το βρήκα! Εγώ κοίταξα πρώτη!'},{s:'ΑΙΑΣ',t:'Δοκίμασέ το στο συρτάρι!'}];
+          },
+          use:()=>{
+            return scenes.kitchen.objects.find(o=>o.id==='copper_pot').verbs.open();
+          }}},
+      { id:'fireplace', x:0, y:140, w:95, h:145, label:'Τζάκι',
+        verbs: { look:[{s:'',t:'Πέτρινο τζάκι με στάχτες. Πάνω του — ένα χάλκινο δοχείο.'}] }},
+      { id:'instruments', x:340, y:40, w:100, h:100, label:'Ναυτικά όργανα',
+        verbs: { look:[{s:'',t:'Ορειχάλκινα ναυτικά όργανα: πυξίδα, εξάντας, τηλεσκόπιο. Γυαλισμένα σαν χθες.'},{s:'ΑΙΑΣ',t:'Ποιου παππού;'},{s:'ΝΤΕΜΗΣ',t:'Του προπάππου μου. Κανένας δεν έχει μπει εδώ χρόνια. Κληρονομιά.'}] }},
+      { id:'charts', x:480, y:100, w:120, h:140, label:'Ναυτικοί χάρτες',
+        verbs: { look:[{s:'',t:'Χάρτες στους τοίχους. Δρομολόγια προς Σμύρνη, Αλεξάνδρεια, Βηρυτό. Με μελάνι σημειωμένα.'},{s:'ΚΛΕΙΩ',t:'Θα έχει φαντάσματα;'},{s:'ΝΤΕΜΗΣ',t:'...Όχι, Κλειώ. Θα έχει σκόνη.'}] }},
     ],
     exits: [{ side:'left', target:'exterior', label:'← Έξω' }],
     entry: [
-      {s:'',t:'Η κουζίνα μυρίζει θυμάρι και παλιό ξύλο.'},
-      {s:'ΚΛΕΙΩ',t:'Κοιτάξτε — κάποιος μας άφησε σύκα!'},
-      {s:'ΑΙΑΣ',t:'Και κάτι πάνω στην καρέκλα... μια τσάντα;'},
+      {s:'',t:'Το γραφείο του καπετάνιου. Σκόνη και μνήμη.'},
+      {s:'',t:'Μοντέλα πλοίων σε ράφια, ορειχάλκινα όργανα, χάρτες στους τοίχους.'},
+      {s:'ΑΙΑΣ',t:'Ουάου! Κοιτάξτε όλα αυτά τα πλοία!'},
+      {s:'ΚΛΕΙΩ',t:'Μπαμπά, ποιος ζούσε εδώ;'},
     ],
   },
 
@@ -1237,6 +1295,119 @@ const scenes = {
 };
 
 // ════════════════════════════════════════════════════════════
+// HOTSPOT RECALIBRATION — MI2-grade background alignment
+// ════════════════════════════════════════════════════════════
+// Background images are 1024x1024 but canvas is 640x400 (1.6:1).
+// Cover-fit crops 192px from top & bottom, shifting visual positions.
+// Recalibrate hotspot rectangles to match the cropped backgrounds.
+(function recalibrateHotspots() {
+  const cal = {
+    exterior: {
+      door:          { x:135, y:95,  w:70,  h:130 },
+      bougainvillea: { x:190, y:2,   w:160, h:108 },
+      flowerpots:    { x:78,  y:222, w:68,  h:48  },
+      barrel:        { x:248, y:172, w:55,  h:55  },
+      boats:         { x:362, y:78,  w:162, h:88  },
+      sea:           { x:350, y:0,   w:230, h:55  },
+    },
+    terrace: {
+      harbor:     { x:130, y:60,  w:290, h:110 },
+      rooftops:   { x:28,  y:52,  w:135, h:92  },
+      mountains:  { x:200, y:0,   w:350, h:42  },
+      balustrade: { x:85,  y:252, w:385, h:38  },
+      flowerpot:  { x:5,   y:210, w:72,  h:52  },
+    },
+    kitchen: {
+      figs:      { x:178, y:155, w:112, h:58  },
+      satchel:   { x:338, y:148, w:82,  h:88  },
+      window:    { x:420, y:10,  w:105, h:105 },
+      pots:      { x:148, y:0,   w:250, h:55  },
+      fireplace: { x:0,   y:2,   w:100, h:145 },
+    },
+    port: {
+      boats_port:  { x:75,  y:22,  w:215, h:108 },
+      bollards:    { x:335, y:282, w:80,  h:55  },
+      nets:        { x:12,  y:328, w:125, h:68  },
+      warehouses:  { x:420, y:8,   w:160, h:125 },
+      seagulls:    { x:300, y:0,   w:150, h:28  },
+      cats:        { x:180, y:332, w:65,  h:28  },
+      elpida_dock: { x:350, y:8,   w:282, h:312 },
+    },
+    museum: {
+      model_ship:    { x:18,  y:48,  w:182, h:152 },
+      steamship:     { x:378, y:45,  w:182, h:152 },
+      portraits_mus: { x:195, y:0,   w:185, h:82  },
+      instruments:   { x:28,  y:340, w:152, h:58  },
+      flags:         { x:95,  y:0,   w:410, h:28  },
+      map_table:     { x:348, y:332, w:122, h:62  },
+    },
+    liotrivi: {
+      olive_press:  { x:8,   y:12,  w:142, h:178 },
+      bar_counter:  { x:198, y:10,  w:182, h:118 },
+      window_liot:  { x:415, y:2,   w:138, h:138 },
+      photos_liot:  { x:145, y:0,   w:105, h:52  },
+      stools:       { x:278, y:278, w:82,  h:58  },
+      checkered_floor: { x:98, y:342, w:408, h:58 },
+    },
+    cave: {
+      vote_inscription: { x:188, y:25,  w:205, h:102 },
+      captain_marks:    { x:8,   y:68,  w:82,  h:72  },
+      cave_water:       { x:128, y:282, w:255, h:78  },
+      stalactites:      { x:45,  y:0,   w:510, h:42  },
+      jade_stone:       { x:418, y:62,  w:82,  h:72  },
+    },
+    church: {
+      fountain:         { x:105, y:298, w:48,  h:48  },
+      church_dome:      { x:245, y:0,   w:165, h:112 },
+      bougainvillea_ch: { x:0,   y:12,  w:95,  h:178 },
+      cat_church:       { x:162, y:338, w:72,  h:48  },
+      benches:          { x:48,  y:308, w:122, h:48  },
+      pots_church:      { x:478, y:165, w:82,  h:102 },
+      church_door:      { x:225, y:32,  w:185, h:198 },
+    },
+    church_interior: {
+      icons:       { x:348, y:10,  w:182, h:138 },
+      iconostasis: { x:118, y:2,   w:282, h:198 },
+      candles_ci:  { x:48,  y:168, w:102, h:118 },
+    },
+    windmill: {
+      telescope:     { x:422, y:218, w:82,  h:162 },
+      panorama:      { x:0,   y:0,   w:640, h:52  },
+      ruins:         { x:468, y:88,  w:122, h:128 },
+      wildflowers:   { x:148, y:278, w:202, h:78  },
+      stone_path_wm: { x:298, y:348, w:202, h:58  },
+    },
+    boat: {
+      nameplate:    { x:48,  y:348, w:122, h:42  },
+      chapel:       { x:25,  y:12,  w:155, h:148 },
+      sunset_sea:   { x:195, y:0,   w:405, h:78  },
+      rope:         { x:348, y:278, w:82,  h:62  },
+      lifebuoy:     { x:458, y:322, w:62,  h:62  },
+      galaxidi_view:{ x:398, y:8,   w:202, h:98  },
+    },
+    graveyard: {
+      visvikis_grave: { x:388, y:248, w:152, h:88  },
+      headstones:     { x:48,  y:215, w:152, h:122 },
+      cypress:        { x:0,   y:0,   w:72,  h:302 },
+      angel_statue:   { x:558, y:152, w:72,  h:148 },
+      poppies_gr:     { x:198, y:352, w:182, h:55  },
+      sea_view_gr:    { x:218, y:0,   w:222, h:88  },
+      moon:           { x:168, y:0,   w:102, h:62  },
+      candles:        { x:348, y:342, w:82,  h:38  },
+      path_stones_gr: { x:148, y:372, w:202, h:48  },
+    },
+  };
+  for (const [sceneId, objects] of Object.entries(cal)) {
+    const sc = scenes[sceneId];
+    if (!sc) continue;
+    for (const [objId, coords] of Object.entries(objects)) {
+      const obj = sc.objects.find(o => o.id === objId);
+      if (obj) Object.assign(obj, coords);
+    }
+  }
+})();
+
+// ════════════════════════════════════════════════════════════
 // FAST-TRAVEL MAP DATA
 // ════════════════════════════════════════════════════════════
 // Galaxidi: North shore of Corinthian Gulf, harbor crescent facing south
@@ -1275,7 +1446,7 @@ const HELP_GENERAL = [
 const HELP_HINTS = {
   exterior: 'Κοιτάξτε την πόρτα, το βαρέλι, τις γλάστρες. Αριστερά → Λιμάνι. Δεξιά → Βεράντα.',
   terrace: 'Κοιτάξτε τη θέα: λιμάνι, σκεπές, βουνά. Δεξιά → Μύλος.',
-  kitchen: 'Ψάξτε την τσάντα στην καρέκλα. Κοιτάξτε τα σύκα και την εστία.',
+  kitchen: 'Κοιτάξτε τη φωτογραφία. Ψάξτε το χάλκινο δοχείο στο τζάκι. Ανοίξτε το συρτάρι.',
   port: 'Μιλήστε στον Άκη και τον Στάθη. Κοιτάξτε το πλοίο Ελπίδα στην προβλήτα. Αριστερά → Μουσείο.',
   museum: 'Μιλήστε στον επιμελητή. Κοιτάξτε τα μοντέλα πλοίων και τον χάρτη. Αριστερά → Λιοτρίβι.',
   liotrivi: 'Μιλήστε στον Άθο. Κοιτάξτε τις φωτογραφίες και το ελαιοτριβείο. Αριστερά → Εκκλησία.',
@@ -1366,24 +1537,26 @@ const cutscenes = {
     },
   },
 
-  // ── THE LETTER — Quest hook (triggered after finding the letter in Scene 2)
+  // ── THE LETTER — Quest hook (triggered after opening the drawer)
   letter: {
     frames: [
       {
-        duration: 7,
+        duration: 10,
         draw: drawLetterClose,
         dialogue: [
-          { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα...»', at: 1.5 },
-          { s: 'ΑΙΑΣ', t: 'Τι πράσινο πέτρωμα;', at: 3.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Ο Καπετάν Βισβίκης. Ο προπάππους μου.', at: 5.0 },
+          { s: 'ΝΤΕΜΗΣ', t: '«Σε όποιον βρει αυτό το γράμμα...»', at: 1.0 },
+          { s: 'ΝΤΕΜΗΣ', t: '«...εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα.»', at: 3.0 },
+          { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο.»', at: 6.5 },
         ],
       },
       {
-        duration: 6,
+        duration: 10,
         draw: drawLetterRoom,
         dialogue: [
-          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά, αυτός μας ζητάει να βρούμε κάτι!', at: 1.0 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Μας ζητάει να βρούμε την αλήθεια.', at: 3.2 },
+          { s: 'ΑΙΑΣ', t: 'Πράσινο πέτρωμα; Σε σπήλαιο; Σοβαρά τώρα;', at: 1.0 },
+          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά, αυτός μας ζητάει να βρούμε κάτι!', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Μας ζητάει να βρούμε την αλήθεια. Ας δούμε...', at: 5.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.', at: 7.5 },
         ],
       },
     ],
@@ -5050,6 +5223,32 @@ const INV_ICONS = {
     c.strokeStyle='#8a6020';
     c.strokeRect(38,22,3,6); c.strokeRect(34,22,2,4);
   },
+  lantern: (c) => {
+    // Brass nautical lantern
+    c.fillStyle='#8a6a30'; c.fillRect(20,6,12,4); // top cap
+    c.fillStyle='#a08038'; c.fillRect(24,2,4,5); // handle base
+    c.beginPath(); c.arc(26,2,4,Math.PI,0); c.strokeStyle='#8a6a30'; c.lineWidth=2; c.stroke(); // handle arc
+    // Glass body
+    c.fillStyle='#1a3040'; c.fillRect(18,10,16,22);
+    c.fillStyle='rgba(255,200,80,0.3)'; c.fillRect(20,12,12,18); // warm glow
+    // Brass frame
+    c.strokeStyle='#8a6a30'; c.lineWidth=1.5;
+    c.strokeRect(18,10,16,22);
+    c.beginPath(); c.moveTo(18,21); c.lineTo(34,21); c.stroke(); // mid band
+    // Flame inside
+    c.fillStyle='#d4a03c'; c.beginPath(); c.ellipse(26,18,3,5,0,0,Math.PI*2); c.fill();
+    c.fillStyle='#f0d060'; c.beginPath(); c.ellipse(26,18,2,3,0,0,Math.PI*2); c.fill();
+    c.fillStyle='#fff8e0'; c.beginPath(); c.ellipse(26,19,1,2,0,0,Math.PI*2); c.fill();
+    // Base
+    c.fillStyle='#8a6a30'; c.fillRect(16,32,20,5);
+    c.fillStyle='#6a5020'; c.fillRect(18,37,16,3);
+    // Light rays
+    c.strokeStyle='rgba(255,200,80,0.2)'; c.lineWidth=0.5;
+    c.beginPath(); c.moveTo(20,16); c.lineTo(12,12); c.stroke();
+    c.beginPath(); c.moveTo(32,16); c.lineTo(40,12); c.stroke();
+    c.beginPath(); c.moveTo(20,22); c.lineTo(12,26); c.stroke();
+    c.beginPath(); c.moveTo(32,22); c.lineTo(40,26); c.stroke();
+  },
   nautical_chart: (c) => {
     // Rolled nautical chart with X mark
     c.fillStyle='#c4a870'; c.fillRect(8,6,36,36);
@@ -5473,7 +5672,7 @@ function drawStatus() {
 
   // Build quest steps based on game state
   const steps = [
-    { done: state.flags.note,           text: 'Βρήκαμε μυστηριώδες σημείωμα στην κουζίνα' },
+    { done: state.flags.drawer_open,    text: 'Βρήκαμε το γράμμα του Βισβίκη στο συρτάρι' },
     { done: state.visited.has('port'),  text: 'Φτάσαμε στο λιμάνι — γνωρίσαμε τον Άκη και τον Στάθη' },
     { done: state.visited.has('museum'),text: 'Μάθαμε για τον χρυσό αιώνα στο Ναυτικό Μουσείο' },
     { done: state.visited.has('liotrivi'), text: 'Ο Άθος μας μίλησε για τη διαθήκη του Βισβίκη' },
@@ -5651,10 +5850,10 @@ const clioComments = {
     'Ο αέρας εδώ πάνω είναι μαγικός.',
   ],
   kitchen: [
-    'Η κουζίνα μυρίζει σαν το σπίτι του παππού.',
-    'Μπαμπά, πεινάω...',
-    'Κοίτα πόσα σκεύη! Κάποτε μαγείρευαν για πολλούς.',
-    'Φαντάζομαι τον παππού να κάθεται εδώ.',
+    'Κοίτα πόσα πλοία! Σαν μουσείο!',
+    'Μπαμπά, τι είναι αυτό το μηχάνημα;',
+    'Φαντάζομαι τον καπετάνιο να κάθεται εδώ.',
+    'Μυρίζει θάλασσα και παλιό ξύλο.',
   ],
   port: [
     'Τα καΐκια κουνιούνται σαν να χορεύουν.',
@@ -6044,8 +6243,44 @@ function render() {
     ctx.restore();
   }
 
+  // ── Debug hotspot overlay ──
+  if (state.debugHotspots && state.scene) {
+    drawDebugHotspots();
+  }
+
   // ── Custom canvas cursor — always on top ──
   drawCustomCursor();
+}
+
+// ════════════════════════════════════════════════════════════
+// DEBUG HOTSPOT OVERLAY — press D to toggle
+// ════════════════════════════════════════════════════════════
+function drawDebugHotspots() {
+  const sc = scenes[state.scene];
+  if (!sc || !sc.objects) return;
+  ctx.save();
+  const colors = ['#ff000080','#00ff0080','#0088ff80','#ff880080','#ff00ff80','#00ffff80','#ffff0080'];
+  for (let i = 0; i < sc.objects.length; i++) {
+    const obj = sc.objects[i];
+    if (obj._hidden) continue;
+    const c = colors[i % colors.length];
+    ctx.fillStyle = c;
+    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+    ctx.strokeStyle = c.replace('80','ff');
+    ctx.lineWidth = 1;
+    ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
+    ctx.fillStyle = '#fff';
+    ctx.font = '8px monospace';
+    ctx.fillText(obj.id, obj.x + 2, obj.y + 9);
+  }
+  // Mouse coordinates
+  const mx = Math.round(state.mouseGX || 0), my = Math.round(state.mouseGY || 0);
+  ctx.fillStyle = '#000';
+  ctx.fillRect(GW - 80, 2, 78, 14);
+  ctx.fillStyle = '#0f0';
+  ctx.font = '10px monospace';
+  ctx.fillText(`${mx}, ${my}`, GW - 76, 13);
+  ctx.restore();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -6412,6 +6647,10 @@ document.addEventListener('keydown', e => {
   // Help toggle
   if ((e.key === 'h' || e.key === 'H') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
     state.helpOpen = !state.helpOpen; state.mapOpen = false; state.statusOpen = false; return;
+  }
+  // Debug hotspot overlay toggle
+  if ((e.key === 'd' || e.key === 'D') && state.phase === 'playing') {
+    state.debugHotspots = !state.debugHotspots; return;
   }
   // Quest status toggle
   if ((e.key === 'q' || e.key === 'Q') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
