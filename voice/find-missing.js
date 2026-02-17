@@ -1,33 +1,23 @@
-const fs = require("fs");
-const lines = JSON.parse(fs.readFileSync(__dirname + "/dialog-lines.json", "utf8"));
-const manifest = JSON.parse(fs.readFileSync(__dirname + "/manifest.json", "utf8"));
-
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'manifest.json'), 'utf-8'));
 const missing = [];
-for (const line of lines) {
-  const key = (line.speaker || "") + "|" + line.text;
-  if (manifest[key] === undefined) {
-    missing.push(line);
+for (const [key, entry] of Object.entries(manifest)) {
+  const filePath = path.join(__dirname, entry.file);
+  if (!fs.existsSync(filePath)) {
+    missing.push(entry);
   }
 }
-
-console.log("Total lines in game:", lines.length);
-console.log("Lines with voice:", lines.length - missing.length);
-console.log("Lines MISSING voice:", missing.length);
-console.log("");
-
+// Group by speaker/directory
 const bySpeaker = {};
-missing.forEach(l => {
-  const s = l.speaker || "NARRATOR";
-  if (!bySpeaker[s]) bySpeaker[s] = [];
-  bySpeaker[s].push(l.text);
-});
-
-Object.entries(bySpeaker).sort((a, b) => b[1].length - a[1].length).forEach(([s, texts]) => {
-  console.log(s + " (" + texts.length + " missing):");
-  texts.forEach(t => console.log("  - " + t));
-  console.log("");
-});
-
-// Also save missing lines for reference
-fs.writeFileSync(__dirname + "/needs-generation.json", JSON.stringify(missing, null, 2));
-console.log("Saved to needs-generation.json");
+for (const entry of missing) {
+  const dir = entry.file.split('/')[0];
+  if (!bySpeaker[dir]) bySpeaker[dir] = [];
+  bySpeaker[dir].push(entry);
+}
+console.log(`Missing: ${missing.length} files`);
+for (const [dir, entries] of Object.entries(bySpeaker).sort((a, b) => b[1].length - a[1].length)) {
+  console.log(`  ${dir}: ${entries.length}`);
+}
+fs.writeFileSync(path.join(__dirname, 'missing-voices.json'), JSON.stringify(missing, null, 2));
