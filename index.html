@@ -902,7 +902,7 @@ const scenes = {
           open:()=>{
             if(state.flags.chest_opened) return [{s:'',t:'Ήδη ανοιχτό.'}];
             state.flags.chest_opened=1;
-            return [
+            showDlg([
               {s:'',t:'Το σιδερένιο κλείδωμα υποχωρεί. Το καπάκι ανοίγει αργά...'},
               {s:'ΚΛΕΙΩ',t:'Χρυσάφι!'},
               {s:'',t:'Νομίσματα — Οθωμανικά, Βενετικά, αρχαία Ελληνικά. Ένας θησαυρός αιώνων.'},
@@ -911,16 +911,22 @@ const scenes = {
               {s:'',t:'Το πρωτότυπο βιβλίο της αλληλασφάλειας. 104 υπογραφές καπεταναίων, 1860.'},
               {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις. Σαν ομάδα.'},
               {s:'',t:'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.'},
-            ];
+            ], () => {
+              document.getElementById('ui-panel').classList.remove('on');
+              document.getElementById('action-line').classList.remove('on');
+              const origComplete = cutscenes.treasure.onComplete;
+              cutscenes.treasure.onComplete = () => {
+                if(origComplete) origComplete();
+                state.phase = 'playing';
+                document.getElementById('ui-panel').classList.add('on');
+                document.getElementById('action-line').classList.add('on');
+              };
+              startCutscene('treasure');
+            });
+            return [];
           },
           use:()=>{
-            if(state.flags.chest_opened) return [{s:'',t:'Ήδη ανοιχτό.'}];
-            state.flags.chest_opened=1;
-            return [
-              {s:'',t:'Το σιδερένιο κλείδωμα υποχωρεί. Το καπάκι ανοίγει αργά...'},
-              {s:'ΚΛΕΙΩ',t:'Χρυσάφι!'},
-              {s:'',t:'Νομίσματα, ένα κολιέ νεφρίτη, ένα παλιό βιβλίο, και ένα γράμμα.'},
-            ];
+            return scenes.treasure.objects.find(o=>o.id==='sea_chest').verbs.open();
           },
         }},
       { id:'final_letter', x:280, y:330, w:100, h:50, label:'Γράμμα Βισβίκη',
@@ -997,13 +1003,18 @@ const scenes = {
               {s:'ΚΛΕΙΩ',t:'ΕΛΠΙΔΑ.'},
             ];
             showDlg(lines, () => {
-              state.phase = 'epilogue';
-              state.epiloguePage = 0;
               document.getElementById('ui-panel').classList.remove('on');
               document.getElementById('action-line').classList.remove('on');
-              const el = document.getElementById('epilogue-screen');
-              el.classList.add('show');
-              showEpiloguePage();
+              const origComplete = cutscenes.epilogue.onComplete;
+              cutscenes.epilogue.onComplete = () => {
+                if(origComplete) origComplete();
+                state.phase = 'epilogue';
+                state.epiloguePage = 0;
+                const el = document.getElementById('epilogue-screen');
+                el.classList.add('show');
+                showEpiloguePage();
+              };
+              startCutscene('epilogue');
             });
             return [];
           },
