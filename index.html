@@ -1273,7 +1273,7 @@ const MAP_PATHS = [
 // ════════════════════════════════════════════════════════════
 const HELP_GENERAL = [
   'ΡΗΜΑΤΑ: 1=Κοίταξε 2=Μίλησε 3=Άνοιξε 4=Χρησιμοποίησε',
-  'ΠΛΗΚΤΡΑ: S=Αποθήκευση M=Χάρτης H=Βοήθεια',
+  'ΠΛΗΚΤΡΑ: S=Αποθήκευση M=Χάρτης Q=Πρόοδος H=Βοήθεια',
   'Κλικ σε αντικείμενα για αλληλεπίδραση.',
   'Κλικ στο έδαφος για βάδισμα.',
   'Βέλη στα άκρα → νέα τοποθεσία.',
@@ -5330,6 +5330,124 @@ function drawHelp() {
 }
 
 // ════════════════════════════════════════════════════════════
+// QUEST STATUS OVERLAY
+// ════════════════════════════════════════════════════════════
+function drawStatus() {
+  if (!state.statusOpen) return;
+  const mx = 40, my = 20, mw = GW - 80, mh = GH - 40;
+
+  // Dark backdrop
+  ctx.save();
+  ctx.globalAlpha = 0.92;
+  ctx.fillStyle = '#0a0806';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+
+  // Frame
+  ctx.fillStyle = '#1a1610';
+  ctx.fillRect(mx, my, mw, mh);
+  ctx.strokeStyle = '#D4A03C';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, mw, mh);
+
+  // Title
+  ctx.save();
+  ctx.fillStyle = '#D4A03C';
+  ctx.font = '9px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
+  ctx.fillText('ΤΟ ΤΑΞΙΔΙ ΜΑΣ', GW / 2, my + 16);
+  ctx.restore();
+
+  // Build quest steps based on game state
+  const steps = [
+    { done: state.flags.note,           text: 'Βρήκαμε μυστηριώδες σημείωμα στην κουζίνα' },
+    { done: state.visited.has('port'),  text: 'Φτάσαμε στο λιμάνι — γνωρίσαμε τον Άκη και τον Στάθη' },
+    { done: state.visited.has('museum'),text: 'Μάθαμε για τον χρυσό αιώνα στο Ναυτικό Μουσείο' },
+    { done: state.visited.has('liotrivi'), text: 'Ο Άθος μας μίλησε για τη διαθήκη του Βισβίκη' },
+    { done: state.flags.lantern_given,  text: 'Ο Γιάννης μας έδωσε φανάρι για το σπήλαιο' },
+    { done: state.flags.vote_read,      text: 'Ο Αίας ανακάλυψε την ψηφοφορία: 9 προς 3' },
+    { done: state.flags.jade_found,     text: 'Η Κλειώ βρήκε την πράσινη πέτρα νεφρίτη' },
+    { done: state.flags.ghost_summoned, text: 'Ο Βισβίκης εμφανίστηκε — μας οδήγησε στην εκκλησία' },
+    { done: state.flags.candle_lit,     text: 'Η Κλειώ άναψε κερί στον Άγιο Νικόλαο' },
+    { done: !!state.inv.find(i => i.id === 'nautical_chart') || state.visited.has('boat'), text: 'Βρήκαμε τον ναυτικό χάρτη κάτω από την πλάκα «Λ.Β.»' },
+    { done: state.visited.has('boat'),  text: 'Πλεύσαμε με την Ελπίδα στον Άγιο Γεώργιο' },
+    { done: state.flags.chest_opened,   text: 'Ανοίξαμε το κιβώτιο του Βισβίκη' },
+    { done: state.flags.letter_read,    text: 'Διαβάσαμε το τελευταίο γράμμα: «Κράτα την αλληλεγγύη»' },
+    { done: state.flags.speech_done,    text: 'Ο Ντέμης μίλησε στο Γαλαξίδι — 104 υπογραφές ξανά' },
+  ];
+
+  const doneCount = steps.filter(s => s.done).length;
+  const total = steps.length;
+
+  // Progress bar
+  ctx.save();
+  const barX = mx + 14, barY = my + 30, barW = mw - 28, barH = 8;
+  ctx.fillStyle = '#2a2010';
+  ctx.fillRect(barX, barY, barW, barH);
+  ctx.fillStyle = '#D4A03C';
+  ctx.fillRect(barX, barY, barW * (doneCount / total), barH);
+  ctx.strokeStyle = '#8a6e42';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(barX, barY, barW, barH);
+  // Progress text
+  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.fillStyle = '#c8b888';
+  ctx.textAlign = 'right';
+  ctx.fillText(doneCount + '/' + total, mx + mw - 14, barY + barH + 10);
+  ctx.restore();
+
+  // Quest steps list
+  let y = my + 54;
+  ctx.save();
+  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.textAlign = 'left';
+  const maxW = mw - 40;
+  for (const step of steps) {
+    const icon = step.done ? '\u2713' : '\u00B7';
+    ctx.fillStyle = step.done ? '#D4A03C' : '#4a3a20';
+    ctx.fillText(icon, mx + 14, y);
+    ctx.fillStyle = step.done ? '#c8b888' : '#4a3a20';
+    // Word-wrap
+    const words = step.text.split(' ');
+    let line = '';
+    for (const word of words) {
+      const test = line + (line ? ' ' : '') + word;
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, mx + 26, y);
+        y += 11;
+        line = word;
+      } else {
+        line = test;
+      }
+    }
+    if (line) { ctx.fillText(line, mx + 26, y); y += 11; }
+    y += 4; // spacing between steps
+    if (y > my + mh - 20) break; // don't overflow
+  }
+  ctx.restore();
+
+  // Current objective hint
+  const nextStep = steps.find(s => !s.done);
+  if (nextStep) {
+    ctx.save();
+    ctx.font = '6px "Press Start 2P", monospace';
+    ctx.fillStyle = '#FFE8A0';
+    ctx.textAlign = 'center';
+    ctx.fillText('\u25B6 ' + nextStep.text.substring(0, 50) + (nextStep.text.length > 50 ? '...' : ''), GW / 2, my + mh - 20);
+    ctx.restore();
+  }
+
+  // Dismiss hint
+  ctx.save();
+  ctx.fillStyle = '#5a4a2a';
+  ctx.font = '6px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('Q ή ESC για κλείσιμο', GW / 2, my + mh - 8);
+  ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════════
 // SCENE MANAGEMENT
 // ════════════════════════════════════════════════════════════
 function startScene(id) {
@@ -5667,16 +5785,17 @@ function render() {
   ctx.fillText(sc.label, GW / 2, 8);
   ctx.restore();
 
-  // Top-right toolbar: Help | Map | Music — with visible button backgrounds
+  // Top-right toolbar: Help | Status | Map | Music — with visible button backgrounds
   ctx.save();
   const tbY = 5, tbH = 18, tbW = 22, tbGap = 4;
   const tbIcons = [
-    { label: '?', x: GW - 72, key: 'help' },
-    { label: 'M', x: GW - 72 + tbW + tbGap, key: 'map' },
-    { label: '\u266A', x: GW - 72 + (tbW + tbGap) * 2, key: 'music' },
+    { label: '?', x: GW - 98, key: 'help' },
+    { label: 'Q', x: GW - 98 + tbW + tbGap, key: 'status' },
+    { label: 'M', x: GW - 98 + (tbW + tbGap) * 2, key: 'map' },
+    { label: '\u266A', x: GW - 98 + (tbW + tbGap) * 3, key: 'music' },
   ];
   for (const btn of tbIcons) {
-    const active = (btn.key === 'map' && state.mapOpen) || (btn.key === 'help' && state.helpOpen) || (btn.key === 'music' && state.musicOn);
+    const active = (btn.key === 'map' && state.mapOpen) || (btn.key === 'help' && state.helpOpen) || (btn.key === 'status' && state.statusOpen) || (btn.key === 'music' && state.musicOn);
     // Button background
     ctx.globalAlpha = active ? 0.55 : 0.3;
     ctx.fillStyle = '#1a1a2e';
@@ -5756,6 +5875,7 @@ function render() {
   // Map & Help overlays
   drawMap();
   drawHelp();
+  drawStatus();
 
   // Transition overlay — iris wipe or flat fade
   if (state.fade.active && state.fade.alpha > 0) {
@@ -5892,8 +6012,8 @@ CVS.addEventListener('mousemove', (e) => {
     return;
   }
 
-  // Help overlay — block hover
-  if (state.helpOpen) { CVS.style.cursor = 'default'; return; }
+  // Help/Status overlay — block hover
+  if (state.helpOpen || state.statusOpen) { CVS.style.cursor = 'default'; return; }
 
   // Check hotspots
   const obj = hitTestObj(g.x, g.y);
@@ -5949,8 +6069,9 @@ CVS.addEventListener('click', (e) => {
     return;
   }
 
-  // Help click — dismiss
+  // Help/Status click — dismiss
   if (state.helpOpen) { state.helpOpen = false; return; }
+  if (state.statusOpen) { state.statusOpen = false; return; }
 
   // Dialogue advance
   if (state.dlg.active) { advanceDlg(); return; }
@@ -5960,10 +6081,11 @@ CVS.addEventListener('click', (e) => {
 
   // Top-right toolbar clicks — matches button positions (tbY=5, tbH=18, tbW=22, tbGap=4)
   if (g.y >= 5 && g.y <= 23) {
-    const bx0 = GW - 72; // help button left edge
-    if (g.x >= bx0 && g.x <= bx0 + 22) { state.helpOpen = !state.helpOpen; state.mapOpen = false; return; }
-    if (g.x >= bx0 + 26 && g.x <= bx0 + 48) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.mapHover = null; return; }
-    if (g.x >= bx0 + 52 && g.x <= bx0 + 74) { toggleMusic(); return; }
+    const bx0 = GW - 98; // help button left edge
+    if (g.x >= bx0 && g.x <= bx0 + 22) { state.helpOpen = !state.helpOpen; state.mapOpen = false; state.statusOpen = false; return; }
+    if (g.x >= bx0 + 26 && g.x <= bx0 + 48) { state.statusOpen = !state.statusOpen; state.helpOpen = false; state.mapOpen = false; return; }
+    if (g.x >= bx0 + 52 && g.x <= bx0 + 74) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.statusOpen = false; state.mapHover = null; return; }
+    if (g.x >= bx0 + 78 && g.x <= bx0 + 100) { toggleMusic(); return; }
   }
 
   // Check exit zones
@@ -6027,6 +6149,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     if (state.mapOpen) { state.mapOpen = false; state.mapHover = null; return; }
     if (state.helpOpen) { state.helpOpen = false; return; }
+    if (state.statusOpen) { state.statusOpen = false; return; }
     if (state.phase === 'cutscene') { skipCutscene(); return; }
     return;
   }
@@ -6036,15 +6159,19 @@ document.addEventListener('keydown', e => {
   }
   // Map toggle
   if ((e.key === 'm' || e.key === 'M') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
-    state.mapOpen = !state.mapOpen; state.helpOpen = false; state.mapHover = null; return;
+    state.mapOpen = !state.mapOpen; state.helpOpen = false; state.statusOpen = false; state.mapHover = null; return;
   }
   // Help toggle
   if ((e.key === 'h' || e.key === 'H') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
-    state.helpOpen = !state.helpOpen; state.mapOpen = false; return;
+    state.helpOpen = !state.helpOpen; state.mapOpen = false; state.statusOpen = false; return;
+  }
+  // Quest status toggle
+  if ((e.key === 'q' || e.key === 'Q') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
+    state.statusOpen = !state.statusOpen; state.helpOpen = false; state.mapOpen = false; return;
   }
   const vk = {'1':'look','2':'talk','3':'open','4':'use'};
-  if (vk[e.key] && state.phase === 'playing' && !state.mapOpen && !state.helpOpen) setVerb(vk[e.key]);
-  if ((e.key === 's' || e.key === 'S') && state.phase === 'playing' && !state.mapOpen && !state.helpOpen) { saveGame('manual'); }
+  if (vk[e.key] && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) setVerb(vk[e.key]);
+  if ((e.key === 's' || e.key === 'S') && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) { saveGame('manual'); }
   // DEBUG: Press G to warp to graveyard with green stone + Use verb active
   if (e.key === 'g' && !state.dlg.active && !state.mapOpen && !state.helpOpen) {
     if (state.phase !== 'playing') {
