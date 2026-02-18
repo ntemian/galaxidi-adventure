@@ -1159,6 +1159,8 @@ const scenes = {
                 state.phase = 'epilogue';
                 state.epiloguePage = 0;
                 const el = document.getElementById('epilogue-screen');
+                el.style.display = '';
+                el.style.opacity = '';
                 el.classList.add('show');
                 showEpiloguePage();
               };
@@ -7681,25 +7683,21 @@ function drawMap() {
     }
     ctx.restore();
 
-    // Label for all locations (with dark background for readability on map)
+    // Label — outlined text, no background pill
     {
       ctx.save();
       const label = loc.label + (isLocked ? ' 🔒' : '');
-      const fontSize = (isCurrent || isHover) ? 7 : 6;
-      ctx.font = fontSize + 'px "Press Start 2P", monospace';
+      ctx.font = '6px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
-      const tw = ctx.measureText(label).width;
-      // Dark pill behind label — oversized to cover baked-in map text
-      ctx.fillStyle = (isCurrent || isHover) ? 'rgba(15, 12, 6, 1.0)' : 'rgba(15, 12, 6, 1.0)';
-      const lx = loc.x - tw / 2 - 16, ly = loc.y - 28;
-      ctx.beginPath();
-      ctx.roundRect(lx, ly, tw + 32, 22, 4);
-      ctx.fill();
-      // Label text
-      ctx.globalAlpha = isLocked ? 0.5 : 1.0;
-      ctx.fillStyle = isCurrent ? '#FFE8A0' : (isHover ? '#FFE8A0' : (isLocked ? '#6a5a3a' : '#C09030'));
-      ctx.shadowColor = '#000'; ctx.shadowBlur = 2;
-      ctx.fillText(label, loc.x, loc.y - 11);
+      ctx.globalAlpha = isLocked ? 0.4 : ((isCurrent || isHover) ? 1.0 : 0.85);
+      // Dark outline for readability on map
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.strokeText(label, loc.x, loc.y - 12);
+      // Gold fill
+      ctx.fillStyle = isCurrent ? '#FFE8A0' : (isHover ? '#FFE8A0' : (isLocked ? '#6a5a3a' : '#D4A03C'));
+      ctx.fillText(label, loc.x, loc.y - 12);
       ctx.restore();
     }
   }
