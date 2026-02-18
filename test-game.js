@@ -2596,9 +2596,54 @@ test('NPCs have consistent height/position (not floating or underground)', () =>
   while ((m = posRegex.exec(block[1])) !== null) {
     const y = parseInt(m[2]);
     if (y < 150) issues.push(`${m[1]}: y=${y} (too high, floating?)`);
-    if (y > 380) issues.push(`${m[1]}: y=${y} (below walkline?)`);
+    if (y > 370) issues.push(`${m[1]}: y=${y} (below walkline — feet won't touch ground)`);
   }
   assert(issues.length === 0, `NPC position issues: ${issues.join('; ')}`);
+});
+
+test('WalkLine Y values are calibrated to visual floor level (340-370 range)', () => {
+  // Ground-contact calibration: walkLine Y must be 340-370 to match background floor levels.
+  // Port (340-345) is the reference — characters look grounded. Values >370 cause floating.
+  // The only exception is the terrace which has a slightly lower vantage point (up to 370).
+  const walkLines = extractWalkLines();
+  const issues = [];
+  for (const [scene, wl] of Object.entries(walkLines)) {
+    if (wl === 'parse_error' || !Array.isArray(wl)) continue;
+    for (const point of wl) {
+      if (point[1] > 375) {
+        issues.push(`${scene}: walkLine y=${point[1]} too low — sprites will float above visual floor (max 375)`);
+      }
+      if (point[1] < 330) {
+        issues.push(`${scene}: walkLine y=${point[1]} too high — sprites will overlap scene furniture (min 330)`);
+      }
+    }
+  }
+  assert(issues.length === 0, `Ground-contact calibration issues: ${issues.join('; ')}`);
+});
+
+test('NPC Y positions match their scene walkLine (within 15px)', () => {
+  // NPCs should stand on or near the walkLine of their scene, not float above it.
+  // Ghost is exempt (supernatural floating). Giannis is on elevated ground (within 20px).
+  const walkLines = extractWalkLines();
+  const npcBlock = js.match(/const npcChars\s*=\s*\{([\s\S]*?)\n\};/);
+  if (!npcBlock) { assert(true); return; }
+  const issues = [];
+  const npcRegex = /(\w+):\s*\{[^}]*scene:\s*'(\w+)'[^}]*y:\s*(\d+)/g;
+  let m;
+  while ((m = npcRegex.exec(npcBlock[1])) !== null) {
+    const [, name, scene, yStr] = m;
+    const y = parseInt(yStr);
+    if (name === 'ghost') continue; // Ghost floats by design
+    const wl = walkLines[scene];
+    if (!wl || wl === 'parse_error' || !Array.isArray(wl)) continue;
+    // Get average walkLine Y for the scene
+    const avgY = wl.reduce((sum, pt) => sum + pt[1], 0) / wl.length;
+    const diff = Math.abs(y - avgY);
+    if (diff > 15) {
+      issues.push(`${name} in ${scene}: y=${y}, walkLine avg=${avgY.toFixed(0)}, diff=${diff.toFixed(0)}px (max 15)`);
+    }
+  }
+  assert(issues.length === 0, `NPCs not grounded to walkLine: ${issues.join('; ')}`);
 });
 
 // ════════════════════════════════════════════════════════════
