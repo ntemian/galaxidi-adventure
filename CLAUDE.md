@@ -171,7 +171,7 @@ Scene 12 (harbor): Ntemis's speech → Akis's documentary → new αλληλασ
 
 - **Backgrounds**: PNG, ~640x400, pixel art style with warm colors
 - **Character sprites**: Idle pose, transparent background, ~50px wide
-  - ntemis: 50x118, ajax: 42x84, clio: 42x92
+  - ntemis: 50x97, ajax: 42x68, clio: 42x75
 - **Portraits**: ~200x200 PNG for dialog display
 
 ## LOSC Integration
