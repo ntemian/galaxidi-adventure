@@ -709,9 +709,6 @@ const scenes = {
         verbs: { look:[{s:'',t:'Ο Άγιος Νικόλαος — προστάτης των ναυτικών. Ο τρούλος λάμπει κόκκινος στον ήλιο.'},{s:'ΝΤΕΜΗΣ',t:'Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.'}] }},
       { id:'bougainvillea_ch', x:0, y:-24, w:90, h:180, label:'Μπουκαμβίλιες',
         verbs: { look:[{s:'',t:'Φούξια μπουκαμβίλιες σκεπάζουν τον τοίχο. Χρώμα που αψηφά τον χρόνο.'}] }},
-      { id:'cat_church', x:210, y:335, w:90, h:45, label:'Γάτα',
-        verbs: { look:[{s:'',t:'Μια πορτοκαλί γάτα κοιμάται αράχτη στα πλακάκια.'},{s:'ΚΛΕΙΩ',t:'Την ξαναβρήκα! Αυτή είναι η ίδια από το λιμάνι.'}],
-                 talk:()=>{ playSFX('meow'); return [{s:'ΚΛΕΙΩ',t:'Γεια σου, μικρούλα. Με ακολουθείς;'},{s:'',t:'Η γάτα νιαουρίζει απαλά.'}]; } }},
       { id:'benches', x:40, y:290, w:110, h:60, label:'Παγκάκια',
         verbs: { look:[{s:'',t:'Πέτρινα παγκάκια στη σκιά. Γέροι κάθονταν εδώ κάθε απόγευμα, εδώ και δεκαετίες.'}] }},
       { id:'pots_church', x:370, y:290, w:80, h:70, label:'Γλάστρες',
@@ -723,8 +720,7 @@ const scenes = {
     exits: [{ side:'right', target:'liotrivi', label:'Λιοτρίβι →' }, { side:'left', target:'cave', label:'← Σπήλαιο' }],
     entry: [
       {s:'',t:'Η πλατεία του Αγίου Νικολάου. Ησυχία, λουλούδια, και ήχος νερού.'},
-      {s:'ΚΛΕΙΩ',t:'Τι ωραία πλατεία! Και γάτα!'},
-      {s:'ΑΙΑΣ',t:'Πάλι γάτα;'},
+      {s:'ΚΛΕΙΩ',t:'Τι ωραία πλατεία!'},
       {s:'ΝΤΕΜΗΣ',t:'Ο Άγιος Νικόλαος. Προστάτης των ναυτικών. Κατάλληλος για το Γαλαξίδι.'},
     ],
   },
@@ -880,7 +876,7 @@ const scenes = {
     walkBounds: [30, 500], // cemetery path ends before sea overlook
     charPos: { ntemis: { x: 250, y: 377 }, ajax: { x: 340, y: 379 }, clio: { x: 160, y: 378 } },
     objects: [
-      { id:'visvikis_grave', x:390, y:248, w:150, h:90, label:'Τάφος Βισβίκη',
+      { id:'visvikis_grave', x:355, y:248, w:80, h:90, label:'Τάφος Βισβίκη',
         verbs: {
           look:[{s:'',t:'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίκης».'},{s:'ΚΛΕΙΩ',t:'Κοίτα κάτω — «Η θάλασσα θυμάται».'},{s:'ΑΙΑΣ',t:'Αυτός είναι ο καπετάνιος από το γράμμα!'}],
           use: () => {
@@ -913,7 +909,7 @@ const scenes = {
         verbs: { look:[{s:'',t:'Αναμμένα κεριά μπροστά στον τάφο. Κάποιος τα φροντίζει ακόμα.'},{s:'ΝΤΕΜΗΣ',t:'120 χρόνια και κάποιος ανάβει ακόμα κεριά. Αυτό είναι αφοσίωση.'}] }},
       { id:'path_stones_gr', x:150, y:376, w:200, h:50, label:'Πέτρινο μονοπάτι',
         verbs: { look:[{s:'',t:'Πλακόστρωτο μονοπάτι ανάμεσα στους τάφους. Λειασμένο από χιλιάδες επισκέψεις.'}] }},
-      { id:'ghost_npc', x:430, y:232, w:65, h:120, label: 'Σκιά',
+      { id:'ghost_npc', x:445, y:232, w:65, h:120, label: 'Σκιά',
         verbs: {
           look: () => {
             if (!state.flags.ghost_summoned) return [{s:'',t:'Σκιές τρεμοπαίζουν ανάμεσα στα κυπαρίσσια. Σαν να κινείται κάτι...'},{s:'ΚΛΕΙΩ',t:'Μπαμπά... νιώθω κάτι εδώ.'}];
@@ -1229,7 +1225,6 @@ const scenes = {
       fountain:         { x:220, y:230, w:160, h:120 },
       church_dome:      { x:200, y:0,   w:250, h:100 },
       bougainvillea_ch: { x:50,  y:30,  w:120, h:180 },
-      cat_church:       { x:210, y:335, w:90,  h:45  },
       benches:          { x:40,  y:290, w:110, h:60  },
       pots_church:      { x:370, y:290, w:80,  h:70  },
       church_door:      { x:250, y:70,  w:140, h:150 },
@@ -1338,7 +1333,7 @@ const HELP_HINTS = {
   museum: 'Μιλήστε στον επιμελητή. Κοιτάξτε τα μοντέλα πλοίων και τον χάρτη. Αριστερά → Λιοτρίβι.',
   liotrivi: 'Μιλήστε στον Άθο. Κοιτάξτε τις φωτογραφίες και το ελαιοτριβείο. Αριστερά → Εκκλησία.',
   cave: 'Κοιτάξτε τις χαράξεις στους τοίχους. Κοιτάξτε ψηλά στη ρωγμή! Δεξιά → Εκκλησία.',
-  church: 'Κοιτάξτε το σιντριβάνι και τη γάτα. Ανοίξτε την πόρτα της εκκλησίας για να μπείτε μέσα.',
+  church: 'Κοιτάξτε το σιντριβάνι. Ανοίξτε την πόρτα της εκκλησίας για να μπείτε μέσα.',
   church_interior: 'Χρησιμοποιήστε τα κεριά πρώτα. Μετά ψάξτε το πάτωμα. Μιλήστε στον Παπά Νικόλα.',
   windmill: 'Μιλήστε στον Γιάννη — θα σας δώσει κάτι. Κοιτάξτε από το τηλεσκόπιο. Δεξιά → Νεκροταφείο.',
   graveyard: 'Βρείτε τον τάφο του Βισβίκη. Χρησιμοποιήστε ό,τι βρήκατε στο σπήλαιο πάνω του.',
@@ -2776,86 +2771,6 @@ function drawPetals() {
 }
 
 
-// ── Orange Cat — follows Clio between scenes ──
-const catScenePos = {
-  exterior:  { x: 95, y: 269 },
-  terrace:   { x: 180, y: 372 },
-  port:      { x: 420, y: 335 },
-  church:    { x: 190, y: 370, bgHasCat: true },
-  church_interior: { x: 380, y: 370 },
-  liotrivi:  { x: 450, y: 372 },
-  windmill:  { x: 340, y: 374 },
-  graveyard: { x: 120, y: 372 },
-  treasure:  { x: 190, y: 372 },
-  new_era:   { x: 200, y: 370 },
-};
-const cat = { x: 95, y: 269, phase: 0, blinkTimer: 0, blinking: false, tailPhase: 0 };
-function updateCat(dt) {
-  cat.phase += dt;
-  cat.tailPhase += dt * 2.5;
-  cat.blinkTimer += dt;
-  if (!cat.blinking && cat.blinkTimer > 3 + Math.random() * 4) {
-    cat.blinking = true;
-    cat.blinkTimer = 0;
-  }
-  if (cat.blinking && cat.blinkTimer > 0.15) {
-    cat.blinking = false;
-    cat.blinkTimer = 0;
-  }
-}
-function drawCat() {
-  const cx = cat.x, cy = cat.y;
-  ctx.save();
-  ctx.imageSmoothingEnabled = false;
-  // Body (sitting loaf shape)
-  ctx.fillStyle = '#D08030';
-  ctx.fillRect(cx, cy, 10, 6);       // body
-  ctx.fillRect(cx + 1, cy - 1, 8, 1); // back curve
-  // Head
-  ctx.fillRect(cx + 8, cy - 4, 6, 5); // head
-  ctx.fillStyle = '#E09040';
-  ctx.fillRect(cx + 9, cy - 3, 4, 3); // face highlight
-  // Ears
-  ctx.fillStyle = '#D08030';
-  ctx.fillRect(cx + 8, cy - 6, 2, 2);  // left ear
-  ctx.fillRect(cx + 12, cy - 6, 2, 2); // right ear
-  ctx.fillStyle = '#E8A060';
-  ctx.fillRect(cx + 9, cy - 5, 1, 1);  // inner ear
-  ctx.fillRect(cx + 12, cy - 5, 1, 1);
-  // Eyes
-  if (!cat.blinking) {
-    ctx.fillStyle = '#40A040';
-    ctx.fillRect(cx + 9, cy - 2, 1, 1);
-    ctx.fillRect(cx + 12, cy - 2, 1, 1);
-  } else {
-    ctx.fillStyle = '#D08030';
-    ctx.fillRect(cx + 9, cy - 2, 1, 1);
-    ctx.fillRect(cx + 12, cy - 2, 1, 1);
-  }
-  // Nose
-  ctx.fillStyle = '#E07890';
-  ctx.fillRect(cx + 11, cy - 1, 1, 1);
-  // Stripes
-  ctx.fillStyle = '#B06820';
-  ctx.fillRect(cx + 2, cy, 1, 5);
-  ctx.fillRect(cx + 5, cy, 1, 5);
-  ctx.fillRect(cx + 10, cy - 4, 1, 2);
-  // Tail (swishing)
-  const tailSwing = Math.sin(cat.tailPhase) * 4;
-  ctx.fillStyle = '#D08030';
-  ctx.fillRect(cx - 1, cy + 3, 1, 1);
-  ctx.fillRect(cx - 2, cy + 2 + tailSwing * 0.2, 1, 1);
-  ctx.fillRect(cx - 3, cy + 1 + tailSwing * 0.4, 1, 1);
-  ctx.fillRect(cx - 4, cy + tailSwing * 0.5, 1, 1);
-  // Tip darker
-  ctx.fillStyle = '#B06820';
-  ctx.fillRect(cx - 4, cy + tailSwing * 0.5, 1, 1);
-  // Paws
-  ctx.fillStyle = '#E0A060';
-  ctx.fillRect(cx + 1, cy + 5, 2, 1);
-  ctx.fillRect(cx + 7, cy + 5, 2, 1);
-  ctx.restore();
-}
 
 // ── Golden Hour Light Shaft ──
 function drawLightShaft(tick) {
@@ -2905,24 +2820,24 @@ function drawHeatHaze(tick) {
 let audioCtx = null;
 const ambientSounds = {
   wavesNode: null, cicadasNode: null, windNode: null, dripsInterval: null,
-  bellPlayed: false, gullTimer: 0, gullInterval: 10,
+  bellPlayed: false, gullTimer: 0, gullInterval: 10, bellTimer: 0, bellInterval: 20,
   masterGain: null, active: false, currentScene: null,
 };
 
 // Per-scene ambient config: which layers play and at what volume
 const sceneAmbientConfig = {
-  exterior:  { waves: 0.12, wind: 0.04, gulls: true,  gullFreq: [8,7], cicadas: 0.03 },
-  terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8], cicadas: 0.04 },
+  exterior:  { waves: 0.12, wind: 0.04, gulls: true,  gullFreq: [8,7], cicadas: 0.03, bell: true, bellFreq: [25,20] },
+  terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8], cicadas: 0.04, bell: true, bellFreq: [30,25] },
   kitchen:   { waves: 0.03, wind: 0.01 },
-  port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4] },
-  waterfront:{ waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6] },
+  port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4], bell: true, bellFreq: [35,30] },
+  waterfront:{ waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6], bell: true, bellFreq: [30,25] },
   museum:    { waves: 0.02, wind: 0.01 },
-  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02 },
+  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02, bell: true, bellFreq: [25,20] },
   cave:      { drips: true,  wind: 0.02 },
-  windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10], cicadas: 0.05 },
-  graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02 },
-  church:    { waves: 0.02, wind: 0.01, cicadas: 0.02 },
-  church_interior: { waves: 0, wind: 0 },
+  windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10], cicadas: 0.05, bell: true, bellFreq: [40,30] },
+  graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02, bell: true, bellFreq: [20,15] },
+  church:    { waves: 0.02, wind: 0.01, cicadas: 0.02, bell: true, bellFreq: [12,10] },
+  church_interior: { waves: 0, wind: 0, bell: true, bellFreq: [15,12] },
   boat:      { waves: 0.22, wind: 0.10, gulls: true,  gullFreq: [6,5] },
   treasure:  { waves: 0.08, wind: 0.06 },
   new_era:   { waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6] },
@@ -3345,26 +3260,6 @@ function playSFX(type) {
     osc2.connect(g2); g2.connect(ambientSounds.masterGain);
     osc2.start(now + 0.08); osc2.stop(now + 0.12);
 
-  } else if (type === 'meow') {
-    // Cat meow — sine sweep up then down with vibrato
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(600, now);
-    osc.frequency.linearRampToValueAtTime(900, now + 0.15);
-    osc.frequency.linearRampToValueAtTime(500, now + 0.4);
-    const vib = ctx.createOscillator();
-    vib.frequency.value = 15;
-    const vibG = ctx.createGain();
-    vibG.gain.value = 20;
-    vib.connect(vibG); vibG.connect(osc.frequency);
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.07, now);
-    g.gain.linearRampToValueAtTime(0.09, now + 0.12);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-    osc.connect(g); g.connect(ambientSounds.masterGain);
-    osc.start(now); osc.stop(now + 0.45);
-    vib.start(now); vib.stop(now + 0.45);
-
   } else if (type === 'ghost') {
     // Supernatural ghost appearance — low drone + high shimmer
     // Low eerie drone
@@ -3653,10 +3548,13 @@ function startSceneAmbience(sceneId) {
       ambientSounds.cicadasNode = createCicadasLoop();
       ambientSounds.cicadasNode.gain.gain.value = cfg.cicadas;
     }
-    // One-time church bell on first exterior visit
-    if (!ambientSounds.bellPlayed && sceneId === 'exterior') {
-      ambientSounds.bellPlayed = true;
-      setTimeout(() => playChurchBell(), 2500);
+    // Church bell — plays on entry for bell-enabled scenes, then periodically
+    if (cfg.bell) {
+      ambientSounds.bellTimer = 0;
+      ambientSounds.bellInterval = cfg.bellFreq[0] + Math.random() * cfg.bellFreq[1];
+      // Bell on scene entry (with short delay)
+      const entryDelay = (sceneId === 'church' || sceneId === 'church_interior' || sceneId === 'graveyard') ? 1500 : 3000;
+      setTimeout(() => playChurchBell(), entryDelay);
     }
   } catch (e) { /* Web Audio not available */ }
   // Visual ambience
@@ -3696,12 +3594,24 @@ function stopSceneAmbience() {
 function updateAmbientSound(dt) {
   if (!ambientSounds.active) return;
   const cfg = sceneAmbientConfig[state.scene];
-  if (!cfg || !cfg.gulls) return;
-  ambientSounds.gullTimer += dt;
-  if (ambientSounds.gullTimer >= ambientSounds.gullInterval) {
-    ambientSounds.gullTimer = 0;
-    ambientSounds.gullInterval = cfg.gullFreq[0] + Math.random() * cfg.gullFreq[1];
-    playSeagullCry();
+  if (!cfg) return;
+  // Seagull timer
+  if (cfg.gulls) {
+    ambientSounds.gullTimer += dt;
+    if (ambientSounds.gullTimer >= ambientSounds.gullInterval) {
+      ambientSounds.gullTimer = 0;
+      ambientSounds.gullInterval = cfg.gullFreq[0] + Math.random() * cfg.gullFreq[1];
+      playSeagullCry();
+    }
+  }
+  // Church bell timer — periodic distant tolls
+  if (cfg.bell) {
+    ambientSounds.bellTimer += dt;
+    if (ambientSounds.bellTimer >= ambientSounds.bellInterval) {
+      ambientSounds.bellTimer = 0;
+      ambientSounds.bellInterval = cfg.bellFreq[0] + Math.random() * cfg.bellFreq[1];
+      playChurchBell();
+    }
   }
 }
 
@@ -3712,18 +3622,9 @@ function updateSceneAmbience(dt) {
     updateBoatBob(dt);
     updatePetals();
   }
-  // Cat follows Clio everywhere she goes
-  if (catScenePos[state.scene]) {
-    const sp = catScenePos[state.scene];
-    cat.x = sp.x; cat.y = sp.y;
-    updateCat(dt);
-  }
 }
 
 function drawSceneAmbience(tick) {
-  // Draw cat in any scene that has a position for it (skip if background already has cat art)
-  const csp = catScenePos[state.scene];
-  if (csp && !csp.bgHasCat) drawCat();
   if (state.scene === 'exterior') {
     drawBoatBob();
     drawSeaShimmer(tick);
@@ -5330,6 +5231,13 @@ const VOICE_MAP = {
   'Μια αχνή, ψηλή σιλουέτα πάνω από τον τάφο. Τρεμοπαίζει σαν φως σε νερό.': 'voice/narrator/165.mp3',
   'Το παλιό νεκροταφείο. Το φεγγάρι φωτίζει τους τάφους, μυρωδιά θυμαριού, ησυχία.': 'voice/narrator/166.mp3',
   'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία τη νύχτα.': 'voice/clio/074.mp3',
+  // Graveyard — green stone entry + USE grave + ghost sequence (generated)
+  'Η εσοχή... αυτό ζητάει η πλάκα.': 'voice/ntemis/145.mp3',
+  'Η πράσινη πέτρα ταιριάζει ακριβώς. Λάμπει αχνά...': 'voice/narrator/241.mp3',
+  'Μπαμπά, νιώθω κάτι περίεργο με αυτή την πέτρα.': 'voice/clio/122.mp3',
+  'Μη λες βλακείες.': 'voice/ajax/128.mp3',
+  '...Βρείτε τον τάφο του Βισβίκη.': 'voice/ntemis/146.mp3',
+  'Δεν φοβήθηκα. Ήταν... λυπημένος.': 'voice/clio/123.mp3',
   'Το κιβώτιο ανοιχτό. Ο θησαυρός του Βισβίκη αποκαλύφθηκε.': 'voice/narrator/167.mp3',
   'Σιδερόδετο ξύλινο κιβώτιο. Εκατόν είκοσι χρόνια κάτω από τη γη. Ο Βισβίκης έχτιζε πράγματα που αντέχουν.': 'voice/narrator/168.mp3',
   'Ανοίξτε το! ΑΝΟΙΞΤΕ ΤΟ!': 'voice/ajax/055.mp3',
@@ -5447,7 +5355,57 @@ const VOICE_MAP = {
   'Την αλληλεγγύη. Κράτα τον διπλανό σου. Άλλαξε το πλοίο.': 'voice/ntemis/112.mp3',
     'Εκατόν τρεις... Μένει μία ακόμα υπογραφή.': 'voice/ajax/079.mp3',
   'Εγώ! Θέλω να υπογράψω εγώ!': 'voice/clio/100.mp3',
-  'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.': 'voice/ntemis/113.mp3'
+  'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.': 'voice/ntemis/113.mp3',
+  // ── SCENE 10: TREASURE ──
+  'Ο Άγιος Γεώργιος. Ένα ξεχασμένο νησάκι στον κόλπο. Θυμάρι, πέτρα, κι ο ήχος του ανέμου.': 'voice/narrator/224.mp3',
+  'Πού σκάβουμε;': 'voice/ajax/116.mp3',
+  'Σιγά. Πρώτα βρίσκουμε τον σταυρό.': 'voice/ntemis/132.mp3',
+  'Εκεί! Βλέπω σταυρό στα βράχια!': 'voice/clio/115.mp3',
+  'Ένας χαμηλός πέτρινος σταυρός. Φαγωμένος από τον χρόνο και την αλμύρα.': 'voice/narrator/225.mp3',
+  'Κοίτα — γράμματα!': 'voice/clio/116.mp3',
+  'Λ... Β... 1860!': 'voice/ajax/117.mp3',
+  'Λ.Β. — Λεονάρδος Βισβίκης. Ο χάρτης λέει: πέντε βήματα νοτιοδυτικά. Σκάψε.': 'voice/ntemis/133.mp3',
+  'Πέντε βήματα! Ένα... δύο... τρία... τέσσερα... πέντε! ΕΔΏΣΚΑΒΟΥΜΕ!': 'voice/ajax/118.mp3',
+  'Ο σταυρός του Βισβίκη. «Λ.Β. 1860». Πέντε βήματα νοτιοδυτικά.': 'voice/narrator/226.mp3',
+  'Το Γαλαξίδι λάμπει στον πρωινό ήλιο απέναντι. Σπίτια, εκκλησίες, το λιμάνι.': 'voice/narrator/227.mp3',
+  'Από εδώ τα έβλεπε όλα ο Βισβίκης.': 'voice/ntemis/134.mp3',
+  'Λευκό εκκλησάκι με μπλε τρούλο. Ο Άγιος Γεώργιος φυλάει αυτόν τον βράχο εδώ και αιώνες.': 'voice/narrator/228.mp3',
+  'Τι ωραίο... Σαν ζαχαρωτό!': 'voice/clio/117.mp3',
+  'Χώμα και πέτρες. Κοίταξε πρώτα τον σταυρό.': 'voice/narrator/229.mp3',
+  'Η τρύπα στη γη. Εδώ βρήκαμε τον θησαυρό.': 'voice/narrator/230.mp3',
+  'Σκούρο χώμα, πατημένο. Πέντε βήματα νοτιοδυτικά από τον σταυρό.': 'voice/narrator/231.mp3',
+  'ΣΚΑΒΟΥΜΕ!': 'voice/ajax/119.mp3',
+  'Πρέπει να βρούμε το σωστό σημείο πρώτα. Κοίταξε τον σταυρό.': 'voice/ntemis/135.mp3',
+  'Ο θησαυρός ήδη βγήκε στο φως.': 'voice/narrator/232.mp3',
+  'Πώς θα σκάψουμε; Χρειαζόμαστε φτυάρι!': 'voice/ajax/120.mp3',
+  'Ποιος θα είχε φτυάρι εδώ γύρω...': 'voice/ntemis/136.mp3',
+  'Πατέρας κι γιος σκάβουν μαζί. Σκληρό χώμα, ρίζες θυμαριού, πέτρες.': 'voice/narrator/233.mp3',
+  'Κι αν δεν υπάρχει τίποτα;': 'voice/clio/118.mp3',
+  'Τότε ήρθαμε για τη θέα.': 'voice/ntemis/137.mp3',
+  'ΚΛΑΝΓΚ! Το φτυάρι χτυπάει κάτι σκληρό.': 'voice/narrator/234.mp3',
+  'ΧΤΥΠΗΣΕ! ΚΑΤΙ ΧΤΥΠΗΣΕ!': 'voice/ajax/121.mp3',
+  'Βλέπω σίδερο... μαντάλια! Είναι κιβώτιο!': 'voice/clio/119.mp3',
+  'ΒΡΗΚΑΜΕ! Μπαμπά, βρήκαμε!': 'voice/ajax/122.mp3',
+  'Ένα σιδερόδετο ξύλινο κιβώτιο αναδύεται από τη γη. Εκατόν είκοσι χρόνια κάτω από τη γη.': 'voice/narrator/235.mp3',
+  'Εκατόν είκοσι χρόνια περίμενε. Μπορεί να περιμένει κι ένα λεπτό ακόμα.': 'voice/ntemis/138.mp3',
+  'Η θάλασσα θυμάται.': 'voice/clio/120.mp3',
+  'Ας δούμε τι μας άφησε ο Βισβίκης.': 'voice/ntemis/139.mp3',
+  'Το καπάκι ανοίγει αργά... Χρυσό φως ξεχύνεται.': 'voice/narrator/236.mp3',
+  'Νομίσματα — Οθωμανικά, Βενετικά, αρχαία. Ένα κολιέ νεφρίτη. Ένα βιβλίο.': 'voice/narrator/237.mp3',
+  'Εκατόν τέσσερις υπογραφές. Σαν ομάδα.': 'voice/ajax/123.mp3',
+  'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.': 'voice/narrator/238.mp3',
+  '«Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.»': 'voice/ntemis/140.mp3',
+  '«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»': 'voice/ntemis/141.mp3',
+  'Σιωπή. Κύματα και γλάροι.': 'voice/narrator/239.mp3',
+  'Μπαμπά... τόσο χρυσάφι. ΕΜΕΙΣ το βρήκαμε.': 'voice/ajax/124.mp3',
+  'Αίαντα. Τι έλεγε η αλληλασφάλεια;': 'voice/ntemis/142.mp3',
+  '...Ότι κανείς δεν ταξιδεύει μόνος. Οκ. Το δίνουμε.': 'voice/ajax/125.mp3',
+  'Όλο. Αλλά εσύ κράτα το κολιέ, Κλειώ.': 'voice/ntemis/143.mp3',
+  'Η θάλασσα μου το χάρισε.': 'voice/clio/121.mp3',
+  'Κι εγώ; Τι κρατάω;': 'voice/ajax/126.mp3',
+  'Τη μνήμη. Κι αυτό αξίζει περισσότερο.': 'voice/ntemis/144.mp3',
+  '...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.': 'voice/ajax/127.mp3',
+  'Ώρα να γυρίσουν στο Γαλαξίδι.': 'voice/narrator/240.mp3'
 };
 
 let voiceFinished = true;
@@ -6096,7 +6054,6 @@ function startGhostSequence() {
     // Ghost SFX breaks the silence
     { type: 'callback', fn: () => playSFX('ghost') },
     { type: 'wait', duration: 1.0 },
-    { type: 'dialog', lines: [{s:'',t:'Κάτι υψώνεται πάνω από τον τάφο...'}] },
     { type: 'effect', effect: 'materialize', duration: 3.0 },
     // Ghost music enters AFTER the ghost materializes — earned
     { type: 'callback', fn: () => {
@@ -6105,7 +6062,7 @@ function startGhostSequence() {
     }},
     { type: 'npc', who: 'ghost', visible: true },
     { type: 'dialog', lines: [
-      {s:'',t:'Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
+      {s:'',t:'Μια φιγούρα υψώνεται πάνω από τον τάφο. Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
       {s:'ΚΛΕΙΩ',t:'Ο... ο Καπετάν Βισβίκης;'},
       {s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέσα από αυτόν!'},
     ]},
@@ -6113,12 +6070,11 @@ function startGhostSequence() {
     { type: 'wait', duration: 0.8 },
     { type: 'npc', who: 'ghost', dir: 1 },
     { type: 'wait', duration: 0.6 },
-    // Ghost raises arm and points to church — narrate BEFORE the visual
-    { type: 'dialog', lines: [{s:'',t:'Το φάντασμα σηκώνει αργά το χέρι...'}] },
+    // Ghost raises arm and points to church
     { type: 'callback', fn: () => { npcChars.ghost.arm = 0; }},
     { type: 'npc', who: 'ghost', dir: 1, tilt: -0.1 },
     { type: 'effect', effect: 'arm_raise', duration: 1.2 },
-    { type: 'dialog', lines: [{s:'',t:'Δείχνει... προς τον Άγιο Νικόλαο.'}] },
+    { type: 'dialog', lines: [{s:'',t:'Το φάντασμα σηκώνει αργά το χέρι. Δείχνει... προς τον Άγιο Νικόλαο.'}] },
     { type: 'dialog', lines: [
       {s:'ΚΛΕΙΩ',t:'Ο χάρτης. Θέλει να βρούμε τον χάρτη.'},
       {s:'ΝΤΕΜΗΣ',t:'Στην εκκλησία; Τι κρύβεται εκεί;'},
@@ -6151,6 +6107,9 @@ function startGhostSequence() {
         sc.exits.push({ side: 'right', target: 'church', label: 'Αγ. Νικόλαος →' });
       }
       npcChars.ghost.visible = false;
+      // Hide ghost hotspot — ghost has departed, should not reappear
+      const ghostObj = sc.objects.find(o => o.id === 'ghost_npc');
+      if (ghostObj) ghostObj._hidden = true;
     }},
   ]);
 }
@@ -6492,6 +6451,41 @@ const INV_ICONS = {
     c.fillStyle='#607090'; c.beginPath(); c.moveTo(36,18); c.lineTo(37,14); c.lineTo(35,14); c.fill();
     // Roll edges
     c.fillStyle='#b09058'; c.fillRect(6,6,38,3); c.fillRect(6,39,38,3);
+  },
+  shovel: (c) => {
+    // Small rusty iron shovel — gift from Giannis
+    // Wooden handle
+    c.fillStyle='#8a6a3a'; c.fillRect(24,4,4,26);
+    c.fillStyle='#7a5a2a'; c.fillRect(25,4,2,26);
+    // Handle grip top
+    c.fillStyle='#6a4a20'; c.fillRect(22,3,8,3);
+    c.fillStyle='#7a5a2a'; c.fillRect(23,4,6,1);
+    // Metal collar
+    c.fillStyle='#606060'; c.fillRect(22,28,8,3);
+    c.fillStyle='#787878'; c.fillRect(23,29,6,1);
+    // Iron blade (spade shape)
+    c.fillStyle='#6a6a6a';
+    c.beginPath();
+    c.moveTo(18,31); c.lineTo(34,31);
+    c.lineTo(36,36); c.quadraticCurveTo(36,48,26,50);
+    c.quadraticCurveTo(16,48,16,36); c.lineTo(18,31);
+    c.fill();
+    // Blade highlight
+    c.fillStyle='#888888';
+    c.beginPath();
+    c.moveTo(19,32); c.lineTo(26,32);
+    c.lineTo(26,48); c.quadraticCurveTo(18,46,17,36);
+    c.lineTo(19,32);
+    c.fill();
+    // Rust spots
+    c.fillStyle='#8a5530'; c.fillRect(22,35,3,2);
+    c.fillStyle='#7a4a28'; c.fillRect(28,40,2,2);
+    c.fillStyle='#8a5530'; c.fillRect(20,43,2,1);
+    // Edge shine
+    c.strokeStyle='rgba(200,200,200,0.3)'; c.lineWidth=0.5;
+    c.beginPath();
+    c.moveTo(18,32); c.quadraticCurveTo(16,40,26,50);
+    c.stroke();
   },
 };
 
@@ -7822,7 +7816,7 @@ function update(dt) {
   // Particles
   updateParticles();
 
-  // Scene ambience (seagulls, petals, cat, sounds)
+  // Scene ambience (seagulls, petals, bells, sounds)
   updateSceneAmbience(dt);
 
   // Fade/iris transition
