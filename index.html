@@ -4683,22 +4683,6 @@ function drawCloseup() {
 // Graveyard ambience: fireflies, mist, moonlight rays, cypress shadow sway
 function drawGraveyardAmbience(tick) {
   ctx.save();
-  // ── TOMBSTONE TEXT CORRECTION ──
-  // Cover old "ΠΛΟΙΑΡΧΟΣ / Λ. ΒΙΣΒΙΖΗΣ" and draw correct name
-  ctx.fillStyle = '#A09890';
-  ctx.fillRect(454, 270, 98, 62);
-  ctx.fillStyle = '#A8A098';
-  ctx.fillRect(456, 272, 94, 58);
-  ctx.fillStyle = '#9A9488';
-  ctx.fillRect(456, 290, 94, 1);
-  ctx.fillRect(456, 310, 94, 1);
-  ctx.fillStyle = '#28241E';
-  ctx.font = 'bold 11px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('ΚΑΠΕΤΑΝΙΟΣ', 503, 287);
-  ctx.fillText('ΛΟΥΚΑΣ', 503, 303);
-  ctx.fillText('ΒΙΣΒΙΚΗΣ', 503, 319);
-  ctx.textAlign = 'left';
   // ── FIREFLIES (yellow-green pulsing dots) ──
   for (let f = 0; f < 8; f++) {
     const fx = 80 + Math.sin(tick * 0.006 + f * 2.7) * 200 + f * 50;
