@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>The Jade Stone Saga — Box Art Collection</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0d1a;
+    padding: 60px 40px;
+    font-family: 'EB Garamond', serif;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .page-title h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 48px;
+    color: #d4a843;
+    letter-spacing: 6px;
+    text-shadow: 0 0 20px rgba(212,168,67,0.3), 0 2px 4px rgba(0,0,0,0.8);
+  }
+
+  .page-title .tagline {
+    font-family: 'EB Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #5a6a8a;
+    letter-spacing: 4px;
+    margin-top: 8px;
+  }
+
+  .page-title .studio {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: #3a4a6a;
+    letter-spacing: 3px;
+    margin-top: 16px;
+  }
+
+  .separator {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a843, transparent);
+    margin: 30px auto 50px;
+  }
+
+  /* ── FEATURED BOX (Episode 1, centered, larger) ── */
+  .featured-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .featured-section .box {
+    width: 680px;
+  }
+
+  .featured-section .main-title {
+    font-size: 38px;
+  }
+
+  .featured-section .main-title .line2 {
+    font-size: 42px;
+    letter-spacing: 5px;
+  }
+
+  .featured-label {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .featured-label span {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: #d4a843;
+    letter-spacing: 4px;
+    border: 1px solid #2a3040;
+    padding: 6px 20px;
+    background: rgba(212,168,67,0.05);
+  }
+
+  /* ── UPCOMING SECTION ── */
+  .section-header {
+    text-align: center;
+    margin: 70px 0 40px;
+    position: relative;
+  }
+
+  .section-header::before,
+  .section-header::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 25%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #2a3a5a);
+  }
+
+  .section-header::before { left: 5%; }
+  .section-header::after { right: 5%; background: linear-gradient(90deg, #2a3a5a, transparent); }
+
+  .section-header h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: #5a6a8a;
+    letter-spacing: 6px;
+    display: inline-block;
+    background: #0d0d1a;
+    padding: 0 30px;
+    position: relative;
+  }
+
+  .section-header .section-sub {
+    font-family: 'EB Garamond', serif;
+    font-size: 14px;
+    font-style: italic;
+    color: #3a4a6a;
+    letter-spacing: 3px;
+    margin-top: 10px;
+  }
+
+  /* ── UPCOMING GRID (smaller boxes, 3 columns) ── */
+  .upcoming-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 40px;
+    justify-content: center;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .upcoming-grid .main-title {
+    font-size: 22px !important;
+    letter-spacing: 2px !important;
+  }
+
+  .upcoming-grid .main-title .line2 {
+    font-size: 26px !important;
+    letter-spacing: 3px !important;
+  }
+
+  .upcoming-grid .main-title.single-line {
+    font-size: 26px !important;
+  }
+
+  .upcoming-grid .title-area {
+    padding: 20px 20px 14px;
+  }
+
+  .upcoming-grid .subtitle {
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 8px;
+  }
+
+  .upcoming-grid .episode-badge {
+    font-size: 9px;
+    top: 8px;
+    right: 10px;
+    padding: 2px 8px;
+  }
+
+  .upcoming-grid .bottom-strip {
+    padding: 10px 16px 12px;
+  }
+
+  .upcoming-grid .specs { font-size: 9px; }
+  .upcoming-grid .specs .line1 { font-size: 9.5px; }
+  .upcoming-grid .floppy-icon { width: 34px; height: 34px; }
+  .upcoming-grid .floppy-icon .disk-label { width: 22px; height: 8px; }
+  .upcoming-grid .floppy-icon .disk-slot { width: 14px; height: 5px; }
+  .upcoming-grid .floppy-text { font-size: 8px; }
+  .upcoming-grid .disk-count { font-size: 8px; }
+  .upcoming-grid .studio-logo { font-size: 9px; }
+  .upcoming-grid .made-in { font-size: 8px; }
+
+  /* ── BOX (shared) ── */
+  .box {
+    background: #0a0e2a;
+    border: 3px solid #1a2040;
+    box-shadow:
+      inset 0 0 30px rgba(0,0,0,0.5),
+      0 0 40px rgba(0,0,0,0.8),
+      0 4px 20px rgba(0,0,0,0.6);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .box:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      inset 0 0 30px rgba(0,0,0,0.5),
+      0 0 60px rgba(212,168,67,0.15),
+      0 8px 30px rgba(0,0,0,0.6);
+  }
+
+  .box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .box::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 3px 3px 15px rgba(0,0,0,0.4), inset -3px -3px 15px rgba(0,0,0,0.3);
+    pointer-events: none;
+    z-index: 11;
+  }
+
+  .episode-badge {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: #7a8cb8;
+    letter-spacing: 2px;
+    z-index: 5;
+    background: rgba(10,14,42,0.7);
+    padding: 3px 10px;
+    border: 1px solid #2a3a5a;
+    border-radius: 2px;
+  }
+
+  .title-area {
+    padding: 28px 30px 18px;
+    text-align: center;
+    background: linear-gradient(180deg, #0d1235 0%, #0a0e2a 100%);
+    border-bottom: 1px solid #1a2550;
+    position: relative;
+  }
+
+  .title-area::before {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a843, transparent);
+    margin: 0 auto 16px;
+  }
+
+  .main-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 30px;
+    letter-spacing: 3px;
+    line-height: 1.15;
+    color: #d4a843;
+    text-shadow:
+      0 0 10px rgba(212,168,67,0.3),
+      0 2px 4px rgba(0,0,0,0.8),
+      0 0 40px rgba(212,168,67,0.1);
+    margin-bottom: 4px;
+  }
+
+  .main-title .line2 {
+    font-size: 36px;
+    letter-spacing: 4px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .main-title.single-line {
+    font-size: 36px;
+    letter-spacing: 4px;
+  }
+
+  .subtitle {
+    font-family: 'EB Garamond', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #7a8cb8;
+    letter-spacing: 3px;
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+
+  .title-area::after {
+    content: '';
+    display: block;
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #d4a843, transparent);
+    margin: 14px auto 0;
+  }
+
+  .artwork {
+    position: relative;
+    border-top: 2px solid #1a2550;
+    border-bottom: 2px solid #1a2550;
+  }
+
+  .artwork img {
+    width: 100%;
+    display: block;
+    filter: saturate(1.1) contrast(1.05);
+  }
+
+  .artwork::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    box-shadow: inset 0 0 60px rgba(10, 14, 42, 0.4);
+    pointer-events: none;
+  }
+
+  .bottom-strip {
+    padding: 14px 25px 16px;
+    background: linear-gradient(180deg, #0a0e2a 0%, #080b22 100%);
+    border-top: 1px solid #1a2550;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .specs {
+    font-family: 'EB Garamond', serif;
+    font-size: 10.5px;
+    color: #4a5a80;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .specs .line1 { color: #6a7a9a; font-size: 11px; }
+
+  .floppy-icon {
+    width: 42px;
+    height: 42px;
+    border: 1.5px solid #3a4a6a;
+    border-radius: 3px;
+    background: #0d1235;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .floppy-icon .disk-label { width: 28px; height: 10px; background: #2a3a5a; border-radius: 1px; margin-bottom: 3px; }
+  .floppy-icon .disk-slot { width: 18px; height: 6px; background: #1a2540; border: 1px solid #2a3a5a; border-radius: 1px; }
+
+  .floppy-text { font-family: 'EB Garamond', serif; font-size: 9px; color: #4a5a80; text-align: center; margin-top: 3px; letter-spacing: 0.5px; }
+  .disk-count { font-family: 'EB Garamond', serif; font-size: 9px; color: #4a5a80; text-align: center; margin-top: 1px; letter-spacing: 0.5px; }
+
+  .right-section { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .studio-logo { font-family: 'Cinzel', serif; font-size: 10px; color: #5a6a8a; letter-spacing: 2px; }
+  .made-in { font-family: 'EB Garamond', serif; font-size: 9px; font-style: italic; color: #3a4a6a; letter-spacing: 1px; }
+
+  /* ── EPISODE ACCENT COLORS ── */
+  .box.ep1 .main-title { color: #d4a843; }
+
+  .box.ep2 .main-title { color: #8cb860; }
+  .box.ep2 .title-area::before, .box.ep2 .title-area::after { background: linear-gradient(90deg, transparent, #8cb860, transparent); }
+
+  .box.ep3 .main-title { color: #b8a0d4; }
+  .box.ep3 .title-area::before, .box.ep3 .title-area::after { background: linear-gradient(90deg, transparent, #b8a0d4, transparent); }
+
+  .box.ep4 .main-title { color: #d4603a; }
+  .box.ep4 .title-area::before, .box.ep4 .title-area::after { background: linear-gradient(90deg, transparent, #d4603a, transparent); }
+
+  .box.ep5 .main-title { color: #8a8a9a; }
+  .box.ep5 .title-area::before, .box.ep5 .title-area::after { background: linear-gradient(90deg, transparent, #8a8a9a, transparent); }
+
+  .box.ep6 .main-title { color: #7ab89a; }
+  .box.ep6 .title-area::before, .box.ep6 .title-area::after { background: linear-gradient(90deg, transparent, #7ab89a, transparent); }
+
+  .box.ep7 .main-title { color: #a0a0d4; }
+  .box.ep7 .title-area::before, .box.ep7 .title-area::after { background: linear-gradient(90deg, transparent, #a0a0d4, transparent); }
+
+  .box.ep8 .main-title { color: #d4a843; }
+  .box.ep8 .title-area::before, .box.ep8 .title-area::after { background: linear-gradient(90deg, transparent, #d4a843, transparent); }
+
+  /* ── COMING SOON RIBBON ── */
+  .coming-soon-ribbon {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 12;
+    pointer-events: none;
+  }
+
+  .coming-soon-ribbon .ribbon {
+    position: absolute;
+    top: 22px;
+    left: -35px;
+    transform: rotate(-45deg);
+    background: rgba(212,168,67,0.9);
+    color: #0a0e2a;
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 40px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+<body>
+
+  <!-- ═══════════ PAGE HEADER ═══════════ -->
+  <div class="page-title">
+    <h1>THE JADE STONE SAGA</h1>
+    <div class="tagline">A Point &amp; Click Adventure Series</div>
+    <div class="studio">GALAXIDI STUDIOS &nbsp;&middot;&nbsp; Made in Greece</div>
+  </div>
+  <div class="separator"></div>
+
+  <!-- ═══════════ FEATURED: EPISODE 1 ═══════════ -->
+  <div class="featured-label"><span>NOW AVAILABLE</span></div>
+
+  <div class="featured-section">
+    <div class="box ep1">
+      <div class="episode-badge">EPISODE I</div>
+      <div class="title-area">
+        <div class="main-title">
+          THE MYSTERY
+          <span class="line2">OF GALAXIDI</span>
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-painting.png" alt="Episode 1 — The Mystery of Galaxidi">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">IBM PC/Compatible &nbsp;&middot;&nbsp; VGA 256 Colors &nbsp;&middot;&nbsp; Sound Blaster</div>
+          <div>AdLib &nbsp;&middot;&nbsp; Roland MT-32 &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 640K RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">3&frac12;" HD</div>
+          <div class="disk-count">8 Disks</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1992</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ UPCOMING SECTION ═══════════ -->
+  <div class="section-header">
+    <h2>UPCOMING</h2>
+    <div class="section-sub">Episodes II&ndash;VIII &nbsp;&middot;&nbsp; 1993&ndash;2000</div>
+  </div>
+
+  <div class="upcoming-grid">
+
+    <!-- EPISODE 2 -->
+    <div class="box ep2">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE II</div>
+      <div class="title-area">
+        <div class="main-title">
+          THE SECRET
+          <span class="line2">OF AMFISSA</span>
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep2-amfissa.png" alt="Episode 2 — The Secret of Amfissa">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">IBM PC/Compatible &nbsp;&middot;&nbsp; VGA 256 Colors &nbsp;&middot;&nbsp; Sound Blaster</div>
+          <div>AdLib &nbsp;&middot;&nbsp; Roland MT-32 &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 640K RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">3&frac12;" HD</div>
+          <div class="disk-count">11 Disks</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1993</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPISODE 3 -->
+    <div class="box ep3">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE III</div>
+      <div class="title-area">
+        <div class="main-title">
+          THE VOICE
+          <span class="line2">OF DELPHI</span>
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep3-delphi.png" alt="Episode 3 — The Voice of Delphi">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">IBM PC/Compatible &nbsp;&middot;&nbsp; SVGA 640&times;480 &nbsp;&middot;&nbsp; Sound Blaster 16</div>
+          <div>General MIDI &nbsp;&middot;&nbsp; Roland MT-32 &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 2 MB RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">CD-ROM</div>
+          <div class="disk-count">Talkie Edition</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1994</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPISODE 4 -->
+    <div class="box ep4">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE IV</div>
+      <div class="title-area">
+        <div class="main-title">
+          THE BATTLE
+          <span class="line2">OF NAFPAKTOS</span>
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep4-nafpaktos.png" alt="Episode 4 — The Battle of Nafpaktos">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">IBM PC/Compatible &nbsp;&middot;&nbsp; SVGA 640&times;480 &nbsp;&middot;&nbsp; Sound Blaster 16</div>
+          <div>General MIDI &nbsp;&middot;&nbsp; Roland SC-55 &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 4 MB RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">CD-ROM</div>
+          <div class="disk-count">Talkie Edition</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1995</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPISODE 5 -->
+    <div class="box ep5">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE V</div>
+      <div class="title-area">
+        <div class="main-title">
+          THE SPIRIT
+          <span class="line2">OF MESSOLONGHI</span>
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep5-messolonghi.png" alt="Episode 5 — The Spirit of Messolonghi">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">IBM PC/Compatible &nbsp;&middot;&nbsp; SVGA 800&times;600 &nbsp;&middot;&nbsp; Sound Blaster AWE32</div>
+          <div>General MIDI &nbsp;&middot;&nbsp; DirectSound &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 8 MB RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">CD-ROM</div>
+          <div class="disk-count">2 Discs</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1996</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPISODE 6 -->
+    <div class="box ep6">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE VI</div>
+      <div class="title-area">
+        <div class="main-title single-line">
+          THE GORGE
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep6-zagori.png" alt="Episode 6 — The Gorge">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">Windows 95/98 &nbsp;&middot;&nbsp; SVGA 800&times;600 &nbsp;&middot;&nbsp; DirectX 5</div>
+          <div>DirectSound &nbsp;&middot;&nbsp; DirectDraw &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 16 MB RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">CD-ROM</div>
+          <div class="disk-count">2 Discs</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1997</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPISODE 7 -->
+    <div class="box ep7">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE VII</div>
+      <div class="title-area">
+        <div class="main-title">
+          THE ISLAND
+          <span class="line2">OF SILENCE</span>
+        </div>
+        <div class="subtitle">A Point &amp; Click Adventure</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep7-patmos.png" alt="Episode 7 — The Island of Silence">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">Windows 95/98 &nbsp;&middot;&nbsp; SVGA 800&times;600 &nbsp;&middot;&nbsp; DirectX 6</div>
+          <div>DirectSound 3D &nbsp;&middot;&nbsp; DirectDraw &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 32 MB RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">CD-ROM</div>
+          <div class="disk-count">2 Discs</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 1998</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPISODE 8 -->
+    <div class="box ep8">
+      <div class="coming-soon-ribbon"><div class="ribbon">COMING SOON</div></div>
+      <div class="episode-badge">EPISODE VIII</div>
+      <div class="title-area">
+        <div class="main-title single-line">
+          THE RETURN
+        </div>
+        <div class="subtitle">The Jade Stone Saga &mdash; Finale</div>
+      </div>
+      <div class="artwork">
+        <img src="assets/box-art-ep8-return.png" alt="Episode 8 — The Return">
+      </div>
+      <div class="bottom-strip">
+        <div class="specs">
+          <div class="line1">Windows 98/ME &nbsp;&middot;&nbsp; SVGA 1024&times;768 &nbsp;&middot;&nbsp; DirectX 7</div>
+          <div>DirectSound 3D &nbsp;&middot;&nbsp; OpenGL &nbsp;&middot;&nbsp; Mouse Required &nbsp;&middot;&nbsp; 64 MB RAM</div>
+        </div>
+        <div class="right-section">
+          <div class="floppy-icon">
+            <div class="disk-label"></div>
+            <div class="disk-slot"></div>
+          </div>
+          <div class="floppy-text">DVD-ROM</div>
+          <div class="disk-count">Collector's Ed.</div>
+        </div>
+        <div style="text-align: right;">
+          <div class="studio-logo">GALAXIDI STUDIOS</div>
+          <div class="made-in">Made in Greece &nbsp;&middot;&nbsp; &copy; 2000</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <div style="text-align: center; margin-top: 60px; padding: 30px 0; border-top: 1px solid #1a2040;">
+    <div style="font-family: 'Cinzel', serif; font-size: 14px; color: #3a4a6a; letter-spacing: 3px;">
+      GALAXIDI STUDIOS
+    </div>
+    <div style="font-family: 'EB Garamond', serif; font-size: 12px; font-style: italic; color: #2a3a5a; margin-top: 6px; letter-spacing: 2px;">
+      &ldquo;What do we owe to memory?&rdquo;
+    </div>
+    <div style="font-family: 'EB Garamond', serif; font-size: 10px; color: #2a3a5a; margin-top: 12px; letter-spacing: 1px;">
+      The Jade Stone Saga &nbsp;&middot;&nbsp; Episodes I&ndash;VIII &nbsp;&middot;&nbsp; 1992&ndash;2000 &nbsp;&middot;&nbsp; Made in Greece
+    </div>
+  </div>
+
+</body>
+</html>

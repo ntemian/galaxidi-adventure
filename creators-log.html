@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creator's Log — Η Θάλασσα Θυμάται</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛵</text></svg>">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0a0a14;
+    color: #d4c9a8;
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Hero Header ── */
+  .hero {
+    position: relative;
+    padding: 80px 24px 60px;
+    text-align: center;
+    overflow: hidden;
+    background: linear-gradient(180deg,
+      #0d1024 0%,
+      #0f1430 30%,
+      #0c1028 60%,
+      #0a0a14 100%
+    );
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+      radial-gradient(ellipse 600px 200px at 50% 80%, rgba(232, 197, 109, 0.04) 0%, transparent 100%),
+      radial-gradient(ellipse 300px 300px at 20% 30%, rgba(196, 162, 77, 0.02) 0%, transparent 100%),
+      radial-gradient(ellipse 300px 300px at 80% 40%, rgba(196, 162, 77, 0.02) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-subtitle {
+    font-family: Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #8a7f6a;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .hero-title {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: normal;
+    color: #e8c56d;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    position: relative;
+    text-shadow: 0 0 60px rgba(232, 197, 109, 0.15);
+  }
+
+  .hero-greek {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: clamp(16px, 3vw, 22px);
+    font-style: italic;
+    color: #c4a24d;
+    opacity: 0.7;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .hero-divider {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e8c56d, transparent);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-author {
+    font-size: 14px;
+    color: #6b6352;
+    margin-top: 24px;
+    letter-spacing: 1px;
+    position: relative;
+  }
+
+  /* ── Stars ── */
+  .stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #d4c9a8;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle var(--dur) ease-in-out infinite;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.05; }
+    50% { opacity: var(--brightness); }
+  }
+
+  /* ── Main Content ── */
+  .content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Headings ── */
+  h1 {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: 32px;
+    font-weight: normal;
+    color: #e8c56d;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(232, 197, 109, 0.3);
+  }
+
+  h2 {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: 26px;
+    font-weight: normal;
+    color: #e8c56d;
+    line-height: 1.3;
+    margin-top: 56px;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: 20px;
+    font-weight: normal;
+    color: #c4a24d;
+    line-height: 1.4;
+    margin-top: 36px;
+    margin-bottom: 14px;
+  }
+
+  /* ── Paragraphs ── */
+  p {
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: #a89b7e;
+    margin-bottom: 32px;
+    font-size: 18px;
+  }
+
+  /* ── Bold & Italic ── */
+  strong {
+    color: #e8c56d;
+    font-weight: 600;
+  }
+
+  em {
+    color: #c9b88a;
+    font-style: italic;
+  }
+
+  /* ── Horizontal Rules ── */
+  hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232, 197, 109, 0.25), transparent);
+    margin: 48px 0;
+  }
+
+  /* ── Lists ── */
+  ul, ol {
+    padding-left: 24px;
+    margin-bottom: 20px;
+  }
+
+  li {
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  li::marker {
+    color: #c4a24d;
+  }
+
+  ol li::marker {
+    color: #c4a24d;
+    font-weight: normal;
+  }
+
+  /* ── Signature ── */
+  .signature {
+    margin-top: 48px;
+    font-style: italic;
+    color: #8a7f6a;
+    line-height: 1.9;
+  }
+
+  .signature p {
+    margin-bottom: 4px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    color: #3d3828;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .footer-ship {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    body {
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .hero {
+      padding: 60px 20px 48px;
+    }
+
+    .content {
+      padding: 32px 20px 60px;
+    }
+
+    h1 {
+      font-size: 26px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 44px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-top: 28px;
+    }
+
+    hr {
+      margin: 36px 0;
+    }
+  }
+
+  /* ── Scroll fade-in ── */
+  .fade-section {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Selection ── */
+  ::selection {
+    background: rgba(232, 197, 109, 0.2);
+    color: #e8c56d;
+  }
+
+  /* ── Date Badge ── */
+  .hero-date {
+    font-size: 13px;
+    color: #6b6352;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    position: relative;
+  }
+
+  /* ── Image Gallery ── */
+  .gallery {
+    display: grid;
+    gap: 12px;
+    margin: 28px 0;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .gallery-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gallery-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .gallery-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    border: 1px solid rgba(232, 197, 109, 0.15);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .gallery img:hover {
+    transform: scale(1.02);
+    border-color: rgba(232, 197, 109, 0.4);
+  }
+
+  .gallery-caption {
+    text-align: center;
+    font-size: 13px;
+    color: #6b6352;
+    font-style: italic;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .gallery-wide img {
+    width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* ── Hero Image ── */
+  .hero-box-art {
+    position: relative;
+    margin-top: 32px;
+  }
+
+  .hero-box-art img {
+    max-width: 320px;
+    width: 80%;
+    border-radius: 8px;
+    border: 2px solid rgba(232, 197, 109, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 80px rgba(232, 197, 109, 0.06);
+  }
+
+  /* ── Character Strip ── */
+  .char-strip {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 24px;
+    margin: 28px 0;
+    padding: 20px 0;
+  }
+
+  .char-strip figure {
+    text-align: center;
+  }
+
+  .char-strip img {
+    height: 90px;
+    width: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+  }
+
+  .char-strip figcaption {
+    font-size: 12px;
+    color: #8a7f6a;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Portrait Grid ── */
+  .portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+    margin: 28px 0;
+  }
+
+  .portrait-grid figure {
+    text-align: center;
+  }
+
+  .portrait-grid img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(232, 197, 109, 0.2);
+    transition: border-color 0.3s ease;
+  }
+
+  .portrait-grid img:hover {
+    border-color: #e8c56d;
+  }
+
+  .portrait-grid figcaption {
+    font-size: 11px;
+    color: #8a7f6a;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 600px) {
+    .gallery-2, .gallery-3 {
+      grid-template-columns: 1fr;
+    }
+    .char-strip {
+      gap: 12px;
+    }
+    .char-strip img {
+      height: 60px;
+    }
+    .portrait-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .portrait-grid img {
+      width: 60px;
+      height: 60px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <div class="stars" id="stars"></div>
+  <p class="hero-subtitle">A Creator's Journal</p>
+  <h1 class="hero-title">Ntemis's Creator Log</h1>
+  <p class="hero-greek">Η Θάλασσα Θυμάται</p>
+  <div class="hero-divider"></div>
+  <p class="hero-author">Galaxidi Adventure &mdash; Το Μυστήριο του Γαλαξειδίου</p>
+  <div class="hero-box-art">
+    <img src="assets/box-art-painting.png" alt="Galaxidi Adventure — Box Art">
+  </div>
+  <p class="hero-date">18 February 2026 &mdash; Day 3 of Development</p>
+</header>
+
+<!-- ── Content ── -->
+<main class="content">
+
+  <p class="subtitle fade-section"><em>A personal journal on creating the Galaxidi Adventure game.</em></p>
+
+  <hr>
+
+  <!-- ── The Beginning ── -->
+  <section class="fade-section">
+    <h2>The Beginning &mdash; 16 February 2026</h2>
+
+    <p>The game started on a Sunday morning. Not with a plan. Not with a design document. With a feeling.</p>
+
+    <p>I've always carried Galaxidi inside me &mdash; the light on the harbor, the smell of salt and old stone, the narrow streets where history breathes through the walls. When Ajax and Clio walk those paths, they walk through something real. The game was born from the desire to give them that &mdash; a version of Galaxidi that lives forever, that they can return to whenever they want.</p>
+
+    <p>The first commit landed at 10:23 AM on February 16, 2026. By the end of that day, we had a walking character, three scenes, and the skeleton of a SCUMM-style adventure. By nightfall, it already felt like something.</p>
+
+    <div class="gallery gallery-2">
+      <img src="assets/pixel-exterior.webp" alt="The House in Galaxidi — first scene">
+      <img src="assets/cutscene-road.png" alt="The road to Galaxidi">
+    </div>
+    <p class="gallery-caption">Left: The house exterior — the very first scene. Right: The family arrives in Galaxidi.</p>
+  </section>
+
+  <hr>
+
+  <!-- ── How Development Runs ── -->
+  <section class="fade-section">
+    <h2>How Development Runs</h2>
+
+    <p>This is not a normal development process. It's a collaboration between a human with a vision and an AI that can execute at inhuman speed. The rhythm is:</p>
+
+    <ul>
+      <li><strong>Ntemis directs</strong> &mdash; story, emotion, aesthetics, what feels right</li>
+      <li><strong>Claude builds</strong> &mdash; code, assets, systems, tests</li>
+      <li><strong>We iterate in real-time</strong> &mdash; sometimes 20+ commits in a single session</li>
+    </ul>
+
+    <p><strong>149 commits in 3 days.</strong> That's not a typo. The game went from nothing to a 13-scene playable adventure with full voice acting, an original soundtrack, anime cutscenes, a Ken Burns cinematic engine, 11 NPCs with portraits and dialog, a quest journal, a fast-travel map, and 202 automated tests &mdash; all in a weekend.</p>
+
+    <p>The tech is deliberately simple: a single HTML5 Canvas file, vanilla JavaScript, no frameworks. Everything procedural. The music is generated. The sound effects are synthesized in real-time via Web Audio API. The cutscenes use Ken Burns animation on anime stills. It runs in a browser. No install. No dependencies.</p>
+
+    <div class="gallery gallery-1 gallery-wide">
+      <img src="assets/title-bg.webp" alt="Title screen background">
+    </div>
+    <p class="gallery-caption">The title screen — where the intro music first touches you.</p>
+  </section>
+
+  <hr>
+
+  <!-- ── The Timeline ── -->
+  <section class="fade-section">
+    <h2>The Timeline</h2>
+
+    <h3>Day 1 &mdash; Sunday, Feb 16: Foundation</h3>
+    <ul>
+      <li>Initial commit, SCUMM UI, title screen</li>
+      <li>Game Bible v3, story structure locked</li>
+      <li>Voice acting system (4 voices, 52 lines)</li>
+      <li>Expanded to 11 playable locations</li>
+      <li>Procedural ambient sounds</li>
+      <li>Scene music system</li>
+    </ul>
+
+    <div class="gallery gallery-3">
+      <img src="assets/pixel-port.webp" alt="The Harbor">
+      <img src="assets/pixel-museum.webp" alt="The Maritime Museum">
+      <img src="assets/pixel-liotrivi.webp" alt="The Liotrivi">
+    </div>
+    <div class="gallery gallery-3">
+      <img src="assets/pixel-windmill.webp" alt="The Windmill">
+      <img src="assets/pixel-church.webp" alt="Agios Nikolaos Church">
+      <img src="assets/pixel-graveyard.webp" alt="The Graveyard">
+    </div>
+    <p class="gallery-caption">Six of the eleven locations built on Day 1: Harbor, Museum, Liotrivi, Windmill, Church, Graveyard.</p>
+
+    <h3>Day 2 &mdash; Monday, Feb 17: Characters &amp; Cutscenes</h3>
+    <ul>
+      <li>11 NPC sprites and portraits</li>
+      <li>Ken Burns cutscene engine built</li>
+      <li>7 anime cutscenes for major story beats</li>
+      <li>Reunion, windmill, church, museum, liotrivi cutscenes</li>
+      <li>Ghost and treasure cutscenes enhanced</li>
+      <li>Complete pilot: 13 scenes, quest gating, save/load, epilogue</li>
+      <li>Fast-travel map and help overlay</li>
+      <li>Ship's journal (HMEROLOGIO) quest log</li>
+      <li>Real Galaxidi map integrated, MI-style cursor</li>
+      <li>179 missing voice files generated &mdash; 100% voice coverage</li>
+    </ul>
+
+    <div class="gallery gallery-2">
+      <img src="assets/cutscene-ghost-appear.png" alt="The Ghost of Visvikis appears">
+      <img src="assets/cutscene-church.png" alt="Agios Nikolaos Church cutscene">
+    </div>
+    <div class="gallery gallery-2">
+      <img src="assets/cutscene-crossing-dawn.png" alt="Crossing to the island at dawn">
+      <img src="assets/cutscene-treasure-open.png" alt="Opening the treasure">
+    </div>
+    <p class="gallery-caption">Anime cutscenes with Ken Burns animation — the emotional backbone of the game.</p>
+
+    <div class="char-strip">
+      <figure><img src="assets/char-ntemis-final.png" alt="Ntemis"><figcaption>Ntemis</figcaption></figure>
+      <figure><img src="assets/char-ajax-final.png" alt="Ajax"><figcaption>Ajax</figcaption></figure>
+      <figure><img src="assets/char-clio-final.png" alt="Clio"><figcaption>Clio</figcaption></figure>
+      <figure><img src="assets/char-akis-final.png" alt="Akis"><figcaption>Akis</figcaption></figure>
+      <figure><img src="assets/char-stathis-final.png" alt="Stathis"><figcaption>Stathis</figcaption></figure>
+      <figure><img src="assets/char-ghost-final.png" alt="Ghost"><figcaption>Ghost</figcaption></figure>
+    </div>
+    <p class="gallery-caption">The cast — 11 characters with sprites and portraits.</p>
+
+    <div class="portrait-grid">
+      <figure><img src="assets/portrait-ntemis.webp" alt="Ntemis"><figcaption>Ntemis</figcaption></figure>
+      <figure><img src="assets/portrait-ajax.webp" alt="Ajax"><figcaption>Ajax</figcaption></figure>
+      <figure><img src="assets/portrait-clio.webp" alt="Clio"><figcaption>Clio</figcaption></figure>
+      <figure><img src="assets/portrait-akis.webp" alt="Akis"><figcaption>Akis</figcaption></figure>
+      <figure><img src="assets/portrait-stathis.webp" alt="Stathis"><figcaption>Stathis</figcaption></figure>
+      <figure><img src="assets/portrait-curator.webp" alt="Curator"><figcaption>Curator</figcaption></figure>
+      <figure><img src="assets/portrait-athos.webp" alt="Athos"><figcaption>Athos</figcaption></figure>
+      <figure><img src="assets/portrait-giannis.webp" alt="Giannis"><figcaption>Giannis</figcaption></figure>
+      <figure><img src="assets/portrait-papas.webp" alt="Papas"><figcaption>Papas</figcaption></figure>
+      <figure><img src="assets/portrait-chrysostomos.webp" alt="Chrysostomos"><figcaption>Chrysos.</figcaption></figure>
+      <figure><img src="assets/portrait-ghost.webp" alt="Ghost"><figcaption>Ghost</figcaption></figure>
+    </div>
+
+    <h3>Day 3 &mdash; Tuesday, Feb 18: Polish &amp; Emotion</h3>
+    <ul>
+      <li>16th-century Dutch atlas crawl map with medieval font</li>
+      <li>Voice-text sync fixes (79 reused audio files caught by tests)</li>
+      <li>68 voice files regenerated to match displayed text</li>
+      <li>Cave jade sequence completed</li>
+      <li>Narration/mechanics overlap resolved</li>
+      <li>Test suite expanded to 202 tests</li>
+    </ul>
+
+    <div class="gallery gallery-2">
+      <img src="assets/map-galaxidi.png" alt="Galaxidi map">
+      <img src="assets/pixel-cave-new.png" alt="The Karkaros Cave">
+    </div>
+    <p class="gallery-caption">The fast-travel map of Galaxidi, and the cave where Ajax finds the jade stone.</p>
+  </section>
+
+  <hr>
+
+  <!-- ── The Goosebumps Discovery ── -->
+  <section class="fade-section">
+    <h2>The Goosebumps Discovery &mdash; Feb 18</h2>
+
+    <p>Something happened today that I need to document because it matters.</p>
+
+    <p>Even in this rough, unfinished state &mdash; with placeholder art in places, with story sequences that still need fixing, with edges everywhere that need sanding &mdash; <strong>the game gave me goosebumps. Multiple times.</strong></p>
+
+    <p>This is unprecedented for me. I've played thousands of games. I've rarely felt this from a finished, polished product, let alone something still in development. But when the intro music plays over the title screen, when the story unfolds through those anime cutscenes with timed Greek dialogue, when my kids walk through a place I love &mdash; something happens. Something real.</p>
+
+    <p><strong>The intro music plays a critical role.</strong> It sets the emotional tone before a single pixel of gameplay appears. It tells the player: <em>this matters. Pay attention. Something beautiful is about to happen.</em> That musical moment is sacred and must be protected as we develop further.</p>
+
+    <p><strong>What I believe is happening:</strong> The game works because it's authentic. This isn't a fictional place researched on Wikipedia. This is Galaxidi through my eyes &mdash; a place my family knows, where my children have memories. That emotional truth transmits through the screen. You can't fake that. Studios spend millions trying to manufacture this feeling and fail. We found it in a weekend because the source material is real life.</p>
+
+    <p><strong>What needs work now:</strong></p>
+    <ul>
+      <li>The sequence of events needs fixing &mdash; story flow must feel inevitable, not jumpy</li>
+      <li>The story structure needs tightening &mdash; every scene should earn its place</li>
+      <li>But the emotional core? <strong>Don't touch it.</strong> Everything we add must serve it.</li>
+    </ul>
+
+    <p><strong>My conviction:</strong> People will feel this too. Games that make their creator feel something always translate. The passion is the product.</p>
+
+    <div class="gallery gallery-2">
+      <img src="assets/cutscene-festival-panorama.png" alt="Festival panorama — the harbor at night">
+      <img src="assets/cutscene-ghost-farewell.png" alt="The ghost's farewell">
+    </div>
+    <p class="gallery-caption">Moments that give you goosebumps — the harbor festival, and Visvikis's farewell.</p>
+  </section>
+
+  <hr>
+
+  <!-- ── Design Principles ── -->
+  <section class="fade-section">
+    <h2>Design Principles <em>(Learned by Doing)</em></h2>
+
+    <ol>
+      <li><strong>Authenticity over polish.</strong> A real place with real emotions beats a fictional world with perfect pixels.</li>
+      <li><strong>Music is half the experience.</strong> The intro theme, the per-scene transitions &mdash; they carry the emotion the visuals set up.</li>
+      <li><strong>Ken Burns on anime stills &gt; video.</strong> Video models can't match the art style. Still images with slow camera movement and timed dialogue create intimacy that motion would destroy.</li>
+      <li><strong>Greek language adds soul.</strong> Even for non-Greek speakers, the language grounds the game in its place.</li>
+      <li><strong>Simple tech, complex emotion.</strong> Vanilla JS in a single HTML file. The constraints force creativity.</li>
+      <li><strong>Test everything.</strong> 202 tests for a weekend project. Voice-text sync, scene transitions, quest gating. Tests caught 79 reused audio files we would have shipped broken.</li>
+      <li><strong>Never optimize the goosebumps away.</strong> As features pile on, the emotional core is the compass.</li>
+    </ol>
+  </section>
+
+  <hr>
+
+  <!-- ── What's Next ── -->
+  <section class="fade-section">
+    <h2>What's Next</h2>
+
+    <p>The roadmap calls for 8 phases over 16 weeks. But the game is already further along than that plan anticipated. The immediate priorities:</p>
+
+    <ol>
+      <li><strong>Story lock</strong> &mdash; Fix the sequence, tighten the narrative arc</li>
+      <li><strong>Puzzle depth</strong> &mdash; Branching dialog trees, more interactive objects</li>
+      <li><strong>Polish</strong> &mdash; Micro-interactions, UI refinements, humor</li>
+      <li><strong>Ship it</strong> &mdash; Bilingual QA, hosting, community launch</li>
+    </ol>
+
+    <p>But above all: <strong>protect the feeling.</strong> Every commit, every feature, every line of dialogue must serve the goosebumps.</p>
+
+    <div class="gallery gallery-3" style="margin-top: 32px;">
+      <img src="assets/box-art-ep2-amfissa.png" alt="Episode 2 — Amfissa">
+      <img src="assets/box-art-ep3-delphi.png" alt="Episode 3 — Delphi">
+      <img src="assets/box-art-ep4-nafpaktos.png" alt="Episode 4 — Nafpaktos">
+    </div>
+    <div class="gallery gallery-3">
+      <img src="assets/box-art-ep5-messolonghi.png" alt="Episode 5 — Messolonghi">
+      <img src="assets/box-art-ep6-zagori.png" alt="Episode 6 — Zagori">
+      <img src="assets/box-art-ep7-patmos.png" alt="Episode 7 — Patmos">
+    </div>
+    <p class="gallery-caption">The vision: a saga spanning Greece — Amfissa, Delphi, Nafpaktos, Messolonghi, Zagori, Patmos.</p>
+  </section>
+
+  <hr>
+
+  <!-- ── Signature ── -->
+  <div class="signature fade-section">
+    <p><em>&mdash; Ntemis, February 2026</em></p>
+    <p><em>Alimos, Athens</em></p>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <span class="footer-ship">&#9973;</span>
+  Galaxidi Adventure &mdash; Crafted with love and goosebumps
+</footer>
+
+<!-- ── Scripts ── -->
+<script>
+  // Generate stars for the hero
+  (function() {
+    const container = document.getElementById('stars');
+    const count = 60;
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.setProperty('--dur', (3 + Math.random() * 5) + 's');
+      star.style.setProperty('--delay', (Math.random() * 5) + 's');
+      star.style.setProperty('--brightness', (0.15 + Math.random() * 0.35));
+      if (Math.random() > 0.7) {
+        star.style.width = '3px';
+        star.style.height = '3px';
+      }
+      container.appendChild(star);
+    }
+  })();
+
+  // Scroll fade-in observer
+  (function() {
+    const sections = document.querySelectorAll('.fade-section');
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    sections.forEach(function(s) { observer.observe(s); });
+  })();
+</script>
+</body>
+</html>
