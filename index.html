@@ -904,221 +904,112 @@ const scenes = {
   },
 
   // ── SCENE 10: THE TREASURE ──
-  // Expanded 6-phase structure:
-  // Phase 1: Arrival & atmospheric exploration (cross, thyme, panorama, seagulls, chapel)
-  // Phase 2: Puzzle — USE chart ON cross → reveals dig spot
-  // Phase 3: Multi-stage dig (4 clicks) → chest emerges → "ΒΡΗΚΑΜΕ!"
-  // Phase 4: Emotional pause before opening
-  // Phase 5: OPEN chest → expanded 5-frame cutscene
-  // Phase 6: Read letter → family decision dialogue
+  // Simple flow: arrive → LOOK cross → USE dig_spot → cutscene → read letter → exit
   treasure: {
     label: 'Ο ΘΗΣΑΥΡΟΣ', bg: 'bg-treasure',
     walkLine: [[50, 380], [320, 377], [560, 380]],
     walkBounds: [50, 560],
     charPos: { ntemis: { x: 320, y: 377 }, ajax: { x: 410, y: 379 }, clio: { x: 230, y: 378 } },
     objects: [
-      // ── Phase 1: Arrival — atmospheric exploration ──
       { id:'stone_cross', x:420, y:200, w:80, h:100, label:'Πέτρινος σταυρός',
         verbs: {
           look:()=>{
-            if(state.flags.cross_examined) return [{s:'',t:'Ο σταυρός του Βισβίκη. «Λ.Β. 1860». Πέντε βήματα νοτιοδυτικά.'},{s:'ΚΛΕΙΩ',t:'Ξέρουμε πού να σκάψουμε.'}];
+            if(state.flags.cross_examined) return [{s:'',t:'Ο σταυρός του Βισβίκη. «Λ.Β. 1860». Πέντε βήματα νοτιοδυτικά.'}];
             state.flags.cross_examined=1;
-            return [
-              {s:'',t:'Ένας χαμηλός πέτρινος σταυρός. Φαγωμένος από τον χρόνο και την αλμύρα.'},
-              {s:'ΚΛΕΙΩ',t:'Κοίτα — γράμματα! Αλλά δεν φαίνονται καλά...'},
-              {s:'ΑΙΑΣ',t:'Λ... Β... 1860!'},
-              {s:'ΝΤΕΜΗΣ',t:'Λ.Β. — Λεονάρδος Βισβίκης. Ο ίδιος έστησε αυτόν τον σταυρό.'},
-              {s:'ΚΛΕΙΩ',t:'Εκατόν είκοσι χρόνια εδώ. Μόνος.'},
-            ];
-          },
-          use:()=>{
-            if(state.flags.spot_found) return [{s:'',t:'Ο χάρτης ήδη μας έδειξε. Πέντε βήματα νοτιοδυτικά.'}];
-            if(!state.inv.find(i=>i.id==='nautical_chart')) return [{s:'ΝΤΕΜΗΣ',t:'Ο σταυρός. Αρχή. Αλλά χρειάζομαι τον χάρτη για τα υπόλοιπα.'}];
-            if(!state.flags.cross_examined) return [{s:'ΝΤΕΜΗΣ',t:'Ας τον εξετάσω πρώτα.'}];
             state.flags.spot_found=1;
             return [
-              {s:'ΝΤΕΜΗΣ',t:'Ο χάρτης λέει: «Κάτω από τον σταυρό, πέντε βήματα νοτιοδυτικά. Σκάψε.»'},
-              {s:'ΑΙΑΣ',t:'Πέντε βήματα! Ένα... δύο... τρία... τέσσερα... πέντε!'},
-              {s:'ΚΛΕΙΩ',t:'Εδώ! Το χώμα εδώ είναι πιο σκούρο. Σαν να το έχουν σκάψει ξανά.'},
-              {s:'ΝΤΕΜΗΣ',t:'Ακριβώς εδώ.'},
+              {s:'',t:'Ένας χαμηλός πέτρινος σταυρός. Φαγωμένος από τον χρόνο και την αλμύρα.'},
+              {s:'ΚΛΕΙΩ',t:'Κοίτα — γράμματα!'},
+              {s:'ΑΙΑΣ',t:'Λ... Β... 1860!'},
+              {s:'ΝΤΕΜΗΣ',t:'Λ.Β. — Λεονάρδος Βισβίκης. Ο χάρτης λέει: πέντε βήματα νοτιοδυτικά. Σκάψε.'},
+              {s:'ΑΙΑΣ',t:'Πέντε βήματα! Ένα... δύο... τρία... τέσσερα... πέντε! ΕΔΏΣΚΑΒΟΥΜΕ!'},
             ];
           },
         }},
-      { id:'wild_thyme', x:480, y:300, w:120, h:60, label:'Θυμάρι',
-        verbs: { look:[
-          {s:'',t:'Θυμάρι και αγριολούλουδα φυτρώνουν ανάμεσα στις πέτρες. Μυρωδιά Ελλάδας.'},
-          {s:'ΚΛΕΙΩ',t:'Σαν να μας περίμενε το νησί.'},
-        ]}},
       { id:'panorama', x:0, y:40, w:350, h:120, label:'Θέα στο Γαλαξίδι',
         verbs: { look:[
-          {s:'',t:'Το Γαλαξίδι λάμπει στον πρωινό ήλιο απέναντι. Σπίτια, εκκλησίες, το λιμάνι. Σπίτι.'},
-          {s:'ΝΤΕΜΗΣ',t:'Από εδώ τα έβλεπε όλα ο Βισβίκης. Τη θάλασσα, την πόλη, τα πλοία.'},
-          {s:'ΑΙΑΣ',t:'Γυρνάμε πίσω πλουσιότεροι. Αλλά όχι όπως νόμιζα.'},
-        ]}},
-      { id:'seagulls', x:150, y:0, w:200, h:60, label:'Γλάροι',
-        verbs: { look:[
-          {s:'',t:'Δύο γλάροι κυκλοφορούν πάνω από τα βράχια. Φωνάζουν σαν να ανακοινώνουν κάτι.'},
-          {s:'ΚΛΕΙΩ',t:'Κι αυτοί ψάχνουν θησαυρό;'},
-          {s:'ΑΙΑΣ',t:'Ψάρια ψάχνουν. Αλλά ναι, είναι σαν πειρατές.'},
+          {s:'',t:'Το Γαλαξίδι λάμπει στον πρωινό ήλιο απέναντι. Σπίτια, εκκλησίες, το λιμάνι.'},
+          {s:'ΝΤΕΜΗΣ',t:'Από εδώ τα έβλεπε όλα ο Βισβίκης.'},
         ]}},
       { id:'chapel_ext', x:500, y:100, w:140, h:200, label:'Εκκλησάκι Αγ. Γεωργίου',
-        verbs: {
-          look:[
-            {s:'',t:'Λευκό εκκλησάκι με μπλε τρούλο. Ο Άγιος Γεώργιος φυλάει αυτόν τον βράχο εδώ και αιώνες.'},
-            {s:'ΚΛΕΙΩ',t:'Τι ωραίο... Σαν ζαχαρωτό!'},
-          ],
-          open:[{s:'',t:'Η πόρτα κλειδωμένη. Αλλά δεν ήρθαμε για λειτουργία.'}],
-        }},
-
-      // ── Phase 2–3: Dig spot (meaningful after chart used on cross) ──
-      { id:'dig_spot', x:80, y:300, w:160, h:70, label:'Σημείο ανασκαφής',
+        verbs: { look:[
+          {s:'',t:'Λευκό εκκλησάκι με μπλε τρούλο. Ο Άγιος Γεώργιος φυλάει αυτόν τον βράχο εδώ και αιώνες.'},
+          {s:'ΚΛΕΙΩ',t:'Τι ωραίο... Σαν ζαχαρωτό!'},
+        ]}},
+      { id:'dig_spot', x:120, y:320, w:160, h:60, label:'Σημείο ανασκαφής',
         verbs: {
           look:()=>{
-            if(!state.flags.spot_found) return [{s:'',t:'Χώμα και πέτρες. Τίποτα ιδιαίτερο — χωρίς τον χάρτη.'}];
-            if(state.flags.chest_visible) return [{s:'',t:'Η τρύπα στη γη. Πέντε βήματα νοτιοδυτικά από τον σταυρό, ακριβώς όπως έγραψε ο Βισβίκης.'}];
-            if((state.flags.dig_stage||0)>=1) return [{s:'',t:'Το χώμα γίνεται πιο σκληρό. Κοντεύουμε;'}];
-            return [{s:'',t:'Σκούρο χώμα, πατημένο. Πέντε βήματα ακριβώς νοτιοδυτικά. Εδώ λέει ο χάρτης.'},{s:'ΑΙΑΣ',t:'Τι περιμένουμε; ΣΚΑΒΟΥΜΕ!'}];
+            if(!state.flags.spot_found) return [{s:'',t:'Χώμα και πέτρες. Κοίταξε πρώτα τον σταυρό.'}];
+            if(state.flags.chest_opened) return [{s:'',t:'Η τρύπα στη γη. Εδώ βρήκαμε τον θησαυρό.'}];
+            return [{s:'',t:'Σκούρο χώμα, πατημένο. Πέντε βήματα νοτιοδυτικά από τον σταυρό.'},{s:'ΑΙΑΣ',t:'ΣΚΑΒΟΥΜΕ!'}];
           },
           use:()=>{
-            if(!state.flags.spot_found) return [{s:'ΝΤΕΜΗΣ',t:'Πρέπει να βρούμε το σωστό σημείο πρώτα. Ψάξε τον σταυρό.'}];
-            if(state.flags.chest_visible) return [{s:'',t:'Ο θησαυρός ήδη βγήκε στο φως.'}];
-            const stage = state.flags.dig_stage || 0;
-            if(stage===0){
-              state.flags.dig_stage=1;
-              playSFX('dig');
-              return [
-                {s:'',t:'Ο Ντέμης σκάβει. Σκληρό χώμα, ρίζες θυμαριού, πέτρες.'},
-                {s:'ΑΙΑΣ',t:'Άσε κι εμένα! Ξέρω να σκάβω!'},
-                {s:'ΝΤΕΜΗΣ',t:'Έλα. Μαζί.'},
-              ];
-            }
-            if(stage===1){
-              state.flags.dig_stage=2;
-              playSFX('dig');
-              return [
-                {s:'',t:'Πιο βαθιά. Πέτρες κι υγρασία. Ο Αίαντας σκάβει δίπλα στον πατέρα του.'},
-                {s:'ΚΛΕΙΩ',t:'Κι αν δεν υπάρχει τίποτα;'},
-                {s:'ΝΤΕΜΗΣ',t:'Τότε ήρθαμε για τη θέα.'},
-                {s:'ΚΛΕΙΩ',t:'...Η θέα είναι αρκετά καλή.'},
-              ];
-            }
-            if(stage===2){
-              state.flags.dig_stage=3;
+            if(!state.flags.spot_found) return [{s:'ΝΤΕΜΗΣ',t:'Πρέπει να βρούμε το σωστό σημείο πρώτα. Κοίταξε τον σταυρό.'}];
+            if(state.flags.chest_opened) return [{s:'',t:'Ο θησαυρός ήδη βγήκε στο φως.'}];
+            // Dig sequence → metallic hit → chest → pause → cutscene → letter
+            playSFX('dig');
+            showDlg([
+              {s:'',t:'Πατέρας κι γιος σκάβουν μαζί. Σκληρό χώμα, ρίζες θυμαριού, πέτρες.'},
+              {s:'ΚΛΕΙΩ',t:'Κι αν δεν υπάρχει τίποτα;'},
+              {s:'ΝΤΕΜΗΣ',t:'Τότε ήρθαμε για τη θέα.'},
+            ], () => {
               playSFX('metallic_hit');
-              return [
+              showDlg([
                 {s:'',t:'ΚΛΑΝΓΚ! Το φτυάρι χτυπάει κάτι σκληρό.'},
                 {s:'ΑΙΑΣ',t:'ΧΤΥΠΗΣΕ! ΚΑΤΙ ΧΤΥΠΗΣΕ!'},
-                {s:'ΝΤΕΜΗΣ',t:'Σιγά... σιγά. Μην το σπάσεις.'},
-                {s:'ΚΛΕΙΩ',t:'Εγώ! Εγώ θα καθαρίσω!'},
-              ];
-            }
-            if(stage===3){
-              state.flags.dig_stage=4;
-              state.flags.chest_visible=1;
-              playSFX('dig');
-              showDlg([
-                {s:'',t:'Η Κλειώ γονατίζει, καθαρίζει το χώμα με τα χέρια. Σιδερόδετες γωνίες αναδύονται.'},
                 {s:'ΚΛΕΙΩ',t:'Βλέπω σίδερο... μαντάλια! Είναι κιβώτιο!'},
-                {s:'',t:'Αργά, ένα σιδερόδετο ξύλινο κιβώτιο αναδύεται από τη γη. Εκατόν είκοσι χρόνια κάτω από τη γη.'},
                 {s:'ΑΙΑΣ',t:'ΒΡΗΚΑΜΕ! Μπαμπά, βρήκαμε!'},
-                {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται...'},
-              ]);
-              return [];
-            }
-            return [{s:'',t:'Ήδη σκάψαμε εδώ.'}];
-          },
-        }},
-
-      // ── Phase 4–5: The chest (meaningful after digging complete) ──
-      { id:'sea_chest', x:80, y:260, w:180, h:110, label:'Θαλασσινό κιβώτιο',
-        verbs: {
-          look:()=>{
-            if(!state.flags.chest_visible) return [{s:'',t:'Δεν βλέπεις κιβώτιο εδώ. Μόνο χώμα και πέτρες.'}];
-            if(state.flags.chest_opened) return [{s:'',t:'Το κιβώτιο ανοιχτό. Ο θησαυρός του Βισβίκη αποκαλύφθηκε.'}];
-            return [
-              {s:'',t:'Σιδερόδετο ξύλινο κιβώτιο. Ο Βισβίκης έχτιζε πράγματα που αντέχουν.'},
-              {s:'ΑΙΑΣ',t:'Ανοίξτε το! ΑΝΟΙΞΤΕ ΤΟ!'},
-            ];
-          },
-          open:()=>{
-            if(!state.flags.chest_visible) return [{s:'',t:'Δεν βλέπεις κιβώτιο εδώ.'}];
-            if(state.flags.chest_opened) return [{s:'',t:'Ήδη ανοιχτό.'}];
-            // ── Phase 4: The pause — a moment of stillness before opening ──
-            showDlg([
-              {s:'',t:'Σιωπή. Μόνο ο άνεμος και τα κύματα.'},
-              {s:'ΝΤΕΜΗΣ',t:'Εκατόν είκοσι χρόνια περίμενε. Μπορεί να περιμένει κι ένα λεπτό ακόμα.'},
-              {s:'ΑΙΑΣ',t:'Μπαμπά... νομίζεις ο παππούς ήξερε;'},
-              {s:'ΝΤΕΜΗΣ',t:'Νομίζω ότι μας οδήγησε εδώ.'},
-              {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται.'},
-              {s:'ΝΤΕΜΗΣ',t:'Ας δούμε τι μας άφησε ο Βισβίκης.'},
-            ], () => {
-              // ── Phase 5: Chest opens → expanded cutscene ──
-              state.flags.chest_opened=1;
-              playSFX('chest');
-              showDlg([
-                {s:'',t:'Το σιδερένιο κλείδωμα υποχωρεί. Το καπάκι ανοίγει αργά...'},
-                {s:'',t:'Χρυσό φως ξεχύνεται. Νομίσματα — Οθωμανικά, Βενετικά, αρχαία Ελληνικά.'},
-                {s:'ΚΛΕΙΩ',t:'Χρυσάφι!'},
-                {s:'',t:'Ένα κολιέ από νεφρίτη. Ταιριάζει τέλεια με την πράσινη πέτρα.'},
-                {s:'ΑΙΑΣ',t:'Κοίτα! Ένα βιβλίο!'},
-                {s:'',t:'Το πρωτότυπο βιβλίο της αλληλασφάλειας. 104 υπογραφές καπεταναίων, 1860.'},
-                {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις. Σαν ομάδα.'},
-                {s:'',t:'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.'},
               ], () => {
-                document.getElementById('ui-panel').classList.remove('on');
-                document.getElementById('action-line').classList.remove('on');
-                const origComplete = cutscenes.treasure.onComplete;
-                cutscenes.treasure.onComplete = () => {
-                  if(origComplete) origComplete();
-                  state.phase = 'playing';
-                  document.getElementById('ui-panel').classList.add('on');
-                  document.getElementById('action-line').classList.add('on');
-                };
-                playSFX('fanfare');
-                startCutscene('treasure');
+                // Pause before opening
+                showDlg([
+                  {s:'',t:'Ένα σιδερόδετο ξύλινο κιβώτιο αναδύεται από τη γη. Εκατόν είκοσι χρόνια κάτω από τη γη.'},
+                  {s:'ΝΤΕΜΗΣ',t:'Εκατόν είκοσι χρόνια περίμενε. Μπορεί να περιμένει κι ένα λεπτό ακόμα.'},
+                  {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται.'},
+                  {s:'ΝΤΕΜΗΣ',t:'Ας δούμε τι μας άφησε ο Βισβίκης.'},
+                ], () => {
+                  // Open chest → cutscene
+                  state.flags.chest_opened=1;
+                  playSFX('chest');
+                  showDlg([
+                    {s:'',t:'Το καπάκι ανοίγει αργά... Χρυσό φως ξεχύνεται.'},
+                    {s:'',t:'Νομίσματα — Οθωμανικά, Βενετικά, αρχαία. Ένα κολιέ νεφρίτη. Ένα βιβλίο.'},
+                    {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις υπογραφές. Σαν ομάδα.'},
+                    {s:'',t:'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.'},
+                  ], () => {
+                    // Launch cutscene
+                    document.getElementById('ui-panel').classList.remove('on');
+                    document.getElementById('action-line').classList.remove('on');
+                    const origComplete = cutscenes.treasure.onComplete;
+                    cutscenes.treasure.onComplete = () => {
+                      if(origComplete) origComplete();
+                      state.phase = 'playing';
+                      document.getElementById('ui-panel').classList.add('on');
+                      document.getElementById('action-line').classList.add('on');
+                      // After cutscene, show the letter reading & family decision
+                      state.flags.letter_read=1;
+                      playSFX('paper');
+                      showDlg([
+                        {s:'ΝΤΕΜΗΣ',t:'«Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.»'},
+                        {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»'},
+                        {s:'',t:'Σιωπή. Κύματα και γλάροι.'},
+                        {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. ΕΜΕΙΣ το βρήκαμε.'},
+                        {s:'ΝΤΕΜΗΣ',t:'Αίαντα. Τι έλεγε η αλληλασφάλεια;'},
+                        {s:'ΑΙΑΣ',t:'...Ότι κανείς δεν ταξιδεύει μόνος. Οκ. Το δίνουμε.'},
+                        {s:'ΝΤΕΜΗΣ',t:'Όλο. Αλλά εσύ κράτα το κολιέ, Κλειώ.'},
+                        {s:'ΚΛΕΙΩ',t:'Η θάλασσα μου το χάρισε.'},
+                        {s:'ΑΙΑΣ',t:'Κι εγώ; Τι κρατάω;'},
+                        {s:'ΝΤΕΜΗΣ',t:'Τη μνήμη. Κι αυτό αξίζει περισσότερο.'},
+                        {s:'ΑΙΑΣ',t:'...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.'},
+                        {s:'',t:'Ώρα να γυρίσουν στο Γαλαξίδι.'},
+                      ]);
+                    };
+                    playSFX('fanfare');
+                    startCutscene('treasure');
+                  });
+                });
               });
             });
             return [];
-          },
-          use:()=>{
-            if(!state.flags.chest_visible) return [{s:'',t:'Δεν βλέπεις κιβώτιο εδώ.'}];
-            return scenes.treasure.objects.find(o=>o.id==='sea_chest').verbs.open();
-          },
-        }},
-
-      // ── Phase 6: The letter & family decision ──
-      { id:'final_letter', x:280, y:330, w:100, h:50, label:'Γράμμα Βισβίκη',
-        verbs: {
-          look:()=>{
-            if(!state.flags.chest_opened) return [{s:'',t:'Δεν βλέπεις τίποτα ακόμα. Πρέπει να ανοίξεις το κιβώτιο.'}];
-            if(state.flags.letter_read) return [{s:'',t:'Τα λόγια του Βισβίκη ηχούν ακόμα. «Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»'}];
-            state.flags.letter_read=1;
-            playSFX('paper');
-            return [
-              {s:'ΝΤΕΜΗΣ',t:'«Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«Ταξίδεψα στην Ανατολή και γύρισα πλούσιος. Αλλά ο αληθινός πλούτος δεν είναι ο χρυσός.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«Είναι αυτό που χτίσαμε μαζί — η αλληλεγγύη. Κανείς δεν ταξιδεύει μόνος.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»'},
-              {s:'ΝΤΕΜΗΣ',t:'«— Καπ. Λ. Βισβίκης»'},
-              {s:'',t:'Σιωπή. Κύματα και γλάροι.'},
-              {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. Θα ήμασταν πλούσιοι.'},
-              {s:'ΚΛΕΙΩ',t:'Αλλά ο Βισβίκης είπε ότι δεν είναι δικό του.'},
-              {s:'ΑΙΑΣ',t:'Ναι αλλά... ΕΜΕΙΣ το βρήκαμε.'},
-              {s:'ΝΤΕΜΗΣ',t:'Αίαντα. Τι έλεγε η αλληλασφάλεια;'},
-              {s:'ΑΙΑΣ',t:'...Ότι κανείς δεν ταξιδεύει μόνος.'},
-              {s:'ΑΙΑΣ',t:'Οκ. Το δίνουμε.'},
-              {s:'ΚΛΕΙΩ',t:'ΟΛΟ.'},
-              {s:'ΝΤΕΜΗΣ',t:'Όλο. Αλλά εσύ κράτα το κολιέ, Κλειώ.'},
-              {s:'ΚΛΕΙΩ',t:'Αλήθεια;'},
-              {s:'ΝΤΕΜΗΣ',t:'Η θάλασσα σου το χάρισε.'},
-              {s:'ΑΙΑΣ',t:'Κι εγώ; Τι κρατάω;'},
-              {s:'ΝΤΕΜΗΣ',t:'Τη μνήμη. Κι αυτό αξίζει περισσότερο.'},
-              {s:'ΑΙΑΣ',t:'...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.'},
-            ];
-          },
-          use:()=>{
-            if(!state.flags.chest_opened) return [{s:'',t:'Δεν βλέπεις τίποτα ακόμα.'}];
-            return [{s:'',t:'Κοίταξέ το πρώτα.'}];
           },
         }},
     ],
@@ -1324,14 +1215,10 @@ const scenes = {
       ghost_npc:      { x:430, y:232, w:65,  h:120 },
     },
     treasure: {
-      stone_cross:  { x:420, y:200, w:80,  h:100 },
-      wild_thyme:   { x:480, y:300, w:120, h:60  },
-      panorama:     { x:0,   y:40,  w:350, h:120 },
-      seagulls:     { x:150, y:0,   w:200, h:60  },
-      chapel_ext:   { x:500, y:100, w:140, h:200 },
-      dig_spot:     { x:80,  y:300, w:160, h:70  },
-      sea_chest:    { x:80,  y:240, w:180, h:120 },
-      final_letter: { x:280, y:310, w:100, h:60  },
+      stone_cross:  { x:300, y:180, w:100, h:130 },
+      panorama:     { x:0,   y:40,  w:300, h:140 },
+      chapel_ext:   { x:460, y:80,  w:180, h:220 },
+      dig_spot:     { x:120, y:320, w:160, h:60  },
     },
     new_era: {
       crowd:          { x:0,   y:180, w:280, h:160 },
@@ -3758,41 +3645,16 @@ function drawSceneAmbience(tick) {
   }
 }
 
-// Treasure island ambience: terrain cover + sea shimmer
+// Treasure island ambience: sea shimmer + warm light
 function drawTreasureAmbience(tick) {
   ctx.save();
-  // Cover chest in background with nearby terrain before discovery
-  if (!state.flags.chest_visible) {
-    const bgImg = images['bg-treasure'];
-    if (bgImg) {
-      const imgW = bgImg.naturalWidth, imgH = bgImg.naturalHeight;
-      const cr = GW / GH, ir = imgW / imgH;
-      let sy0 = 0, sh = imgH, sx0 = 0, sw = imgW;
-      if (ir < cr) { sh = imgW / cr; sy0 = (imgH - sh) / 2; }
-      else if (ir > cr) { sw = imgH * cr; sx0 = (imgW - sw) / 2; }
-      const scX = sw / GW, scY = sh / GH;
-      // Source: clean rocky ground right of chest (game coords 250,290)
-      // Destination: over the chest area (game coords 55,240)
-      ctx.drawImage(bgImg,
-        sx0 + 250 * scX, sy0 + 290 * scY, 150 * scX, 90 * scY,
-        55, 240, 195, 140
-      );
-      // Soften edges with radial gradient
-      const eg = ctx.createRadialGradient(152, 310, 40, 152, 310, 110);
-      eg.addColorStop(0, 'rgba(0,0,0,0)');
-      eg.addColorStop(1, 'rgba(60,40,25,0.25)');
-      ctx.fillStyle = eg;
-      ctx.fillRect(55, 240, 195, 140);
-    }
-  }
-  // Sea shimmer on the water
-  for (let i = 0; i < 6; i++) {
-    const ph = tick * 0.02 + i * 2.1;
-    const a = 0.08 + Math.sin(ph * 1.3) * 0.06;
+  for (let i = 0; i < 8; i++) {
+    const ph = tick * 0.02 + i * 1.8;
+    const a = 0.07 + Math.sin(ph * 1.3) * 0.05;
     if (a > 0) {
       ctx.globalAlpha = a;
       ctx.fillStyle = '#b8d4e8';
-      ctx.fillRect(80 + Math.sin(ph * 0.7 + i) * 200, 180 + Math.sin(ph) * 10, 2, 1);
+      ctx.fillRect(60 + Math.sin(ph * 0.7 + i) * 240, 160 + Math.sin(ph) * 12, 2, 1);
     }
   }
   ctx.restore();
@@ -4519,9 +4381,9 @@ const CHAR_SCALE_MULT = { ntemis: 1.0, ajax: 1.11, clio: 0.80 };
 
 // Per-character anatomy: waist split ratio & max leg stride (pixels, in sprite space)
 const WALK_ANATOMY = {
-  ntemis:  { waist: 0.62, stride: 10 },
-  ajax:    { waist: 0.58, stride: 8 },
-  clio:    { waist: 0.60, stride: 8 },
+  ntemis:  { waist: 0.75, stride: 10 },
+  ajax:    { waist: 0.71, stride: 8 },
+  clio:    { waist: 0.73, stride: 8 },
   ghost:   { waist: 0.55, stride: 0 },
   athos:   { waist: 0.60, stride: 7 },
   stathis: { waist: 0.58, stride: 8 },
@@ -7094,15 +6956,7 @@ const SCENE_CUTSCENES = {
 // SCENE MANAGEMENT
 // ════════════════════════════════════════════════════════════
 
-// Dynamic visibility for treasure scene objects — called on enter & every frame
-function updateTreasureVisibility(sc) {
-  if (!sc) sc = scenes.treasure;
-  for (const obj of sc.objects) {
-    if (obj.id === 'sea_chest')    obj._hidden = !state.flags.chest_visible;
-    if (obj.id === 'final_letter') obj._hidden = !state.flags.chest_opened;
-    if (obj.id === 'dig_spot')     obj._hidden = false; // always clickable (verb handles gating)
-  }
-}
+// (treasure visibility no longer needed — simplified scene has no hidden objects)
 
 function startScene(id) {
   if (state.phase === 'playing') saveGame('auto');
@@ -7143,7 +6997,7 @@ function startScene(id) {
     const tile = sc.objects.find(o => o.id === 'floor_tile');
     if (tile) tile._hidden = false;
   }
-  if (id === 'treasure') updateTreasureVisibility(sc);
+  // (treasure visibility handled inline by verbs now)
 
   // Entry dialogue (first visit only) — with cutscene triggers
   if (!state.visited.has(id)) {
@@ -7806,8 +7660,7 @@ function update(dt) {
   if (state.phase === 'cutscene') { updateCutscene(dt); return; }
   if (state.phase !== 'playing') return;
 
-  // Dynamic object visibility (treasure scene)
-  if (state.scene === 'treasure') updateTreasureVisibility();
+  // (treasure visibility handled inline by verbs now)
 
   // Walking
   updateWalking(dt);
