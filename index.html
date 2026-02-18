@@ -307,6 +307,7 @@ async function loadAllAssets() {
     loadImg('cutscene-ghost-farewell', 'assets/cutscene-ghost-farewell.png'),
     loadImg('cutscene-crossing-dawn', 'assets/cutscene-crossing-dawn.png'),
     loadImg('cutscene-crossing-island', 'assets/cutscene-crossing-island.png'),
+    loadImg('cutscene-telescope-island', 'assets/cutscene-telescope-island.png'),
     loadImg('cutscene-treasure-open', 'assets/cutscene-treasure-open.png'),
     loadImg('cutscene-treasure-letter', 'assets/cutscene-treasure-letter.png'),
     loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
@@ -771,7 +772,13 @@ const scenes = {
     objects: [
       { id:'telescope', x:470, y:220, w:80, h:160, label:'Παρατηρητήριο',
         verbs: { look:[{s:'',t:'Ένα παλιό παρατηρητήριο στην άκρη του λόφου. Βλέπει ολόκληρο τον κόλπο.'},{s:'ΚΛΕΙΩ',t:'Αφήστε με να κοιτάξω!'}],
-                 use:[{s:'ΚΛΕΙΩ',t:'Βλέπω... το λιμάνι! Και κάτι στο νερό...'},{s:'ΑΙΑΣ',t:'Τι; Τι βλέπεις;'},{s:'ΚΛΕΙΩ',t:'Ένα σημάδι στην προβλήτα. Σαν αστέρι.'},{s:'ΝΤΕΜΗΣ',t:'Σημείωσέ το, Κλειώ.'}] }},
+                 use:()=>{
+                   if(!state.flags.telescope_used){
+                     state.flags.telescope_used=1;
+                     setTimeout(()=>{ startCutscene('telescope_island'); },800);
+                   }
+                   return [{s:'ΚΛΕΙΩ',t:'Βλέπω... ένα νησάκι! Με ένα λευκό εκκλησάκι πάνω στον βράχο!'},{s:'ΑΙΑΣ',t:'Πού; Δείξε μου!'},{s:'ΚΛΕΙΩ',t:'Εκεί, στη μέση του κόλπου. Λάμπει στον ήλιο!'},{s:'ΝΤΕΜΗΣ',t:'Ο Άγιος Γεώργιος. Σημείωσέ τον, Κλειώ.'}];
+                 } }},
       { id:'panorama', x:0, y:-88, w:640, h:100, label:'Πανόραμα',
         verbs: { look:[{s:'',t:'Η θέα κόβει την ανάσα. Ολόκληρο το Γαλαξίδι, ο κόλπος, τα βουνά. Από εδώ βλέπεις τα πάντα.'},{s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέχρι την Ιτέα!'},{s:'ΚΛΕΙΩ',t:'Και τους Δελφούς! Εκεί πάνω!'}] }},
       { id:'windmill_tower', x:470, y:88, w:120, h:130, label:'Ο μύλος',
@@ -1390,6 +1397,26 @@ const cutscenes = {
     ],
     onComplete: () => {
       state.phase = 'playing';
+    },
+  },
+
+  // ── TELESCOPE — Clio spots Agios Georgios island from the windmill
+  telescope_island: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawTelescopeIsland,
+        dialogue: [
+          { s: 'ΚΛΕΙΩ', t: 'Κοίτα... ένα νησάκι με εκκλησάκι! Στη μέση του κόλπου!', at: 1.0 },
+          { s: 'ΑΙΑΣ', t: 'Πώς φτάνεις εκεί; Με βάρκα;', at: 3.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Ο Άγιος Γεώργιος. Λένε ότι οι ψαράδες πάνε εκεί πριν κάθε ταξίδι.', at: 5.5 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+      document.getElementById('ui-panel').classList.add('on');
+      document.getElementById('action-line').classList.add('on');
     },
   },
 
@@ -2016,6 +2043,20 @@ function drawGhostFade(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.10 + p * 0.10;
   ctx.fillStyle = '#1a0a2e';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: TELESCOPE — Clio spots Agios Georgios island
+// ═══════════════════════════════════════════════════════════
+
+function drawTelescopeIsland(t, p, tick) {
+  drawKenBurns('cutscene-telescope-island', 1.06 + p * 0.10, 0, p * -8);
+  // Soft golden shimmer on the chapel
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.02) * 0.02;
+  ctx.fillStyle = '#FFD880';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
@@ -4348,8 +4389,9 @@ const VOICE_MAP = {
   'Γεια σου, μικρούλα. Με ακολουθείς;': 'voice/clio/032.mp3',
   'Τι ωραία πλατεία! Και γάτα!': 'voice/clio/033.mp3',
   'Αφήστε με να κοιτάξω!': 'voice/clio/034.mp3',
-  'Βλέπω... το λιμάνι! Και κάτι στο νερό...': 'voice/clio/035.mp3',
-  'Ένα σημάδι στην προβλήτα. Σαν αστέρι.': 'voice/clio/036.mp3',
+  'Βλέπω... ένα νησάκι! Με ένα λευκό εκκλησάκι πάνω στον βράχο!': 'voice/clio/035.mp3',
+  'Εκεί, στη μέση του κόλπου. Λάμπει στον ήλιο!': 'voice/clio/036.mp3',
+  'Κοίτα... ένα νησάκι με εκκλησάκι! Στη μέση του κόλπου!': 'voice/clio/035.mp3',
   'Και τους Δελφούς! Εκεί πάνω!': 'voice/clio/037.mp3',
   'Θέλω να ζωγραφίσω αυτά.': 'voice/clio/038.mp3',
   'Μπαμπά, κοίτα — ένα τηλεσκόπιο!': 'voice/clio/039.mp3',
@@ -4761,19 +4803,6 @@ function playVoice(text) {
     voiceAudio.src = src;
     voiceAudio.onended = () => { voiceFinished = true; };
     voiceAudio.play().catch(() => { voiceFinished = true; });
-  } else if ('speechSynthesis' in window) {
-    // Fallback: browser TTS for lines without pre-recorded audio
-    voiceFinished = false;
-    speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'el-GR';
-    utter.rate = 0.9;
-    utter.volume = 0.8;
-    const voices = speechSynthesis.getVoices();
-    const greek = voices.find(v => v.lang.startsWith('el'));
-    if (greek) utter.voice = greek;
-    utter.onend = () => { voiceFinished = true; };
-    speechSynthesis.speak(utter);
   }
 }
 
@@ -5107,17 +5136,31 @@ function drawStoneGlow() {
 function drawJadeReveal() {
   if (!state.seq.jadeReveal || !state.seq.jadeReveal.active) return;
   const t = state.seq.jadeReveal.progress;
-  const gemX = 210, gemY = 48;
   const tick = state.tick;
 
-  // Phase 1 (0–0.4): Green glow builds and expands from gem
+  // Stone floats from crack (210,48) to screen center (320,150)
+  const startX = 210, startY = 48;
+  const endX = GW / 2, endY = GH * 0.38;
+
+  // Float trajectory: stone lifts out at t=0.1, arrives center at t=0.7
+  const floatStart = 0.1, floatEnd = 0.7;
+  const floatT = Math.max(0, Math.min(1, (t - floatStart) / (floatEnd - floatStart)));
+  const eased = easeInOutCubic(floatT);
+  const stoneX = startX + (endX - startX) * eased;
+  const stoneY = startY + (endY - startY) * eased;
+  // Gentle bobbing once it starts moving
+  const bob = floatT > 0 ? Math.sin(tick * 0.06) * 3 * floatT : 0;
+  const stoneDrawX = stoneX;
+  const stoneDrawY = stoneY + bob;
+
+  // Phase 1 (0–0.4): Green glow builds — follows the stone
   if (t > 0) {
     const buildT = Math.min(1, t / 0.4);
     const pulse = Math.sin(t * Math.PI * 8) * 0.08;
     ctx.save();
     const radius = 20 + buildT * 200;
     ctx.globalAlpha = (0.2 + pulse) * buildT;
-    const glow = ctx.createRadialGradient(gemX, gemY, 0, gemX, gemY, radius);
+    const glow = ctx.createRadialGradient(stoneDrawX, stoneDrawY, 0, stoneDrawX, stoneDrawY, radius);
     glow.addColorStop(0, 'rgba(100,255,140,0.9)');
     glow.addColorStop(0.2, 'rgba(60,230,100,0.5)');
     glow.addColorStop(0.5, 'rgba(40,180,80,0.2)');
@@ -5127,47 +5170,54 @@ function drawJadeReveal() {
     ctx.restore();
   }
 
-  // Phase 2 (0.15–0.8): Light rays radiating from gem
+  // Phase 2 (0.15–0.8): Light rays radiate from stone as it descends
   if (t > 0.15) {
     const rayT = Math.min(1, (t - 0.15) / 0.65);
     ctx.save();
     for (let r = 0; r < 12; r++) {
       const baseAngle = (r / 12) * Math.PI * 2;
       const angle = baseAngle + Math.sin(tick * 0.02 + r * 0.8) * 0.15;
-      const rayLen = rayT * (150 + Math.sin(tick * 0.03 + r * 1.3) * 40);
-      const endX = gemX + Math.cos(angle) * rayLen;
-      const endY = gemY + Math.sin(angle) * rayLen;
+      const rayLen = rayT * (120 + Math.sin(tick * 0.03 + r * 1.3) * 40);
+      const rx = stoneDrawX + Math.cos(angle) * rayLen;
+      const ry = stoneDrawY + Math.sin(angle) * rayLen;
       ctx.globalAlpha = rayT * (0.08 + Math.sin(tick * 0.04 + r * 2.1) * 0.03);
       ctx.strokeStyle = 'rgba(120,255,170,0.8)';
       ctx.lineWidth = 1.5 + Math.sin(tick * 0.05 + r) * 0.5;
       ctx.beginPath();
-      ctx.moveTo(gemX, gemY);
-      ctx.lineTo(endX, endY);
+      ctx.moveTo(stoneDrawX, stoneDrawY);
+      ctx.lineTo(rx, ry);
       ctx.stroke();
     }
     ctx.restore();
   }
 
-  // Phase 3 (0.3–1.0): Green sparkle particles floating outward
-  if (t > 0.3) {
-    const sparkT = Math.min(1, (t - 0.3) / 0.7);
+  // Phase 3 (0.1–1.0): Trailing sparkle particles along the float path
+  if (t > 0.1) {
     ctx.save();
-    for (let s = 0; s < 20; s++) {
-      const angle = (s / 20) * Math.PI * 2 + tick * 0.01;
-      const dist = 20 + sparkT * (40 + Math.sin(tick * 0.025 + s * 1.5) * 60);
-      const sx = gemX + Math.cos(angle + Math.sin(tick * 0.015 + s)) * dist;
-      const sy = gemY + Math.sin(angle + Math.cos(tick * 0.012 + s * 0.7)) * dist * 0.7;
-      const sa = sparkT * Math.max(0, Math.sin(tick * 0.05 + s * 2.3));
-      if (sa > 0.1 && sx > 0 && sx < GW && sy > 0 && sy < GH) {
-        ctx.globalAlpha = sa * 0.4;
-        ctx.fillStyle = 'rgba(180,255,200,1)';
-        ctx.fillRect(sx, sy, 2, 2);
+    for (let s = 0; s < 24; s++) {
+      // Particles trail behind the stone and orbit around it
+      const pDelay = s * 0.03;
+      const pT = Math.max(0, Math.min(1, (t - floatStart - pDelay) / (floatEnd - floatStart)));
+      if (pT <= 0) continue;
+      const pe = easeInOutCubic(pT);
+      const baseX = startX + (endX - startX) * pe;
+      const baseY = startY + (endY - startY) * pe;
+      // Orbit offset from path
+      const orbitR = 15 + Math.sin(s * 1.7) * 10;
+      const orbitAngle = tick * 0.04 + s * (Math.PI * 2 / 24);
+      const px = baseX + Math.cos(orbitAngle) * orbitR;
+      const py = baseY + Math.sin(orbitAngle) * orbitR * 0.6 + Math.sin(tick * 0.06 + s) * 2;
+      const pa = Math.max(0, Math.sin(tick * 0.05 + s * 2.3)) * 0.5 * Math.min(1, pT * 3);
+      if (pa > 0.05 && px > 0 && px < GW && py > 0 && py < GH) {
+        ctx.globalAlpha = pa;
+        ctx.fillStyle = s % 3 === 0 ? 'rgba(220,255,230,1)' : 'rgba(100,255,160,1)';
+        ctx.fillRect(px, py, s % 4 === 0 ? 2 : 1, s % 4 === 0 ? 2 : 1);
       }
     }
     ctx.restore();
   }
 
-  // Phase 4 (0.5–1.0): Subtle green wash over entire cave
+  // Phase 4 (0.5–1.0): Green ambient wash over cave
   if (t > 0.5) {
     const washT = Math.min(1, (t - 0.5) / 0.5);
     ctx.save();
@@ -5177,19 +5227,80 @@ function drawJadeReveal() {
     ctx.restore();
   }
 
-  // Phase 5 (0.7–1.0): Bright core flash at gem position
+  // Phase 5 (0.1–1.0): The floating jade stone itself
+  if (t > 0.1) {
+    const stoneAlpha = Math.min(1, (t - 0.1) / 0.2);
+    // Scale grows slightly as it approaches center
+    const sc = 1.0 + eased * 0.6;
+    // Slow rotation
+    const rot = Math.sin(tick * 0.015) * 0.12;
+
+    ctx.save();
+    ctx.translate(stoneDrawX, stoneDrawY);
+    ctx.rotate(rot);
+    ctx.scale(sc, sc);
+
+    // Outer aura glow
+    ctx.globalAlpha = stoneAlpha * (0.4 + Math.sin(tick * 0.04) * 0.1);
+    const aura = ctx.createRadialGradient(0, 0, 4, 0, 0, 28);
+    aura.addColorStop(0, 'rgba(100,255,150,0.6)');
+    aura.addColorStop(0.5, 'rgba(60,200,100,0.2)');
+    aura.addColorStop(1, 'rgba(30,150,60,0)');
+    ctx.fillStyle = aura;
+    ctx.fillRect(-28, -28, 56, 56);
+
+    // The jade stone — faceted gem
+    ctx.globalAlpha = stoneAlpha;
+    // Dark base
+    ctx.fillStyle = '#1a4a2a';
+    ctx.beginPath();
+    ctx.moveTo(0, -12); ctx.lineTo(14, 0); ctx.lineTo(12, 14);
+    ctx.lineTo(-12, 14); ctx.lineTo(-14, 0); ctx.closePath();
+    ctx.fill();
+    // Mid tone
+    ctx.fillStyle = '#2a7a3a';
+    ctx.beginPath();
+    ctx.moveTo(0, -10); ctx.lineTo(12, 1); ctx.lineTo(10, 12);
+    ctx.lineTo(-10, 12); ctx.lineTo(-12, 1); ctx.closePath();
+    ctx.fill();
+    // Lighter face
+    ctx.fillStyle = '#3a9a4a';
+    ctx.beginPath();
+    ctx.moveTo(0, -6); ctx.lineTo(8, 2); ctx.lineTo(6, 10);
+    ctx.lineTo(-6, 10); ctx.lineTo(-8, 2); ctx.closePath();
+    ctx.fill();
+    // Highlight
+    ctx.fillStyle = 'rgba(180,255,200,0.5)';
+    ctx.beginPath();
+    ctx.ellipse(-2, 0, 5, 3, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Veins
+    ctx.strokeStyle = 'rgba(20,80,30,0.3)';
+    ctx.lineWidth = 0.6;
+    ctx.beginPath(); ctx.moveTo(-6, -2); ctx.quadraticCurveTo(0, 4, 6, 0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-4, 8); ctx.quadraticCurveTo(2, 5, 8, 8); ctx.stroke();
+    // Inner luminous glow
+    ctx.fillStyle = 'rgba(100,255,150,0.2)';
+    ctx.beginPath();
+    ctx.ellipse(0, 4, 8, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // Phase 6 (0.7–1.0): Bright flash as stone reaches center
   if (t > 0.7) {
     const coreT = (t - 0.7) / 0.3;
     const flash = Math.sin(coreT * Math.PI);
     ctx.save();
-    ctx.globalAlpha = flash * 0.6;
-    const coreGlow = ctx.createRadialGradient(gemX, gemY, 0, gemX, gemY, 50);
+    ctx.globalAlpha = flash * 0.5;
+    const coreGlow = ctx.createRadialGradient(stoneDrawX, stoneDrawY, 0, stoneDrawX, stoneDrawY, 60);
     coreGlow.addColorStop(0, 'rgba(220,255,230,1)');
     coreGlow.addColorStop(0.3, 'rgba(140,255,170,0.6)');
     coreGlow.addColorStop(0.7, 'rgba(80,220,120,0.2)');
     coreGlow.addColorStop(1, 'rgba(40,180,80,0)');
     ctx.fillStyle = coreGlow;
-    ctx.fillRect(gemX - 50, gemY - 50, 100, 100);
+    ctx.fillRect(stoneDrawX - 60, stoneDrawY - 60, 120, 120);
     ctx.restore();
   }
 }
@@ -5258,17 +5369,17 @@ function startJadeSequence() {
       {s:'',t:'Η Κλειώ κοιτάζει ΠΑΝΩ — η γωνία που μόνο μια επτάχρονη θα δοκίμαζε.'},
     ]},
 
-    // Phase 3: Green light floods the cave
-    { type: 'effect', effect: 'jade_reveal', duration: 3.0 },
+    // Phase 3: Green light floods the cave, stone floats to center
     { type: 'callback', fn: () => changeSceneMusic('_jade') },
+    { type: 'effect', effect: 'jade_reveal', duration: 4.0 },
     { type: 'dialog', lines: [
       {s:'ΚΛΕΙΩ',t:'ΕΚΕΙ! Κάτι πράσινο — λάμπει!'},
-      {s:'ΑΙΑΣ',t:'Το σπήλαιο... αλλάζει χρώμα;'},
+      {s:'ΑΙΑΣ',t:'Αιωρείται! Μπαμπά, η πέτρα αιωρείται!'},
     ]},
 
-    // Phase 4: Retrieval — the stone emerges
+    // Phase 4: Stone arrives at center
     { type: 'dialog', lines: [
-      {s:'',t:'Πράσινο φως πλημμυρίζει τη σχισμή. Σφηνωμένη μέσα: μια πέτρα. Σκούρα πράσινη, λεία, ζεστή σαν να ζει.'},
+      {s:'',t:'Η πέτρα αιωρείται στο κέντρο του σπηλαίου, τυλιγμένη σε πράσινο φως. Σκούρα πράσινη, λεία, ζεστή σαν να ζει.'},
       {s:'ΚΛΕΙΩ',t:'Σας. Το. Είπα.'},
     ]},
 
@@ -7710,30 +7821,32 @@ function drawCrawl(tick) {
   }
 
 
+
   // ═══════════════════════════════════════
-  // NAUTICAL MAP DECORATIONS (on parchment, before darkening)
+  // NAUTICAL MAP DECORATIONS — illuminated portolan style
+  // Rich colors: deep blue sea, red hulls, cream sails, gold leaf, green serpent
   // ═══════════════════════════════════════
 
-  // ── Rhumb lines (radiating from compass area) ──
+  // ── Rhumb lines (gold + red alternating, like real portolan charts) ──
   ctx.save();
-  ctx.globalAlpha = 0.12;
-  ctx.strokeStyle = '#6a5030';
-  ctx.lineWidth = 0.6;
+  ctx.lineWidth = 0.7;
   const rhumbCx = 95, rhumbCy = GH - 55;
   for (let a = 0; a < 16; a++) {
     const angle = (a / 16) * Math.PI * 2;
+    ctx.globalAlpha = a % 2 === 0 ? 0.18 : 0.10;
+    ctx.strokeStyle = a % 4 === 0 ? '#b8860b' : a % 2 === 0 ? '#8b2500' : '#5a4a28';
     ctx.beginPath();
     ctx.moveTo(rhumbCx, rhumbCy);
-    ctx.lineTo(rhumbCx + Math.cos(angle) * 200, rhumbCy + Math.sin(angle) * 200);
+    ctx.lineTo(rhumbCx + Math.cos(angle) * 220, rhumbCy + Math.sin(angle) * 220);
     ctx.stroke();
   }
   ctx.restore();
 
-  // ── Sailing ships (3 schooner silhouettes) ──
+  // ── Sailing ships (3 colorful schooners) ──
   const crawlShips = [
-    { x: 130, y: 85, scale: 1.0, speed: 0.08, bob: 1.5, phase: 0, flip: false },
-    { x: 470, y: 130, scale: 0.8, speed: -0.05, bob: 1.2, phase: 2.1, flip: true },
-    { x: 310, y: 50, scale: 0.65, speed: 0.04, bob: 0.8, phase: 4.0, flip: false },
+    { x: 130, y: 85, scale: 1.0, speed: 0.08, bob: 1.5, phase: 0, flip: false, hullColor: '#5c2210', sailColor: '#f0e6c8', flagColor: '#c42020' },
+    { x: 470, y: 130, scale: 0.8, speed: -0.05, bob: 1.2, phase: 2.1, flip: true, hullColor: '#3a1a08', sailColor: '#e8dcc0', flagColor: '#1a5fa0' },
+    { x: 310, y: 50, scale: 0.65, speed: 0.04, bob: 0.8, phase: 4.0, flip: false, hullColor: '#4a2010', sailColor: '#f5edd5', flagColor: '#d4a030' },
   ];
   ctx.save();
   for (const ship of crawlShips) {
@@ -7744,60 +7857,88 @@ function drawCrawl(tick) {
     ctx.translate(sx, sy);
     ctx.rotate(tilt);
     ctx.scale(ship.scale * (ship.flip ? -1 : 1), ship.scale);
-    ctx.globalAlpha = 0.4;
-    ctx.strokeStyle = '#5a3a18';
-    ctx.fillStyle = '#4a2a10';
+
+    // Hull — rich dark wood with waterline
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = ship.hullColor;
+    ctx.strokeStyle = '#2a0a00';
     ctx.lineWidth = 1.5;
-    // Hull
     ctx.beginPath();
     ctx.moveTo(-18, 4); ctx.quadraticCurveTo(-14, 10, 0, 11);
     ctx.quadraticCurveTo(14, 10, 20, 4);
     ctx.lineTo(18, 0); ctx.lineTo(-16, 0); ctx.closePath();
     ctx.fill(); ctx.stroke();
-    // Masts
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -24); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(8, 0); ctx.lineTo(8, -18); ctx.stroke();
-    // Main sail
-    ctx.globalAlpha = 0.3;
-    ctx.fillStyle = '#6a4a20';
+    // Waterline stripe
+    ctx.strokeStyle = '#a04020';
+    ctx.lineWidth = 0.8;
     ctx.beginPath();
-    ctx.moveTo(0, -22); ctx.quadraticCurveTo(14 + Math.sin(t0 * 0.8 + ship.phase) * 2, -13, 0, -3);
-    ctx.fill();
+    ctx.moveTo(-15, 6); ctx.quadraticCurveTo(0, 9, 17, 6);
+    ctx.stroke();
+
+    // Masts — dark wood
+    ctx.strokeStyle = '#3a1a00';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -26); ctx.stroke();
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(8, 0); ctx.lineTo(8, -19); ctx.stroke();
+    // Crow's nest
+    ctx.fillStyle = '#3a1a00';
+    ctx.fillRect(-3, -20, 6, 2);
+
+    // Sails — cream/canvas with warm tones
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = ship.sailColor;
+    ctx.strokeStyle = '#a09070';
+    ctx.lineWidth = 0.6;
+    // Main sail
+    ctx.beginPath();
+    ctx.moveTo(1, -24); ctx.quadraticCurveTo(15 + Math.sin(t0 * 0.8 + ship.phase) * 3, -14, 1, -3);
+    ctx.fill(); ctx.stroke();
     // Fore sail
     ctx.beginPath();
-    ctx.moveTo(8, -16); ctx.quadraticCurveTo(18 + Math.sin(t0 * 0.7 + ship.phase) * 1.5, -9, 8, -2);
-    ctx.fill();
+    ctx.moveTo(9, -17); ctx.quadraticCurveTo(20 + Math.sin(t0 * 0.7 + ship.phase) * 2, -10, 9, -2);
+    ctx.fill(); ctx.stroke();
     // Jib
     ctx.beginPath();
-    ctx.moveTo(0, -20); ctx.quadraticCurveTo(-10 - Math.sin(t0 * 0.7 + ship.phase) * 1.5, -11, -16, 0);
-    ctx.lineTo(0, -5); ctx.fill();
-    // Flag
-    ctx.globalAlpha = 0.45;
-    ctx.fillStyle = '#8a3020';
+    ctx.moveTo(0, -22); ctx.quadraticCurveTo(-12 - Math.sin(t0 * 0.7 + ship.phase) * 2, -12, -16, 0);
+    ctx.lineTo(0, -5); ctx.fill(); ctx.stroke();
+
+    // Flag — vivid color
+    ctx.globalAlpha = 0.65;
+    ctx.fillStyle = ship.flagColor;
+    const flagWave = Math.sin(t0 * 1.5 + ship.phase) * 2;
     ctx.beginPath();
-    ctx.moveTo(0, -24); ctx.lineTo(6 + Math.sin(t0 * 1.5 + ship.phase) * 2, -26);
-    ctx.lineTo(0, -28); ctx.fill();
-    // Wake
-    ctx.globalAlpha = 0.15;
-    ctx.strokeStyle = '#6a4a28';
+    ctx.moveTo(0, -26); ctx.lineTo(7 + flagWave, -28);
+    ctx.lineTo(0, -30); ctx.fill();
+    // Cross or stripe on flag
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 0.5;
+    ctx.globalAlpha = 0.4;
+    ctx.beginPath();
+    ctx.moveTo(1, -28); ctx.lineTo(5 + flagWave * 0.5, -28);
+    ctx.stroke();
+
+    // Wake — blue-white water trail
+    ctx.globalAlpha = 0.2;
+    ctx.strokeStyle = '#7aa8c8';
     ctx.lineWidth = 0.8;
     for (let w = 1; w <= 3; w++) {
-      const wx = ship.flip ? w * 8 : -w * 8;
+      const wx = ship.flip ? w * 9 : -w * 9;
       ctx.beginPath();
-      ctx.arc(wx, 9, w * 3, -0.3, 0.3);
+      ctx.arc(wx, 9, w * 3, -0.4, 0.4);
       ctx.stroke();
     }
     ctx.restore();
   }
   ctx.restore();
 
-  // ── Sea serpent (cartographic illustration) ──
+  // ── Sea serpent — green/teal with red accents (classic cartographic) ──
   ctx.save();
-  ctx.globalAlpha = 0.3;
-  ctx.strokeStyle = '#5a3a18';
-  ctx.fillStyle = '#4a2a10';
-  ctx.lineWidth = 2;
   const serpX = 75, serpY = 315;
+  // Body — green with dark outline
+  ctx.globalAlpha = 0.45;
+  ctx.strokeStyle = '#1a4a30';
+  ctx.lineWidth = 3;
   ctx.beginPath();
   for (let i = 0; i < 60; i++) {
     const px = serpX + i * 1.3;
@@ -7805,30 +7946,75 @@ function drawCrawl(tick) {
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   }
   ctx.stroke();
-  const headX = serpX, headY = serpY + Math.sin(t0 * 0.5) * 9;
+  // Body fill — green gradient effect
+  ctx.globalAlpha = 0.35;
+  ctx.strokeStyle = '#3a8a50';
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.ellipse(headX - 6, headY - 2, 7, 5, -0.3, 0, Math.PI * 2);
+  for (let i = 0; i < 60; i++) {
+    const px = serpX + i * 1.3;
+    const py = serpY + Math.sin(i * 0.18 + t0 * 0.5) * 9 - i * 0.15;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  // Scales pattern (dots along body)
+  ctx.globalAlpha = 0.2;
+  ctx.fillStyle = '#50aa68';
+  for (let i = 5; i < 55; i += 4) {
+    const px = serpX + i * 1.3;
+    const py = serpY + Math.sin(i * 0.18 + t0 * 0.5) * 9 - i * 0.15;
+    ctx.beginPath(); ctx.arc(px, py + 2, 1, 0, Math.PI * 2); ctx.fill();
+  }
+  // Head — larger, colored
+  const headX = serpX, headY = serpY + Math.sin(t0 * 0.5) * 9;
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = '#2a6a38';
+  ctx.strokeStyle = '#1a3a20';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.ellipse(headX - 6, headY - 2, 8, 6, -0.3, 0, Math.PI * 2);
   ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#c8a040'; ctx.globalAlpha = 0.5;
-  ctx.beginPath(); ctx.arc(headX - 8, headY - 3, 1.5, 0, Math.PI * 2); ctx.fill();
-  ctx.globalAlpha = 0.3; ctx.strokeStyle = '#5a3a18';
-  ctx.beginPath(); ctx.moveTo(headX - 12, headY); ctx.lineTo(headX - 15, headY + 3); ctx.stroke();
-  ctx.globalAlpha = 0.25; ctx.fillStyle = '#5a3a18';
+  // Eye — bright yellow/red
+  ctx.fillStyle = '#e8c020'; ctx.globalAlpha = 0.7;
+  ctx.beginPath(); ctx.arc(headX - 9, headY - 3, 2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#c02010'; ctx.globalAlpha = 0.8;
+  ctx.beginPath(); ctx.arc(headX - 9, headY - 3, 0.8, 0, Math.PI * 2); ctx.fill();
+  // Open jaw with red inside
+  ctx.globalAlpha = 0.4;
+  ctx.fillStyle = '#a02020';
+  ctx.beginPath();
+  ctx.moveTo(headX - 13, headY + 1);
+  ctx.lineTo(headX - 18, headY + 4);
+  ctx.lineTo(headX - 13, headY + 5);
+  ctx.closePath(); ctx.fill();
+  // Teeth
+  ctx.strokeStyle = '#f0e8d0'; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.5;
+  ctx.beginPath(); ctx.moveTo(headX - 14, headY + 1); ctx.lineTo(headX - 15, headY + 3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(headX - 16, headY + 2); ctx.lineTo(headX - 16, headY + 4); ctx.stroke();
+  // Dorsal spines — red/orange
+  ctx.globalAlpha = 0.4;
+  ctx.fillStyle = '#c04020';
   for (let s = 0; s < 8; s++) {
     const spx = serpX + s * 9 + 5;
     const spy = serpY + Math.sin((s * 9 + 5) * 0.18 + t0 * 0.5) * 9 - (s * 9 + 5) * 0.15;
     ctx.beginPath();
-    ctx.moveTo(spx - 2, spy); ctx.lineTo(spx, spy - 6); ctx.lineTo(spx + 2, spy);
+    ctx.moveTo(spx - 2, spy); ctx.lineTo(spx, spy - 7); ctx.lineTo(spx + 2, spy);
     ctx.fill();
   }
+  // Tail fin — green with red tips
   const tailX = serpX + 78, tailY = serpY + Math.sin(60 * 0.18 + t0 * 0.5) * 9 - 60 * 0.15;
-  ctx.globalAlpha = 0.25;
+  ctx.globalAlpha = 0.4;
+  ctx.fillStyle = '#2a6a38';
   ctx.beginPath();
-  ctx.moveTo(tailX, tailY); ctx.lineTo(tailX + 10, tailY - 7); ctx.lineTo(tailX + 8, tailY + 5); ctx.closePath();
+  ctx.moveTo(tailX, tailY); ctx.lineTo(tailX + 12, tailY - 8); ctx.lineTo(tailX + 10, tailY + 6); ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#c04020'; ctx.globalAlpha = 0.3;
+  ctx.beginPath();
+  ctx.moveTo(tailX + 8, tailY - 5); ctx.lineTo(tailX + 12, tailY - 8); ctx.lineTo(tailX + 10, tailY - 3); ctx.closePath();
   ctx.fill();
   ctx.restore();
 
-  // ── Voyage route (animated dotted line) ──
+  // ── Voyage route (animated gold dotted line with blue water trail) ──
   ctx.save();
   const routePoints = [
     { x: 520, y: 350 }, { x: 470, y: 300 }, { x: 430, y: 260 },
@@ -7837,10 +8023,21 @@ function drawCrawl(tick) {
   ];
   const routeProgress = Math.min(1, (t0 % 20) / 12);
   const drawPts = Math.floor(routeProgress * routePoints.length);
-  ctx.strokeStyle = '#7a5020';
-  ctx.lineWidth = 1.2;
-  ctx.setLineDash([4, 4]);
-  ctx.globalAlpha = 0.35;
+  // Blue water trail underneath
+  ctx.strokeStyle = '#4a7aa0';
+  ctx.lineWidth = 3;
+  ctx.globalAlpha = 0.12;
+  ctx.beginPath();
+  for (let i = 0; i <= drawPts && i < routePoints.length; i++) {
+    const rp = routePoints[i];
+    if (i === 0) ctx.moveTo(rp.x, rp.y); else ctx.lineTo(rp.x, rp.y);
+  }
+  ctx.stroke();
+  // Gold route line
+  ctx.strokeStyle = '#d4a030';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 4]);
+  ctx.globalAlpha = 0.5;
   ctx.beginPath();
   for (let i = 0; i <= drawPts && i < routePoints.length; i++) {
     const rp = routePoints[i];
@@ -7848,35 +8045,44 @@ function drawCrawl(tick) {
   }
   ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#8a6a30';
+  // Waypoint markers — gold circles with red centers
   for (let i = 0; i <= drawPts && i < routePoints.length; i++) {
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = '#d4a030';
+    ctx.beginPath();
+    ctx.arc(routePoints[i].x, routePoints[i].y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#b03020';
     ctx.globalAlpha = 0.4;
     ctx.beginPath();
-    ctx.arc(routePoints[i].x, routePoints[i].y, 2.5, 0, Math.PI * 2);
+    ctx.arc(routePoints[i].x, routePoints[i].y, 1.5, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.restore();
 
-  // ── Treasure X marker (pulsing red) ──
+  // ── Treasure X marker (vivid red with gold glow) ──
   ctx.save();
   const txX = 130, txY = 130;
-  const xPulse = 0.3 + Math.sin(t0 * 1.2) * 0.15;
+  const xPulse = 0.4 + Math.sin(t0 * 1.2) * 0.2;
   ctx.globalAlpha = xPulse;
-  ctx.strokeStyle = '#9a2a10';
-  ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(txX - 7, txY - 7); ctx.lineTo(txX + 7, txY + 7); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(txX + 7, txY - 7); ctx.lineTo(txX - 7, txY + 7); ctx.stroke();
-  ctx.globalAlpha = xPulse * 0.5;
-  ctx.shadowColor = '#c84020'; ctx.shadowBlur = 10;
-  ctx.beginPath(); ctx.arc(txX, txY, 5, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = '#cc2010';
+  ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.moveTo(txX - 8, txY - 8); ctx.lineTo(txX + 8, txY + 8); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(txX + 8, txY - 8); ctx.lineTo(txX - 8, txY + 8); ctx.stroke();
+  // Gold glow behind
+  ctx.globalAlpha = xPulse * 0.4;
+  ctx.shadowColor = '#d4a030'; ctx.shadowBlur = 14;
+  ctx.strokeStyle = '#d4a030';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(txX, txY, 6, 0, Math.PI * 2); ctx.stroke();
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // ── Wave patterns (sea markings) ──
+  // ── Wave patterns — blue sea markings ──
   ctx.save();
-  ctx.strokeStyle = '#6a5030';
+  ctx.strokeStyle = '#4a7a9a';
   ctx.lineWidth = 1;
-  ctx.globalAlpha = 0.2;
+  ctx.globalAlpha = 0.25;
   const waveRegions = [
     { x: 390, y: 75, w: 90, rows: 3 },
     { x: 45, y: 195, w: 70, rows: 3 },
@@ -7894,7 +8100,7 @@ function drawCrawl(tick) {
   }
   ctx.restore();
 
-  // ── Dolphins ──
+  // ── Dolphins — blue-grey with white bellies ──
   ctx.save();
   const crawlDolphins = [
     { x: 495, y: 305, phase: 0, scale: 0.8 },
@@ -7908,88 +8114,129 @@ function drawCrawl(tick) {
     ctx.translate(ddx, ddy);
     ctx.scale(dph.scale, dph.scale);
     ctx.rotate(jump * 0.3);
-    ctx.globalAlpha = 0.3;
-    ctx.fillStyle = '#4a3018';
-    ctx.strokeStyle = '#5a3a18'; ctx.lineWidth = 1;
+    // Body — blue-grey
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = '#3a5a7a';
+    ctx.strokeStyle = '#2a3a50'; ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(-10, 2); ctx.quadraticCurveTo(-4, -9, 6, -5);
     ctx.quadraticCurveTo(10, -2, 12, 2);
     ctx.quadraticCurveTo(6, 6, -4, 5); ctx.closePath();
     ctx.fill(); ctx.stroke();
+    // Belly — lighter
+    ctx.fillStyle = '#8aaccc';
+    ctx.globalAlpha = 0.25;
+    ctx.beginPath();
+    ctx.moveTo(-6, 3); ctx.quadraticCurveTo(0, 6, 8, 2);
+    ctx.quadraticCurveTo(4, 5, -6, 4); ctx.closePath();
+    ctx.fill();
+    // Tail
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = '#3a5a7a';
     ctx.beginPath();
     ctx.moveTo(-10, 2); ctx.lineTo(-17, -4); ctx.lineTo(-15, 7); ctx.closePath();
     ctx.fill();
+    // Dorsal fin
     ctx.beginPath();
-    ctx.moveTo(0, -5); ctx.lineTo(2, -12); ctx.lineTo(5, -5); ctx.closePath();
+    ctx.moveTo(0, -5); ctx.lineTo(2, -13); ctx.lineTo(5, -5); ctx.closePath();
     ctx.fill();
     ctx.restore();
   }
   ctx.restore();
 
-  // ── Anchor ornament (top-right) ──
+  // ── Anchor ornament — iron with gold accents ──
   ctx.save();
   const ancX = GW - 60, ancY = 50;
   ctx.translate(ancX, ancY);
-  ctx.globalAlpha = 0.3;
-  ctx.strokeStyle = '#5a3a18';
-  ctx.fillStyle = '#4a2a10';
-  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.4;
+  ctx.strokeStyle = '#3a3a40';
+  ctx.fillStyle = '#4a4a50';
+  ctx.lineWidth = 2.5;
+  // Ring — gold
+  ctx.strokeStyle = '#b8860b';
   ctx.beginPath(); ctx.arc(0, -16, 5, 0, Math.PI * 2); ctx.stroke();
+  // Shank — dark iron
+  ctx.strokeStyle = '#3a3a40';
   ctx.beginPath(); ctx.moveTo(0, -11); ctx.lineTo(0, 14); ctx.stroke();
+  // Cross bar — with gold ends
   ctx.beginPath(); ctx.moveTo(-10, -5); ctx.lineTo(10, -5); ctx.stroke();
+  ctx.fillStyle = '#b8860b'; ctx.globalAlpha = 0.35;
+  ctx.beginPath(); ctx.arc(-10, -5, 2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(10, -5, 2, 0, Math.PI * 2); ctx.fill();
+  // Curved arms
+  ctx.globalAlpha = 0.4; ctx.strokeStyle = '#3a3a40'; ctx.lineWidth = 2.5;
   ctx.beginPath(); ctx.moveTo(-10, 9); ctx.quadraticCurveTo(-14, 16, -7, 19); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(10, 9); ctx.quadraticCurveTo(14, 16, 7, 19); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(-7, 19); ctx.lineTo(-11, 15); ctx.lineTo(-5, 16); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(7, 19); ctx.lineTo(11, 15); ctx.lineTo(5, 16); ctx.fill();
+  // Flukes — red tips
+  ctx.fillStyle = '#8b2500'; ctx.globalAlpha = 0.35;
+  ctx.beginPath(); ctx.moveTo(-7, 19); ctx.lineTo(-12, 14); ctx.lineTo(-4, 16); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(7, 19); ctx.lineTo(12, 14); ctx.lineTo(4, 16); ctx.fill();
+  // Crown
+  ctx.fillStyle = '#3a3a40'; ctx.globalAlpha = 0.4;
   ctx.beginPath(); ctx.moveTo(0, 14); ctx.lineTo(-5, 19); ctx.lineTo(5, 19); ctx.closePath(); ctx.fill();
   ctx.restore();
 
-  // ── Map annotations (Greek place names, coordinates) ──
+  // ── Map annotations — dark ink with colored place names ──
   ctx.save();
-  ctx.globalAlpha = 0.22;
-  ctx.fillStyle = '#5a3a18';
   const crawlAnnotations = [
-    { text: '38°23\'N', x: 440, y: 42, size: 8 },
-    { text: '22°24\'E', x: 555, y: 90, size: 8 },
-    { text: 'Κορινθιακός Κόλπος', x: 300, y: 72, size: 9 },
-    { text: 'ΑΓ. ΓΕΩΡΓΙΟΣ', x: 155, y: 148, size: 7 },
-    { text: '1860', x: 138, y: 112, size: 9 },
-    { text: 'Ν. Τρίζονια', x: 195, y: 98, size: 7 },
-    { text: 'λιμήν', x: 508, y: 340, size: 7 },
-    { text: 'ΓΑΛΑΞΕΙΔΙ', x: 495, y: 358, size: 9 },
+    { text: '38°23\'N', x: 440, y: 42, size: 8, color: '#3a2810' },
+    { text: '22°24\'E', x: 555, y: 90, size: 8, color: '#3a2810' },
+    { text: 'Κορινθιακός Κόλπος', x: 300, y: 72, size: 9, color: '#2a5080' },
+    { text: 'ΑΓ. ΓΕΩΡΓΙΟΣ', x: 155, y: 148, size: 7, color: '#8b2500' },
+    { text: '1860', x: 138, y: 112, size: 9, color: '#b8860b' },
+    { text: 'Ν. Τρίζονια', x: 195, y: 98, size: 7, color: '#2a5080' },
+    { text: 'λιμήν', x: 508, y: 340, size: 7, color: '#2a5080' },
+    { text: 'ΓΑΛΑΞΕΙΔΙ', x: 495, y: 358, size: 9, color: '#8b2500' },
   ];
   for (const ann of crawlAnnotations) {
+    ctx.globalAlpha = 0.35;
+    ctx.fillStyle = ann.color;
     ctx.font = `italic ${ann.size}px Georgia, serif`;
     ctx.fillText(ann.text, ann.x, ann.y);
   }
   ctx.restore();
 
-  // ── Treasure chest with gold coins ──
+  // ── Treasure chest — rich wood with gold hardware ──
   ctx.save();
   const chX = GW - 75, chY = GH - 65;
   ctx.translate(chX, chY);
-  ctx.globalAlpha = 0.3;
-  ctx.fillStyle = '#5a3018';
-  ctx.strokeStyle = '#4a2810';
+  // Shadow
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(-10, 12, 20, 4);
+  // Body — warm wood
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = '#6a3818';
+  ctx.strokeStyle = '#3a1a08';
   ctx.lineWidth = 1.5;
   ctx.fillRect(-12, 0, 24, 14);
   ctx.strokeRect(-12, 0, 24, 14);
+  // Lid — curved, slightly lighter
+  ctx.fillStyle = '#7a4420';
   ctx.beginPath();
   ctx.moveTo(-12, 0); ctx.quadraticCurveTo(-12, -10, 0, -11);
   ctx.quadraticCurveTo(12, -10, 12, 0); ctx.closePath();
   ctx.fill(); ctx.stroke();
-  ctx.strokeStyle = '#8a6a30'; ctx.lineWidth = 1;
+  // Gold metal bands
+  ctx.strokeStyle = '#d4a030'; ctx.lineWidth = 1.2;
+  ctx.globalAlpha = 0.5;
   ctx.beginPath(); ctx.moveTo(-12, 5); ctx.lineTo(12, 5); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(-12, 10); ctx.lineTo(12, 10); ctx.stroke();
-  ctx.fillStyle = '#a08040'; ctx.globalAlpha = 0.4;
-  ctx.fillRect(-3, 1, 6, 6);
+  // Gold lock
+  ctx.fillStyle = '#d4a030'; ctx.globalAlpha = 0.6;
+  ctx.fillRect(-3, 1, 6, 5);
+  ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.arc(0, 0, 3, Math.PI, 0); ctx.stroke();
-  const chGlint = 0.15 + Math.sin(t0 * 1.5) * 0.1;
+  // Gold glint from open lid
+  const chGlint = 0.25 + Math.sin(t0 * 1.5) * 0.15;
   ctx.globalAlpha = chGlint;
-  ctx.fillStyle = '#d4a030';
+  ctx.fillStyle = '#ffe060';
+  ctx.shadowColor = '#d4a030'; ctx.shadowBlur = 8;
   ctx.fillRect(-8, -2, 16, 3);
+  ctx.shadowBlur = 0;
   ctx.restore();
-  // Coins
+
+  // ── Gold coins — bright with glints ──
   ctx.save();
   const crawlCoins = [
     { x: GW - 98, y: GH - 58 }, { x: GW - 60, y: GH - 50 },
@@ -7997,14 +8244,27 @@ function drawCrawl(tick) {
     { x: GW - 105, y: GH - 45 },
   ];
   for (let ci = 0; ci < crawlCoins.length; ci++) {
-    const coinGlint = 0.2 + Math.sin(t0 * 0.9 + ci * 1.3) * 0.1;
-    ctx.globalAlpha = coinGlint;
-    ctx.fillStyle = '#c8a030';
+    const coinGlint = 0.3 + Math.sin(t0 * 0.9 + ci * 1.3) * 0.15;
+    // Coin shadow
+    ctx.globalAlpha = 0.1;
+    ctx.fillStyle = '#000';
     ctx.beginPath();
-    ctx.arc(crawlCoins[ci].x, crawlCoins[ci].y, 3, 0, Math.PI * 2);
+    ctx.arc(crawlCoins[ci].x + 1, crawlCoins[ci].y + 1, 3.5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.strokeStyle = '#8a6a20'; ctx.lineWidth = 0.8;
+    // Coin body
+    ctx.globalAlpha = coinGlint;
+    ctx.fillStyle = '#d4a030';
+    ctx.beginPath();
+    ctx.arc(crawlCoins[ci].x, crawlCoins[ci].y, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 0.8;
     ctx.stroke();
+    // Highlight
+    ctx.fillStyle = '#ffe870';
+    ctx.globalAlpha = coinGlint * 0.5;
+    ctx.beginPath();
+    ctx.arc(crawlCoins[ci].x - 1, crawlCoins[ci].y - 1, 1.5, 0, Math.PI * 2);
+    ctx.fill();
   }
   ctx.restore();
 
