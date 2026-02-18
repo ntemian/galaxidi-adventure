@@ -139,8 +139,8 @@
   /* ── SCENE TESTER (` key or click button) ── */
   #scene-tester{position:fixed;top:0;right:0;z-index:5000;background:rgba(0,0,0,.92);border-left:2px solid #39d52e;border-bottom:2px solid #39d52e;font-family:'Press Start 2P',monospace;font-size:.45rem;color:#39d52e;max-height:100vh;overflow-y:auto;display:none;flex-direction:column;width:220px}
   #scene-tester.open{display:flex}
-  #st-toggle{display:none!important}
-  #st-toggle:hover{display:none!important}
+  #st-toggle{position:fixed;top:6px;right:6px;z-index:5001;background:rgba(0,0,0,.7);border:1px solid #39d52e;color:#39d52e;font-family:'Press Start 2P',monospace;font-size:.5rem;padding:4px 8px;cursor:pointer;border-radius:2px}
+  #st-toggle:hover{background:#39d52e;color:#000}
   .st-s{padding:6px 8px;border-bottom:1px solid #1a3a1a}
   .st-s h3{font-size:.4rem;color:#7fff7f;margin-bottom:5px;letter-spacing:1px}
   .st-b{display:block;width:100%;text-align:left;padding:4px 6px;margin:2px 0;background:none;border:1px solid #1a3a1a;color:#39d52e;font-family:'Press Start 2P',monospace;font-size:.38rem;cursor:pointer}
@@ -154,7 +154,8 @@
 <body>
 
 <div id="fade"></div>
-<button id="st-toggle" style="display:none">TEST</button>
+<button id="st-toggle">TEST</button>
+<script>if(location.hostname.includes('github.io'))document.getElementById('st-toggle').style.display='none';</script>
 <div id="scene-tester"></div>
 
 <!-- Title screen is canvas-rendered -->
