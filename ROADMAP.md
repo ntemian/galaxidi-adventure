@@ -598,6 +598,94 @@ The rhythm: build → release → build higher → release deeper. Never two hea
 
 ---
 
+## PHASE 9: IMMERSION & PSYCHOLOGY (from Game Design Academy Audit)
+**"The difference between a game people play and a game people feel"**
+
+**Source:** `AUDIT.md` — systematic audit of all 10 Academy chapters against actual game code.
+**Overall score:** 68/100 — strong soul, needs responsive nerves.
+
+### 9.0 Tier 1 — Highest Impact, Lowest Effort (Do First)
+
+These 5 changes deliver the most immersion improvement for the least work:
+
+| # | Change | Effort | Impact | Academy Chapter |
+|---|--------|--------|--------|-----------------|
+| 1 | **Variable typewriter speed** — fast for Ajax excitement (0.02s), slow for final letter (0.06s), flickering for ghost (0.08s) | 1 hour | Very High | IX. Neuroscience — Emotional Contagion |
+| 2 | **2-3 seconds total silence before ghost** — cut ALL ambient sound before swirl particles begin | 15 min | High | VII. Sound — Strategic Silence |
+| 3 | **Character-voiced verb defaults** — replace generic "Δεν γίνεται" with Ajax/Clio/Ntemis personality lines, rotated | 2 hours | High | IV. Dialog — Verb Responses |
+| 4 | **5 NPC cross-reference lines** — Athos: "Ο επιμελητής μου τηλεφώνησε", Giannis: "Ο Άθος είπε ότι θα ερχόσασταν" etc. | 30 min | High | VI. World — Connected World |
+| 5 | **20 wrong-verb comedy lines** — "Use fish on ghost" → Ajax: "Δεν νομίζω ότι πεινάει, μπαμπά" | 2 hours | High | II. Emotions — Humor |
+
+### 9.1 Tier 2 — High Impact, Medium Effort
+
+| # | Change | Effort | Impact | Academy Chapter |
+|---|--------|--------|--------|-----------------|
+| 6 | **Eureka character reactions** — when jade found: Ajax jumps, Clio says "Αυτό είναι! Το πράσινο πέτρωμα!" When chart found: Clio voices "Λ.Β. = Λουκάς Βισβίκης!" | 2 hours | High | II. Emotions — Eureka |
+| 7 | **Populate "Look Twice" for all major objects** — system exists, needs content. 1st look = description, 2nd = character memory/joke | 3 hours | High | IV. Dialog — Look Twice Rule |
+| 8 | **2 background Zeigarnik loops** — (a) Why does the cat follow Clio specifically? Resolved: cat belonged to Visvikis's daughter who looked like Clio. (b) Chrysostomos knew Ntemis's father: "Ήταν ο τελευταίος που επισκέφθηκε ο πατέρας σου πριν..." Resolved in epilogue | 1 hour | Medium | VIII. Psychology — Zeigarnik Effect |
+| 9 | **Differentiated character reactions at peaks** — Ghost appears: Ajax freezes (fear), Clio steps forward (fascination), Ntemis whispers "Παππού;" (recognition). Treasure: Ajax cheers, Clio examines, Ntemis reads alone | 2 hours | High | IX. Neuroscience — Mirror Neurons |
+| 10 | **Three Clue Rule fixes** — Copper pot: add visual wobble + Clio "Ακούς αυτό;" on entry. Church tile: Papas says "Σημάδεψε κάθε πέτρα αυτής της εκκλησίας" | 1 hour | Medium | III. Puzzles — Three Clue Rule |
+
+### 9.2 Tier 3 — Medium Impact, Higher Effort
+
+| # | Change | Effort | Impact | Academy Chapter |
+|---|--------|--------|--------|-----------------|
+| 11 | **1 unremarkable detail per scene** — objects with NO gameplay purpose that reward looking: date carved in door frame (1887), chalk drawing on quay, guest book in museum, fossil in cave wall, fresh flower on unmarked grave, carved name on mast | 3 hours | Medium | I. Immersion — Environmental Storytelling |
+| 12 | **10-15 "surprise" Look responses** — scattered across scenes. Objects that reveal unexpected character memories, jokes, or historical details. Creates explorer's dopamine loop (variable reward schedule) | 3 hours | Medium | IX. Neuroscience — Dopamine |
+| 13 | **Visvikis leitmotif** — simple 4-6 note nautical melody: faint in museum bg (unconscious), full at graveyard ghost (recognition), final in epilogue on Stathis's guitar (the dead captain's melody, carried by the living) | 4 hours | High | VII. Sound — Music as Narrative |
+| 14 | **Epilogue obsessive polish** — per Peak-End Rule, this scene determines how the ENTIRE game is remembered. Slow typewriter (0.07s), unique music, longer pauses, 104-signature ceremony must echo across 170 years | 3 hours | Very High | VIII. Psychology — Peak-End Rule |
+| 15 | **Terrace reflection scene** — after graveyard/church, family returns at dusk. No puzzle. Ajax talks about cave fear, Clio about αλληλεγγύη, Ntemis about his father. The game's campfire moment | 2 hours | Medium | V. Pacing — Campfire Moment |
+
+### 9.3 Tier 4 — Lower Priority
+
+| # | Change | Effort | Impact | Academy Chapter |
+|---|--------|--------|--------|-----------------|
+| 16 | **Item combinations** (3-4): lantern + matches → lit lantern, chart + compass → marked route | 4 hours | Medium | I. Immersion — Systemic Layer |
+| 17 | **Port scene mini-puzzle** — break three-breather stretch. Akis won't talk until you Look at his flute, or a locked warehouse needs fisherman's key | 2 hours | Medium | III. Puzzles — Difficulty Curve |
+| 18 | **Museum dialog restructure** — break curator info dump into 2-fact chunks separated by player interaction (Cognitive Load Theory: max 4 items in working memory) | 2 hours | Medium | IV. Dialog — Double Duty |
+| 19 | **Flow channel fix for breather stretch** — Port → Museum → Liotrivi are 3 consecutive breathers. Add challenge to at least one | 2 hours | Medium | VIII. Psychology — Flow State |
+
+### 9.4 Psychology Principles Checklist
+
+Per-scene verification checklist (from Academy Chapters VIII-IX):
+
+- [ ] At least 3 Zeigarnik loops open at any time (main mystery + current puzzle + background question)
+- [ ] Peak moment (ghost) and End moment (epilogue) get 30% of emotional design effort
+- [ ] Typewriter speed varies by emotional context (not constant 0.03s)
+- [ ] Variable reward: 20% of Look responses are unexpectedly rewarding
+- [ ] DMN breathing room exists after every emotional peak (no puzzles immediately after ghost)
+- [ ] Characters react DIFFERENTLY to same events (3-channel emotional bandwidth)
+- [ ] Mere exposure: key words/melodies recur 3+ times across game (αλληλεγγύη, leitmotif)
+- [ ] No info dump exceeds 4 facts without player interaction break
+- [ ] Loss aversion leveraged: ghost's 120-year wait framed as loss prevention, not treasure gain
+
+### 9.5 Per-Scene Immersion Checklist
+
+For EVERY scene, verify all boxes:
+
+- [ ] At least ONE thing is moving (particles, light, water, wind)
+- [ ] Ambient sound matches what the player sees
+- [ ] Entry dialog establishes mood in 2-3 lines
+- [ ] 4-6 interactive objects minimum
+- [ ] At least one object rewards "Look" with character personality
+- [ ] At least one object has no puzzle purpose (environmental storytelling)
+- [ ] Wrong verbs give funny or character-driven responses (not "Δεν γίνεται")
+- [ ] NPCs reference events from other scenes
+- [ ] Music matches the emotional tone
+- [ ] Second "Look" gives a different response for key objects
+- [ ] Characters react to the scene, not just to objects
+- [ ] Exit transitions feel natural
+
+**Deliverables:**
+- [ ] Tier 1 changes (5 items) — implemented and tested
+- [ ] Tier 2 changes (5 items) — implemented and tested
+- [ ] Per-scene immersion checklist passes for all 13 scenes
+- [ ] Psychology checklist all boxes checked
+- [ ] Full playthrough validates emotional arc with new changes
+- [ ] `AUDIT.md` score updated from 68/100 to target 85+/100
+
+---
+
 ## TIMELINE OVERVIEW
 
 ```
@@ -643,6 +731,12 @@ Week 16      PHASE 8: Ship It
              ├── Bilingual QA
              ├── Hosting
              └── Community launch
+
+Week 17-18   PHASE 9: Immersion & Psychology (Academy Audit)
+             ├── Tier 1: Variable typewriter, silence, verb comedy (3 days)
+             ├── Tier 2: Eureka reactions, Look Twice, Zeigarnik loops (4 days)
+             ├── Tier 3: Unremarkable details, leitmotif, epilogue polish (5 days)
+             └── Per-scene immersion checklist validation
 ```
 
 ---
