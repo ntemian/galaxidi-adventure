@@ -215,7 +215,7 @@ let bgCachedScene = null; // invalidate when scene changes
 // STATE
 // ════════════════════════════════════════════════════════════
 const state = {
-  phase: 'title', // title, crawl, intro, playing
+  phase: 'title', // title, crawl, intro, playing, epilogue, credits
   crawlScroll: 0,
   crawlFading: false,
   crawlFadeAlpha: 0,
@@ -232,6 +232,10 @@ const state = {
   fade: { active: false, alpha: 0, dir: 0, cb: null },
   introPage: 0,
   epiloguePage: 0,
+  creditsScroll: 0,
+  creditsFading: false,
+  creditsFadeAlpha: 0,
+  creditsSpeedUp: false,
   mapOpen: false,
   mapHover: null,
   helpOpen: false,
@@ -307,7 +311,7 @@ async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
     loadImg('title-bg', 'assets/title-bg.webp'),
-    loadImg('bg-exterior', 'assets/pixel-exterior-new.png'),
+    loadImg('bg-exterior', 'assets/pixel-exterior.webp'),
     loadImg('bg-terrace', 'assets/pixel-terrace.webp'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
     loadImg('bg-port', 'assets/pixel-port.webp'),
@@ -1403,21 +1407,159 @@ const epiloguePages = [
   'Να βρούμε αυτά που μας ενώνουν.\nΌχι αυτά που μας χωρίζουν.\n\nΚράτα την αλληλεγγύη.\nΆλλαξε το πλοίο.',
   'Η θάλασσα θυμάται.\nΚι εμείς τώρα,\nαλλάζουμε μαζί της.',
   'ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ\n\n104 υπογραφές.\nΤότε και τώρα.\n\n\nΓια τον Αίαντα και την Κλειώ.',
-
-  // ── END CREDITS ──
-
-  '— Η  Θ Α Λ Α Σ Σ Α  Θ Υ Μ Α Τ Α Ι —\n\nΈνα παιχνίδι αγάπης\nαπό έναν αφοσιωμένο Γαλαξιδιώτη.',
-
-  '— ΠΡΩΤΑΓΩΝΙΣΤΕΣ —\n\nΝΤΕΜΗΣ\nΑΙΑΣ\nΚΛΕΙΩ',
-
-  '— ΧΑΡΑΚΤΗΡΕΣ —\n\nΆΚΗΣ — Ντοκιμαντερίστας & Φλογεράς\nΣΤΑΘΗΣ — Κιθαρίστας\nΆΘΟΣ — Δικηγόρος & Ιδιοκτήτης Λιοτριβιού\nΓΙΑΝΝΗΣ — Ο Μυλωνάς\nΕΠΙΜΕΛΗΤΗΣ — Ναυτικό Μουσείο\nΠΑΠΑΣ — Ιερέας Αγίου Νικολάου\nΧΡΥΣΟΣΤΟΜΟΣ — Ναυτικός της Ελπίδας',
-
-  '— —\n\nΚΑΠΕΤΑΝ ΛΟΥΚΑΣ ΒΙΣΒΙΚΗΣ\n\nΤο φάντασμα που περίμενε\n120 χρόνια.',
-
-  'Οποιαδήποτε ομοιότητα\nμε πραγματικά πρόσωπα\nείναι απολύτως σκόπιμη\nκαι τους ευχαριστούμε.',
-
-  'Ευχαριστούμε το Γαλαξίδι\nπου μας δίδαξε ότι\n\nη θάλασσα θυμάται.\n\n\n· · ·',
 ];
+
+// ════════════════════════════════════════════════════════════
+// END CREDITS DATA — canvas-rendered vertical scroll
+// ════════════════════════════════════════════════════════════
+const CREDITS_SECTIONS = [
+  { type: 'title', text: '— Η  Θ Α Λ Α Σ Σ Α  Θ Υ Μ Α Τ Α Ι —' },
+  { type: 'subtitle', text: 'Ένα παιχνίδι αγάπης\nαπό έναν αφοσιωμένο Γαλαξιδιώτη' },
+  { type: 'gap', size: 60 },
+  { type: 'heading', text: 'ΠΡΩΤΑΓΩΝΙΣΤΕΣ' },
+  { type: 'gap', size: 10 },
+  { type: 'name', text: 'ΝΤΕΜΗΣ' },
+  { type: 'name', text: 'ΑΙΑΣ' },
+  { type: 'name', text: 'ΚΛΕΙΩ' },
+  { type: 'gap', size: 60 },
+  { type: 'heading', text: 'ΧΑΡΑΚΤΗΡΕΣ' },
+  { type: 'gap', size: 10 },
+  { type: 'role', name: 'ΑΚΗΣ', desc: 'Ντοκιμαντερίστας & Φλογεράς' },
+  { type: 'role', name: 'ΣΤΑΘΗΣ', desc: 'Κιθαρίστας' },
+  { type: 'role', name: 'ΑΘΟΣ', desc: 'Δικηγόρος & Ιδιοκτήτης Λιοτριβιού' },
+  { type: 'role', name: 'ΓΙΑΝΝΗΣ', desc: 'Ο Μυλωνάς' },
+  { type: 'role', name: 'ΕΠΙΜΕΛΗΤΗΣ', desc: 'Ναυτικό Μουσείο' },
+  { type: 'role', name: 'ΠΑΠΑΣ', desc: 'Ιερέας Αγίου Νικολάου' },
+  { type: 'role', name: 'ΧΡΥΣΟΣΤΟΜΟΣ', desc: 'Ναυτικός της Ελπίδας' },
+  { type: 'gap', size: 60 },
+  { type: 'special', text: 'ΚΑΠΕΤΑΝ ΛΟΥΚΑΣ ΒΙΣΒΙΚΗΣ' },
+  { type: 'special-sub', text: 'Το φάντασμα που περίμενε\n120 χρόνια.' },
+  { type: 'gap', size: 60 },
+  { type: 'quip', text: 'Οποιαδήποτε ομοιότητα\nμε πραγματικά πρόσωπα\nείναι απολύτως σκόπιμη\nκαι τους ευχαριστούμε.' },
+  { type: 'gap', size: 60 },
+  { type: 'thanks', text: 'Ευχαριστούμε το Γαλαξίδι\nπου μας δίδαξε ότι' },
+  { type: 'thanks-em', text: 'η θάλασσα θυμάται.' },
+  { type: 'gap', size: 20 },
+  { type: 'dots', text: '· · ·' },
+  { type: 'gap', size: 100 },
+  { type: 'divider' },
+  { type: 'gap', size: 40 },
+  { type: 'saga-title', text: 'THE JADE STONE SAGA' },
+  { type: 'saga-sub', text: 'A Point & Click Adventure Series' },
+  { type: 'gap', size: 30 },
+  { type: 'saga-ep', text: 'Episode I — The Mystery of Galaxidi', status: 'current' },
+  { type: 'gap', size: 10 },
+  { type: 'saga-ep', text: 'Episode II — The Secret of Amfissa', status: 'coming' },
+  { type: 'gap', size: 40 },
+  { type: 'saga-studio', text: 'GALAXIDI STUDIOS' },
+  { type: 'saga-made', text: 'Made in Greece' },
+  { type: 'gap', size: 120 },
+];
+
+// Pre-calculate credits layout (y positions for each section)
+const CREDITS_SPEED = 22; // pixels per second (auto-scroll)
+const CREDITS_SPEED_FAST = 80; // when clicking to speed up
+const CREDITS_FONT = "'Cormorant Garamond', 'Cinzel', Georgia, serif";
+const CREDITS_PIXEL_FONT = "'Press Start 2P', monospace";
+
+function buildCreditsLayout() {
+  let y = GH + 20; // start off-screen below
+  const items = [];
+  for (const sec of CREDITS_SECTIONS) {
+    switch (sec.type) {
+      case 'title':
+        items.push({ y, text: sec.text, font: `700 22px ${CREDITS_FONT}`, color: '#ffd454', glow: '#d4a030', glowBlur: 14, align: 'center' });
+        y += 36;
+        break;
+      case 'subtitle':
+        for (const line of sec.text.split('\n')) {
+          items.push({ y, text: line, font: `italic 400 12px ${CREDITS_FONT}`, color: '#c8b070', align: 'center' });
+          y += 20;
+        }
+        break;
+      case 'heading':
+        items.push({ y, text: '— ' + sec.text + ' —', font: `700 14px ${CREDITS_FONT}`, color: '#d4a03c', glow: '#8a6a20', glowBlur: 8, align: 'center' });
+        y += 28;
+        break;
+      case 'name':
+        items.push({ y, text: sec.text, font: `400 13px ${CREDITS_FONT}`, color: '#f0e8d0', align: 'center' });
+        y += 22;
+        break;
+      case 'role':
+        items.push({ y, text: sec.name, font: `700 12px ${CREDITS_FONT}`, color: '#d4a03c', align: 'center' });
+        y += 16;
+        items.push({ y, text: sec.desc, font: `italic 400 10px ${CREDITS_FONT}`, color: '#a09070', align: 'center' });
+        y += 24;
+        break;
+      case 'special':
+        items.push({ y, text: sec.text, font: `700 15px ${CREDITS_FONT}`, color: '#e0d0a0', glow: '#6080a0', glowBlur: 12, align: 'center' });
+        y += 28;
+        break;
+      case 'special-sub':
+        for (const line of sec.text.split('\n')) {
+          items.push({ y, text: line, font: `italic 400 11px ${CREDITS_FONT}`, color: '#8090a0', align: 'center' });
+          y += 18;
+        }
+        break;
+      case 'quip':
+        for (const line of sec.text.split('\n')) {
+          items.push({ y, text: line, font: `italic 400 10px ${CREDITS_FONT}`, color: '#807060', align: 'center' });
+          y += 17;
+        }
+        break;
+      case 'thanks':
+        for (const line of sec.text.split('\n')) {
+          items.push({ y, text: line, font: `400 12px ${CREDITS_FONT}`, color: '#d4a03c', align: 'center' });
+          y += 20;
+        }
+        break;
+      case 'thanks-em':
+        items.push({ y, text: sec.text, font: `italic 700 14px ${CREDITS_FONT}`, color: '#ffd454', glow: '#d4a030', glowBlur: 10, align: 'center' });
+        y += 26;
+        break;
+      case 'dots':
+        items.push({ y, text: sec.text, font: `400 14px ${CREDITS_FONT}`, color: '#605040', align: 'center' });
+        y += 24;
+        break;
+      case 'divider':
+        items.push({ y, type: 'divider' });
+        y += 10;
+        break;
+      case 'saga-title':
+        items.push({ y, text: sec.text, font: `700 18px ${CREDITS_FONT}`, color: '#40d070', glow: '#206030', glowBlur: 14, align: 'center' });
+        y += 30;
+        break;
+      case 'saga-sub':
+        items.push({ y, text: sec.text, font: `italic 400 10px ${CREDITS_FONT}`, color: '#70a080', align: 'center' });
+        y += 22;
+        break;
+      case 'saga-ep':
+        if (sec.status === 'current') {
+          items.push({ y, text: sec.text, font: `700 11px ${CREDITS_FONT}`, color: '#d4a03c', align: 'center' });
+        } else {
+          items.push({ y, text: sec.text, font: `400 11px ${CREDITS_FONT}`, color: '#70a080', align: 'center' });
+          y += 14;
+          items.push({ y, text: 'COMING SOON', font: `700 7px ${CREDITS_PIXEL_FONT}`, color: '#40d070', align: 'center', blink: true });
+        }
+        y += 20;
+        break;
+      case 'saga-studio':
+        items.push({ y, text: sec.text, font: `700 9px ${CREDITS_PIXEL_FONT}`, color: '#506050', align: 'center' });
+        y += 18;
+        break;
+      case 'saga-made':
+        items.push({ y, text: sec.text, font: `italic 400 10px ${CREDITS_FONT}`, color: '#506050', align: 'center' });
+        y += 18;
+        break;
+      case 'gap':
+        y += sec.size || 40;
+        break;
+    }
+  }
+  return { items, totalHeight: y };
+}
+
+let creditsLayout = null;
 
 // ════════════════════════════════════════════════════════════
 // STAR WARS STYLE TEXT CRAWL
@@ -1510,24 +1652,22 @@ const cutscenes = {
       document.getElementById('ui-panel').classList.add('on');
       document.getElementById('action-line').classList.add('on');
       state.phase = 'playing';
-      // Crossfade title music out, scene music in
+      // Stop title music immediately, start scene music
+      titleMusic.pause();
+      titleMusic.currentTime = 0;
+      titleMusic.volume = 0.7;
       currentMusicSrc = sceneMusic['exterior'];
       bgm.src = currentMusicSrc;
       bgm.volume = 0;
       bgm.play().catch(() => {});
-      const fadeDur = 2000;
+      // Fade scene music in
+      const fadeDur = 1500;
       const fadeStart = performance.now();
       const fadeStep = () => {
         const t = Math.min(1, (performance.now() - fadeStart) / fadeDur);
         const ease = t < 0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
-        titleMusic.volume = Math.max(0, 0.4 * (1 - ease));
         bgm.volume = 0.25 * ease;
-        if (t < 1) {
-          requestAnimationFrame(fadeStep);
-        } else {
-          titleMusic.pause();
-          titleMusic.volume = 0.7;
-        }
+        if (t < 1) requestAnimationFrame(fadeStep);
       };
       requestAnimationFrame(fadeStep);
       startScene('exterior');
@@ -2864,7 +3004,7 @@ const ambientSounds = {
 
 // Per-scene ambient config: which layers play and at what volume
 const sceneAmbientConfig = {
-  exterior:  { waves: 0.12, wind: 0.04, gulls: true,  gullFreq: [8,7], cicadas: 0.03, bell: true, bellFreq: [25,20] },
+  exterior:  { waves: 0.12, wind: 0.04, gulls: false, cicadas: 0.03, bell: true, bellFreq: [25,20] },
   terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8], cicadas: 0.04, bell: true, bellFreq: [30,25] },
   kitchen:   { waves: 0.03, wind: 0.01 },
   port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4], bell: true, bellFreq: [35,30] },
@@ -4045,13 +4185,9 @@ function updateSceneAmbience(dt) {
 
 function drawSceneAmbience(tick) {
   if (state.scene === 'exterior') {
-    drawBoatBob();
-    drawSeaShimmer(tick);
     drawLightShaft(tick);
     drawPetals();
-    drawHeatHaze(tick);
   } else if (state.scene === 'terrace') {
-    drawSeaShimmer(tick);
     drawLightShaft(tick);
   } else if (state.scene === 'cave') {
     drawCaveAmbience(tick);
@@ -7881,6 +8017,12 @@ function render() {
     return;
   }
 
+  if (state.phase === 'credits') {
+    drawCredits(state.tick);
+    drawCustomCursor();
+    return;
+  }
+
   if (state.phase !== 'playing') return;
   if (!state.scene) return;
 
@@ -7923,6 +8065,18 @@ function render() {
   }
   ctx.drawImage(bgBuffer, 0, 0);
 
+  // ── DEBUG: press Z to isolate the "thing" between characters ──
+  if (window.__DBG_STRIP) {
+    // Skip ALL ambience/particles/shimmer — draw ONLY bg + characters
+    // Also draw bright markers: MAGENTA at the gap between Ntemis and Ajax
+    ctx.save();
+    ctx.fillStyle = '#FF00FF';
+    ctx.globalAlpha = 0.5;
+    ctx.fillRect(310, 355, 60, 35); // covers gap between Ntemis(280) and Ajax(400)
+    ctx.restore();
+  }
+
+  if (!window.__DBG_STRIP) {
   // Scene-specific ambience (behind characters)
   drawSceneAmbience(state.tick);
 
@@ -8009,6 +8163,8 @@ function render() {
       }
     }
   }
+
+  } // end if (!window.__DBG_STRIP)
 
   // Collect all visible characters + NPCs and sort by Y for proper depth
   const drawOrder = [];
@@ -8410,6 +8566,16 @@ function update(dt) {
     return;
   }
   if (state.phase === 'cutscene') { updateCutscene(dt); return; }
+  if (state.phase === 'credits') {
+    if (!state.creditsFading) {
+      const speed = state.creditsSpeedUp ? CREDITS_SPEED_FAST : CREDITS_SPEED;
+      state.creditsScroll += speed * dt;
+      if (creditsLayout && state.creditsScroll > creditsLayout.totalHeight) {
+        endCredits();
+      }
+    }
+    return;
+  }
   if (state.phase !== 'playing') return;
 
   // (treasure visibility handled inline by verbs now)
@@ -8480,7 +8646,7 @@ CVS.addEventListener('mousemove', (e) => {
   state.mouseGX = g.x;
   state.mouseGY = g.y;
 
-  if (state.phase === 'title' || state.phase === 'crawl') {
+  if (state.phase === 'title' || state.phase === 'crawl' || state.phase === 'credits') {
     state.cursorMode ='pointer';
     return;
   }
@@ -8690,6 +8856,7 @@ document.addEventListener('keydown', e => {
   // Escape: close overlays first, then skip crawl/cutscene
   if (e.key === 'Escape') {
     if (state.phase === 'crawl') { endCrawl(); return; }
+    if (state.phase === 'credits') { endCredits(); return; }
     if (state.mapOpen) { state.mapOpen = false; state.mapHover = null; return; }
     if (state.helpOpen) { state.helpOpen = false; return; }
     if (state.statusOpen) { state.statusOpen = false; return; }
@@ -9424,6 +9591,19 @@ CVS.addEventListener('click', () => {
   }
 });
 
+// Click to speed up credits (hold = fast, release = normal)
+CVS.addEventListener('mousedown', () => {
+  if (state.phase === 'credits' && !state.creditsFading) {
+    state.creditsSpeedUp = true;
+  }
+});
+CVS.addEventListener('mouseup', () => {
+  state.creditsSpeedUp = false;
+});
+CVS.addEventListener('mouseleave', () => {
+  state.creditsSpeedUp = false;
+});
+
 // ════════════════════════════════════════════════════════════
 // TITLE & INTRO FLOW
 // ════════════════════════════════════════════════════════════
@@ -9559,20 +9739,180 @@ function showEpiloguePage() {
 document.getElementById('epilogue-screen').onclick = () => {
   state.epiloguePage++;
   if (state.epiloguePage >= epiloguePages.length) {
+    // Narrative pages done — transition to canvas credits scroll
     const es = document.getElementById('epilogue-screen');
     es.style.opacity = '0';
     setTimeout(() => {
       es.style.display = 'none';
       es.classList.remove('show');
       es.style.opacity = '';
-      state.phase = 'title';
-      titleClicked = false;
-      titleFadeOut = 0;
+      startCreditsRoll();
     }, 1500);
   } else {
     showEpiloguePage();
   }
 };
+
+// ════════════════════════════════════════════════════════════
+// CREDITS ROLL — Canvas-rendered vertical scroll (film-style)
+// ════════════════════════════════════════════════════════════
+const creditsStars = [];
+for (let i = 0; i < 60; i++) {
+  creditsStars.push({
+    x: Math.random() * 640,
+    y: Math.random() * 400,
+    size: Math.random() * 1.5 + 0.3,
+    speed: Math.random() * 0.08 + 0.02,
+    phase: Math.random() * Math.PI * 2,
+    brightness: Math.random() * 0.4 + 0.2,
+  });
+}
+
+function startCreditsRoll() {
+  creditsLayout = buildCreditsLayout();
+  state.phase = 'credits';
+  state.creditsScroll = 0;
+  state.creditsFading = false;
+  state.creditsFadeAlpha = 0;
+  state.creditsSpeedUp = false;
+}
+
+function drawCredits(tick) {
+  // Background: deep dark with subtle stars
+  ctx.fillStyle = '#0a0812';
+  ctx.fillRect(0, 0, GW, GH);
+
+  // Animated stars
+  for (const star of creditsStars) {
+    const twinkle = star.brightness + Math.sin(tick * star.speed + star.phase) * 0.15;
+    if (twinkle <= 0) continue;
+    ctx.globalAlpha = Math.min(1, twinkle);
+    ctx.fillStyle = '#c0b8d0';
+    ctx.fillRect(Math.floor(star.x), Math.floor(star.y), star.size > 1 ? 2 : 1, 1);
+    if (star.size > 1.2) {
+      ctx.fillRect(Math.floor(star.x) + 1, Math.floor(star.y), 1, 1);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Subtle sea-dark gradient at the bottom
+  const seaGrd = ctx.createLinearGradient(0, GH * 0.7, 0, GH);
+  seaGrd.addColorStop(0, 'rgba(10, 20, 40, 0)');
+  seaGrd.addColorStop(1, 'rgba(10, 20, 40, 0.3)');
+  ctx.fillStyle = seaGrd;
+  ctx.fillRect(0, 0, GW, GH);
+
+  if (!creditsLayout) return;
+
+  const scrollY = state.creditsScroll;
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  for (const item of creditsLayout.items) {
+    const screenY = item.y - scrollY;
+
+    // Cull off-screen items
+    if (screenY < -40 || screenY > GH + 40) continue;
+
+    // Fade at edges
+    let alpha = 1;
+    if (screenY < 40) alpha = Math.max(0, screenY / 40);
+    if (screenY > GH - 40) alpha = Math.max(0, (GH - screenY) / 40);
+    if (alpha <= 0) continue;
+
+    if (item.type === 'divider') {
+      // Decorative horizontal line
+      ctx.save();
+      ctx.globalAlpha = alpha * 0.3;
+      ctx.strokeStyle = '#d4a03c';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(GW * 0.3, screenY);
+      ctx.lineTo(GW * 0.7, screenY);
+      ctx.stroke();
+      // Diamond in center
+      ctx.fillStyle = '#40d070';
+      ctx.globalAlpha = alpha * 0.5;
+      const cx = GW / 2, cy = screenY;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - 3); ctx.lineTo(cx + 3, cy);
+      ctx.lineTo(cx, cy + 3); ctx.lineTo(cx - 3, cy);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+      continue;
+    }
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.font = item.font;
+
+    // Glow pass
+    if (item.glow) {
+      ctx.shadowColor = item.glow;
+      ctx.shadowBlur = item.glowBlur || 10;
+      ctx.fillStyle = item.glow;
+      ctx.globalAlpha = alpha * 0.5;
+      ctx.fillText(item.text, GW / 2, screenY);
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = alpha;
+    }
+
+    // Blink effect for COMING SOON
+    if (item.blink) {
+      ctx.globalAlpha = alpha * (0.5 + Math.sin(tick * 0.06) * 0.4);
+    }
+
+    // Main text with drop shadow
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetY = 1;
+    ctx.fillStyle = item.color;
+    ctx.fillText(item.text, GW / 2, screenY);
+
+    ctx.restore();
+  }
+
+  ctx.restore();
+
+  // Skip/speed hint
+  ctx.save();
+  ctx.globalAlpha = 0.25 + Math.sin(tick * 0.04) * 0.1;
+  ctx.font = "7px 'Press Start 2P', monospace";
+  ctx.fillStyle = '#4a4a4a';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('ΚΛΙΚ = ΓΡΗΓΟΡΑ · ESC = ΠΑΡΑΛΕΙΨΗ', GW - 10, GH - 8);
+  ctx.restore();
+
+  // Fade overlay
+  if (state.creditsFadeAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.creditsFadeAlpha;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
+
+function endCredits() {
+  if (state.creditsFading) return;
+  state.creditsFading = true;
+  const fadeStep = () => {
+    state.creditsFadeAlpha += 0.02;
+    if (state.creditsFadeAlpha < 1) {
+      requestAnimationFrame(fadeStep);
+    } else {
+      state.creditsFadeAlpha = 1;
+      state.phase = 'title';
+      titleClicked = false;
+      titleFadeOut = 0;
+      titleStartTick = -1;
+    }
+  };
+  requestAnimationFrame(fadeStep);
+}
 
 // ════════════════════════════════════════════════════════════
 // SCENE TESTER — ` key or TEST button to jump into any scene/cutscene
@@ -9612,6 +9952,36 @@ function stPlayCutscene(id) {
   document.getElementById('intro-screen').style.display = 'none';
   document.getElementById('epilogue-screen').style.display = 'none';
   startCutscene(id);
+  stUpdatePanel();
+}
+
+function stStartEpilogue() {
+  state.cutscene.active = false;
+  state.dlg.active = false;
+  state.dlg.queue = [];
+  state.seq.active = false;
+  state.fade.active = false;
+  document.getElementById('intro-screen').style.display = 'none';
+  state.phase = 'epilogue';
+  state.epiloguePage = 0;
+  const el = document.getElementById('epilogue-screen');
+  el.classList.add('show');
+  el.style.display = '';
+  el.style.opacity = '';
+  showEpiloguePage();
+  stUpdatePanel();
+}
+
+function stStartCredits() {
+  state.cutscene.active = false;
+  state.dlg.active = false;
+  state.dlg.queue = [];
+  state.seq.active = false;
+  state.fade.active = false;
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('epilogue-screen').style.display = 'none';
+  document.getElementById('epilogue-screen').classList.remove('show');
+  startCreditsRoll();
   stUpdatePanel();
 }
 
@@ -9684,6 +10054,12 @@ function stUpdatePanel() {
     const cur = state.cutscene.active && state.cutscene.id === id ? ' on' : '';
     h += `<button class="st-b${cur}" onclick="stPlayCutscene('${id}')">${id}</button>`;
   }
+  h += '</div>';
+
+  // Epilogue & Credits
+  h += '<div class="st-s"><h3>EPILOGUE</h3>';
+  h += `<button class="st-b${state.phase === 'epilogue' ? ' on' : ''}" onclick="stStartEpilogue()">Narrative</button>`;
+  h += `<button class="st-b${state.phase === 'credits' ? ' on' : ''}" onclick="stStartCredits()">Credits Roll</button>`;
   h += '</div>';
 
   // Flags
