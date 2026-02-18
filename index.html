@@ -136,11 +136,26 @@
   /* ── FADE ── */
   #fade { position: fixed; inset: 0; background: #000; z-index: 3000; opacity: 0; pointer-events: none; transition: opacity .5s; }
   #fade.on { opacity: 1; }
+  /* ── SCENE TESTER (F2) ── */
+  #scene-tester{position:fixed;top:0;right:0;z-index:5000;background:rgba(0,0,0,.92);border-left:2px solid #39d52e;border-bottom:2px solid #39d52e;font-family:'Press Start 2P',monospace;font-size:.45rem;color:#39d52e;max-height:100vh;overflow-y:auto;display:none;flex-direction:column;width:220px}
+  #scene-tester.open{display:flex}
+  #st-toggle{position:fixed;top:6px;right:6px;z-index:5001;background:rgba(0,0,0,.7);border:1px solid #39d52e;color:#39d52e;font-family:'Press Start 2P',monospace;font-size:.5rem;padding:4px 8px;cursor:pointer;border-radius:2px}
+  #st-toggle:hover{background:#39d52e;color:#000}
+  .st-s{padding:6px 8px;border-bottom:1px solid #1a3a1a}
+  .st-s h3{font-size:.4rem;color:#7fff7f;margin-bottom:5px;letter-spacing:1px}
+  .st-b{display:block;width:100%;text-align:left;padding:4px 6px;margin:2px 0;background:none;border:1px solid #1a3a1a;color:#39d52e;font-family:'Press Start 2P',monospace;font-size:.38rem;cursor:pointer}
+  .st-b:hover{background:#39d52e;color:#000}
+  .st-b.on{border-color:#7fff7f;color:#fff;background:#1a3a1a}
+  .st-c{display:flex;align-items:center;gap:5px;padding:2px 0}
+  .st-c input{accent-color:#39d52e;cursor:pointer}
+  .st-c label{cursor:pointer;font-size:.35rem;color:#aaa}
 </style>
 </head>
 <body>
 
 <div id="fade"></div>
+<button id="st-toggle" onclick="document.getElementById('scene-tester').classList.toggle('open')">F2</button>
+<div id="scene-tester"></div>
 
 <!-- Title screen is canvas-rendered -->
 
@@ -4742,6 +4757,9 @@ const WALK_ANATOMY = {
   curator: { waist: 0.62, stride: 6 },
 };
 
+// ── CHARACTER OUTLINE (Curse of Monkey Island style) ──
+const CHAR_OUTLINE = 'drop-shadow(2px 0 0 rgba(25,18,12,0.9)) drop-shadow(-2px 0 0 rgba(25,18,12,0.9)) drop-shadow(0 2px 0 rgba(25,18,12,0.9)) drop-shadow(0 -2px 0 rgba(25,18,12,0.9))';
+
 function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
   const img = CHAR_IMGS[who];
   if (!img || !img.complete || !img.naturalWidth) {
@@ -4873,13 +4891,14 @@ function drawCharacter(who, tick) {
   const offsets = { ntemis: 0, ajax: 1.05, clio: 2.1 };
   // Fade-in alpha with smoothstep
   let alpha = Math.min(1, c.fadeIn);
+  ctx.save();
   if (alpha < 1) {
     alpha = alpha * alpha * (3 - 2 * alpha); // smoothstep
-    ctx.save();
     ctx.globalAlpha = alpha;
   }
+  ctx.filter = CHAR_OUTLINE;
   drawSprite(who, c.x, c.y, c.dir, c.walking, c.frame, tick, offsets[who]);
-  if (alpha < 1) ctx.restore();
+  ctx.restore();
 }
 
 function drawNPC(who, tick) {
@@ -4919,6 +4938,8 @@ function drawNPC(who, tick) {
 
   ctx.save();
   ctx.imageSmoothingEnabled = false;
+  // Outline for non-ghost NPCs (Curse of Monkey Island style)
+  if (who !== 'ghost') ctx.filter = CHAR_OUTLINE;
 
   // Ghost special effects
   if (who === 'ghost') {
@@ -9270,105 +9291,179 @@ document.getElementById('epilogue-screen').onclick = () => {
 };
 
 // ════════════════════════════════════════════════════════════
-// SCENE TESTER — URL params to jump directly into scenes/cutscenes
-// Usage:
-//   ?scene=port              — jump to port scene
-//   ?scene=cave&flags=key_found,vote_read  — with flags pre-set
-//   ?scene=church_interior&inv=green_stone,lantern — with inventory
-//   ?cutscene=arrival        — play a cutscene directly
-//   ?scene=graveyard&visited=exterior,port,cave — mark scenes visited
-//   ?scene=treasure&all      — all flags + all inventory (full progress)
+// SCENE TESTER — F2 panel to jump into any scene/cutscene
 // ════════════════════════════════════════════════════════════
-function parseTestParams() {
-  const p = new URLSearchParams(window.location.search);
-  if (!p.has('scene') && !p.has('cutscene')) return null;
-  return {
-    scene: p.get('scene'),
-    cutscene: p.get('cutscene'),
-    flags: p.get('flags') ? p.get('flags').split(',') : [],
-    inv: p.get('inv') ? p.get('inv').split(',') : [],
-    visited: p.get('visited') ? p.get('visited').split(',') : [],
-    all: p.has('all'),
-    nofirstvisit: p.has('nofirstvisit'),
-  };
-}
-
-// All known inventory items for &all mode
-const ALL_INV = [
+const ST_INV = [
   { id: 'brass_key', label: 'Χάλκινο Κλειδί', desc: 'An old brass key' },
   { id: 'visvikis_letter', label: 'Γράμμα Βισβίζη', desc: 'Letter from Visvikis' },
   { id: 'lantern', label: 'Φανάρι', desc: 'A brass lantern' },
   { id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Green jade stone' },
   { id: 'nautical_chart', label: 'Ναυτικός Χάρτης', desc: 'Nautical chart with X' },
 ];
-
-// All known flags for &all mode
-const ALL_FLAGS = [
+const ST_FLAGS = [
   'photo_seen','key_found','drawer_open','vote_read','candle_lit',
   'threshold_done','dolphins','lantern_given','green_stone_found',
   'ghost_done','chart_found','treasure_open',
 ];
 
-function applyTestParams(params) {
-  // Set flags
-  const flagList = params.all ? ALL_FLAGS : params.flags;
-  for (const f of flagList) state.flags[f] = 1;
-
-  // Set inventory
-  if (params.all) {
-    state.inv = [...ALL_INV];
-  } else {
-    for (const id of params.inv) {
-      const known = ALL_INV.find(i => i.id === id);
-      if (known) state.inv.push({ ...known });
-      else state.inv.push({ id, label: id, desc: id });
-    }
-  }
-
-  // Mark scenes as visited
-  const visitList = params.all
-    ? Object.keys(scenes)
-    : params.visited;
-  for (const v of visitList) state.visited.add(v);
-
-  // If nofirstvisit, mark target scene as visited to skip entry dialog
-  if (params.nofirstvisit && params.scene) {
-    state.visited.add(params.scene);
-  }
-
+function stJumpScene(id) {
+  state.phase = 'playing';
+  state.cutscene.active = false;
+  state.dlg.active = false;
+  state.dlg.queue = [];
+  state.seq.active = false;
+  state.fade.active = false;
   state.musicOn = true;
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('epilogue-screen').style.display = 'none';
+  startScene(id);
   renderInvUI();
+  stUpdatePanel();
+}
 
-  if (params.cutscene) {
-    if (cutscenes[params.cutscene]) {
-      startCutscene(params.cutscene);
-    } else {
-      console.warn('[SceneTester] Unknown cutscene:', params.cutscene,
-        '— available:', Object.keys(cutscenes).join(', '));
-    }
-  } else if (params.scene) {
-    if (scenes[params.scene]) {
-      state.phase = 'playing';
-      startScene(params.scene);
-    } else {
-      console.warn('[SceneTester] Unknown scene:', params.scene,
-        '— available:', Object.keys(scenes).join(', '));
-    }
+function stPlayCutscene(id) {
+  state.dlg.active = false;
+  state.dlg.queue = [];
+  state.musicOn = true;
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('epilogue-screen').style.display = 'none';
+  startCutscene(id);
+  stUpdatePanel();
+}
+
+function stSetAllFlags() {
+  for (const f of ST_FLAGS) state.flags[f] = 1;
+  stUpdatePanel();
+}
+
+function stClearFlags() {
+  for (const k of Object.keys(state.flags)) delete state.flags[k];
+  stUpdatePanel();
+}
+
+function stSetAllInv() {
+  state.inv = ST_INV.map(i => ({...i}));
+  renderInvUI();
+  stUpdatePanel();
+}
+
+function stClearInv() {
+  state.inv = [];
+  renderInvUI();
+  stUpdatePanel();
+}
+
+function stToggleFlag(f) {
+  if (state.flags[f]) delete state.flags[f];
+  else state.flags[f] = 1;
+  stUpdatePanel();
+}
+
+function stToggleInv(id) {
+  const idx = state.inv.findIndex(i => i.id === id);
+  if (idx >= 0) { state.inv.splice(idx, 1); }
+  else { const t = ST_INV.find(i => i.id === id); if (t) state.inv.push({...t}); }
+  renderInvUI();
+  stUpdatePanel();
+}
+
+function stMarkAllVisited() {
+  for (const k of Object.keys(scenes)) state.visited.add(k);
+  stUpdatePanel();
+}
+
+function stClearVisited() {
+  state.visited.clear();
+  stUpdatePanel();
+}
+
+function stUpdatePanel() {
+  const el = document.getElementById('scene-tester');
+  if (!el) return;
+
+  const sceneLabels = {};
+  for (const [id, sc] of Object.entries(scenes)) sceneLabels[id] = sc.label || id;
+
+  let h = '';
+
+  // Scenes
+  h += '<div class="st-s"><h3>SCENES</h3>';
+  for (const [id, label] of Object.entries(sceneLabels)) {
+    const cur = state.scene === id && state.phase === 'playing' ? ' on' : '';
+    h += `<button class="st-b${cur}" onclick="stJumpScene('${id}')">${label}</button>`;
   }
+  h += '</div>';
 
-  console.log('%c[SceneTester]%c Active — scene:%c ' + (params.scene || '-') +
-    ' %cflags: ' + Object.keys(state.flags).join(',') +
-    ' inv: ' + state.inv.map(i => i.id).join(','),
-    'color:#0f0;font-weight:bold', 'color:#ccc', 'color:#ff0', 'color:#888');
+  // Cutscenes
+  h += '<div class="st-s"><h3>CUTSCENES</h3>';
+  for (const id of Object.keys(cutscenes)) {
+    const cur = state.cutscene.active && state.cutscene.id === id ? ' on' : '';
+    h += `<button class="st-b${cur}" onclick="stPlayCutscene('${id}')">${id}</button>`;
+  }
+  h += '</div>';
+
+  // Flags
+  h += '<div class="st-s"><h3>FLAGS <button class="st-b" style="display:inline;width:auto;font-size:.3rem;padding:2px 4px" onclick="stSetAllFlags()">ALL</button> <button class="st-b" style="display:inline;width:auto;font-size:.3rem;padding:2px 4px" onclick="stClearFlags()">CLR</button></h3>';
+  for (const f of ST_FLAGS) {
+    const ck = state.flags[f] ? 'checked' : '';
+    h += `<div class="st-c"><input type="checkbox" ${ck} onchange="stToggleFlag('${f}')"><label onclick="stToggleFlag('${f}')">${f}</label></div>`;
+  }
+  h += '</div>';
+
+  // Inventory
+  h += '<div class="st-s"><h3>INVENTORY <button class="st-b" style="display:inline;width:auto;font-size:.3rem;padding:2px 4px" onclick="stSetAllInv()">ALL</button> <button class="st-b" style="display:inline;width:auto;font-size:.3rem;padding:2px 4px" onclick="stClearInv()">CLR</button></h3>';
+  for (const item of ST_INV) {
+    const ck = state.inv.find(i => i.id === item.id) ? 'checked' : '';
+    h += `<div class="st-c"><input type="checkbox" ${ck} onchange="stToggleInv('${item.id}')"><label onclick="stToggleInv('${item.id}')">${item.label}</label></div>`;
+  }
+  h += '</div>';
+
+  // Visited
+  h += '<div class="st-s"><h3>VISITED <button class="st-b" style="display:inline;width:auto;font-size:.3rem;padding:2px 4px" onclick="stMarkAllVisited()">ALL</button> <button class="st-b" style="display:inline;width:auto;font-size:.3rem;padding:2px 4px" onclick="stClearVisited()">CLR</button></h3>';
+  for (const id of Object.keys(scenes)) {
+    const ck = state.visited.has(id) ? 'checked' : '';
+    h += `<div class="st-c"><input type="checkbox" ${ck} onchange="state.visited.has('${id}')?state.visited.delete('${id}'):state.visited.add('${id}');stUpdatePanel()"><label>${id}</label></div>`;
+  }
+  h += '</div>';
+
+  // State info
+  h += `<div class="st-s" style="color:#666;font-size:.3rem">phase: ${state.phase} | scene: ${state.scene}<br>flags: ${Object.keys(state.flags).length} | inv: ${state.inv.length} | visited: ${state.visited.size}</div>`;
+
+  el.innerHTML = h;
+}
+
+// F2 toggles the panel
+document.addEventListener('keydown', e => {
+  if (e.code === 'F2') {
+    e.preventDefault();
+    const el = document.getElementById('scene-tester');
+    el.classList.toggle('open');
+    if (el.classList.contains('open')) stUpdatePanel();
+  }
+});
+// Toggle button
+document.getElementById('st-toggle').addEventListener('click', () => {
+  const el = document.getElementById('scene-tester');
+  el.classList.toggle('open');
+  if (el.classList.contains('open')) stUpdatePanel();
+});
+
+// URL param support (still works)
+function parseTestParams() {
+  const p = new URLSearchParams(window.location.search);
+  if (!p.has('scene') && !p.has('cutscene')) return null;
+  return { scene: p.get('scene'), cutscene: p.get('cutscene'), all: p.has('all') };
 }
 
 // ════════════════════════════════════════════════════════════
 // BOOT
 // ════════════════════════════════════════════════════════════
 loadAllAssets().then(() => {
-  const testParams = parseTestParams();
-  if (testParams) {
-    applyTestParams(testParams);
+  const tp = parseTestParams();
+  if (tp) {
+    if (tp.all) { stSetAllFlags(); stSetAllInv(); stMarkAllVisited(); }
+    if (tp.cutscene && cutscenes[tp.cutscene]) stPlayCutscene(tp.cutscene);
+    else if (tp.scene && scenes[tp.scene]) stJumpScene(tp.scene);
   }
   requestAnimationFrame(gameLoop);
 });
