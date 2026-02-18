@@ -136,7 +136,7 @@
   /* ── FADE ── */
   #fade { position: fixed; inset: 0; background: #000; z-index: 3000; opacity: 0; pointer-events: none; transition: opacity .5s; }
   #fade.on { opacity: 1; }
-  /* ── SCENE TESTER (F2) ── */
+  /* ── SCENE TESTER (` key or click button) ── */
   #scene-tester{position:fixed;top:0;right:0;z-index:5000;background:rgba(0,0,0,.92);border-left:2px solid #39d52e;border-bottom:2px solid #39d52e;font-family:'Press Start 2P',monospace;font-size:.45rem;color:#39d52e;max-height:100vh;overflow-y:auto;display:none;flex-direction:column;width:220px}
   #scene-tester.open{display:flex}
   #st-toggle{position:fixed;top:6px;right:6px;z-index:5001;background:rgba(0,0,0,.7);border:1px solid #39d52e;color:#39d52e;font-family:'Press Start 2P',monospace;font-size:.5rem;padding:4px 8px;cursor:pointer;border-radius:2px}
@@ -154,7 +154,7 @@
 <body>
 
 <div id="fade"></div>
-<button id="st-toggle" onclick="document.getElementById('scene-tester').classList.toggle('open')">F2</button>
+<button id="st-toggle" onclick="document.getElementById('scene-tester').classList.toggle('open')">TEST</button>
 <div id="scene-tester"></div>
 
 <!-- Title screen is canvas-rendered -->
@@ -277,7 +277,9 @@ let walkDoneCallback = null;
 // IMAGE LOADING
 // ════════════════════════════════════════════════════════════
 const images = {};
+const DATA_ONLY = new URLSearchParams(window.location.search).has('data-only');
 function loadImg(key, src) {
+  if (DATA_ONLY) return Promise.resolve(null); // skip asset loading in test mode
   return new Promise(resolve => {
     const img = new Image();
     img.onload = () => { images[key] = img; resolve(img); };
@@ -4758,22 +4760,44 @@ const WALK_ANATOMY = {
 };
 
 // ── CHARACTER OUTLINE (Curse of Monkey Island style) ──
+// Pre-rendered to offscreen canvases to avoid expensive drop-shadow filter every frame
 const CHAR_OUTLINE = 'drop-shadow(2px 0 0 rgba(25,18,12,0.9)) drop-shadow(-2px 0 0 rgba(25,18,12,0.9)) drop-shadow(0 2px 0 rgba(25,18,12,0.9)) drop-shadow(0 -2px 0 rgba(25,18,12,0.9))';
+const OUTLINED_SPRITES = {}; // cached: who -> canvas with outline baked in
+function getOutlinedSprite(who) {
+  if (OUTLINED_SPRITES[who]) return OUTLINED_SPRITES[who];
+  const src = CHAR_IMGS[who];
+  if (!src || !src.complete || !src.naturalWidth) return null;
+  // Padding for the outline shadow (2px each side)
+  const pad = 4;
+  const oc = document.createElement('canvas');
+  oc.width = src.naturalWidth + pad * 2;
+  oc.height = src.naturalHeight + pad * 2;
+  const octx = oc.getContext('2d');
+  octx.filter = CHAR_OUTLINE;
+  octx.imageSmoothingEnabled = false;
+  octx.drawImage(src, pad, pad);
+  OUTLINED_SPRITES[who] = { canvas: oc, pad };
+  return OUTLINED_SPRITES[who];
+}
 
 function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
-  const img = CHAR_IMGS[who];
-  if (!img || !img.complete || !img.naturalWidth) {
+  const rawImg = CHAR_IMGS[who];
+  if (!rawImg || !rawImg.complete || !rawImg.naturalWidth) {
     drawFallbackPerson(gx, gy, who);
     return;
   }
-  const sprW = img.naturalWidth;
-  const sprH = img.naturalHeight;
+  // Use pre-outlined sprite (drop-shadow baked in) for performance
+  const outlined = getOutlinedSprite(who);
+  const img = outlined ? outlined.canvas : rawImg;
+  const pad = outlined ? outlined.pad : 0;
+  const sprW = rawImg.naturalWidth;
+  const sprH = rawImg.naturalHeight;
   const anat = WALK_ANATOMY[who] || { waist: 0.60, stride: 6 };
   const S = CHAR_SCALE * (CHAR_SCALE_MULT[who] || 1.0);
 
   if (walking) {
-    // ── WALK PHASE (slower cycle for natural cadence) ──
-    const walkPhase = frame * Math.PI * 2.4 + frameOffset * Math.PI / 3;
+    // ── WALK PHASE (brisk cadence matching faster walk speed) ──
+    const walkPhase = frame * Math.PI * 4.8 + frameOffset * Math.PI / 3;
     const bob = -Math.abs(Math.sin(walkPhase)) * 2;
     const lean = dir * 0.02;
     const strideDir = Math.sin(walkPhase); // -1 to 1
@@ -4803,12 +4827,12 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     // ── UPPER BODY (slight counter-sway) ──
     const counterSway = Math.round(-strideDir * 1.5);
     ctx.drawImage(img,
-      0, 0, sprW, waistY,
+      pad, pad, sprW, waistY,
       -sprW/2 + counterSway, -sprH, sprW, waistY
     );
 
     // ── BACK LEG (drawn first, darker, shifted opposite, lifted) ──
-    const bandH = 1;
+    const bandH = 2; // 2px bands (halves draw calls vs 1px, imperceptible quality diff)
     ctx.save();
     ctx.globalAlpha = 0.7;
     for (let y = 0; y < legH; y += bandH) {
@@ -4817,7 +4841,7 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
       const lift = Math.abs(strideDir) * 3 * progress;
       const h = Math.min(bandH, legH - y);
       ctx.drawImage(img,
-        0, waistY + y, sprW, h,
+        pad, pad + waistY + y, sprW, h,
         -sprW/2 + backOff, -sprH + waistY + y - lift, sprW, h
       );
     }
@@ -4829,7 +4853,7 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
       const frontOff = strideDir * maxStride * (0.3 + 0.7 * progress);
       const h = Math.min(bandH, legH - y);
       ctx.drawImage(img,
-        0, waistY + y, sprW, h,
+        pad, pad + waistY + y, sprW, h,
         -sprW/2 + frontOff, -sprH + waistY + y, sprW, h
       );
     }
@@ -4863,7 +4887,7 @@ function drawSprite(who, gx, gy, dir, walking, frame, tick, frameOffset) {
     else ctx.scale(S, S);
     ctx.rotate(sway);
     ctx.scale(squashX, squashY);
-    ctx.drawImage(img, -sprW/2, -sprH);
+    ctx.drawImage(img, pad, pad, sprW, sprH, -sprW/2, -sprH, sprW, sprH);
     ctx.restore();
   }
 }
@@ -4896,7 +4920,7 @@ function drawCharacter(who, tick) {
     alpha = alpha * alpha * (3 - 2 * alpha); // smoothstep
     ctx.globalAlpha = alpha;
   }
-  ctx.filter = CHAR_OUTLINE;
+  // Outline baked into cached sprite — no per-frame filter
   drawSprite(who, c.x, c.y, c.dir, c.walking, c.frame, tick, offsets[who]);
   ctx.restore();
 }
@@ -4907,11 +4931,15 @@ function drawNPC(who, tick) {
   // Allow ghost rendering during materialization even when not yet visible
   const isMaterializing = who === 'ghost' && state.seq.active && state.seq.ghostMat.active;
   if (!npc.visible && !isMaterializing) return;
-  const img = CHAR_IMGS[who];
-  if (!img || !img.complete || !img.naturalWidth) return;
+  const rawImg = CHAR_IMGS[who];
+  if (!rawImg || !rawImg.complete || !rawImg.naturalWidth) return;
 
-  const sprW = img.naturalWidth;
-  const sprH = img.naturalHeight;
+  // Use cached outlined sprite for non-ghost NPCs (ghost uses raw + live effects)
+  const outlined = (who !== 'ghost') ? getOutlinedSprite(who) : null;
+  const img = outlined ? outlined.canvas : rawImg;
+  const pad = outlined ? outlined.pad : 0;
+  const sprW = rawImg.naturalWidth;
+  const sprH = rawImg.naturalHeight;
   const gx = npc.x;
   const gy = npc.y;
 
@@ -4938,13 +4966,11 @@ function drawNPC(who, tick) {
 
   ctx.save();
   ctx.imageSmoothingEnabled = false;
-  // Outline for non-ghost NPCs (Curse of Monkey Island style)
-  if (who !== 'ghost') ctx.filter = CHAR_OUTLINE;
+  // Outline baked into cached sprite — no per-frame filter for non-ghost
 
-  // Ghost special effects
+  // Ghost special effects (ghost uses raw sprite + live glow)
   if (who === 'ghost') {
     if (state.seq.active && state.seq.ghostMat.active) {
-      // During sequence: use materialization alpha/glow
       ctx.globalAlpha = state.seq.ghostMat.alpha;
       ctx.shadowColor = 'rgba(100,180,255,0.5)';
       ctx.shadowBlur = state.seq.ghostMat.glowBlur;
@@ -4963,7 +4989,7 @@ function drawNPC(who, tick) {
   else ctx.scale(S, S);
   ctx.rotate(sway + (npc.tilt || 0));
   ctx.scale(squashX, squashY);
-  ctx.drawImage(img, -sprW / 2, -sprH);
+  ctx.drawImage(img, pad, pad, sprW, sprH, -sprW / 2, -sprH, sprW, sprH);
   ctx.restore();
 }
 
@@ -5017,7 +5043,7 @@ function startWalk(who, targetX, cb) {
   c.walkT = 0;
   // Slower walk in graveyard after ghost — weight of the moment
   const walkMult = (state.scene === 'graveyard' && state.flags.ghost_summoned) ? 1.4 : 1.0;
-  c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0 * walkMult));
+  c.walkDur = Math.max(0.3, Math.min(2.0, (dist / GW) * 2.5 * walkMult));
   c.frame = 0;
   if (who === 'ntemis') sfxStepAcc = 0;
   if (who === 'ntemis') walkDoneCallback = cb;
@@ -5040,8 +5066,8 @@ function updateWalking(dt) {
     // Footstep SFX — only for ntemis, every ~0.3s
     if (who === 'ntemis') {
       sfxStepAcc += dt;
-      if (sfxStepAcc >= 0.3) {
-        sfxStepAcc -= 0.3;
+      if (sfxStepAcc >= 0.18) {
+        sfxStepAcc -= 0.18;
         playSFX('step');
       }
     }
@@ -7022,11 +7048,19 @@ function drawMap() {
   ctx.restore();
 
   // Location markers
+  function isMapLocked(sceneId) {
+    if (sceneId === 'cave' && !state.inv.find(i => i.id === 'lantern')) return true;
+    if (sceneId === 'boat' && !state.inv.find(i => i.id === 'nautical_chart')) return true;
+    if (sceneId === 'treasure' && !state.inv.find(i => i.id === 'nautical_chart')) return true;
+    if (sceneId === 'new_era' && !state.flags.letter_read) return true;
+    return false;
+  }
   for (let i = 0; i < MAP_LOCATIONS.length; i++) {
     const loc = MAP_LOCATIONS[i];
     const isVisited = loc.sceneIds.some(s => state.visited.has(s));
     const isCurrent = loc.sceneIds.includes(state.scene);
     const isHover = state.mapHover === i;
+    const isLocked = isMapLocked(loc.sceneIds[0]);
 
     ctx.save();
     if (isCurrent) {
@@ -7045,8 +7079,27 @@ function drawMap() {
       ctx.beginPath();
       ctx.arc(loc.x, loc.y, 2.5, 0, Math.PI * 2);
       ctx.fill();
+    } else if (isLocked) {
+      // Locked: dim dot with lock icon
+      ctx.globalAlpha = 0.45;
+      ctx.strokeStyle = '#1a1200';
+      ctx.lineWidth = 1.5;
+      ctx.fillStyle = '#6a5a3a';
+      ctx.beginPath();
+      ctx.arc(loc.x, loc.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.globalAlpha = 0.7;
+      // Tiny pixel lock: shackle (arc) + body (rect)
+      ctx.strokeStyle = '#8a7a4a';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(loc.x, loc.y - 2, 2.5, Math.PI, 0);
+      ctx.stroke();
+      ctx.fillStyle = '#8a7a4a';
+      ctx.fillRect(loc.x - 3, loc.y - 1, 6, 4);
     } else {
-      // All locations: gold dot with dark outline (clickable)
+      // Unlocked: gold dot with dark outline (clickable)
       ctx.strokeStyle = '#1a1200';
       ctx.lineWidth = 1.5;
       ctx.fillStyle = isHover ? '#FFE8A0' : (isVisited ? '#D4A03C' : '#B08828');
@@ -7067,7 +7120,7 @@ function drawMap() {
     // Label for current + hover (with dark background for readability on map)
     if (isCurrent || isHover) {
       ctx.save();
-      const label = loc.label;
+      const label = loc.label + (isLocked ? ' 🔒' : '');
       ctx.font = '7px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
       const tw = ctx.measureText(label).width;
@@ -7078,7 +7131,7 @@ function drawMap() {
       ctx.roundRect(lx, ly, tw + 8, 12, 3);
       ctx.fill();
       // Label text
-      ctx.fillStyle = isCurrent ? '#FFE8A0' : '#D4A03C';
+      ctx.fillStyle = isCurrent ? '#FFE8A0' : (isLocked ? '#8a7a4a' : '#D4A03C');
       ctx.shadowColor = '#000'; ctx.shadowBlur = 2;
       ctx.fillText(label, loc.x, loc.y - 11);
       ctx.restore();
@@ -8306,15 +8359,37 @@ CVS.addEventListener('click', (e) => {
   // Title clicks handled by dedicated handler
   if (state.phase !== 'playing') return;
 
-  // Map click — teleport
+  // Map click — teleport (with quest gates)
   if (state.mapOpen) {
     if (state.mapHover !== null) {
       const loc = MAP_LOCATIONS[state.mapHover];
       const isCurrent = loc.sceneIds.includes(state.scene);
       if (!isCurrent) {
+        // Quest gates — same rules as exit zones
+        const target = loc.sceneIds[0];
+        if (target === 'cave' && !state.inv.find(i => i.id === 'lantern')) {
+          state.mapOpen = false; state.mapHover = null;
+          showDlg([{s:'ΝΤΕΜΗΣ',t:'Είναι σκοτεινά εκεί μέσα. Χρειαζόμαστε φανάρι.'},{s:'ΚΛΕΙΩ',t:'Ο Γιάννης στον μύλο ίσως έχει κάτι.'}]);
+          return;
+        }
+        if (target === 'boat' && !state.inv.find(i => i.id === 'nautical_chart')) {
+          state.mapOpen = false; state.mapHover = null;
+          showDlg([{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρουμε πού να πάμε ακόμα. Χρειαζόμαστε χάρτη.'}]);
+          return;
+        }
+        if (target === 'treasure' && !state.inv.find(i => i.id === 'nautical_chart')) {
+          state.mapOpen = false; state.mapHover = null;
+          showDlg([{s:'ΝΤΕΜΗΣ',t:'Χρειαζόμαστε τον χάρτη του Βισβίκη για να βρούμε το νησί.'}]);
+          return;
+        }
+        if (target === 'new_era' && !state.flags.letter_read) {
+          state.mapOpen = false; state.mapHover = null;
+          showDlg([{s:'ΝΤΕΜΗΣ',t:'Πρέπει να δούμε τι μας άφησε ο Βισβίκης πρώτα.'}]);
+          return;
+        }
         state.mapOpen = false;
         state.mapHover = null;
-        changeScene(loc.sceneIds[0]);
+        changeScene(target);
       }
     }
     return;
@@ -8665,13 +8740,13 @@ function drawTitleScreen(tick) {
 
     // ── Tiny people strolling along the dock ──
     const walkers = [
-      // Right dock / stone walkway
-      { x0: 400, range: 45, speed: 0.06, y: 350, phase: 0,   shirt: '#9A3030', pants: '#4A4A56' },
-      { x0: 480, range: 40, speed: -0.05, y: 353, phase: 80,  shirt: '#2858A0', pants: '#3A3A48' },
-      { x0: 540, range: 30, speed: 0.07, y: 347, phase: 200, shirt: '#D09040', pants: '#484854' },
-      // Harbor edge near boats (left side)
-      { x0: 120, range: 30, speed: 0.04, y: 285, phase: 50,  shirt: '#7A4020', pants: '#3A3A48' },
-      { x0: 220, range: 25, speed: -0.03, y: 288, phase: 160, shirt: '#308050', pants: '#484854' },
+      // Stone pier at the water's edge (~y=262-270)
+      { x0: 340, range: 45, speed: 0.06, y: 264, phase: 0,   shirt: '#9A3030', pants: '#4A4A56' },
+      { x0: 430, range: 40, speed: -0.05, y: 267, phase: 80,  shirt: '#2858A0', pants: '#3A3A48' },
+      { x0: 520, range: 30, speed: 0.07, y: 262, phase: 200, shirt: '#D09040', pants: '#484854' },
+      // Left side of pier
+      { x0: 80,  range: 30, speed: 0.04, y: 265, phase: 50,  shirt: '#7A4020', pants: '#3A3A48' },
+      { x0: 180, range: 25, speed: -0.03, y: 268, phase: 160, shirt: '#308050', pants: '#484854' },
     ];
     ctx.globalAlpha = 0.8;
     for (const p of walkers) {
@@ -9291,7 +9366,7 @@ document.getElementById('epilogue-screen').onclick = () => {
 };
 
 // ════════════════════════════════════════════════════════════
-// SCENE TESTER — F2 panel to jump into any scene/cutscene
+// SCENE TESTER — ` key or TEST button to jump into any scene/cutscene
 // ════════════════════════════════════════════════════════════
 const ST_INV = [
   { id: 'brass_key', label: 'Χάλκινο Κλειδί', desc: 'An old brass key' },
@@ -9432,9 +9507,9 @@ function stUpdatePanel() {
   el.innerHTML = h;
 }
 
-// F2 toggles the panel
+// Backtick (`) toggles the panel
 document.addEventListener('keydown', e => {
-  if (e.code === 'F2') {
+  if (e.code === 'Backquote') {
     e.preventDefault();
     const el = document.getElementById('scene-tester');
     el.classList.toggle('open');
@@ -9459,6 +9534,7 @@ function parseTestParams() {
 // BOOT
 // ════════════════════════════════════════════════════════════
 loadAllAssets().then(() => {
+  if (DATA_ONLY) return; // test mode — data is ready, skip game loop
   const tp = parseTestParams();
   if (tp) {
     if (tp.all) { stSetAllFlags(); stSetAllInv(); stMarkAllVisited(); }

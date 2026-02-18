@@ -17,7 +17,7 @@ Family adventure starring Ntemis, Ajax, and Clio in Galaxidi, Greece. A gift to 
 1. **Spelling**: Always **Γαλαξειδίου** (with ει), never Γαλαξιδίου
 2. **Single file**: `index.html` is the complete game. No build step, no modules
 3. **Canvas**: Native resolution **640x400**, scaled to fill browser window. CSS `image-rendering: pixelated`
-4. **Art style**: Warm Mediterranean — golden hour exterior, cozy kitchen, sea views. NOT dark/night
+4. **Art style**: **16-bit VGA pixel art adventure game** — Monkey Island 2 / Fate of Atlantis heritage. Vivid saturated colors, bold lighting, rich pixel-level detail. See `STYLE-GUIDE.md` for full rules. MANDATORY for all background generation
 5. **Language**: Bilingual Greek/English. Player selects at start. Greek is primary. Code comments in English
 6. **Test after changes**: Always `open index.html` in browser after edits. Check console for errors
 7. **Assets are external**: Images in `assets/`, music in `music/`. Referenced by relative path from index.html
@@ -118,6 +118,28 @@ Scene 12 (harbor): Ntemis's speech → Akis's documentary → new αλληλασ
 | **Παπάς / Papas** | Church | ~65, warm, mischievous. Visvikis was greatest benefactor |
 | **Χρυσόστομος / Chrysostomos** | Boat | ~70, old sailor. Sails the Ελπίδα (Visvikis's ship). Knew Ntemis's father |
 | **Ghost of Visvikis** | Graveyard | Silent, weathered, proud. Waited 120 years. Points to church |
+
+## Art Style Rules (MANDATORY — Read STYLE-GUIDE.md for full details)
+
+**Heritage**: LucasArts SCUMM games — Monkey Island 2, Fate of Atlantis, Day of the Tentacle, Loom, King's Quest V/VI.
+
+**When generating ANY background image (`losc_imagine`):**
+1. ALWAYS use this prompt structure: `"Pixel art [scene]. 16-bit retro pixel art, 320x200 resolution aesthetic, visible square pixels, chunky pixel textures like Monkey Island 2 VGA backgrounds. [layout]. Limited 256-color VGA palette. Dithering patterns for gradients. Every surface has pixel-level texture. [lighting — sharp, not soft]. [mood]. Classic point-and-click adventure game background art. No smooth gradients, no anti-aliasing, no photorealism. Pure pixel art. No people, no text."`
+2. ALWAYS: `preset: "anime"`, `backend: "openai"`
+3. NEVER generate smooth painterly/photorealistic art — this is pixel art heritage
+4. NEVER muted/desaturated colors — VGA games were VIVID
+5. NEVER soft-focus lighting — VGA light is sharp, defined, dramatic
+6. **Lighting is THE signature** — every scene has ONE bold light source with visible shafts and cast shadows
+7. **Color temperature contrast** — warm light vs cool shadow, always
+8. **Title screen** (`title-bg.webp`) is the pixel art quality benchmark — match its level
+9. **Default mood is HAPPINESS** — joyful, bright, warm, alive. Like a perfect Greek summer day
+10. **Only exceptions**: Cave (Karkaros) and Graveyard = mystery/fear. Everything else = happiness
+11. Even mystery scenes must be BEAUTIFUL — scary-beautiful, not ugly-scary
+
+**Canonical reference scenes** (the 9 that define our look):
+`title-bg.webp`, `pixel-exterior-new.png`, `pixel-kitchen-new.png`, `pixel-terrace-new.png`, `pixel-liotrivi-new.png`, `pixel-cave-new2.png`, `pixel-windmill-new.png`, `pixel-graveyard-new.png`, `pixel-treasure-new2.png`
+
+---
 
 ## Historical Research
 
