@@ -6,6 +6,7 @@
 <title>Το Μυστήριο του Γαλαξειδίου — Canvas Engine</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
   body { background: #000; overflow: hidden; font-family: 'Press Start 2P', monospace; display: flex; flex-direction: column; height: 100vh; }
 
@@ -1076,6 +1077,11 @@ const scenes = {
     kitchen: {
       model_ships: { x:148, y:0,   w:245, h:55  },
       photo:       { x:452, y:5,   w:98,  h:108 },
+      charts:      { x:220, y:28,  w:225, h:135 },
+      desk_drawer: { x:185, y:305, w:260, h:55  },
+      copper_pot:  { x:35,  y:245, w:55,  h:45  },
+      fireplace:   { x:0,   y:255, w:95,  h:145 },
+      instruments: { x:420, y:190, w:145, h:90  },
     },
     port: {
       boats_port:  { x:55,  y:80,  w:210, h:100 },
@@ -1084,6 +1090,8 @@ const scenes = {
       warehouses:  { x:0,   y:5,   w:160, h:110 },
       seagulls:    { x:250, y:0,   w:180, h:25  },
       elpida_dock: { x:370, y:30,  w:230, h:260 },
+      stathis:     { x:55,  y:312, w:70,  h:80  },
+      akis:        { x:125, y:315, w:60,  h:78  },
     },
     museum: {
       model_ship:    { x:18,  y:48,  w:182, h:152 },
@@ -1092,6 +1100,7 @@ const scenes = {
       instruments:   { x:28,  y:340, w:152, h:58  },
       flags:         { x:95,  y:0,   w:410, h:28  },
       map_table:     { x:348, y:332, w:122, h:62  },
+      curator_npc:   { x:75,  y:312, w:90,  h:80  },
     },
     liotrivi: {
       olive_press:  { x:8,   y:12,  w:142, h:178 },
@@ -1100,6 +1109,7 @@ const scenes = {
       photos_liot:  { x:145, y:0,   w:105, h:52  },
       stools:       { x:278, y:278, w:82,  h:58  },
       checkered_floor: { x:98, y:342, w:408, h:58 },
+      athos_npc:    { x:485, y:280, w:55,  h:95  },
     },
     cave: {
       vote_inscription: { x:188, y:25,  w:205, h:102 },
@@ -1121,32 +1131,37 @@ const scenes = {
       icons:       { x:348, y:10,  w:182, h:138 },
       iconostasis: { x:118, y:2,   w:282, h:198 },
       candles_ci:  { x:48,  y:168, w:102, h:118 },
+      floor_tile:  { x:220, y:340, w:100, h:50  },
+      papas_npc:   { x:450, y:280, w:80,  h:110 },
     },
     windmill: {
       telescope:     { x:422, y:218, w:82,  h:162 },
       panorama:      { x:0,   y:0,   w:640, h:52  },
       windmill_tower:{ x:468, y:88,  w:122, h:128 },
       wildflowers:   { x:148, y:278, w:202, h:78  },
-      stone_path_wm: { x:298, y:348, w:202, h:58  },
+      stone_path_wm: { x:298, y:348, w:202, h:52  },
+      giannis_npc:   { x:125, y:309, w:75,  h:85  },
     },
     boat: {
-      nameplate:    { x:48,  y:348, w:122, h:42  },
-      chapel:       { x:25,  y:12,  w:155, h:148 },
-      sunset_sea:   { x:195, y:0,   w:405, h:78  },
-      rope:         { x:348, y:278, w:82,  h:62  },
-      lifebuoy:     { x:458, y:322, w:62,  h:62  },
-      galaxidi_view:{ x:398, y:8,   w:202, h:98  },
+      nameplate:       { x:48,  y:348, w:122, h:42  },
+      chapel:          { x:25,  y:12,  w:155, h:148 },
+      sunset_sea:      { x:195, y:0,   w:405, h:78  },
+      rope:            { x:348, y:278, w:82,  h:62  },
+      lifebuoy:        { x:458, y:322, w:62,  h:62  },
+      galaxidi_view:   { x:398, y:8,   w:202, h:98  },
+      chrysostomos_npc:{ x:75,  y:280, w:75,  h:110 },
     },
     graveyard: {
       visvikis_grave: { x:388, y:248, w:152, h:88  },
       headstones:     { x:48,  y:215, w:152, h:122 },
       cypress:        { x:0,   y:0,   w:72,  h:302 },
       angel_statue:   { x:558, y:152, w:72,  h:148 },
-      poppies_gr:     { x:198, y:352, w:182, h:55  },
+      poppies_gr:     { x:198, y:352, w:182, h:48  },
       sea_view_gr:    { x:218, y:0,   w:222, h:88  },
       moon:           { x:168, y:0,   w:102, h:62  },
       candles:        { x:348, y:342, w:82,  h:38  },
-      path_stones_gr: { x:148, y:372, w:202, h:48  },
+      path_stones_gr: { x:148, y:372, w:202, h:28  },
+      ghost_npc:      { x:430, y:232, w:65,  h:120 },
     },
     treasure: {
       sea_chest:    { x:80,  y:240, w:180, h:120 },
@@ -1246,18 +1261,22 @@ const epiloguePages = [
 // STAR WARS STYLE TEXT CRAWL
 // ════════════════════════════════════════════════════════════
 const CRAWL_LINES = [
-  'ΓΑΛΑΞΙΔΙ',
+  'ΓΑΛΑΞΙΔΙ — Η ΘΑΛΑΣΣΑ ΘΥΜΑΤΑΙ',
   '',
   '',
-  'Κάποτε, τριακόσια καράβια',
-  'σάλπαραν από αυτό το λιμάνι.',
+  'Εκεί που ο Κορινθιακός',
+  'φιλάει τα βουνά,',
+  'ένα μικρό λιμάνι κάποτε',
+  'γέμιζε τον κόσμο με πανιά.',
+  '',
+  'Τριακόσια καράβια.',
+  'Έξι χιλιάδες ψυχές.',
+  'Ο μεγαλύτερος στόλος της Ελλάδας.',
   '',
   'Οι καπεταναίοι ταξίδευαν',
   'ως τη Μαύρη Θάλασσα,',
-  'την Αλεξάνδρεια, τη Σμύρνη.',
-  '',
-  'Έξι χιλιάδες ψυχές.',
-  'Ο μεγαλύτερος στόλος της Ελλάδας.',
+  'την Αλεξάνδρεια, τη Σμύρνη —',
+  'και πάντα γύριζαν σπίτι.',
   '',
   '',
   'Μέχρι που ήρθε η ψηφοφορία.',
@@ -1271,7 +1290,9 @@ const CRAWL_LINES = [
   'Ένας από τους τρεις',
   'ήταν ο Καπετάν Βισβίκης.',
   '',
-  'Πριν πεθάνει, έκρυψε κάτι.',
+  'Πριν φύγει, έκρυψε κάτι',
+  'για όποιον αγαπήσει',
+  'το Γαλαξίδι αρκετά.',
   '',
   '«Η θάλασσα θυμάται.»',
   '',
@@ -1284,14 +1305,11 @@ const CRAWL_LINES = [
   'Ένας πατέρας και δυο παιδιά',
   'φτάνουν στο Γαλαξίδι',
   'για ένα ήσυχο Σαββατοκύριακο.',
-  '',
-  '',
-  'Τουλάχιστον, αυτό νόμιζε.',
 ];
 
-const CRAWL_LINE_SPACING = 22;
-const CRAWL_VISIBLE_DEPTH = 350;
-const CRAWL_SPEED = 25; // world units per second
+const CRAWL_LINE_SPACING = 24;
+const CRAWL_VISIBLE_DEPTH = 380;
+const CRAWL_SPEED = 15; // world units per second
 
 // ════════════════════════════════════════════════════════════
 // CUTSCENE ENGINE
@@ -7133,10 +7151,22 @@ function drawTitleScreen(tick) {
 // STAR WARS TEXT CRAWL
 // ════════════════════════════════════════════════════════════
 
+// Persistent dust motes for the crawl — initialized once
+const crawlDust = Array.from({length: 40}, () => ({
+  x: Math.random() * 640,
+  y: Math.random() * 400,
+  size: 1 + Math.random() * 2.5,
+  speed: 0.15 + Math.random() * 0.3,
+  drift: (Math.random() - 0.5) * 0.4,
+  phase: Math.random() * Math.PI * 2,
+  brightness: 0.5 + Math.random() * 0.5,
+}));
+
 function drawCrawl(tick) {
+  const t0 = tick * 0.01; // slow time for ambient animation
   const parchment = images['intro-parchment'];
 
-  // Draw parchment background (cover fit)
+  // Draw parchment background (cover fit) with gentle brightness pulse
   if (parchment && parchment.complete) {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
@@ -7156,23 +7186,68 @@ function drawCrawl(tick) {
     ctx.fillRect(0, 0, GW, GH);
   }
 
-  // Darken for text readability
-  ctx.fillStyle = 'rgba(10, 5, 0, 0.35)';
+  // Warm ambient light overlay — gentle breathing glow
+  const warmPulse = 0.06 + Math.sin(t0 * 0.8) * 0.03;
+  ctx.fillStyle = `rgba(180, 140, 60, ${warmPulse})`;
   ctx.fillRect(0, 0, GW, GH);
 
-  // Vignette
-  const vgrd = ctx.createRadialGradient(GW / 2, GH / 2, GW * 0.25, GW / 2, GH / 2, GW * 0.65);
-  vgrd.addColorStop(0, 'rgba(0,0,0,0)');
-  vgrd.addColorStop(1, 'rgba(0,0,0,0.7)');
+  // Diagonal light rays (slow drift)
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  for (let r = 0; r < 3; r++) {
+    const rayX = GW * (0.2 + r * 0.3) + Math.sin(t0 * 0.3 + r * 2) * 30;
+    const rayW = 40 + Math.sin(t0 * 0.5 + r) * 15;
+    const rayAlpha = 0.04 + Math.sin(t0 * 0.4 + r * 1.5) * 0.02;
+    const rayGrd = ctx.createLinearGradient(rayX - rayW, 0, rayX + rayW, 0);
+    rayGrd.addColorStop(0, 'rgba(200,170,80,0)');
+    rayGrd.addColorStop(0.5, `rgba(200,170,80,${rayAlpha})`);
+    rayGrd.addColorStop(1, 'rgba(200,170,80,0)');
+    ctx.fillStyle = rayGrd;
+    ctx.save();
+    ctx.translate(rayX, GH / 2);
+    ctx.rotate(-0.3);
+    ctx.translate(-rayX, -GH / 2);
+    ctx.fillRect(rayX - rayW * 2, -50, rayW * 4, GH + 100);
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // Darken edges for readability
+  ctx.fillStyle = 'rgba(10, 5, 0, 0.25)';
+  ctx.fillRect(0, 0, GW, GH);
+
+  // Warm vignette (golden center, dark edges)
+  const vgrd = ctx.createRadialGradient(GW / 2, GH / 2, GW * 0.2, GW / 2, GH / 2, GW * 0.7);
+  vgrd.addColorStop(0, 'rgba(60,40,10,0)');
+  vgrd.addColorStop(0.6, 'rgba(20,10,0,0.15)');
+  vgrd.addColorStop(1, 'rgba(0,0,0,0.65)');
   ctx.fillStyle = vgrd;
   ctx.fillRect(0, 0, GW, GH);
+
+  // ── Floating golden dust motes ──
+  ctx.save();
+  for (const d of crawlDust) {
+    d.y -= d.speed;
+    d.x += d.drift + Math.sin(tick * 0.02 + d.phase) * 0.3;
+    if (d.y < -5) { d.y = GH + 5; d.x = Math.random() * GW; }
+    if (d.x < -5) d.x = GW + 5;
+    if (d.x > GW + 5) d.x = -5;
+
+    const flicker = 0.3 + Math.sin(tick * 0.06 + d.phase) * 0.2;
+    ctx.globalAlpha = flicker * d.brightness;
+    ctx.fillStyle = '#d4a84080';
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
 
   // ── Perspective text crawl ──
   const scrollY = state.crawlScroll;
   const vanishY = GH * 0.10;
   const nearY = GH * 0.92;
-  const focalLen = 280;
-  const baseFontSize = 11;
+  const baseFontSize = 16;
+  const crawlFont = 'Cinzel, Georgia, serif';
 
   ctx.save();
   ctx.textAlign = 'center';
@@ -7180,41 +7255,46 @@ function drawCrawl(tick) {
 
   for (let i = 0; i < CRAWL_LINES.length; i++) {
     const line = CRAWL_LINES[i];
-    if (!line) continue; // blank lines take spacing but don't render
+    if (!line) continue;
 
-    // Distance this line has traveled from the entry point
     const dist = scrollY - i * CRAWL_LINE_SPACING;
-    if (dist < 0) continue;       // not yet visible
-    if (dist > CRAWL_VISIBLE_DEPTH) continue; // past vanishing point
+    if (dist < 0) continue;
+    if (dist > CRAWL_VISIBLE_DEPTH) continue;
 
-    // Normalized: 0 = near (bottom), 1 = vanishing point (top)
     const t = dist / CRAWL_VISIBLE_DEPTH;
-
-    // Perspective scale: shrinks as text recedes
     const scale = 1 - t * 0.82;
-
-    // Screen Y with perspective compression
     const screenY = nearY - (nearY - vanishY) * Math.pow(t, 0.55);
 
-    // Alpha: fade out near vanishing point
     let alpha = t < 0.82 ? 1 : (1 - t) / 0.18;
-    // Soft fade-in at entry
-    if (t < 0.05) alpha *= t / 0.05;
-
+    if (t < 0.06) alpha *= t / 0.06;
     if (alpha <= 0) continue;
 
-    // Title line rendered larger
     const isTitle = (i === 0);
-    const fontSize = Math.max(3, (isTitle ? baseFontSize * 1.6 : baseFontSize) * scale);
+    const fontSize = Math.max(4, (isTitle ? baseFontSize * 1.8 : baseFontSize) * scale);
+    const weight = isTitle ? '700' : '400';
 
-    ctx.globalAlpha = alpha;
-    ctx.font = `${Math.round(fontSize)}px 'Press Start 2P', monospace`;
-    ctx.fillStyle = '#3a2410';
-
-    // Horizontal narrowing for perspective
+    // Golden text glow (drawn behind)
     ctx.save();
     ctx.translate(GW / 2, screenY);
     ctx.scale(scale, 1);
+    ctx.globalAlpha = alpha * 0.4;
+    ctx.shadowColor = '#c8a040';
+    ctx.shadowBlur = isTitle ? 18 : 10;
+    ctx.font = `${weight} ${Math.round(fontSize)}px ${crawlFont}`;
+    ctx.fillStyle = '#b8922e';
+    ctx.fillText(line, 0, 0);
+    ctx.restore();
+
+    // Main text (warm golden amber)
+    ctx.save();
+    ctx.translate(GW / 2, screenY);
+    ctx.scale(scale, 1);
+    ctx.globalAlpha = alpha;
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetY = 1;
+    ctx.font = `${weight} ${Math.round(fontSize)}px ${crawlFont}`;
+    ctx.fillStyle = isTitle ? '#d4a030' : '#5a3a12';
     ctx.fillText(line, 0, 0);
     ctx.restore();
   }
@@ -7223,7 +7303,7 @@ function drawCrawl(tick) {
 
   // Skip hint
   ctx.save();
-  ctx.globalAlpha = 0.35 + Math.sin(tick * 0.05) * 0.15;
+  ctx.globalAlpha = 0.3 + Math.sin(tick * 0.05) * 0.12;
   ctx.font = "7px 'Press Start 2P', monospace";
   ctx.fillStyle = '#8a7a5a';
   ctx.textAlign = 'right';

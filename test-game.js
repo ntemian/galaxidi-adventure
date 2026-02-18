@@ -1800,19 +1800,36 @@ function extractSceneBgPaths() {
   return bgMap;
 }
 
-// Extract object IDs from a scene
+// Extract object IDs from a scene's objects array only
 function extractSceneObjectIds(sceneId) {
-  // Find the scene's objects array
+  // Find the scene definition
   const scenePattern = new RegExp(`(?:^|\\n)\\s*${sceneId}:\\s*\\{`, 'm');
   const match = scenePattern.exec(js);
   if (!match) return [];
 
   const startIdx = match.index + match[0].length;
-  // Find all id: references in this scene's objects
+  // Find the objects: [ array within this scene
+  const chunk = js.substring(startIdx, startIdx + 500);
+  const objsStart = chunk.indexOf('objects:');
+  if (objsStart === -1) return [];
+
+  // From the objects: [ start, find matching ] using bracket counting
+  const fullStart = startIdx + objsStart;
+  let bracketDepth = 0;
+  let inObjects = false;
+  let objEnd = fullStart + 1000;
+
+  for (let i = fullStart; i < fullStart + 8000 && i < js.length; i++) {
+    if (js[i] === '[' && !inObjects) { inObjects = true; bracketDepth = 1; continue; }
+    if (!inObjects) continue;
+    if (js[i] === '[') bracketDepth++;
+    if (js[i] === ']') { bracketDepth--; if (bracketDepth === 0) { objEnd = i; break; } }
+  }
+
+  const objectsSection = js.substring(fullStart, objEnd);
   const ids = [];
-  // Look for objects array within reasonable range (next 3000 chars)
-  const chunk = js.substring(startIdx, startIdx + 5000);
-  const objMatches = [...chunk.matchAll(/id:'(\w+)'/g)];
+  // Only match actual positioned scene objects: { id:'xxx', x:N, y:N, w:N, h:N
+  const objMatches = [...objectsSection.matchAll(/\{\s*id:'(\w+)',\s*x:\d/g)];
   for (const m of objMatches) {
     ids.push(m[1]);
   }
@@ -1872,6 +1889,74 @@ test('Recalibration entries reference valid scene objects', () => {
     }
   }
   assert(issues.length === 0, `Stale recal entries: ${issues.join('; ')}`);
+});
+
+test('Every scene object has a recalibration entry (hitbox positions)', () => {
+  // Extract the full recalibration block
+  const calStart = js.indexOf('const cal = {');
+  const calEnd = js.indexOf('};\n  for (const [sceneId', calStart);
+  if (calStart === -1 || calEnd === -1) {
+    assert(false, 'Recalibration block not found');
+    return;
+  }
+  const calBlock = js.substring(calStart, calEnd);
+  const bgMap = extractSceneBgPaths();
+  const uncalibrated = [];
+
+  for (const sceneId of Object.keys(bgMap)) {
+    const sceneObjIds = extractSceneObjectIds(sceneId);
+    if (sceneObjIds.length === 0) continue;
+
+    // Check if each object ID appears in the calibration block for this scene
+    // Pattern: sceneId: { ... objId: { x:... } ... }
+    const sceneInCal = calBlock.includes(sceneId + ':');
+    if (!sceneInCal) {
+      for (const objId of sceneObjIds) uncalibrated.push(`${sceneId}.${objId}`);
+      continue;
+    }
+
+    for (const objId of sceneObjIds) {
+      // Check if this object ID appears in the cal block within this scene's section
+      const objPattern = new RegExp(`${objId}\\s*:\\s*\\{\\s*x:`);
+      if (!objPattern.test(calBlock)) {
+        uncalibrated.push(`${sceneId}.${objId}`);
+      }
+    }
+  }
+
+  if (uncalibrated.length > 0) {
+    console.log(`    Uncalibrated objects (using raw coords, likely mispositioned):`);
+    for (const u of uncalibrated.slice(0, 10)) console.log(`      - ${u}`);
+    if (uncalibrated.length > 10) console.log(`      ... and ${uncalibrated.length - 10} more`);
+  }
+  assert(uncalibrated.length === 0,
+    `${uncalibrated.length} scene objects missing from recalibrateHotspots() — hitboxes may be wrong`);
+});
+
+test('All object hitboxes are within canvas bounds (640x400)', () => {
+  const bgMap = extractSceneBgPaths();
+  const outOfBounds = [];
+  for (const sceneId of Object.keys(bgMap)) {
+    const sceneObjIds = extractSceneObjectIds(sceneId);
+    // Get calibrated coords from the recalibration block
+    const calMatch = js.match(/const cal\s*=\s*\{([\s\S]*?)\};\s*for\s*\(const/);
+    if (!calMatch) continue;
+    const calBlock = calMatch[1];
+    for (const objId of sceneObjIds) {
+      // Try to find calibrated coords
+      const coordMatch = calBlock.match(new RegExp(objId + '\\s*:\\s*\\{\\s*x:\\s*(\\d+),\\s*y:\\s*(\\d+),\\s*w:\\s*(\\d+),\\s*h:\\s*(\\d+)'));
+      if (!coordMatch) continue;
+      const x = parseInt(coordMatch[1]);
+      const y = parseInt(coordMatch[2]);
+      const w = parseInt(coordMatch[3]);
+      const h = parseInt(coordMatch[4]);
+      if (x < 0 || y < 0 || x + w > 640 || y + h > 400) {
+        outOfBounds.push(`${sceneId}.${objId}: (${x},${y},${w},${h}) exceeds 640x400`);
+      }
+    }
+  }
+  assert(outOfBounds.length === 0,
+    `${outOfBounds.length} hitboxes extend outside canvas: ${outOfBounds[0]}`);
 });
 
 test('Port scene has no invisible cats object', () => {
