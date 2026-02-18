@@ -529,7 +529,7 @@ const scenes = {
         verbs: { look:[{s:'',t:'Γλάροι κράζουν πάνω από το λιμάνι. Αιώνιοι κάτοικοι.'},{s:'ΚΛΕΙΩ',t:'Αυτοί ξέρουν τα πάντα. Αν μιλούσαν...'}] }},
       { id:'stathis', x:55, y:312, w:70, h:100, label:'Στάθης',
         verbs: { look:[{s:'',t:'Ο Στάθης με την κιθάρα του. Φίλος από τα παλιά.'}],
-                 talk:[{s:'ΣΤΑΘΗΣ',t:'Ντέμη! Τι κάνεις εδώ; Πάρε μια καρέκλα!'},{s:'ΝΤΕΜΗΣ',t:'Στάθη! Πόσο καιρό!'},{s:'ΣΤΑΘΗΣ',t:'Ψάχνεις κάτι; Ρώτα τον Άθο στο Λιοτρίβι. Ξέρει τα πάντα για τις παλιές οικογένειες.'}] }},
+                 talk:[{s:'ΣΤΑΘΗΣ',t:'Ντέμη! Τι κάνεις εδώ; Πάρε μια καρέκλα!'},{s:'ΝΤΕΜΗΣ',t:'Στάθη! Πόσο καιρό!'},{s:'ΣΤΑΘΗΣ',t:'Ψάχνεις κάτι; Ρώτα τον Άθο στο Λιοτρίβι. Ξέρει τα πάντα για τις παλιές οικογένειες.'},{s:'ΣΤΑΘΗΣ',t:'Κι αν χρειαστείς βάρκα, ψάξε τον Χρυσόστομο. Μόνο αυτός πλέει ακόμα με πανιά.'}] }},
       { id:'akis', x:125, y:315, w:60, h:98, label:'Άκης',
         verbs: { look:[{s:'',t:'Ο Άκης παίζει φλογέρα στο λιμάνι. Η μελωδία ταξιδεύει στο νερό.'}],
                  talk:[{s:'ΑΚΗΣ',t:'Ε, Ντέμη! Τα παιδιά μεγάλωσαν!'},{s:'ΚΛΕΙΩ',t:'Θείε Άκη, τι παίζεις;'},{s:'ΑΚΗΣ',t:'Ένα παλιό τραγούδι ναυτικό. Πήγαινε στο μουσείο — θα καταλάβεις.'}] }},
@@ -540,10 +540,28 @@ const scenes = {
                  },
                  walk:()=>{
                    if(!state.inv.find(i=>i.id==='nautical_chart')) return [{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρουμε πού να πάμε ακόμα. Χρειαζόμαστε χάρτη.'}];
+                   if(!state.flags.threshold_done){
+                     state.flags.threshold_done=1;
+                     showDlg([
+                       {s:'ΝΤΕΜΗΣ',t:'Ο χάρτης δείχνει τον Άγιο Γεώργιο. Σίγουροι;'},
+                       {s:'ΑΙΑΣ',t:'Σίγουρος.'},
+                       {s:'',t:'Η Κλειώ κουνάει σοβαρά το κεφάλι.'},
+                     ], () => changeScene('boat'));
+                     return [];
+                   }
                    return 'boat';
                  },
                  use:()=>{
                    if(!state.inv.find(i=>i.id==='nautical_chart')) return [{s:'ΝΤΕΜΗΣ',t:'Δεν ξέρουμε πού να πάμε ακόμα. Χρειαζόμαστε χάρτη.'}];
+                   if(!state.flags.threshold_done){
+                     state.flags.threshold_done=1;
+                     showDlg([
+                       {s:'ΝΤΕΜΗΣ',t:'Ο χάρτης δείχνει τον Άγιο Γεώργιο. Σίγουροι;'},
+                       {s:'ΑΙΑΣ',t:'Σίγουρος.'},
+                       {s:'',t:'Η Κλειώ κουνάει σοβαρά το κεφάλι.'},
+                     ], () => changeScene('boat'));
+                     return [];
+                   }
                    return 'boat';
                  }}},
     ],
@@ -608,7 +626,7 @@ const scenes = {
         verbs: { look:[{s:'',t:'Πλακάκια σε σκακιέρα — κίτρινα και καφέ. Λαμπυρίζουν στο φως των φαναριών.'}] }},
       { id:'athos_npc', x:485, y:280, w:55, h:95, label:'Άθος',
         verbs: { look:[{s:'',t:'Ο Άθος. Δικηγόρος και ιδιοκτήτης του Λιοτριβιού. Τα μάτια του κρύβουν χίλια μυστικά.'}],
-                 talk:[{s:'ΑΘΟΣ',t:'Λατσούδη! Περίμενα πότε θα φτάσεις.'},{s:'ΝΤΕΜΗΣ',t:'Με ξέρεις;'},{s:'ΑΘΟΣ',t:'Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.'},{s:'ΑΘΟΣ',t:'Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.'},{s:'ΚΛΕΙΩ',t:'Σπήλαιο; Θα πάμε σε σπήλαιο;!'}] }},
+                 talk:[{s:'ΑΘΟΣ',t:'Λατσούδη! Περίμενα πότε θα φτάσεις.'},{s:'ΝΤΕΜΗΣ',t:'Με ξέρεις;'},{s:'ΑΘΟΣ',t:'Ξέρω τον παππού σου. Ήξερα. Και ξέρω τι ψάχνεις.'},{s:'ΑΘΟΣ',t:'Ο Βισβίκης άφησε διαθήκη. Αν θέλεις απαντήσεις, ψάξε στο σπήλαιο του Κάρκαρου.'},{s:'ΑΘΟΣ',t:'Κι ο Χρυσόστομος στο λιμάνι — γνώριζε τον πατέρα σου. Θα σε πάει αν του δείξεις χάρτη.'},{s:'ΚΛΕΙΩ',t:'Σπήλαιο; Θα πάμε σε σπήλαιο;!'}] }},
     ],
     exits: [{ side:'right', target:'museum', label:'Μουσείο →' }, { side:'left', target:'church', label:'← Εκκλησία' }],
     entry: [
@@ -799,7 +817,8 @@ const scenes = {
                    if(state.flags.lantern_given) return [{s:'ΓΙΑΝΝΗΣ',t:'Προσοχή εκεί κάτω. Το σπήλαιο έχει μυστικά.'}];
                    state.flags.lantern_given=1;
                    addInv({id:'lantern',label:'Φανάρι',desc:'Ένα ορειχάλκινο ναυτικό φανάρι. Παλιό αλλά καλοσυντηρημένο. Δώρο του Γιάννη.'});
-                   return [{s:'ΓΙΑΝΝΗΣ',t:'...'},{s:'ΝΤΕΜΗΣ',t:'Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.'},{s:'ΓΙΑΝΝΗΣ',t:'Το ξέρω. Σε βλέπω από εδώ πάνω.'},{s:'ΓΙΑΝΝΗΣ',t:'Πάρε αυτό. Θα το χρειαστείς.'},{s:'',t:'Ο Γιάννης σου δίνει ένα ορειχάλκινο φανάρι. Παλιό, ναυτικό, καλοσυντηρημένο.'}];
+                   addInv({id:'shovel',label:'Φτυάρι',desc:'Ένα μικρό σιδερένιο φτυάρι. Σκουριασμένο αλλά γερό. Δώρο του Γιάννη.'});
+                   return [{s:'ΓΙΑΝΝΗΣ',t:'...'},{s:'ΝΤΕΜΗΣ',t:'Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.'},{s:'ΓΙΑΝΝΗΣ',t:'Το ξέρω. Σε βλέπω από εδώ πάνω.'},{s:'ΓΙΑΝΝΗΣ',t:'Πάρε αυτά. Θα τα χρειαστείς.'},{s:'',t:'Ο Γιάννης σου δίνει ένα ορειχάλκινο φανάρι κι ένα μικρό φτυάρι.'},{s:'ΓΙΑΝΝΗΣ',t:'Δεν ξέρεις τι θα βρεις εκεί κάτω.'}];
                  } }},
     ],
     exits: [{ side:'right', target:'graveyard', label:'Νεκροταφείο →' }, { side:'left', target:'terrace', label:'← Βεράντα' }],
@@ -831,9 +850,21 @@ const scenes = {
         verbs: { look:[{s:'',t:'Το Γαλαξίδι λάμπει στον ήλιο του δειλινού. Σπίτια, εκκλησίες, το λιμάνι — σαν μακέτα.'},{s:'ΚΛΕΙΩ',t:'Από εδώ φαίνεται σαν παραμύθι.'}] }},
       { id:'chrysostomos_npc', x:75, y:280, w:75, h:110, label:'Χρυσόστομος',
         verbs: { look:[{s:'',t:'Ο Χρυσόστομος στο τιμόνι. Εβδομήντα χρονών, μάτια σαν τη θάλασσα.'}],
-                 talk:[{s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν.'},{s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Η θάλασσα δεν σε ρωτάει τι αγαπάς. Αλλάζει κι εσύ αλλάζεις μαζί της.'},{s:'ΝΤΕΜΗΣ',t:'Γνώριζες τον Βισβίκη;'},{s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Ήταν ο τελευταίος ρομαντικός. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.'},{s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Η Ελπίδα ξέρει τον δρόμο. Εγώ απλά κρατάω το τιμόνι.'}] }},
+                 talk:()=>{
+                   // Drop music to let his words fill the silence
+                   const prevVol = bgm.volume;
+                   bgm.volume = prevVol * 0.3;
+                   showDlg([
+                     {s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν.'},
+                     {s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Η θάλασσα δεν σε ρωτάει τι αγαπάς. Αλλάζει κι εσύ αλλάζεις μαζί της.'},
+                     {s:'ΝΤΕΜΗΣ',t:'Γνώριζες τον Βισβίκη;'},
+                     {s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Ήταν ο τελευταίος ρομαντικός. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.'},
+                     {s:'ΧΡΥΣΟΣΤΟΜΟΣ',t:'Η Ελπίδα ξέρει τον δρόμο. Εγώ απλά κρατάω το τιμόνι.'},
+                   ], () => { bgm.volume = prevVol; });
+                   return [];
+                 } }},
     ],
-    exits: [{ side:'left', target:'port', label:'← Λιμάνι' },{ side:'right', target:'treasure', label:'Νησί →' }],
+    exits: [{ side:'left', target:'treasure', label:'← Νησί' },{ side:'right', target:'port', label:'Γαλαξίδι →' }],
     entry: [
       {s:'',t:'Η Ελπίδα πλέει αργά στον Κορινθιακό. Ο κόσμος σταμάτησε.'},
       {s:'ΚΛΕΙΩ',t:'Αυτό... αυτό είναι τέλειο.'},
@@ -895,12 +926,23 @@ const scenes = {
         }},
     ],
     exits: [{ side:'left', target:'terrace', label:'← Βεράντα' }],
-    entry: [
-      {s:'',t:'Το παλιό νεκροταφείο. Το φεγγάρι φωτίζει τους τάφους, μυρωδιά θυμαριού, ησυχία.'},
-      {s:'ΚΛΕΙΩ',t:'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία τη νύχτα.'},
-      {s:'ΝΤΕΜΗΣ',t:'Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.'},
-      {s:'ΑΙΑΣ',t:'Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.'},
-    ],
+    entry: () => {
+      const lines = [
+        {s:'',t:'Το παλιό νεκροταφείο. Το φεγγάρι φωτίζει τους τάφους, μυρωδιά θυμαριού, ησυχία.'},
+        {s:'ΚΛΕΙΩ',t:'Μπαμπά... δεν μου αρέσουν τα νεκροταφεία τη νύχτα.'},
+        {s:'ΝΤΕΜΗΣ',t:'Αυτό δεν είναι τρομακτικό. Είναι γεμάτο ιστορίες.'},
+        {s:'ΑΙΑΣ',t:'Κοίτα — βλέπεις τη θάλασσα από κάθε τάφο. Αυτό ήθελαν.'},
+      ];
+      // Transitional dialog: arriving with the green stone — building tension
+      if (state.inv.find(i => i.id === 'green_stone')) {
+        lines.push(
+          {s:'ΚΛΕΙΩ',t:'Μπαμπά, νιώθω κάτι περίεργο με αυτή την πέτρα.'},
+          {s:'ΑΙΑΣ',t:'Μη λες βλακείες.'},
+          {s:'ΝΤΕΜΗΣ',t:'...Βρείτε τον τάφο του Βισβίκη.'},
+        );
+      }
+      return lines;
+    },
   },
 
   // ── SCENE 10: THE TREASURE ──
@@ -946,14 +988,22 @@ const scenes = {
           use:()=>{
             if(!state.flags.spot_found) return [{s:'ΝΤΕΜΗΣ',t:'Πρέπει να βρούμε το σωστό σημείο πρώτα. Κοίταξε τον σταυρό.'}];
             if(state.flags.chest_opened) return [{s:'',t:'Ο θησαυρός ήδη βγήκε στο φως.'}];
-            // Dig sequence → metallic hit → chest → pause → cutscene → letter
+            if(!state.inv.find(i=>i.id==='shovel')) return [{s:'ΑΙΑΣ',t:'Πώς θα σκάψουμε; Χρειαζόμαστε φτυάρι!'},{s:'ΝΤΕΜΗΣ',t:'Ποιος θα είχε φτυάρι εδώ γύρω...'}];
+            removeInv('shovel');
+            // Dig sequence → silence pocket → metallic hit → chest → cutscene → letter
             playSFX('dig');
             showDlg([
               {s:'',t:'Πατέρας κι γιος σκάβουν μαζί. Σκληρό χώμα, ρίζες θυμαριού, πέτρες.'},
               {s:'ΚΛΕΙΩ',t:'Κι αν δεν υπάρχει τίποτα;'},
               {s:'ΝΤΕΜΗΣ',t:'Τότε ήρθαμε για τη θέα.'},
             ], () => {
-              playSFX('metallic_hit');
+              // Silence pocket — fade ALL audio before the CLANG
+              fadeAllAudio(0, 600, () => {
+                setTimeout(() => {
+                  playSFX('metallic_hit');
+                  setTimeout(() => fadeAllAudio(1, 2000), 1200);
+                }, 800);
+              });
               showDlg([
                 {s:'',t:'ΚΛΑΝΓΚ! Το φτυάρι χτυπάει κάτι σκληρό.'},
                 {s:'ΑΙΑΣ',t:'ΧΤΥΠΗΣΕ! ΚΑΤΙ ΧΤΥΠΗΣΕ!'},
@@ -989,9 +1039,9 @@ const scenes = {
                       state.flags.letter_read=1;
                       playSFX('paper');
                       showDlg([
-                        {s:'ΝΤΕΜΗΣ',t:'«Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.»'},
-                        {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»'},
-                        {s:'',t:'Σιωπή. Κύματα και γλάροι.'},
+                        {s:'ΝΤΕΜΗΣ',t:'«Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.»', auto:3.5},
+                        {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»', auto:4},
+                        {s:'',t:'Σιωπή. Κύματα και γλάροι.', auto:3},
                         {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. ΕΜΕΙΣ το βρήκαμε.'},
                         {s:'ΝΤΕΜΗΣ',t:'Αίαντα. Τι έλεγε η αλληλασφάλεια;'},
                         {s:'ΑΙΑΣ',t:'...Ότι κανείς δεν ταξιδεύει μόνος. Οκ. Το δίνουμε.'},
@@ -1048,6 +1098,8 @@ const scenes = {
               {s:'ΝΤΕΜΗΣ',t:'Να βρούμε αυτά που μας ενώνουν. Όχι αυτά που μας χωρίζουν.'},
               {s:'ΝΤΕΜΗΣ',t:'Τα χρήματα θα γίνουν αρχή. Για να μπει το Γαλαξίδι στη νέα εποχή.'},
               {s:'ΝΤΕΜΗΣ',t:'Το Γαλαξίδι δεν χρειάζεται να γίνει σαν την Αθήνα. Χρειάζεται να γίνει περισσότερο Γαλαξίδι.'},
+              {s:'',t:'Ο Ντέμης κοιτάζει τον Άθο στο πλήθος.'},
+              {s:'ΝΤΕΜΗΣ',t:'Ναι, Άθο. Βρήκαμε το ατμόπλοιο.'},
               {s:'',t:'Σιωπή. Μετά, η γριά με τα μαύρα σηκώνεται πρώτη. Πλησιάζει το βιβλίο και υπογράφει.'},
               {s:'',t:'Ένας-ένας, οι Γαλαξειδιώτες ακολουθούν. Ψαράδες, ταβερνιάρηδες, νέοι, γέροι.'},
               {s:'ΑΙΑΣ',t:'Μπαμπά, πόσες υπογραφές;'},
@@ -1562,6 +1614,35 @@ const cutscenes = {
     },
   },
 
+  // ── SAILING BACK — Return from boat to Galaxidi (triggered when exiting boat toward port)
+  sail_back: {
+    frames: [
+      {
+        duration: 8,
+        draw: drawSailBackSunset,
+        dialogue: [
+          { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Ώρα να γυρίσουμε. Η Ελπίδα ξέρει τον δρόμο.', at: 1.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Ήδη τελειώνει; Δεν θέλω να φύγουμε...', at: 4.0 },
+          { s: 'ΑΙΑΣ', t: 'Κοίτα πίσω — το νησάκι μικραίνει!', at: 6.0 },
+        ],
+      },
+      {
+        duration: 7,
+        draw: drawSailBackGalaxidi,
+        dialogue: [
+          { s: 'ΝΤΕΜΗΣ', t: 'Να, βλέπετε; Τα φώτα του Γαλαξειδίου.', at: 1.5 },
+          { s: 'ΧΡΥΣΟΣΤΟΜΟΣ', t: 'Πάντα γυρνάς. Αυτό είναι το μυστικό.', at: 4.0 },
+        ],
+      },
+    ],
+    onComplete: () => {
+      state.phase = 'playing';
+      document.getElementById('ui-panel').classList.add('on');
+      document.getElementById('action-line').classList.add('on');
+      startScene('port');
+    },
+  },
+
   // ── THE TREASURE — Expanded 5-frame reveal (triggered when opening chest)
   treasure: {
     frames: [
@@ -1769,7 +1850,7 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','cave_enter','ghost','church_tile','crossing','treasure','epilogue'].filter(id => {
+  const ids = ['arrival','letter','cave_enter','ghost','church_tile','crossing','sail_back','treasure','epilogue'].filter(id => {
     if (!cutscenes[id]) {
       console.warn('playAllCutscenes: unknown cutscene "' + id + '" skipped');
       return false;
@@ -2170,6 +2251,32 @@ function drawCrossingClose(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.04 + Math.sin(tick * 0.02) * 0.015;
   ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: SAILING BACK — Return to Galaxidi
+// ═══════════════════════════════════════════════════════════
+
+function drawSailBackSunset(t, p, tick) {
+  // Reuse crossing-island image, slow reverse pan (island receding)
+  drawKenBurns('cutscene-crossing-island', 1.12 - p * 0.06, -p * 10, p * -6);
+  // Warm sunset overlay
+  ctx.save();
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.018) * 0.025;
+  ctx.fillStyle = '#FF9040';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawSailBackGalaxidi(t, p, tick) {
+  // Galaxidi approaching — reuse crossing-dawn, pan toward town
+  drawKenBurns('cutscene-crossing-dawn', 1.12 - p * 0.08, 8 - p * 16, 0);
+  // Golden hour glow
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.02) * 0.02;
+  ctx.fillStyle = '#FFD060';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
@@ -4048,7 +4155,8 @@ function drawCaveAmbience(tick) {
   ctx.fillRect(lx - 4, ly - 6, 8, 10);
 
   // ── MYSTICAL JADE GEM (floating in cave alcove) ──
-  if (!state.flags.jade_found) {
+  // Jade is hidden until the player actively searches the crack (use verb)
+  if (state.flags.jade_visible && !state.flags.jade_found) {
     const gemX = 210, gemY = 48;
     const pulse = Math.sin(tick * 0.04) * 0.5 + 0.5;
     const glow2 = Math.sin(tick * 0.025) * 0.3 + 0.7;
@@ -4644,7 +4752,9 @@ function startWalk(who, targetX, cb) {
   c.targetX = targetX;
   c.targetY = getGroundY(state.scene, targetX);
   c.walkT = 0;
-  c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0));
+  // Slower walk in graveyard after ghost — weight of the moment
+  const walkMult = (state.scene === 'graveyard' && state.flags.ghost_summoned) ? 1.4 : 1.0;
+  c.walkDur = Math.max(0.6, Math.min(3.5, (dist / GW) * 5.0 * walkMult));
   c.frame = 0;
   if (who === 'ntemis') sfxStepAcc = 0;
   if (who === 'ntemis') walkDoneCallback = cb;
@@ -5383,6 +5493,7 @@ function nextDlgLine() {
   state.dlg.displayed = '';
   state.dlg.charIdx = 0;
   state.dlg.timer = 0;
+  state.dlg.autoDelay = l.auto || 0; // auto-advance delay in seconds (0 = manual)
   if (l.sfx) playSFX(l.sfx);
   playVoice(l.t);
 }
@@ -5396,6 +5507,13 @@ function updateDlg(dt) {
       state.dlg.charIdx++;
       state.dlg.displayed = state.dlg.text.substring(0, state.dlg.charIdx);
       if (state.dlg.charIdx % 2 === 0) playSFX('tick');
+    }
+  } else if (state.dlg.autoDelay > 0) {
+    // Auto-advance: count down after text is fully displayed
+    state.dlg.autoDelay -= dt;
+    if (state.dlg.autoDelay <= 0) {
+      state.dlg.autoDelay = 0;
+      nextDlgLine();
     }
   }
 }
@@ -5908,6 +6026,8 @@ function drawGhostArm() {
 // ════════════════════════════════════════════════════════════
 function startJadeSequence() {
   startSequence([
+    // Phase 0: Make jade gem visible for the reveal animation
+    { type: 'callback', fn: () => { state.flags.jade_visible = true; } },
     // Phase 1: Something responds — cave goes quiet, resonance builds
     { type: 'callback', fn: () => playSFX('jade_reveal') },
     { type: 'env', duration: 1.5, darken: 0.15, vignette: 0.3, spectral: 0 },
@@ -5958,19 +6078,27 @@ function startJadeSequence() {
 // ════════════════════════════════════════════════════════════
 function startGhostSequence() {
   startSequence([
-    // Crossfade to eerie ghost music
+    // SILENCE POCKET — fade ALL audio to zero before ghost appears
     { type: 'callback', fn: () => {
-      changeSceneMusic('_ghost');
+      fadeAllAudio(0, 1500);
     }},
     { type: 'env', duration: 1.5, darken: 0.35, vignette: 0.6, spectral: 0.8 },
     { type: 'dialog', lines: [{s:'',t:'Ο αέρας αλλάζει. Η θερμοκρασία πέφτει. Τα κυπαρίσσια σταματούν να κουνιούνται.'}] },
     { type: 'move', who: 'clio', dx: 25, duration: 0.8 },
     { type: 'move', who: 'ajax', dx: 20, duration: 0.8 },
     { type: 'dialog', lines: [{s:'ΚΛΕΙΩ',t:'Μπαμπά... η πέτρα λάμπει!'},{s:'ΑΙΑΣ',t:'Τι γίνεται; Γιατί σκοτείνιασε;'}] },
-    { type: 'wait', duration: 1.0 },
+    // Total silence — the absence of sound IS the effect
+    { type: 'wait', duration: 1.5 },
+    // Ghost SFX breaks the silence
     { type: 'callback', fn: () => playSFX('ghost') },
+    { type: 'wait', duration: 1.0 },
     { type: 'dialog', lines: [{s:'',t:'Κάτι υψώνεται πάνω από τον τάφο...'}] },
     { type: 'effect', effect: 'materialize', duration: 3.0 },
+    // Ghost music enters AFTER the ghost materializes — earned
+    { type: 'callback', fn: () => {
+      changeSceneMusic('_ghost');
+      fadeAllAudio(1, 2000);
+    }},
     { type: 'npc', who: 'ghost', visible: true },
     { type: 'dialog', lines: [
       {s:'',t:'Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
@@ -6002,6 +6130,12 @@ function startGhostSequence() {
     { type: 'callback', fn: () => {
       changeSceneMusic('graveyard');
     }},
+    // Clio processes the experience — the compass validates the emotion
+    { type: 'wait', duration: 2.0 },
+    { type: 'dialog', lines: [
+      {s:'ΚΛΕΙΩ',t:'Δεν φοβήθηκα. Ήταν... λυπημένος.'},
+    ]},
+    { type: 'wait', duration: 1.5 },
     { type: 'dialog', lines: [
       {s:'ΑΙΑΣ',t:'Αυτό... αυτό μόλις έγινε. Δεν ονειρεύομαι.'},
       {s:'ΚΛΕΙΩ',t:'Περίμενε 120 χρόνια. Για κάποιον σαν εμάς.'},
@@ -7011,12 +7145,12 @@ function startScene(id) {
         state.phase = 'playing';
         document.getElementById('ui-panel').classList.add('on');
         document.getElementById('action-line').classList.add('on');
-        if (sc.entry) setTimeout(() => showDlg(sc.entry), 600);
+        if (sc.entry) setTimeout(() => showDlg(typeof sc.entry === 'function' ? sc.entry() : sc.entry), 600);
       };
       startCutscene(csId);
       return;
     }
-    if (sc.entry) setTimeout(() => showDlg(sc.entry), 600);
+    if (sc.entry) setTimeout(() => showDlg(typeof sc.entry === 'function' ? sc.entry() : sc.entry), 600);
   } else {
     // Clio auto-comment on revisit (after a short delay)
     scheduleClio(id);
@@ -7865,6 +7999,11 @@ CVS.addEventListener('click', (e) => {
     }
     if (exit.target === 'new_era' && !state.flags.letter_read) {
       showDlg([{s:'ΝΤΕΜΗΣ',t:'Πρέπει να δούμε τι μας άφησε ο Βισβίκης πρώτα.'}]);
+      return;
+    }
+    // Sailing back cutscene: boat → port
+    if (state.scene === 'boat' && exit.target === 'port') {
+      startCutscene('sail_back');
       return;
     }
     changeScene(exit.target);
