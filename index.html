@@ -232,6 +232,7 @@ const state = {
     env: { darken: 0, vignette: 0, spectral: 0 },
     swirlParticles: [],
     stoneGlow: { active: false, progress: 0 },
+    jadeReveal: { active: false, progress: 0 },
   },
 };
 
@@ -657,17 +658,8 @@ const scenes = {
           use: () => {
             if (state.inv.find(i => i.id === 'green_stone')) return [{s:'',t:'Ήδη βρήκατε την πράσινη πέτρα.'}];
             if (state.flags.jade_found) return [{s:'',t:'Η ρωγμή είναι άδεια τώρα.'}];
-            state.flags.jade_found = true;
-            addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίζη.' });
-            return [
-              {s:'',t:'Η Κλειώ δείχνει ψηλά. Σφηνωμένη σε μια ρωγμή πάνω από το ύψος των ματιών: μια πέτρα. Σκούρα πράσινη, λεία, ζεστή στο χέρι.'},
-              {s:'ΚΛΕΙΩ',t:'Σας. Το. Είπα.'},
-              {s:'ΝΤΕΜΗΣ',t:'Νεφρίτης. Jade. Από την Ανατολή.'},
-              {s:'ΑΙΑΣ',t:'Αξίζει κάτι;'},
-              {s:'ΝΤΕΜΗΣ',t:'Αξίζει ό,τι ο Βισβίκης ήθελε να δείξει μ\' αυτό. Τώρα πρέπει... να του το πάμε.'},
-              {s:'ΑΙΑΣ',t:'...Στο νεκροταφείο.'},
-              {s:'ΚΛΕΙΩ',t:'Σας. Το. Είπα.'},
-            ];
+            showDlg([{s:'',t:'Ο Ντέμης σκύβει στη ρωγμή. Τα δάχτυλά του αγγίζουν κάτι λείο, ζεστό...'}], () => startJadeSequence());
+            return [];
           },
         }},
     ],
@@ -850,10 +842,12 @@ const scenes = {
           use: () => {
             if (state.flags.ghost_summoned) return [{s:'',t:'Η πέτρα ήδη τοποθετήθηκε. Η πλάκα λάμπει αχνά.'}];
             if (!state.inv.find(i => i.id === 'green_stone')) return [{s:'ΝΤΕΜΗΣ',t:'Λείπει κάτι. Η εσοχή στην πλάκα... σαν να περιμένει κάτι.'}];
-            removeInv('green_stone');
             state.flags.ghost_summoned = true;
-            playSFX('stone');
-            showDlg([{s:'',t:'Ο Ντέμης τοποθετεί την πράσινη πέτρα τζέιντ στην εσοχή της πλάκας...'}], () => startGhostSequence());
+            showDlg([{s:'ΝΤΕΜΗΣ',t:'Η εσοχή... αυτό ζητάει η πλάκα.'}], () => {
+              removeInv('green_stone');
+              playSFX('stone');
+              showDlg([{s:'',t:'Η πράσινη πέτρα ταιριάζει ακριβώς. Λάμπει αχνά...'}], () => startGhostSequence());
+            });
             return [];
           },
         }},
@@ -3136,6 +3130,55 @@ function playSFX(type) {
     nG.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
     nSrc.connect(nHP); nHP.connect(nG); nG.connect(ambientSounds.masterGain);
     nSrc.start(now); nSrc.stop(now + 0.15);
+
+  } else if (type === 'jade_reveal') {
+    // Mystical jade discovery — singing bowl resonance + ascending crystal chimes
+    // Deep resonance (singing bowl vibration)
+    const bowl = ctx.createOscillator();
+    bowl.type = 'sine'; bowl.frequency.value = 174;
+    const bowlG = ctx.createGain();
+    bowlG.gain.setValueAtTime(0, now);
+    bowlG.gain.linearRampToValueAtTime(0.09, now + 0.8);
+    bowlG.gain.setValueAtTime(0.09, now + 2.0);
+    bowlG.gain.exponentialRampToValueAtTime(0.001, now + 4.0);
+    bowl.connect(bowlG); bowlG.connect(ambientSounds.masterGain);
+    bowl.start(now); bowl.stop(now + 4.0);
+    // Harmonic overtone (perfect fifth)
+    const harm = ctx.createOscillator();
+    harm.type = 'sine'; harm.frequency.value = 261;
+    const harmG = ctx.createGain();
+    harmG.gain.setValueAtTime(0, now + 0.3);
+    harmG.gain.linearRampToValueAtTime(0.05, now + 1.0);
+    harmG.gain.exponentialRampToValueAtTime(0.001, now + 3.5);
+    harm.connect(harmG); harmG.connect(ambientSounds.masterGain);
+    harm.start(now + 0.3); harm.stop(now + 3.5);
+    // Ascending crystal chimes (C5→E5→G5→C6)
+    [523, 659, 784, 1047].forEach((freq, i) => {
+      const t0 = now + 0.5 + i * 0.3;
+      const osc = ctx.createOscillator();
+      osc.type = 'sine'; osc.frequency.value = freq;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.07 - i * 0.01, t0);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 1.2);
+      osc.connect(g); g.connect(ambientSounds.masterGain);
+      osc.start(t0); osc.stop(t0 + 1.2);
+    });
+    // Cave resonance (stone vibrating — filtered noise)
+    const rnLen = Math.ceil(ctx.sampleRate * 3.0);
+    const rnBuf = ctx.createBuffer(1, rnLen, ctx.sampleRate);
+    const rnd = rnBuf.getChannelData(0);
+    for (let i = 0; i < rnLen; i++) rnd[i] = Math.random() * 2 - 1;
+    const rnSrc = ctx.createBufferSource();
+    rnSrc.buffer = rnBuf;
+    const rnBP = ctx.createBiquadFilter();
+    rnBP.type = 'bandpass'; rnBP.frequency.value = 200; rnBP.Q.value = 8;
+    const rnG = ctx.createGain();
+    rnG.gain.setValueAtTime(0, now);
+    rnG.gain.linearRampToValueAtTime(0.025, now + 1.0);
+    rnG.gain.setValueAtTime(0.025, now + 2.0);
+    rnG.gain.exponentialRampToValueAtTime(0.001, now + 3.5);
+    rnSrc.connect(rnBP); rnBP.connect(rnG); rnG.connect(ambientSounds.masterGain);
+    rnSrc.start(now); rnSrc.stop(now + 3.5);
   }
 }
 
@@ -4862,6 +4905,9 @@ function executeStep() {
         seq.stoneGlow.progress = 0;
       } else if (step.effect === 'arm_raise') {
         // Arm raise is timer-based, handled in updateGhostEffect
+      } else if (step.effect === 'jade_reveal') {
+        seq.jadeReveal.active = true;
+        seq.jadeReveal.progress = 0;
       }
       break;
     case 'callback':
@@ -4886,6 +4932,7 @@ function endSequence() {
   state.seq.stepIdx = 0;
   state.seq.ghostMat.active = false;
   state.seq.stoneGlow.active = false;
+  state.seq.jadeReveal.active = false;
 }
 
 function updateSequence(dt) {
@@ -5014,6 +5061,12 @@ function updateGhostEffect(dt, step) {
     // Lerp ghost arm from 0 (down) to 1 (raised and pointing)
     npcChars.ghost.arm = easeInOutCubic(t);
     if (t >= 1) advanceSeqStep();
+  } else if (step.effect === 'jade_reveal') {
+    seq.jadeReveal.progress = t;
+    if (t >= 1) {
+      seq.jadeReveal.active = false;
+      advanceSeqStep();
+    }
   }
 }
 
@@ -5049,6 +5102,96 @@ function drawStoneGlow() {
   ctx.fillStyle = grad;
   ctx.fillRect(400, 210, 120, 120);
   ctx.restore();
+}
+
+function drawJadeReveal() {
+  if (!state.seq.jadeReveal || !state.seq.jadeReveal.active) return;
+  const t = state.seq.jadeReveal.progress;
+  const gemX = 210, gemY = 48;
+  const tick = state.tick;
+
+  // Phase 1 (0–0.4): Green glow builds and expands from gem
+  if (t > 0) {
+    const buildT = Math.min(1, t / 0.4);
+    const pulse = Math.sin(t * Math.PI * 8) * 0.08;
+    ctx.save();
+    const radius = 20 + buildT * 200;
+    ctx.globalAlpha = (0.2 + pulse) * buildT;
+    const glow = ctx.createRadialGradient(gemX, gemY, 0, gemX, gemY, radius);
+    glow.addColorStop(0, 'rgba(100,255,140,0.9)');
+    glow.addColorStop(0.2, 'rgba(60,230,100,0.5)');
+    glow.addColorStop(0.5, 'rgba(40,180,80,0.2)');
+    glow.addColorStop(1, 'rgba(20,120,50,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+
+  // Phase 2 (0.15–0.8): Light rays radiating from gem
+  if (t > 0.15) {
+    const rayT = Math.min(1, (t - 0.15) / 0.65);
+    ctx.save();
+    for (let r = 0; r < 12; r++) {
+      const baseAngle = (r / 12) * Math.PI * 2;
+      const angle = baseAngle + Math.sin(tick * 0.02 + r * 0.8) * 0.15;
+      const rayLen = rayT * (150 + Math.sin(tick * 0.03 + r * 1.3) * 40);
+      const endX = gemX + Math.cos(angle) * rayLen;
+      const endY = gemY + Math.sin(angle) * rayLen;
+      ctx.globalAlpha = rayT * (0.08 + Math.sin(tick * 0.04 + r * 2.1) * 0.03);
+      ctx.strokeStyle = 'rgba(120,255,170,0.8)';
+      ctx.lineWidth = 1.5 + Math.sin(tick * 0.05 + r) * 0.5;
+      ctx.beginPath();
+      ctx.moveTo(gemX, gemY);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Phase 3 (0.3–1.0): Green sparkle particles floating outward
+  if (t > 0.3) {
+    const sparkT = Math.min(1, (t - 0.3) / 0.7);
+    ctx.save();
+    for (let s = 0; s < 20; s++) {
+      const angle = (s / 20) * Math.PI * 2 + tick * 0.01;
+      const dist = 20 + sparkT * (40 + Math.sin(tick * 0.025 + s * 1.5) * 60);
+      const sx = gemX + Math.cos(angle + Math.sin(tick * 0.015 + s)) * dist;
+      const sy = gemY + Math.sin(angle + Math.cos(tick * 0.012 + s * 0.7)) * dist * 0.7;
+      const sa = sparkT * Math.max(0, Math.sin(tick * 0.05 + s * 2.3));
+      if (sa > 0.1 && sx > 0 && sx < GW && sy > 0 && sy < GH) {
+        ctx.globalAlpha = sa * 0.4;
+        ctx.fillStyle = 'rgba(180,255,200,1)';
+        ctx.fillRect(sx, sy, 2, 2);
+      }
+    }
+    ctx.restore();
+  }
+
+  // Phase 4 (0.5–1.0): Subtle green wash over entire cave
+  if (t > 0.5) {
+    const washT = Math.min(1, (t - 0.5) / 0.5);
+    ctx.save();
+    ctx.globalAlpha = washT * 0.08;
+    ctx.fillStyle = 'rgba(80,220,120,1)';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+
+  // Phase 5 (0.7–1.0): Bright core flash at gem position
+  if (t > 0.7) {
+    const coreT = (t - 0.7) / 0.3;
+    const flash = Math.sin(coreT * Math.PI);
+    ctx.save();
+    ctx.globalAlpha = flash * 0.6;
+    const coreGlow = ctx.createRadialGradient(gemX, gemY, 0, gemX, gemY, 50);
+    coreGlow.addColorStop(0, 'rgba(220,255,230,1)');
+    coreGlow.addColorStop(0.3, 'rgba(140,255,170,0.6)');
+    coreGlow.addColorStop(0.7, 'rgba(80,220,120,0.2)');
+    coreGlow.addColorStop(1, 'rgba(40,180,80,0)');
+    ctx.fillStyle = coreGlow;
+    ctx.fillRect(gemX - 50, gemY - 50, 100, 100);
+    ctx.restore();
+  }
 }
 
 function drawGhostArm() {
@@ -5099,6 +5242,56 @@ function drawGhostArm() {
 }
 
 // ════════════════════════════════════════════════════════════
+// JADE DISCOVERY SEQUENCE
+// ════════════════════════════════════════════════════════════
+function startJadeSequence() {
+  startSequence([
+    // Phase 1: Something responds — cave goes quiet, resonance builds
+    { type: 'callback', fn: () => playSFX('jade_reveal') },
+    { type: 'env', duration: 1.5, darken: 0.15, vignette: 0.3, spectral: 0 },
+    { type: 'dialog', lines: [{s:'',t:'Κάτι αντηχεί βαθιά μέσα στον βράχο. Οι σταγόνες σταματούν. Σιωπή.'}] },
+
+    // Phase 2: Clio reacts, looks up
+    { type: 'move', who: 'clio', dx: -15, duration: 0.6 },
+    { type: 'dialog', lines: [
+      {s:'ΚΛΕΙΩ',t:'Περιμένετε...'},
+      {s:'',t:'Η Κλειώ κοιτάζει ΠΑΝΩ — η γωνία που μόνο μια επτάχρονη θα δοκίμαζε.'},
+    ]},
+
+    // Phase 3: Green light floods the cave
+    { type: 'effect', effect: 'jade_reveal', duration: 3.0 },
+    { type: 'callback', fn: () => changeSceneMusic('_jade') },
+    { type: 'dialog', lines: [
+      {s:'ΚΛΕΙΩ',t:'ΕΚΕΙ! Κάτι πράσινο — λάμπει!'},
+      {s:'ΑΙΑΣ',t:'Το σπήλαιο... αλλάζει χρώμα;'},
+    ]},
+
+    // Phase 4: Retrieval — the stone emerges
+    { type: 'dialog', lines: [
+      {s:'',t:'Πράσινο φως πλημμυρίζει τη σχισμή. Σφηνωμένη μέσα: μια πέτρα. Σκούρα πράσινη, λεία, ζεστή σαν να ζει.'},
+      {s:'ΚΛΕΙΩ',t:'Σας. Το. Είπα.'},
+    ]},
+
+    // Phase 5: Take the stone + identify it
+    { type: 'callback', fn: () => {
+      state.flags.jade_found = true;
+      addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίζη.' });
+    }},
+    { type: 'dialog', lines: [
+      {s:'ΝΤΕΜΗΣ',t:'Νεφρίτης. Jade. Από την Ανατολή.'},
+      {s:'ΑΙΑΣ',t:'Αξίζει κάτι;'},
+      {s:'ΝΤΕΜΗΣ',t:'Αξίζει ό,τι ο Βισβίκης ήθελε να δείξει μ\' αυτό. Τώρα πρέπει... να του το πάμε.'},
+      {s:'ΑΙΑΣ',t:'...Στο νεκροταφείο.'},
+      {s:'ΚΛΕΙΩ',t:'Σας. Το. Είπα.'},
+    ]},
+
+    // Phase 6: Return to normal
+    { type: 'env', duration: 2.0, darken: 0, vignette: 0, spectral: 0 },
+    { type: 'callback', fn: () => changeSceneMusic('cave') },
+  ]);
+}
+
+// ════════════════════════════════════════════════════════════
 // GHOST SUMMONING SEQUENCE
 // ════════════════════════════════════════════════════════════
 function startGhostSequence() {
@@ -5114,10 +5307,11 @@ function startGhostSequence() {
     { type: 'dialog', lines: [{s:'ΚΛΕΙΩ',t:'Μπαμπά... η πέτρα λάμπει!'},{s:'ΑΙΑΣ',t:'Τι γίνεται; Γιατί σκοτείνιασε;'}] },
     { type: 'wait', duration: 1.0 },
     { type: 'callback', fn: () => playSFX('ghost') },
+    { type: 'dialog', lines: [{s:'',t:'Κάτι υψώνεται πάνω από τον τάφο...'}] },
     { type: 'effect', effect: 'materialize', duration: 3.0 },
     { type: 'npc', who: 'ghost', visible: true },
     { type: 'dialog', lines: [
-      {s:'',t:'Μια φιγούρα υψώνεται πάνω από τον τάφο. Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
+      {s:'',t:'Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
       {s:'ΚΛΕΙΩ',t:'Ο... ο Καπετάν Βισβίκης;'},
       {s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέσα από αυτόν!'},
     ]},
@@ -5125,11 +5319,12 @@ function startGhostSequence() {
     { type: 'wait', duration: 0.8 },
     { type: 'npc', who: 'ghost', dir: 1 },
     { type: 'wait', duration: 0.6 },
-    // Ghost raises arm and points to church
+    // Ghost raises arm and points to church — narrate BEFORE the visual
+    { type: 'dialog', lines: [{s:'',t:'Το φάντασμα σηκώνει αργά το χέρι...'}] },
     { type: 'callback', fn: () => { npcChars.ghost.arm = 0; }},
     { type: 'npc', who: 'ghost', dir: 1, tilt: -0.1 },
     { type: 'effect', effect: 'arm_raise', duration: 1.2 },
-    { type: 'dialog', lines: [{s:'',t:'Το φάντασμα σηκώνει αργά το χέρι. Δείχνει... προς τον Άγιο Νικόλαο.'}] },
+    { type: 'dialog', lines: [{s:'',t:'Δείχνει... προς τον Άγιο Νικόλαο.'}] },
     { type: 'dialog', lines: [
       {s:'ΚΛΕΙΩ',t:'Ο χάρτης. Θέλει να βρούμε τον χάρτη.'},
       {s:'ΝΤΕΜΗΣ',t:'Στην εκκλησία; Τι κρύβεται εκεί;'},
@@ -6111,6 +6306,7 @@ function startScene(id) {
   state.seq.env.spectral = 0;
   state.seq.swirlParticles.length = 0;
   state.seq.stoneGlow.active = false;
+  state.seq.jadeReveal.active = false;
 
   document.getElementById('ui-panel').classList.add('on');
   document.getElementById('action-line').classList.add('on');
@@ -6560,6 +6756,7 @@ function render() {
   }
   drawSwirlParticles();
   drawStoneGlow();
+  drawJadeReveal();
 
   // Dialogue overlay
   drawDialogue();
@@ -7086,6 +7283,7 @@ const sceneMusic = {
   new_era:   'music/the-sea-remembers-1.mp3',
   epilogue:  'music/the-sea-remembers-1.mp3',
   _ghost:    'music/graveyard-veil-1.mp3',
+  _jade:     'music/the-ghost-of-captain-visvikis-1.mp3',
 };
 
 let currentMusicSrc = '';
