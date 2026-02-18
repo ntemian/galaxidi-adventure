@@ -3152,6 +3152,156 @@ test('Window resize handler exists for canvas scaling', () => {
     'No window resize handler for canvas scaling');
 });
 
+// ── Section 45: VOICE-TEXT SYNC — Audio content matches displayed text ──
+console.log('\n45. VOICE-TEXT SYNC — Audio content matches displayed text');
+
+test('No voice file is mapped to multiple different texts', () => {
+  // Build reverse map: voice file → all texts that reference it
+  const vmRegex = /'([^']+)':\s*'(voice\/[^']+\.mp3)'/g;
+  const fileToTexts = {};
+  let m;
+  while ((m = vmRegex.exec(js)) !== null) {
+    const text = m[1];
+    const file = m[2];
+    if (!fileToTexts[file]) fileToTexts[file] = [];
+    if (!fileToTexts[file].includes(text)) fileToTexts[file].push(text);
+  }
+  const conflicts = [];
+  for (const [file, texts] of Object.entries(fileToTexts)) {
+    if (texts.length > 1) {
+      conflicts.push({ file, texts });
+    }
+  }
+  if (conflicts.length > 0) {
+    console.log(`    ⚠ ${conflicts.length} voice files mapped to multiple texts:`);
+    for (const c of conflicts) {
+      console.log(`      ${c.file}:`);
+      for (const t of c.texts) {
+        console.log(`        - "${t.substring(0, 60)}..."`);
+      }
+    }
+  }
+  assert(conflicts.length === 0,
+    `${conflicts.length} voice files are reused for different texts — audio won't match displayed text`);
+});
+
+test('dialog-lines.json text matches VOICE_MAP text for same voice file', () => {
+  // dialog-lines.json is ordered: narrator 001-N, then character files
+  // VOICE_MAP maps displayed text → file
+  // The dialog-lines.json text is what was ACTUALLY generated as audio
+  const dlJson = JSON.parse(fs.readFileSync(path.join(GAME_DIR, 'voice', 'dialog-lines.json'), 'utf8'));
+
+  // Build: VOICE_MAP text → file
+  const vmRegex = /'([^']+)':\s*'(voice\/[^']+\.mp3)'/g;
+  const textToFile = {};
+  let m;
+  while ((m = vmRegex.exec(js)) !== null) {
+    textToFile[m[1]] = m[2];
+  }
+
+  // Build: file → dialog-lines.json text (the audio content)
+  // dialog-lines.json entries map to voice files by order within each speaker directory
+  // narrator entries: 001.mp3, 002.mp3, ... ; character entries: speaker/001.mp3, ...
+  const fileToGenText = {};
+  const speakerCounts = {};
+  for (const entry of dlJson) {
+    const speaker = entry.speaker || '';
+    const dir = speaker === '' ? 'narrator' : speaker.toLowerCase();
+    if (!speakerCounts[dir]) speakerCounts[dir] = 0;
+    speakerCounts[dir]++;
+    const num = String(speakerCounts[dir]).padStart(3, '0');
+    const filePath = `voice/${dir}/${num}.mp3`;
+    fileToGenText[filePath] = entry.text;
+  }
+
+  // Compare: for each VOICE_MAP entry, check if the displayed text matches the generated audio text
+  const mismatches = [];
+  for (const [displayText, file] of Object.entries(textToFile)) {
+    const genText = fileToGenText[file];
+    if (genText && genText !== displayText) {
+      mismatches.push({
+        file,
+        displayed: displayText.substring(0, 70),
+        audioSays: genText.substring(0, 70)
+      });
+    }
+  }
+  if (mismatches.length > 0) {
+    console.log(`    ⚠ ${mismatches.length} voice-text mismatches found:`);
+    for (const mm of mismatches.slice(0, 10)) {
+      console.log(`      ${mm.file}:`);
+      console.log(`        Screen: "${mm.displayed}..."`);
+      console.log(`        Audio:  "${mm.audioSays}..."`);
+    }
+    if (mismatches.length > 10) console.log(`      ... and ${mismatches.length - 10} more`);
+  }
+  assert(mismatches.length === 0,
+    `${mismatches.length} voice files play audio that doesn't match displayed text`);
+});
+
+test('Kitchen/captain office scene texts all have matching voice entries', () => {
+  // Extract all text from kitchen scene objects and entry
+  const kitchenTexts = [];
+  // Entry dialog
+  const entryMatch = js.match(/kitchen:[\s\S]*?entry:\s*\[([\s\S]*?)\]/);
+  if (entryMatch) {
+    const tMatches = entryMatch[1].matchAll(/t:'([^']+)'/g);
+    for (const tm of tMatches) kitchenTexts.push(tm[1]);
+  }
+  // Object verbs
+  const kitchenSection = js.substring(
+    js.indexOf("kitchen:") + 1,
+    js.indexOf("exits:", js.indexOf("kitchen:"))
+  );
+  const lookTexts = kitchenSection.matchAll(/t:'([^']+)'/g);
+  for (const lt of lookTexts) kitchenTexts.push(lt[1]);
+
+  // Check each against VOICE_MAP
+  const vmRegex = /'([^']+)':\s*'(voice\/[^']+\.mp3)'/g;
+  const voiceMapTexts = new Set();
+  let m;
+  while ((m = vmRegex.exec(js)) !== null) voiceMapTexts.add(m[1]);
+
+  const missing = kitchenTexts.filter(t => !voiceMapTexts.has(t));
+  if (missing.length > 0) {
+    console.log(`    ⚠ Kitchen lines missing from VOICE_MAP:`);
+    for (const t of missing) console.log(`      - "${t.substring(0, 70)}..."`);
+  }
+  assert(missing.length === 0,
+    `${missing.length} kitchen/captain office lines have no voice entry`);
+});
+
+test('Exterior and terrace scene texts all have matching voice entries', () => {
+  const sceneTexts = [];
+  // Only match t:'...' that contain Greek characters (dialogue), not scene IDs
+  for (const sceneId of ['exterior', 'terrace']) {
+    const sceneStart = js.indexOf(`  ${sceneId}: {`);
+    if (sceneStart === -1) continue;
+    const nextScene = js.indexOf('\n  },\n', sceneStart);
+    const section = js.substring(sceneStart, nextScene > sceneStart ? nextScene : sceneStart + 3000);
+    const tMatches = section.matchAll(/t:'([^']+)'/g);
+    for (const tm of tMatches) {
+      // Filter out scene IDs (pure ASCII, short) — only keep actual Greek dialogue
+      if (/[\u0370-\u03FF\u1F00-\u1FFF]/.test(tm[1])) {
+        sceneTexts.push(tm[1]);
+      }
+    }
+  }
+
+  const vmRegex = /'([^']+)':\s*'(voice\/[^']+\.mp3)'/g;
+  const voiceMapTexts = new Set();
+  let m;
+  while ((m = vmRegex.exec(js)) !== null) voiceMapTexts.add(m[1]);
+
+  const missing = sceneTexts.filter(t => !voiceMapTexts.has(t));
+  if (missing.length > 0) {
+    console.log(`    ⚠ Exterior/terrace lines missing from VOICE_MAP:`);
+    for (const t of missing) console.log(`      - "${t.substring(0, 70)}..."`);
+  }
+  assert(missing.length === 0,
+    `${missing.length} exterior/terrace lines have no voice entry`);
+});
+
 // ════════════════════════════════════════════════════════════
 // SUMMARY
 // ════════════════════════════════════════════════════════════
