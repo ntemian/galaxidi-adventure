@@ -315,7 +315,7 @@ async function loadAllAssets() {
     loadImg('bg-terrace', 'assets/pixel-terrace.webp'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
     loadImg('bg-port', 'assets/pixel-port.webp'),
-    loadImg('bg-museum', 'assets/pixel-museum-new.png'),
+    loadImg('bg-museum', 'assets/pixel-museum-new2.png'),
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
     loadImg('bg-cave', 'assets/pixel-cave-new.png'),
     loadImg('bg-church', 'assets/pixel-church-new.png'),
@@ -352,6 +352,15 @@ async function loadAllAssets() {
     loadImg('cutscene-festival-panorama', 'assets/cutscene-festival-panorama.png'),
     loadImg('map-bg', 'assets/map-galaxidi.png'),
     loadImg('intro-parchment', 'assets/intro-parchment-v4.png'),
+    // Box art for end credits gallery
+    loadImg('box-art-ep1', 'assets/box-art-painting.png'),
+    loadImg('box-art-ep2', 'assets/box-art-ep2-amfissa.png'),
+    loadImg('box-art-ep3', 'assets/box-art-ep3-delphi.png'),
+    loadImg('box-art-ep4', 'assets/box-art-ep4-nafpaktos.png'),
+    loadImg('box-art-ep5', 'assets/box-art-ep5-messolonghi.png'),
+    loadImg('box-art-ep6', 'assets/box-art-ep6-zagori.png'),
+    loadImg('box-art-ep7', 'assets/box-art-ep7-patmos.png'),
+    loadImg('box-art-ep8', 'assets/box-art-ep8-return.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -814,7 +823,7 @@ const scenes = {
         }},
       { id:'papas_npc', x:450, y:280, w:80, h:110, label:'Παπά Νικόλα',
         verbs: { look:[{s:'',t:'Ο Παπά Νικόλας. Εξήντα χρονών, ζεστό πρόσωπο, πονηρό χαμόγελο.'}],
-                 talk:[{s:'ΠΑΠΑΣ',t:'Καλώς ήρθατε στον Άγιο Νικόλαο, παιδιά μου.'},{s:'ΝΤΕΜΗΣ',t:'Γεια σας, πάτερ. Ψάχνουμε για τον Βισβίκη.'},{s:'ΠΑΠΑΣ',t:'Α, τον Λουκά! Ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας.'},{s:'ΠΑΠΑΣ',t:'Αυτός έφτιαξε το τέμπλο, αυτός πλήρωνε τα κεριά, αυτός...'},{s:'ΑΙΑΣ',t:'Αυτός τα έκανε ΟΛΑ;'},{s:'ΠΑΠΑΣ',t:'Σχεδόν, παιδί μου. Σχεδόν. Κοιτάξτε γύρω σας — βλέπετε τα ίχνη του παντού.'}] }},
+                 talk:[{s:'ΠΑΠΑΣ',t:'Καλώς ήρθατε στον Άγιο Νικόλαο, παιδιά μου.'},{s:'ΝΤΕΜΗΣ',t:'Γεια σας, πάτερ. Ψάχνουμε για τον Βισβίκη.'},{s:'ΠΑΠΑΣ',t:'Α, τον Λουκά! Ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας.'},{s:'ΠΑΠΑΣ',t:'Βοήθησε να χτιστεί αυτή η εκκλησία. Έβαλε τα πλακάκια με τα ίδια του τα χέρια!'},{s:'ΑΙΑΣ',t:'Αυτός τα έκανε ΟΛΑ;'},{s:'ΠΑΠΑΣ',t:'Σχεδόν, παιδί μου. Σχεδόν. Κοιτάξτε γύρω σας — βλέπετε τα ίχνη του παντού.'}] }},
     ],
     exits: [{ side:'left', target:'church', label:'← Πλατεία' }],
     entry: [
@@ -1453,7 +1462,31 @@ const CREDITS_SECTIONS = [
   { type: 'gap', size: 40 },
   { type: 'saga-studio', text: 'GALAXIDI STUDIOS' },
   { type: 'saga-made', text: 'Made in Greece' },
-  { type: 'gap', size: 120 },
+  { type: 'gap', size: 80 },
+  { type: 'divider' },
+  { type: 'gap', size: 60 },
+  { type: 'heading', text: 'ΤΑ ΚΟΥΤΙΑ ΤΗΣ ΣΑΓΑΣ' },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep1', label: 'Episode I — The Mystery of Galaxidi', width: 180 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep2', label: 'Episode II — The Secret of Amfissa', width: 160 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep3', label: 'Episode III — The Voice of Delphi', width: 160 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep4', label: 'Episode IV — The Battle of Nafpaktos', width: 160 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep5', label: 'Episode V — The Spirit of Messolonghi', width: 160 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep6', label: 'Episode VI — The Gorge', width: 160 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep7', label: 'Episode VII — The Island of Silence', width: 160 },
+  { type: 'gap', size: 30 },
+  { type: 'image', key: 'box-art-ep8', label: 'Episode VIII — The Return', width: 160 },
+  { type: 'gap', size: 80 },
+  { type: 'divider' },
+  { type: 'gap', size: 60 },
+  { type: 'story-continues', text: 'Η  Ι Σ Τ Ο Ρ Ι Α  Σ Υ Ν Ε Χ Ι Ζ Ε Τ Α Ι . . .' },
+  { type: 'gap', size: 200 },
 ];
 
 // Pre-calculate credits layout (y positions for each section)
@@ -1550,6 +1583,22 @@ function buildCreditsLayout() {
       case 'saga-made':
         items.push({ y, text: sec.text, font: `italic 400 10px ${CREDITS_FONT}`, color: '#506050', align: 'center' });
         y += 18;
+        break;
+      case 'image': {
+        const img = images[sec.key];
+        const w = sec.width || 160;
+        const h = img ? Math.round(w * (img.naturalHeight / img.naturalWidth)) : Math.round(w * 1.3);
+        items.push({ y, type: 'image', key: sec.key, width: w, height: h });
+        y += h + 12;
+        if (sec.label) {
+          items.push({ y, text: sec.label, font: `italic 400 9px ${CREDITS_FONT}`, color: '#70a080', align: 'center' });
+          y += 18;
+        }
+        break;
+      }
+      case 'story-continues':
+        items.push({ y, text: sec.text, font: `700 20px ${CREDITS_FONT}`, color: '#ffd454', glow: '#d4a030', glowBlur: 20, align: 'center', pulse: true });
+        y += 40;
         break;
       case 'gap':
         y += sec.size || 40;
@@ -1684,7 +1733,7 @@ const cutscenes = {
           { s: 'ΝΤΕΜΗΣ', t: '«...εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα.»', at: 1.0 },
           { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο.»', at: 4.5 },
           { s: 'ΑΙΑΣ', t: 'Είναι νεκρός εδώ και εκατό χρόνια!', at: 8.0 },
-          { s: 'ΚΛΕΙΩ', t: 'Στο νεκροταφείο, βλάκα. Λογικό είναι.', at: 9.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Στο νεκροταφείο! Λογικό είναι.', at: 9.5 },
           { s: 'ΝΤΕΜΗΣ', t: 'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.', at: 11.5 },
         ],
       },
@@ -2337,7 +2386,7 @@ function drawLetterSingle(t, p, tick) {
 
 function drawCaveEntrance(t, p, tick) {
   // Pan forward into the cave, lantern light flickers
-  drawKenBurns('cutscene-cave', 1.10 + p * 0.10, 0, p * -15);
+  drawKenBurns('cutscene-cave', 1.05 + p * 0.08, 0, 30 - p * 8);
   ctx.save();
   ctx.globalAlpha = 0.05 + Math.sin(tick * 0.06) * 0.03;
   ctx.fillStyle = '#FFa040';
@@ -2409,7 +2458,7 @@ function drawTelescopeIsland(t, p, tick) {
 
 function drawCrossingWide(t, p, tick) {
   // Chrysostomos at the helm, dawn stories
-  drawKenBurns('cutscene-crossing-dawn', 1.08 + p * 0.08, -8 + p * 16, 0);
+  drawKenBurns('cutscene-crossing-dawn', 1.06 + p * 0.08, -8 + p * 16, 30);
   // Dawn pink-gold overlay
   ctx.save();
   ctx.globalAlpha = 0.05 + Math.sin(tick * 0.015) * 0.02;
@@ -2549,7 +2598,7 @@ function drawChurchTile(t, p, tick) {
 // ═══════════════════════════════════════════════════════════
 
 function drawEpilogueHarbor(t, p, tick) {
-  drawKenBurns('cutscene-epilogue-speech', 1.08 + p * 0.08, p * 6, 0);
+  drawKenBurns('cutscene-epilogue-speech', 1.06 + p * 0.08, p * 6, 25);
   // Warm night festive glow
   ctx.save();
   ctx.globalAlpha = 0.06 + Math.sin(tick * 0.03) * 0.025;
@@ -3096,61 +3145,8 @@ function createCicadasLoop() {
 }
 
 function playSeagullCry() {
-  const ctx = getAudioCtx();
-  const now = ctx.currentTime;
-  const osc = ctx.createOscillator();
-  osc.type = 'sine';
-  const baseF = 1800 + Math.random() * 600;
-  osc.frequency.setValueAtTime(baseF, now);
-  osc.frequency.linearRampToValueAtTime(baseF * 0.6, now + 0.15);
-  osc.frequency.linearRampToValueAtTime(baseF * 1.1, now + 0.35);
-  osc.frequency.linearRampToValueAtTime(baseF * 0.5, now + 0.6);
-  const osc2 = ctx.createOscillator();
-  osc2.type = 'sine';
-  osc2.frequency.setValueAtTime(baseF * 1.5, now);
-  osc2.frequency.linearRampToValueAtTime(baseF * 0.9, now + 0.15);
-  osc2.frequency.linearRampToValueAtTime(baseF * 1.6, now + 0.35);
-  osc2.frequency.linearRampToValueAtTime(baseF * 0.75, now + 0.6);
-  const vib = ctx.createOscillator();
-  vib.frequency.value = 20 + Math.random() * 15;
-  const vibGain = ctx.createGain();
-  vibGain.gain.value = 40;
-  vib.connect(vibGain);
-  vibGain.connect(osc.frequency);
-  vibGain.connect(osc2.frequency);
-  const env = ctx.createGain();
-  env.gain.setValueAtTime(0, now);
-  env.gain.linearRampToValueAtTime(0.06 + Math.random() * 0.04, now + 0.05);
-  env.gain.setValueAtTime(0.06, now + 0.35);
-  env.gain.linearRampToValueAtTime(0, now + 0.7);
-  const noiseLen = ctx.sampleRate;
-  const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
-  const nd = noiseBuf.getChannelData(0);
-  for (let i = 0; i < noiseLen; i++) nd[i] = Math.random() * 2 - 1;
-  const noiseSrc = ctx.createBufferSource();
-  noiseSrc.buffer = noiseBuf;
-  const noiseBP = ctx.createBiquadFilter();
-  noiseBP.type = 'bandpass';
-  noiseBP.frequency.value = 2000;
-  noiseBP.Q.value = 3;
-  const noiseGain = ctx.createGain();
-  noiseGain.gain.setValueAtTime(0, now);
-  noiseGain.gain.linearRampToValueAtTime(0.015, now + 0.05);
-  noiseGain.gain.linearRampToValueAtTime(0, now + 0.7);
-  noiseSrc.connect(noiseBP);
-  noiseBP.connect(noiseGain);
-  noiseGain.connect(ambientSounds.masterGain);
-  osc.connect(env);
-  osc2.connect(env);
-  env.connect(ambientSounds.masterGain);
-  osc.start(now);
-  osc2.start(now);
-  vib.start(now);
-  noiseSrc.start(now);
-  osc.stop(now + 0.75);
-  osc2.stop(now + 0.75);
-  vib.stop(now + 0.75);
-  noiseSrc.stop(now + 0.75);
+  // Disabled: procedural synth seagull removed — replace with ElevenLabs SFX when available
+  // To enable: load sfx/seagull-cry.mp3 and play it here
 }
 
 function playChurchBell() {
@@ -4266,86 +4262,288 @@ function drawKitchenAmbience(tick) {
 function drawMuseumAmbience(tick) {
   ctx.save();
 
-  // ── OLD NAUTICAL MAP of Corinthian Gulf on the wall ──
+  // ── NAUTICAL CHART: Κορινθιακός Κόλπος, 1858 ──
+  // Period chart with accurate gulf geography, depth soundings, rhumb lines
   const mx = 478, my = 108, mw = 122, mh = 140;
-  // Parchment background
-  ctx.fillStyle = '#D4C4A0';
+
+  // --- Parchment base with aged gradient ---
+  ctx.fillStyle = '#D8C89C';
   ctx.fillRect(mx, my, mw, mh);
-  // Aged border / frame
-  ctx.strokeStyle = '#6B5332';
+  const pg = ctx.createLinearGradient(mx, my, mx, my + mh);
+  pg.addColorStop(0, 'rgba(230,218,185,0.3)');
+  pg.addColorStop(0.5, 'rgba(0,0,0,0)');
+  pg.addColorStop(1, 'rgba(120,100,60,0.12)');
+  ctx.fillStyle = pg;
+  ctx.fillRect(mx, my, mw, mh);
+  // Fox marks (circular water stains)
+  ctx.fillStyle = 'rgba(150,125,75,0.14)';
+  ctx.beginPath(); ctx.arc(mx + 28, my + 55, 14, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(140,115,65,0.09)';
+  ctx.beginPath(); ctx.arc(mx + 88, my + 100, 10, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(130,105,55,0.07)';
+  ctx.beginPath(); ctx.arc(mx + 60, my + 120, 8, 0, Math.PI * 2); ctx.fill();
+
+  // --- Ornate double frame ---
+  ctx.strokeStyle = '#4A2A10';
   ctx.lineWidth = 2;
   ctx.strokeRect(mx, my, mw, mh);
-  ctx.strokeStyle = '#8B7352';
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = '#7B6342';
+  ctx.lineWidth = 0.5;
   ctx.strokeRect(mx + 3, my + 3, mw - 6, mh - 6);
-  // Parchment stain/aging
-  ctx.fillStyle = 'rgba(139,115,82,0.12)';
-  ctx.fillRect(mx + 20, my + 30, 60, 50);
-  ctx.fillStyle = 'rgba(139,115,82,0.08)';
-  ctx.fillRect(mx + 8, my + 70, 40, 35);
-  // Coastline — simplified Corinthian Gulf
-  ctx.strokeStyle = '#5A4228';
+
+  // Clip contents to inner frame
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(mx + 4, my + 4, mw - 8, mh - 8);
+  ctx.clip();
+
+  // --- Title cartouche ---
+  const tcx = mx + 14, tcy = my + 6, tcw = mw - 28, tch = 19;
+  ctx.fillStyle = 'rgba(216,200,156,0.92)';
+  ctx.fillRect(tcx, tcy, tcw, tch);
+  ctx.strokeStyle = '#6B5332';
+  ctx.lineWidth = 0.8;
+  ctx.strokeRect(tcx, tcy, tcw, tch);
+  [[tcx + 2, tcy + 2], [tcx + tcw - 2, tcy + 2], [tcx + 2, tcy + tch - 2], [tcx + tcw - 2, tcy + tch - 2]].forEach(([ox, oy]) => {
+    ctx.beginPath(); ctx.arc(ox, oy, 1.5, 0, Math.PI * 2); ctx.strokeStyle = '#8B7352'; ctx.lineWidth = 0.5; ctx.stroke();
+  });
+  ctx.fillStyle = '#2A1808';
+  ctx.font = 'bold 5px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('ΚΟΡΙΝΘΙΑΚΟΣ', mx + mw / 2, my + 14);
+  ctx.font = '4.5px serif';
+  ctx.fillText('ΚΟΛΠΟΣ', mx + mw / 2, my + 21);
+  ctx.textAlign = 'left';
+
+  // --- Sea base (water fills map area, land drawn on top) ---
+  ctx.fillStyle = 'rgba(140,175,200,0.18)';
+  ctx.fillRect(mx + 4, my + 26, mw - 8, 90);
+  // Horizontal water hatching
+  ctx.strokeStyle = 'rgba(90,66,40,0.08)';
+  ctx.lineWidth = 0.3;
+  for (let hy = 50; hy < 85; hy += 3) {
+    ctx.beginPath(); ctx.moveTo(mx + 6, my + hy); ctx.lineTo(mx + mw - 6, my + hy); ctx.stroke();
+  }
+
+  // --- NORTH COAST (Στερεά Ελλάδα) filled landmass ---
+  // West=Antirrio narrows, Galaxidi ~35% from west, Itea bay east of it
+  ctx.fillStyle = '#C8B88A';
+  ctx.beginPath();
+  ctx.moveTo(mx + 4, my + 26);
+  ctx.lineTo(mx + mw - 4, my + 26);
+  ctx.lineTo(mx + 116, my + 45);
+  ctx.lineTo(mx + 108, my + 43);
+  ctx.lineTo(mx + 100, my + 47);
+  ctx.lineTo(mx + 94, my + 44);
+  ctx.lineTo(mx + 86, my + 46);
+  ctx.lineTo(mx + 80, my + 50);   // Itea bay east
+  ctx.lineTo(mx + 74, my + 54);   // Itea bay deep
+  ctx.lineTo(mx + 70, my + 50);   // Itea bay west
+  ctx.lineTo(mx + 64, my + 47);   // peninsula
+  ctx.lineTo(mx + 58, my + 50);   // Galaxidi headland east
+  ctx.lineTo(mx + 54, my + 54);   // Galaxidi bay deep
+  ctx.lineTo(mx + 50, my + 52);   // Galaxidi bay center
+  ctx.lineTo(mx + 46, my + 54);   // Galaxidi bay west
+  ctx.lineTo(mx + 42, my + 50);   // Galaxidi headland west
+  ctx.lineTo(mx + 36, my + 48);
+  ctx.lineTo(mx + 30, my + 52);
+  ctx.lineTo(mx + 24, my + 48);   // Nafpaktos area
+  ctx.lineTo(mx + 18, my + 46);
+  ctx.lineTo(mx + 14, my + 44);
+  ctx.lineTo(mx + 10, my + 42);   // Antirrio narrows north
+  ctx.lineTo(mx + 6, my + 40);
+  ctx.lineTo(mx + 4, my + 38);
+  ctx.closePath();
+  ctx.fill();
+  // North coast ink stroke
+  ctx.strokeStyle = '#4A3218';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  // North coast (mainland)
-  ctx.moveTo(mx + 5, my + 45);
-  ctx.lineTo(mx + 25, my + 42);
-  ctx.lineTo(mx + 45, my + 50);
-  ctx.lineTo(mx + 65, my + 44);
-  ctx.lineTo(mx + 90, my + 48);
-  ctx.lineTo(mx + 117, my + 42);
+  ctx.moveTo(mx + 4, my + 38);
+  ctx.lineTo(mx + 6, my + 40); ctx.lineTo(mx + 10, my + 42);
+  ctx.lineTo(mx + 14, my + 44); ctx.lineTo(mx + 18, my + 46);
+  ctx.lineTo(mx + 24, my + 48); ctx.lineTo(mx + 30, my + 52);
+  ctx.lineTo(mx + 36, my + 48); ctx.lineTo(mx + 42, my + 50);
+  ctx.lineTo(mx + 46, my + 54); ctx.lineTo(mx + 50, my + 52);
+  ctx.lineTo(mx + 54, my + 54); ctx.lineTo(mx + 58, my + 50);
+  ctx.lineTo(mx + 64, my + 47); ctx.lineTo(mx + 70, my + 50);
+  ctx.lineTo(mx + 74, my + 54); ctx.lineTo(mx + 80, my + 50);
+  ctx.lineTo(mx + 86, my + 46); ctx.lineTo(mx + 94, my + 44);
+  ctx.lineTo(mx + 100, my + 47); ctx.lineTo(mx + 108, my + 43);
+  ctx.lineTo(mx + 116, my + 45);
   ctx.stroke();
-  // South coast (Peloponnese)
+
+  // --- SOUTH COAST (Πελοπόννησος) filled landmass ---
+  ctx.fillStyle = '#C8B88A';
   ctx.beginPath();
-  ctx.moveTo(mx + 5, my + 85);
-  ctx.lineTo(mx + 30, my + 90);
-  ctx.lineTo(mx + 55, my + 82);
-  ctx.lineTo(mx + 80, my + 88);
-  ctx.lineTo(mx + 100, my + 82);
-  ctx.lineTo(mx + 117, my + 86);
-  ctx.stroke();
-  // Gulf water (light blue wash)
-  ctx.fillStyle = 'rgba(100,140,180,0.12)';
-  ctx.fillRect(mx + 6, my + 48, mw - 12, 34);
-  // Galaxidi marker — small red dot
-  ctx.fillStyle = '#8B2020';
-  ctx.beginPath();
-  ctx.arc(mx + 50, my + 78, 2, 0, Math.PI * 2);
+  ctx.moveTo(mx + 4, my + 115);
+  ctx.lineTo(mx + mw - 4, my + 115);
+  ctx.lineTo(mx + 116, my + 80);
+  ctx.lineTo(mx + 110, my + 83);
+  ctx.lineTo(mx + 104, my + 79);
+  ctx.lineTo(mx + 96, my + 82);
+  ctx.lineTo(mx + 88, my + 85);   // Aigio area
+  ctx.lineTo(mx + 82, my + 81);
+  ctx.lineTo(mx + 76, my + 84);
+  ctx.lineTo(mx + 68, my + 87);   // opposite Galaxidi
+  ctx.lineTo(mx + 60, my + 83);
+  ctx.lineTo(mx + 52, my + 86);
+  ctx.lineTo(mx + 44, my + 82);
+  ctx.lineTo(mx + 36, my + 85);
+  ctx.lineTo(mx + 28, my + 80);
+  ctx.lineTo(mx + 20, my + 78);
+  ctx.lineTo(mx + 14, my + 75);   // Rio area
+  ctx.lineTo(mx + 10, my + 72);
+  ctx.lineTo(mx + 6, my + 70);
+  ctx.lineTo(mx + 4, my + 68);    // Rio narrows south
+  ctx.closePath();
   ctx.fill();
-  // "ΓΑΛΑΞΕΙΔΙ" label tiny
-  ctx.fillStyle = '#5A3018';
-  ctx.font = '4px serif';
-  ctx.fillText('ΓΑΛΑΞΕΙΔΙ', mx + 37, my + 76);
-  // Navigation routes (dotted lines in ink)
-  ctx.strokeStyle = 'rgba(90,66,40,0.4)';
-  ctx.setLineDash([2, 2]);
+  // South coast ink stroke
+  ctx.strokeStyle = '#4A3218';
+  ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(mx + 50, my + 78); // from Galaxidi
-  ctx.lineTo(mx + 20, my + 60); // west route
+  ctx.moveTo(mx + 4, my + 68);
+  ctx.lineTo(mx + 6, my + 70); ctx.lineTo(mx + 10, my + 72);
+  ctx.lineTo(mx + 14, my + 75); ctx.lineTo(mx + 20, my + 78);
+  ctx.lineTo(mx + 28, my + 80); ctx.lineTo(mx + 36, my + 85);
+  ctx.lineTo(mx + 44, my + 82); ctx.lineTo(mx + 52, my + 86);
+  ctx.lineTo(mx + 60, my + 83); ctx.lineTo(mx + 68, my + 87);
+  ctx.lineTo(mx + 76, my + 84); ctx.lineTo(mx + 82, my + 81);
+  ctx.lineTo(mx + 88, my + 85); ctx.lineTo(mx + 96, my + 82);
+  ctx.lineTo(mx + 104, my + 79); ctx.lineTo(mx + 110, my + 83);
+  ctx.lineTo(mx + 116, my + 80);
   ctx.stroke();
+
+  // --- Coastal hachures (short ticks into land) ---
+  ctx.strokeStyle = 'rgba(74,50,24,0.25)';
+  ctx.lineWidth = 0.4;
+  [[10,42,-3],[18,46,-3],[30,52,-3],[42,50,-3],[58,50,-3],[70,50,-3],[86,46,-3],[100,47,-3],[108,43,-3]].forEach(([hx,hy,d]) => {
+    ctx.beginPath(); ctx.moveTo(mx+hx, my+hy); ctx.lineTo(mx+hx, my+hy+d); ctx.stroke();
+  });
+  [[14,75,3],[28,80,3],[44,82,3],[60,83,3],[76,84,3],[88,85,3],[104,79,3],[110,83,3]].forEach(([hx,hy,d]) => {
+    ctx.beginPath(); ctx.moveTo(mx+hx, my+hy); ctx.lineTo(mx+hx, my+hy+d); ctx.stroke();
+  });
+
+  // --- TRIZONIA ISLAND ---
+  ctx.fillStyle = '#C8B88A';
   ctx.beginPath();
-  ctx.moveTo(mx + 50, my + 78);
-  ctx.lineTo(mx + 95, my + 60); // east route
+  ctx.ellipse(mx + 50, my + 62, 5, 2.5, -0.15, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#4A3218'; ctx.lineWidth = 0.7; ctx.stroke();
+  ctx.fillStyle = 'rgba(58,34,16,0.6)';
+  ctx.font = '3px serif';
+  ctx.fillText('Τριζόνια', mx + 43, my + 59);
+
+  // --- DEPTH SOUNDINGS (fathoms scattered in water) ---
+  ctx.fillStyle = 'rgba(58,34,16,0.35)';
+  ctx.font = '3px serif';
+  [[20,60,'8'],[35,68,'15'],[55,72,'22'],[70,68,'18'],[85,62,'12'],[95,70,'25'],[9,55,'6'],[105,65,'20']].forEach(([sx,sy,v]) => {
+    ctx.fillText(v, mx+sx, my+sy);
+  });
+
+  // --- PLACE LABELS ---
+  // Galaxidi — prominent
+  ctx.fillStyle = '#2A1808';
+  ctx.font = 'bold 4.5px serif';
+  ctx.fillText('ΓΑΛΑΞΕΙΔΙ', mx + 38, my + 48);
+  // Red marker with ring
+  ctx.fillStyle = '#8B1818';
+  ctx.beginPath(); ctx.arc(mx + 50, my + 51, 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#6B1010'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.arc(mx + 50, my + 51, 4, 0, Math.PI * 2); ctx.stroke();
+  // Other towns
+  ctx.fillStyle = 'rgba(42,24,8,0.6)';
+  ctx.font = '3.5px serif';
+  ctx.fillText('Ιτέα', mx + 74, my + 47);
+  ctx.fillText('Ναύπακτος', mx + 14, my + 43);
+  ctx.font = '3px serif';
+  ctx.fillText('Αίγιο', mx + 84, my + 90);
+  ctx.fillText('Ρίο', mx + 8, my + 68);
+  ctx.fillText('Αντίρριο', mx + 6, my + 36);
+
+  // --- NAVIGATION ROUTES (curved dotted ink from Galaxidi) ---
+  ctx.strokeStyle = 'rgba(140,30,20,0.30)';
+  ctx.setLineDash([2, 2]);
+  ctx.lineWidth = 0.7;
+  // West: Galaxidi → Nafpaktos → strait
+  ctx.beginPath();
+  ctx.moveTo(mx + 50, my + 53);
+  ctx.quadraticCurveTo(mx + 30, my + 56, mx + 15, my + 55);
+  ctx.quadraticCurveTo(mx + 8, my + 54, mx + 5, my + 52);
+  ctx.stroke();
+  // East: Galaxidi → Itea → Aigio
+  ctx.beginPath();
+  ctx.moveTo(mx + 50, my + 53);
+  ctx.quadraticCurveTo(mx + 75, my + 58, mx + 95, my + 62);
+  ctx.quadraticCurveTo(mx + 108, my + 64, mx + 116, my + 62);
+  ctx.stroke();
+  // South crossing to Peloponnese
+  ctx.strokeStyle = 'rgba(140,30,20,0.20)';
+  ctx.beginPath();
+  ctx.moveTo(mx + 50, my + 55);
+  ctx.quadraticCurveTo(mx + 55, my + 68, mx + 60, my + 82);
   ctx.stroke();
   ctx.setLineDash([]);
-  // Compass rose (simple)
-  const cx = mx + 95, cy = my + 115;
-  ctx.strokeStyle = '#6B5332';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy); ctx.stroke();
-  // N indicator
-  ctx.fillStyle = '#5A3018';
-  ctx.font = '5px serif';
-  ctx.fillText('B', cx - 2, cy - 10); // Β = Βορράς (North in Greek)
-  // Title at top
-  ctx.fillStyle = '#4A3218';
-  ctx.font = '5px serif';
-  ctx.fillText('ΚΟΡΙΝΘΙΑΚΟΣ ΚΟΛΠΟΣ', mx + 15, my + 14);
-  // Ink date
-  ctx.fillStyle = 'rgba(90,66,40,0.5)';
-  ctx.font = '4px serif';
-  ctx.fillText('1858', mx + mw - 22, my + mh - 6);
+
+  // --- COMPASS ROSE (8-point period style) ---
+  const cx = mx + 100, cy = my + 100;
+  const cr = 9;
+  ctx.strokeStyle = 'rgba(74,42,16,0.4)'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.arc(cx, cy, cr + 2, 0, Math.PI * 2); ctx.stroke();
+  ctx.strokeStyle = '#5A3A18'; ctx.lineWidth = 0.4;
+  for (let r = 0; r < 8; r++) {
+    const a = r * Math.PI / 4 - Math.PI / 2;
+    const len = (r % 2 === 0) ? cr : cr * 0.6;
+    ctx.beginPath(); ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * len, cy + Math.sin(a) * len); ctx.stroke();
+  }
+  // North pointer (filled)
+  ctx.fillStyle = '#3A1A08';
+  ctx.beginPath(); ctx.moveTo(cx, cy - cr); ctx.lineTo(cx - 2, cy); ctx.lineTo(cx + 2, cy); ctx.closePath(); ctx.fill();
+  // South pointer (outline)
+  ctx.strokeStyle = '#5A3A18'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(cx, cy + cr); ctx.lineTo(cx - 2, cy); ctx.lineTo(cx + 2, cy); ctx.closePath(); ctx.stroke();
+  // Cardinal labels
+  ctx.fillStyle = '#2A1808';
+  ctx.font = 'bold 4px serif'; ctx.textAlign = 'center';
+  ctx.fillText('Β', cx, cy - cr - 2);
+  ctx.font = '3px serif';
+  ctx.fillText('Ν', cx, cy + cr + 5);
+  ctx.fillText('Α', cx + cr + 4, cy + 1);
+  ctx.fillText('Δ', cx - cr - 4, cy + 1);
+  ctx.textAlign = 'left';
+
+  // --- RHUMB LINES (radiating from compass, period chart style) ---
+  ctx.strokeStyle = 'rgba(90,70,40,0.06)';
+  ctx.lineWidth = 0.3;
+  for (let r = 0; r < 16; r++) {
+    const a = r * Math.PI / 8;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * (cr + 3), cy + Math.sin(a) * (cr + 3));
+    ctx.lineTo(cx + Math.cos(a) * 50, cy + Math.sin(a) * 50);
+    ctx.stroke();
+  }
+
+  // --- Scale bar (bottom left) ---
+  const sbx = mx + 10, sby = my + 108;
+  ctx.strokeStyle = 'rgba(74,50,24,0.5)'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + 30, sby); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sbx, sby - 2); ctx.lineTo(sbx, sby + 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sbx + 15, sby - 1); ctx.lineTo(sbx + 15, sby + 1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sbx + 30, sby - 2); ctx.lineTo(sbx + 30, sby + 2); ctx.stroke();
+  ctx.fillStyle = 'rgba(58,34,16,0.45)'; ctx.font = '2.5px serif';
+  ctx.fillText('0', sbx - 1, sby + 6);
+  ctx.fillText('10', sbx + 12, sby + 6);
+  ctx.fillText('20 ν.μ.', sbx + 26, sby + 6);
+
+  // --- Cartographer & date ---
+  ctx.fillStyle = 'rgba(74,50,24,0.45)';
+  ctx.font = 'italic 3.5px serif'; ctx.textAlign = 'right';
+  ctx.fillText('Α.Δ. Βισβίκης, 1858', mx + mw - 8, my + mh - 8);
+  ctx.textAlign = 'left';
+
+  // Unclip map
+  ctx.restore();
 
   // ── FLOATING DUST MOTES (dim, slow) ──
   for (let d = 0; d < 10; d++) {
@@ -4451,6 +4649,24 @@ function drawWindmillAmbience(tick) {
 // Graveyard ambience: fireflies, mist, moonlight rays, cypress shadow sway
 function drawGraveyardAmbience(tick) {
   ctx.save();
+  // ── TOMBSTONE TEXT CORRECTION ──
+  // Cover old "ΠΛΟΙΑΡΧΟΣ / Λ. ΒΙΣΒΙΖΗΣ" and draw correct name
+  ctx.fillStyle = '#A09890';
+  ctx.fillRect(454, 270, 98, 62);
+  ctx.fillStyle = '#A8A098';
+  ctx.fillRect(456, 272, 94, 58);
+  // Subtle stone texture lines
+  ctx.fillStyle = '#9A9488';
+  ctx.fillRect(456, 290, 94, 1);
+  ctx.fillRect(456, 310, 94, 1);
+  // Draw correct name: Καπετάνιος Λουκάς Βισβίκης
+  ctx.fillStyle = '#28241E';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('ΚΑΠΕΤΑΝΙΟΣ', 503, 287);
+  ctx.fillText('ΛΟΥΚΑΣ', 503, 303);
+  ctx.fillText('ΒΙΣΒΙΚΗΣ', 503, 319);
+  ctx.textAlign = 'left';
   // ── FIREFLIES (yellow-green pulsing dots) ──
   for (let f = 0; f < 8; f++) {
     const fx = 80 + Math.sin(tick * 0.006 + f * 2.7) * 200 + f * 50;
@@ -5699,7 +5915,7 @@ const VOICE_MAP = {
   'Ποιος είναι αυτός;': 'voice/clio/055.mp3',
   'Ο Καπετάν Βισβίκης. Ο προπάππους μου.': 'voice/ntemis/049.mp3',
   'Φέρε τη σε μένα... Είναι νεκρός εδώ και εκατό χρόνια.': 'voice/ajax/034.mp3',
-  'Στο νεκροταφείο, βλάκα.': 'voice/clio/056.mp3',
+  'Στο νεκροταφείο!': 'voice/clio/056.mp3',
   '...Κλειώ.': 'voice/ntemis/050.mp3',
   'Τι; Λογικό είναι.': 'voice/clio/057.mp3',
   'Ποιου παππού;': 'voice/ajax/035.mp3',
@@ -5881,7 +6097,7 @@ const VOICE_MAP = {
   'Καλώς ήρθατε στον Άγιο Νικόλαο, παιδιά μου.': 'voice/papas/011.mp3',
   'Γεια σας, πάτερ. Ψάχνουμε για τον Βισβίκη.': 'voice/ntemis/067.mp3',
   'Α, τον Λουκά! Ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας.': 'voice/papas/009.mp3',
-  'Αυτός έφτιαξε το τέμπλο, αυτός πλήρωνε τα κεριά, αυτός...': 'voice/papas/010.mp3',
+  'Βοήθησε να χτιστεί αυτή η εκκλησία. Έβαλε τα πλακάκια με τα ίδια του τα χέρια!': 'voice/papas/010.mp3',
   'Αυτός τα έκανε ΟΛΑ;': 'voice/ajax/052.mp3',
   'Σχεδόν, παιδί μου. Σχεδόν. Κοιτάξτε γύρω σας — βλέπετε τα ίχνη του παντού.': 'voice/papas/012.mp3',
   'Ημίφως και μυρωδιά λιβανιού. Χρυσές εικόνες λάμπουν στη σιωπή.': 'voice/narrator/153.mp3',
@@ -8065,18 +8281,7 @@ function render() {
   }
   ctx.drawImage(bgBuffer, 0, 0);
 
-  // ── DEBUG: press Z to isolate the "thing" between characters ──
-  if (window.__DBG_STRIP) {
-    // Skip ALL ambience/particles/shimmer — draw ONLY bg + characters
-    // Also draw bright markers: MAGENTA at the gap between Ntemis and Ajax
-    ctx.save();
-    ctx.fillStyle = '#FF00FF';
-    ctx.globalAlpha = 0.5;
-    ctx.fillRect(310, 355, 60, 35); // covers gap between Ntemis(280) and Ajax(400)
-    ctx.restore();
-  }
 
-  if (!window.__DBG_STRIP) {
   // Scene-specific ambience (behind characters)
   drawSceneAmbience(state.tick);
 
@@ -8163,8 +8368,6 @@ function render() {
       }
     }
   }
-
-  } // end if (!window.__DBG_STRIP)
 
   // Collect all visible characters + NPCs and sort by Y for proper depth
   const drawOrder = [];
@@ -9812,13 +10015,20 @@ function drawCredits(tick) {
   for (const item of creditsLayout.items) {
     const screenY = item.y - scrollY;
 
-    // Cull off-screen items
-    if (screenY < -40 || screenY > GH + 40) continue;
+    // Cull off-screen items (use larger margin for images)
+    const cullMargin = item.type === 'image' ? (item.height || 200) + 20 : 40;
+    if (screenY < -cullMargin || screenY > GH + cullMargin) continue;
 
     // Fade at edges
     let alpha = 1;
-    if (screenY < 40) alpha = Math.max(0, screenY / 40);
-    if (screenY > GH - 40) alpha = Math.max(0, (GH - screenY) / 40);
+    if (item.type === 'image') {
+      const bot = screenY + (item.height || 0);
+      if (bot < 60) alpha = Math.max(0, bot / 60);
+      if (screenY > GH - 60) alpha = Math.max(0, (GH - screenY) / 60);
+    } else {
+      if (screenY < 40) alpha = Math.max(0, screenY / 40);
+      if (screenY > GH - 40) alpha = Math.max(0, (GH - screenY) / 40);
+    }
     if (alpha <= 0) continue;
 
     if (item.type === 'divider') {
@@ -9844,6 +10054,36 @@ function drawCredits(tick) {
       continue;
     }
 
+    // Box art images
+    if (item.type === 'image') {
+      const img = images[item.key];
+      if (img) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        const w = item.width;
+        const h = item.height;
+        const x = Math.floor((GW - w) / 2);
+        const iy = Math.floor(screenY);
+        // Subtle golden border glow
+        ctx.shadowColor = '#d4a030';
+        ctx.shadowBlur = 12;
+        ctx.strokeStyle = '#2a3a5a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x - 1, iy - 1, w + 2, h + 2);
+        ctx.shadowBlur = 0;
+        ctx.drawImage(img, x, iy, w, h);
+        // Inner vignette overlay
+        ctx.globalAlpha = alpha * 0.15;
+        const vig = ctx.createRadialGradient(x + w/2, iy + h/2, w * 0.3, x + w/2, iy + h/2, w * 0.7);
+        vig.addColorStop(0, 'transparent');
+        vig.addColorStop(1, '#0a0812');
+        ctx.fillStyle = vig;
+        ctx.fillRect(x, iy, w, h);
+        ctx.restore();
+      }
+      continue;
+    }
+
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.font = item.font;
@@ -9862,6 +10102,12 @@ function drawCredits(tick) {
     // Blink effect for COMING SOON
     if (item.blink) {
       ctx.globalAlpha = alpha * (0.5 + Math.sin(tick * 0.06) * 0.4);
+    }
+
+    // Pulse effect for "Η ΙΣΤΟΡΙΑ ΣΥΝΕΧΙΖΕΤΑΙ"
+    if (item.pulse) {
+      const p = 0.85 + Math.sin(tick * 0.03) * 0.15;
+      ctx.globalAlpha = alpha * p;
     }
 
     // Main text with drop shadow
