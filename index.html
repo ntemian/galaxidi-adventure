@@ -1413,7 +1413,7 @@ const introPages = [
 const epiloguePages = [
   'Ο Καπετάν Βισβίκης\nταξίδεψε στην Ανατολή,\nγύρισε πλούσιος,\nκι έκρυψε τον θησαυρό του\nγια κάποιον που θα αγαπούσε\nτο Γαλαξίδι αρκετά\nγια να τον βρει.',
   'Εκατόν είκοσι χρόνια αργότερα,\nτρεις ταξιδιώτες τον βρήκαν.\n\nΚαι έκαναν αυτό\nπου ο Καπετάνιος ονειρευόταν.',
-  'Να βρούμε αυτά που μας ενώνουν.\nΌχι αυτά που μας χωρίζουν.\n\nΚράτα την αλληλεγγύη.\nΆλλαξε το πλοίο.',
+  'Να βρούμε αυτά που μας ενώνουν.\nΌχι αυτά που μας χωρίζουν.\n\nΑναζητήστε ότι σας ενώνει\nκαι πηγαίνετε με τη ροή.',
   'Η θάλασσα θυμάται.\nΚι εμείς τώρα,\nαλλάζουμε μαζί της.',
   'ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ\n\n104 υπογραφές.\nΤότε και τώρα.\n\n\nΓια τον Αίαντα και την Κλειώ.',
 ];
@@ -1909,9 +1909,9 @@ const cutscenes = {
         duration: 10,
         draw: drawTreasureFamilyRead,
         dialogue: [
-          { s: 'ΝΤΕΜΗΣ', t: '«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»', at: 1.5 },
-          { s: 'ΑΙΑΣ', t: 'Τι εννοεί "άλλαξε το πλοίο";', at: 4.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Ότι δεν αρκεί να είσαι ο καλύτερος. Πρέπει να αλλάζεις.', at: 6.5 },
+          { s: 'ΝΤΕΜΗΣ', t: '«Αναζητήστε ότι σας ενώνει και πηγαίνετε με τη ροή.»', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Τι εννοεί "πηγαίνετε με τη ροή";', at: 4.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Ότι η ζωή κυλάει σαν θάλασσα. Μη πας κόντρα — βρες τι σε ενώνει με τους άλλους.', at: 6.5 },
           { s: 'ΚΛΕΙΩ', t: 'Ο Καπετάνιος... ήξερε.', at: 9.0 },
         ],
       },
@@ -1960,7 +1960,7 @@ const cutscenes = {
   epilogue: {
     frames: [
       { duration: 8, draw: drawEpilogueHarbor, dialogue: [
-        { s: 'ΝΤΕΜΗΣ', t: 'Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.', at: 2.0 },
+        { s: 'ΝΤΕΜΗΣ', t: 'Αναζητήστε ότι σας ενώνει και πηγαίνετε με τη ροή.', at: 2.0 },
       ]},
     ],
     onComplete: () => { state.phase = 'playing'; },
@@ -2468,8 +2468,8 @@ function drawCrossingWide(t, p, tick) {
 }
 
 function drawCrossingClose(t, p, tick) {
-  // Island approaching, golden path on water
-  drawKenBurns('cutscene-crossing-island', 1.06 + p * 0.12, p * 10, p * -12);
+  // Island approaching — panY positive to keep captain's head visible at top
+  drawKenBurns('cutscene-crossing-island', 1.06 + p * 0.12, p * 10, 18 - p * 8);
   // Golden path shimmer
   ctx.save();
   ctx.globalAlpha = 0.04 + Math.sin(tick * 0.02) * 0.015;
@@ -6473,7 +6473,10 @@ const VOICE_MAP = {
   'Κι εγώ; Τι κρατάω;': 'voice/ajax/126.mp3',
   'Τη μνήμη. Κι αυτό αξίζει περισσότερο.': 'voice/ntemis/144.mp3',
   '...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.': 'voice/ajax/127.mp3',
-  'Ώρα να γυρίσουν στο Γαλαξίδι.': 'voice/narrator/240.mp3'
+  'Ώρα να γυρίσουν στο Γαλαξίδι.': 'voice/narrator/240.mp3',
+  'Ο χάρτης δείχνει τον Άγιο Γεώργιο. Σίγουροι;': 'voice/ntemis/147.mp3',
+  'Σίγουρος.': 'voice/ajax/129.mp3',
+  'Η Κλειώ κουνάει σοβαρά το κεφάλι.': 'voice/narrator/242.mp3'
 };
 
 let voiceFinished = true;
@@ -8035,7 +8038,7 @@ function drawStatus() {
     { done: !!state.inv.find(i => i.id === 'nautical_chart') || state.visited.has('boat'), text: 'Βρήκαμε τον ναυτικό χάρτη κάτω από την πλάκα «Λ.Β.»' },
     { done: state.visited.has('boat'),  text: 'Πλεύσαμε με την Ελπίδα στον Άγιο Γεώργιο' },
     { done: state.flags.chest_opened,   text: 'Ανοίξαμε το κιβώτιο του Βισβίκη' },
-    { done: state.flags.letter_read,    text: 'Διαβάσαμε το τελευταίο γράμμα: «Κράτα την αλληλεγγύη»' },
+    { done: state.flags.letter_read,    text: 'Διαβάσαμε το τελευταίο γράμμα: «Αναζητήστε ότι σας ενώνει»' },
     { done: state.flags.speech_done,    text: 'Ο Ντέμης μίλησε στο Γαλαξίδι — 104 υπογραφές ξανά' },
   ];
 
