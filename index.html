@@ -4454,19 +4454,7 @@ function drawKitchenAmbience(tick) {
 function drawMuseumAmbience(tick) {
   ctx.save();
 
-  // ── NAUTICAL CHART: Κορινθιακός Κόλπος, 1858 ──
-  // Period chart with accurate gulf geography, depth soundings, rhumb lines
-  const mx = 478, my = 108, mw = 122, mh = 140;
-
-  // --- Parchment base with aged gradient ---
-  ctx.fillStyle = '#D8C89C';
-  ctx.fillRect(mx, my, mw, mh);
-  const pg = ctx.createLinearGradient(mx, my, mx, my + mh);
-  pg.addColorStop(0, 'rgba(230,218,185,0.3)');
-  pg.addColorStop(0.5, 'rgba(0,0,0,0)');
-  pg.addColorStop(1, 'rgba(120,100,60,0.12)');
-  ctx.fillStyle = pg;
-  ctx.fillRect(mx, my, mw, mh);
+  // Map is now part of the background image — no programmatic overlay needed
   // Fox marks (circular water stains)
   ctx.fillStyle = 'rgba(150,125,75,0.14)';
   ctx.beginPath(); ctx.arc(mx + 28, my + 55, 14, 0, Math.PI * 2); ctx.fill();
@@ -7829,10 +7817,10 @@ function drawMap() {
       ctx.textAlign = 'center';
       const tw = ctx.measureText(label).width;
       // Dark pill behind label
-      ctx.fillStyle = (isCurrent || isHover) ? 'rgba(15, 12, 6, 0.85)' : 'rgba(15, 12, 6, 0.65)';
-      const lx = loc.x - tw / 2 - 4, ly = loc.y - 20;
+      ctx.fillStyle = (isCurrent || isHover) ? 'rgba(15, 12, 6, 1.0)' : 'rgba(15, 12, 6, 0.95)';
+      const lx = loc.x - tw / 2 - 6, ly = loc.y - 22;
       ctx.beginPath();
-      ctx.roundRect(lx, ly, tw + 8, 12, 3);
+      ctx.roundRect(lx, ly, tw + 12, 15, 3);
       ctx.fill();
       // Label text
       ctx.globalAlpha = isLocked ? 0.5 : 1.0;
