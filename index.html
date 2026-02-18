@@ -662,22 +662,24 @@ const scenes = {
           },
         }},
       { id:'captain_marks', x:10, y:100, w:100, h:120, label:'Σημάδια καπεταναίων',
-        verbs: { look:[{s:'',t:'Χαραγμένα σύμβολα στον βράχο. Ονόματα πλοίων, αρχικά, ημερομηνίες.'},{s:'ΑΙΑΣ',t:'Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. «Λ.Β. 1887.»'},{s:'ΚΛΕΙΩ',t:'Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!'},{s:'ΝΤΕΜΗΣ',t:'Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα. Αυτοί οι τοίχοι θυμούνται.'}] }},
+        verbs: { look:[{s:'',t:'Χαραγμένα σύμβολα στον βράχο. Ονόματα πλοίων, αρχικά, ημερομηνίες.'},{s:'ΑΙΑΣ',t:'Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. «Λ.Β. 1887.»'},{s:'ΚΛΕΙΩ',t:'Αυτά δεν είναι πειρατικά. Είναι σημάδια καπεταναίων!'},{s:'ΝΤΕΜΗΣ',t:'Σωστά. Κάθε καπετάνιος είχε το δικό του σήμα. Αυτοί οι τοίχοι θυμούνται.'}],
+                 use:[{s:'ΝΤΕΜΗΣ',t:'Δεν τα αγγίζω. Αυτά πρέπει να μείνουν ανέπαφα.'}] }},
       { id:'cave_water', x:100, y:260, w:350, h:100, label:'Νερό',
-        verbs: { look:[{s:'',t:'Τυρκουάζ νερό λάμπει από το φως του φαναριού. Κρυστάλλινο.'},{s:'ΑΙΑΣ',t:'Μπορώ να κολυμπήσω;'},{s:'ΝΤΕΜΗΣ',t:'Όχι τώρα, Αία. Ποιος ξέρει πόσο βαθιά είναι.'}] }},
+        verbs: { look:[{s:'',t:'Τυρκουάζ νερό λάμπει από το φως του φαναριού. Κρυστάλλινο.'},{s:'ΑΙΑΣ',t:'Μπορώ να κολυμπήσω;'},{s:'ΝΤΕΜΗΣ',t:'Όχι τώρα, Αία. Ποιος ξέρει πόσο βαθιά είναι.'}],
+                 use:[{s:'ΑΙΑΣ',t:'Μπορώ να—'},{s:'ΝΤΕΜΗΣ',t:'Όχι. Πολύ βαθιά, πολύ κρύα.'}] }},
       { id:'stalactites', x:50, y:0, w:500, h:60, label:'Σταλακτίτες',
-        verbs: { look:[{s:'',t:'Σταλακτίτες κρέμονται σαν δάχτυλα γίγαντα. Χιλιάδες χρόνια σε κάθε σταγόνα.'},{s:'ΚΛΕΙΩ',t:'Ο Κάρκαρος. Λέγανε ότι η φωνή σου γυρίζει πίσω τρεις φορές.'}] }},
+        verbs: { look:[{s:'',t:'Σταλακτίτες κρέμονται σαν δάχτυλα γίγαντα. Χιλιάδες χρόνια σε κάθε σταγόνα.'},{s:'ΚΛΕΙΩ',t:'Ο Κάρκαρος. Λέγανε ότι η φωνή σου γυρίζει πίσω τρεις φορές.'}],
+                 use:[{s:'ΝΤΕΜΗΣ',t:'Δεν αγγίζουμε σταλακτίτες. Χρειάστηκαν χιλιάδες χρόνια.'}] }},
       { id:'jade_stone', x:180, y:30, w:60, h:50, label:'Ρωγμή στον βράχο',
         verbs: {
           look: () => {
             if (state.inv.find(i => i.id === 'green_stone')) return [{s:'',t:'Η ρωγμή στον βράχο. Εκεί βρήκε η Κλειώ την πράσινη πέτρα.'}];
             if (state.flags.jade_found) return [{s:'',t:'Η ρωγμή είναι άδεια τώρα.'}];
             return [
+              {s:'',t:'Μια βαθιά ρωγμή στον βράχο, ψηλά. Κάτι αχνοφέγγει μέσα.'},
               {s:'ΝΤΕΜΗΣ',t:'Ψάξτε παντού. Η πέτρα πρέπει να είναι εδώ κάπου.'},
               {s:'ΑΙΑΣ',t:'Κοίταξα σε κάθε σχισμή. Τίποτα.'},
-              {s:'ΚΛΕΙΩ',t:'Περιμένετε...'},
-              {s:'',t:'Η Κλειώ κοιτάζει ΠΑΝΩ — η γωνία που μόνο μια επτάχρονη θα δοκίμαζε.'},
-              {s:'ΚΛΕΙΩ',t:'ΕΚΕΙ! Κάτι πράσινο!'},
+              {s:'ΚΛΕΙΩ',t:'Εγώ βλέπω κάτι εκεί πάνω...'},
             ];
           },
           use: () => {
@@ -689,12 +691,21 @@ const scenes = {
         }},
     ],
     exits: [{ side:'right', target:'church', label:'Έξοδος →' }],
-    entry: [
-      {s:'',t:'Ο Κάρκαρος. Το φανάρι φωτίζει τοίχους γεμάτους αρχαία σημάδια. Σταγόνες ηχούν στο σκοτάδι.'},
-      {s:'ΚΛΕΙΩ',t:'Μπαμπά... αυτό δεν μοιάζει σπήλαιο. Μοιάζει σαν κάποιος να το έφτιαξε.'},
-      {s:'ΑΙΑΣ',t:'Κοιτάξτε τους τοίχους! Παντού σημάδια!'},
-      {s:'ΝΤΕΜΗΣ',t:'Ονόματα πλοίων, αρχικά, ημερομηνίες. Αιώνες ιστορίας χαραγμένοι στον βράχο.'},
-    ],
+    entry: () => {
+      const lines = [
+        {s:'',t:'Ο Κάρκαρος. Το φανάρι φωτίζει τοίχους γεμάτους αρχαία σημάδια. Σταγόνες ηχούν στο σκοτάδι.'},
+        {s:'ΚΛΕΙΩ',t:'Μπαμπά... αυτό δεν μοιάζει σπήλαιο. Μοιάζει σαν κάποιος να το έφτιαξε.'},
+        {s:'ΑΙΑΣ',t:'Κοιτάξτε τους τοίχους! Παντού σημάδια!'},
+        {s:'ΝΤΕΜΗΣ',t:'Ονόματα πλοίων, αρχικά, ημερομηνίες. Αιώνες ιστορίας χαραγμένοι στον βράχο.'},
+      ];
+      if (state.flags.jade_found) {
+        lines.splice(0, lines.length,
+          {s:'',t:'Ο Κάρκαρος. Ο βράχος θυμάται τη λάμψη της πέτρας.'},
+          {s:'ΚΛΕΙΩ',t:'Νιώθω ότι κάτι άλλαξε εδώ μέσα.'},
+        );
+      }
+      return lines;
+    },
   },
 
   // ── SCENE 6: CHURCH OF AGIOS NIKOLAOS ──
@@ -802,13 +813,18 @@ const scenes = {
       { id:'panorama', x:0, y:-88, w:640, h:100, label:'Πανόραμα',
         verbs: { look:[{s:'',t:'Η θέα κόβει την ανάσα. Ολόκληρο το Γαλαξίδι, ο κόλπος, τα βουνά. Από εδώ βλέπεις τα πάντα.'},{s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέχρι την Ιτέα!'},{s:'ΚΛΕΙΩ',t:'Και τους Δελφούς! Εκεί πάνω!'}] }},
       { id:'windmill_tower', x:470, y:88, w:120, h:130, label:'Ο μύλος',
-        verbs: { look:[{s:'',t:'Πέτρινος ανεμόμυλος — φτερά ακόμα όρθια, αψηφώντας τον χρόνο. Κάποτε άλεθε σιτάρι για ολόκληρο το Γαλαξείδι.'}] }},
+        verbs: { look:[{s:'',t:'Πέτρινος ανεμόμυλος — φτερά ακόμα όρθια, αψηφώντας τον χρόνο. Κάποτε άλεθε σιτάρι για ολόκληρο το Γαλαξείδι.'}],
+                 use:[{s:'ΑΙΑΣ',t:'Μπορώ να ανέβω;'},{s:'ΝΤΕΜΗΣ',t:'Δεν είναι ασφαλές. Ο μύλος είναι ερείπιο.'}] }},
       { id:'wildflowers', x:150, y:280, w:200, h:80, label:'Αγριολούλουδα',
-        verbs: { look:[{s:'',t:'Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.'},{s:'ΚΛΕΙΩ',t:'Θέλω να ζωγραφίσω αυτά.'}] }},
+        verbs: { look:[{s:'',t:'Παπαρούνες, μαργαρίτες, θυμάρι. Ο λόφος μυρίζει μέλι και καλοκαίρι.'},{s:'ΚΛΕΙΩ',t:'Θέλω να ζωγραφίσω αυτά.'}],
+                 use:[{s:'ΚΛΕΙΩ',t:'Μπορώ να μαζέψω μερικά;'},{s:'ΝΤΕΜΗΣ',t:'Άσε τα εδώ, Κλειώ. Εδώ είναι πιο ωραία.'}] }},
       { id:'stone_path_wm', x:300, y:360, w:200, h:60, label:'Μονοπάτι',
         verbs: { look:[{s:'',t:'Πέτρινο καλντερίμι ανεβαίνει τον λόφο. Λειασμένο από πόδια αιώνων.'}] }},
       { id:'giannis_npc', x:125, y:309, w:75, h:105, label:'Γιάννης Βελανής',
-        verbs: { look:[{s:'',t:'Ο Γιάννης Βελανής. Ιδιοκτήτης του παλιού μύλου. Ήσυχος, βλέπει τα πάντα από ψηλά.'}],
+        verbs: { look:()=>{
+                   if(state.flags.lantern_given) return [{s:'',t:'Ο Γιάννης Βελανής. Μας έδωσε φανάρι και φτυάρι. Βλέπει τα πάντα από ψηλά.'}];
+                   return [{s:'',t:'Ο Γιάννης Βελανής. Ιδιοκτήτης του παλιού μύλου. Ήσυχος, βλέπει τα πάντα από ψηλά.'}];
+                 },
                  talk:()=>{
                    if(state.flags.lantern_given) return [{s:'ΓΙΑΝΝΗΣ',t:'Προσοχή εκεί κάτω. Το σπήλαιο έχει μυστικά.'}];
                    state.flags.lantern_given=1;
@@ -818,10 +834,19 @@ const scenes = {
                  } }},
     ],
     exits: [{ side:'right', target:'graveyard', label:'Νεκροταφείο →' }, { side:'left', target:'terrace', label:'← Βεράντα' }],
-    entry: [
-      {s:'',t:'Ο αέρας σφυρίζει στα ερείπια του μύλου.'},
-      {s:'ΝΤΕΜΗΣ',t:'Ο Γιάννης μας έδειξε τον δρόμο. Ώρα να ψάξουμε.'},
-    ],
+    entry: () => {
+      const lines = [
+        {s:'',t:'Ο αέρας σφυρίζει στα ερείπια του μύλου. Η θέα κόβει την ανάσα.'},
+        {s:'ΑΙΑΣ',t:'Μπαμπά, από εδώ βλέπεις τα πάντα!'},
+        {s:'ΚΛΕΙΩ',t:'Κοίτα, ένας ανεμόμυλος!'},
+      ];
+      if (state.flags.lantern_given) {
+        lines.push(
+          {s:'ΝΤΕΜΗΣ',t:'Ο Γιάννης μας έδωσε ό,τι χρειαζόμαστε. Ώρα για το σπήλαιο.'},
+        );
+      }
+      return lines;
+    },
   },
 
   // ── SCENE 8: THE BOAT (ELPIDA) ──
@@ -1532,32 +1557,7 @@ const cutscenes = {
     },
   },
 
-  // ── THE GHOST — Captain Visvikis appears (triggered after jade placement)
-  ghost: {
-    frames: [
-      {
-        duration: 9,
-        draw: drawGhostAppear,
-        dialogue: [
-          { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... κάποιος είναι εκεί. Στο φως.', at: 1.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Καπετάν Βισβίκη... Εκατόν είκοσι χρόνια περίμενες.', at: 4.0 },
-          { s: 'ΑΙΑΣ', t: 'Μας κοιτάει. Δεν φοβάμαι. Μοιάζει... χαρούμενος.', at: 7.0 },
-        ],
-      },
-      {
-        duration: 8,
-        draw: drawGhostFade,
-        dialogue: [
-          { s: 'ΚΛΕΙΩ', t: 'Γεια σου, καπετάνιε! Γεια σου!', at: 1.0 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Δείχνει προς την εκκλησία... Τον Άγιο Νικόλαο.', at: 3.5 },
-          { s: 'ΑΙΑΣ', t: 'Η θάλασσα θυμάται...', at: 6.0 },
-        ],
-      },
-    ],
-    onComplete: () => {
-      state.phase = 'playing';
-    },
-  },
+  // (Ghost cutscene removed — ghost moment handled by startGhostSequence() with in-game choreography)
 
   // ── THE CHURCH — Clio finds the floor tile (triggered after candle scene in church)
   church_tile: {
@@ -1849,7 +1849,7 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','cave_enter','ghost','church_tile','crossing','sail_back','treasure','epilogue'].filter(id => {
+  const ids = ['arrival','letter','cave_enter','church_tile','crossing','sail_back','treasure','epilogue'].filter(id => {
     if (!cutscenes[id]) {
       console.warn('playAllCutscenes: unknown cutscene "' + id + '" skipped');
       return false;
@@ -2821,6 +2821,7 @@ let audioCtx = null;
 const ambientSounds = {
   wavesNode: null, cicadasNode: null, windNode: null, dripsInterval: null,
   bellPlayed: false, gullTimer: 0, gullInterval: 10, bellTimer: 0, bellInterval: 20,
+  tavernaNode: null, tavernaTimer: 0, tavernaInterval: 4,
   masterGain: null, active: false, currentScene: null,
 };
 
@@ -2832,7 +2833,7 @@ const sceneAmbientConfig = {
   port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4], bell: true, bellFreq: [35,30] },
   waterfront:{ waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6], bell: true, bellFreq: [30,25] },
   museum:    { waves: 0.02, wind: 0.01 },
-  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02, bell: true, bellFreq: [25,20] },
+  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02, bell: true, bellFreq: [25,20], taverna: true, tavernaFreq: [3,4] },
   cave:      { drips: true,  wind: 0.02 },
   windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10], cicadas: 0.05, bell: true, bellFreq: [40,30] },
   graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02, bell: true, bellFreq: [20,15] },
@@ -3510,6 +3511,79 @@ function playSFX(type) {
   }
 }
 
+// ── TAVERNA AMBIENT SOUNDS (glass clink, cutlery, crowd murmur) ──
+function playTavernaGlassClink() {
+  const ac = getAudioCtx();
+  if (!ac || !state.musicOn) return;
+  const now = ac.currentTime;
+  const freq = 2800 + Math.random() * 1200;
+  const osc = ac.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, now);
+  osc.frequency.exponentialRampToValueAtTime(freq * 0.7, now + 0.12);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.04 + Math.random() * 0.02, now);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+  osc.connect(g); g.connect(ambientSounds.masterGain);
+  osc.start(now); osc.stop(now + 0.15);
+  const osc2 = ac.createOscillator();
+  osc2.type = 'sine';
+  osc2.frequency.setValueAtTime(freq * 1.5, now + 0.01);
+  osc2.frequency.exponentialRampToValueAtTime(freq, now + 0.1);
+  const g2 = ac.createGain();
+  g2.gain.setValueAtTime(0.02, now + 0.01);
+  g2.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+  osc2.connect(g2); g2.connect(ambientSounds.masterGain);
+  osc2.start(now + 0.01); osc2.stop(now + 0.12);
+}
+
+function playTavernaCutlery() {
+  const ac = getAudioCtx();
+  if (!ac || !state.musicOn) return;
+  const now = ac.currentTime;
+  const freq = 1200 + Math.random() * 800;
+  const osc = ac.createOscillator();
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(freq, now);
+  osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + 0.06);
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.03, now);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  osc.connect(g); g.connect(ambientSounds.masterGain);
+  osc.start(now); osc.stop(now + 0.08);
+}
+
+function createTavernaMurmurLoop() {
+  const ac = getAudioCtx();
+  if (!ac) return null;
+  const len = ac.sampleRate * 2;
+  const buf = ac.createBuffer(1, len, ac.sampleRate);
+  const d = buf.getChannelData(0);
+  let last = 0;
+  for (let i = 0; i < len; i++) {
+    const white = Math.random() * 2 - 1;
+    last = (last + 0.02 * white) / 1.02;
+    d[i] = last * 3.5;
+  }
+  const src = ac.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  const bp = ac.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 350;
+  bp.Q.value = 0.8;
+  const gain = ac.createGain();
+  gain.gain.value = 0.035;
+  src.connect(bp); bp.connect(gain); gain.connect(ambientSounds.masterGain);
+  src.start();
+  return { src, gain };
+}
+
+function playTavernaSound() {
+  if (Math.random() < 0.5) playTavernaGlassClink();
+  else playTavernaCutlery();
+}
+
 function initAmbientSound() {
   ambientSounds.gullTimer = 0;
   ambientSounds.gullInterval = 8 + Math.random() * 7;
@@ -3556,6 +3630,14 @@ function startSceneAmbience(sceneId) {
       const entryDelay = (sceneId === 'church' || sceneId === 'church_interior' || sceneId === 'graveyard') ? 1500 : 3000;
       setTimeout(() => playChurchBell(), entryDelay);
     }
+    // Taverna sounds — murmur loop + periodic glass/cutlery
+    if (cfg.taverna) {
+      ambientSounds.tavernaNode = createTavernaMurmurLoop();
+      ambientSounds.tavernaTimer = 0;
+      ambientSounds.tavernaInterval = cfg.tavernaFreq[0] + Math.random() * cfg.tavernaFreq[1];
+      // Initial clink on entry
+      setTimeout(() => playTavernaGlassClink(), 1500);
+    }
   } catch (e) { /* Web Audio not available */ }
   // Visual ambience
   if (sceneId === 'exterior' || sceneId === 'terrace') {
@@ -3584,6 +3666,10 @@ function stopSceneAmbience() {
     clearTimeout(ambientSounds.dripsInterval);
     ambientSounds.dripsInterval = null;
   }
+  if (ambientSounds.tavernaNode) {
+    try { ambientSounds.tavernaNode.src.stop(); } catch (e) {}
+    ambientSounds.tavernaNode = null;
+  }
   boatCutout = null;
   boatWaterPatch = null;
   petals.length = 0;
@@ -3611,6 +3697,15 @@ function updateAmbientSound(dt) {
       ambientSounds.bellTimer = 0;
       ambientSounds.bellInterval = cfg.bellFreq[0] + Math.random() * cfg.bellFreq[1];
       playChurchBell();
+    }
+  }
+  // Taverna sounds — periodic glass clinks & cutlery
+  if (cfg.taverna) {
+    ambientSounds.tavernaTimer += dt;
+    if (ambientSounds.tavernaTimer >= ambientSounds.tavernaInterval) {
+      ambientSounds.tavernaTimer = 0;
+      ambientSounds.tavernaInterval = cfg.tavernaFreq[0] + Math.random() * cfg.tavernaFreq[1];
+      playTavernaSound();
     }
   }
 }
@@ -3707,9 +3802,91 @@ function drawKitchenAmbience(tick) {
   ctx.restore();
 }
 
-// Museum ambience: dust motes, display case glow, subtle flicker
+// Museum ambience: old nautical chart, dust motes, display case glow, subtle flicker
 function drawMuseumAmbience(tick) {
   ctx.save();
+
+  // ── OLD NAUTICAL MAP of Corinthian Gulf on the wall ──
+  const mx = 478, my = 108, mw = 122, mh = 140;
+  // Parchment background
+  ctx.fillStyle = '#D4C4A0';
+  ctx.fillRect(mx, my, mw, mh);
+  // Aged border / frame
+  ctx.strokeStyle = '#6B5332';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(mx, my, mw, mh);
+  ctx.strokeStyle = '#8B7352';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(mx + 3, my + 3, mw - 6, mh - 6);
+  // Parchment stain/aging
+  ctx.fillStyle = 'rgba(139,115,82,0.12)';
+  ctx.fillRect(mx + 20, my + 30, 60, 50);
+  ctx.fillStyle = 'rgba(139,115,82,0.08)';
+  ctx.fillRect(mx + 8, my + 70, 40, 35);
+  // Coastline — simplified Corinthian Gulf
+  ctx.strokeStyle = '#5A4228';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  // North coast (mainland)
+  ctx.moveTo(mx + 5, my + 45);
+  ctx.lineTo(mx + 25, my + 42);
+  ctx.lineTo(mx + 45, my + 50);
+  ctx.lineTo(mx + 65, my + 44);
+  ctx.lineTo(mx + 90, my + 48);
+  ctx.lineTo(mx + 117, my + 42);
+  ctx.stroke();
+  // South coast (Peloponnese)
+  ctx.beginPath();
+  ctx.moveTo(mx + 5, my + 85);
+  ctx.lineTo(mx + 30, my + 90);
+  ctx.lineTo(mx + 55, my + 82);
+  ctx.lineTo(mx + 80, my + 88);
+  ctx.lineTo(mx + 100, my + 82);
+  ctx.lineTo(mx + 117, my + 86);
+  ctx.stroke();
+  // Gulf water (light blue wash)
+  ctx.fillStyle = 'rgba(100,140,180,0.12)';
+  ctx.fillRect(mx + 6, my + 48, mw - 12, 34);
+  // Galaxidi marker — small red dot
+  ctx.fillStyle = '#8B2020';
+  ctx.beginPath();
+  ctx.arc(mx + 50, my + 78, 2, 0, Math.PI * 2);
+  ctx.fill();
+  // "ΓΑΛΑΞΕΙΔΙ" label tiny
+  ctx.fillStyle = '#5A3018';
+  ctx.font = '4px serif';
+  ctx.fillText('ΓΑΛΑΞΕΙΔΙ', mx + 37, my + 76);
+  // Navigation routes (dotted lines in ink)
+  ctx.strokeStyle = 'rgba(90,66,40,0.4)';
+  ctx.setLineDash([2, 2]);
+  ctx.beginPath();
+  ctx.moveTo(mx + 50, my + 78); // from Galaxidi
+  ctx.lineTo(mx + 20, my + 60); // west route
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(mx + 50, my + 78);
+  ctx.lineTo(mx + 95, my + 60); // east route
+  ctx.stroke();
+  ctx.setLineDash([]);
+  // Compass rose (simple)
+  const cx = mx + 95, cy = my + 115;
+  ctx.strokeStyle = '#6B5332';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx - 8, cy); ctx.lineTo(cx + 8, cy); ctx.stroke();
+  // N indicator
+  ctx.fillStyle = '#5A3018';
+  ctx.font = '5px serif';
+  ctx.fillText('B', cx - 2, cy - 10); // Β = Βορράς (North in Greek)
+  // Title at top
+  ctx.fillStyle = '#4A3218';
+  ctx.font = '5px serif';
+  ctx.fillText('ΚΟΡΙΝΘΙΑΚΟΣ ΚΟΛΠΟΣ', mx + 15, my + 14);
+  // Ink date
+  ctx.fillStyle = 'rgba(90,66,40,0.5)';
+  ctx.font = '4px serif';
+  ctx.fillText('1858', mx + mw - 22, my + mh - 6);
+
   // ── FLOATING DUST MOTES (dim, slow) ──
   for (let d = 0; d < 10; d++) {
     const dx = 50 + Math.sin(tick * 0.005 + d * 3.2) * 280;
@@ -4559,10 +4736,10 @@ function drawNPC(who, tick) {
   const gx = npc.x;
   const gy = npc.y;
 
-  // Idle animation (same as family chars)
-  const bp = tick * 0.03;
-  const breathe = Math.sin(bp) * 1.0 + Math.sin(bp * 0.6 + 0.5) * 0.4;
-  const sway = Math.sin(tick * 0.01) * 0.008 + Math.sin(tick * 0.023) * 0.003;
+  // Idle animation — subtle for stationary NPCs (reduced from family chars)
+  const bp = tick * 0.02;
+  const breathe = Math.sin(bp) * 0.3 + Math.sin(bp * 0.6 + 0.5) * 0.1;
+  const sway = Math.sin(tick * 0.008) * 0.003 + Math.sin(tick * 0.018) * 0.001;
   const bc = Math.sin(bp);
   const squashX = 1 + bc * 0.005;
   const squashY = 1 - bc * 0.005;
@@ -6019,7 +6196,7 @@ function startJadeSequence() {
     // Phase 5: Take the stone + identify it
     { type: 'callback', fn: () => {
       state.flags.jade_found = true;
-      addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίζη.' });
+      addInv({ id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Μια λεία πράσινη πέτρα από νεφρίτη. Λάμπει αχνά στο φως. Ανήκε στον Καπετάν Βισβίκη.' });
     }},
     { type: 'dialog', lines: [
       {s:'ΝΤΕΜΗΣ',t:'Νεφρίτης. Jade. Από την Ανατολή.'},
@@ -6048,7 +6225,7 @@ function startGhostSequence() {
     { type: 'dialog', lines: [{s:'',t:'Ο αέρας αλλάζει. Η θερμοκρασία πέφτει. Τα κυπαρίσσια σταματούν να κουνιούνται.'}] },
     { type: 'move', who: 'clio', dx: 25, duration: 0.8 },
     { type: 'move', who: 'ajax', dx: 20, duration: 0.8 },
-    { type: 'dialog', lines: [{s:'ΚΛΕΙΩ',t:'Μπαμπά... η πέτρα λάμπει!'},{s:'ΑΙΑΣ',t:'Τι γίνεται; Γιατί σκοτείνιασε;'}] },
+    { type: 'dialog', lines: [{s:'ΚΛΕΙΩ',t:'Μπαμπά... κάποιος είναι εκεί. Στο φως.'}] },
     // Total silence — the absence of sound IS the effect
     { type: 'wait', duration: 1.5 },
     // Ghost SFX breaks the silence
@@ -6063,8 +6240,8 @@ function startGhostSequence() {
     { type: 'npc', who: 'ghost', visible: true },
     { type: 'dialog', lines: [
       {s:'',t:'Μια φιγούρα υψώνεται πάνω από τον τάφο. Ψηλός, αυστηρός, με ναυτική στολή από άλλη εποχή.'},
-      {s:'ΚΛΕΙΩ',t:'Ο... ο Καπετάν Βισβίκης;'},
-      {s:'ΑΙΑΣ',t:'Μπαμπά, βλέπω μέσα από αυτόν!'},
+      {s:'ΝΤΕΜΗΣ',t:'Καπετάν Βισβίκη... Εκατόν είκοσι χρόνια περίμενες.'},
+      {s:'ΑΙΑΣ',t:'Μας κοιτάει. Δεν φοβάμαι. Μοιάζει... χαρούμενος.'},
     ]},
     { type: 'npc', who: 'ghost', dir: -1 },
     { type: 'wait', duration: 0.8 },
@@ -6076,10 +6253,11 @@ function startGhostSequence() {
     { type: 'effect', effect: 'arm_raise', duration: 1.2 },
     { type: 'dialog', lines: [{s:'',t:'Το φάντασμα σηκώνει αργά το χέρι. Δείχνει... προς τον Άγιο Νικόλαο.'}] },
     { type: 'dialog', lines: [
-      {s:'ΚΛΕΙΩ',t:'Ο χάρτης. Θέλει να βρούμε τον χάρτη.'},
-      {s:'ΝΤΕΜΗΣ',t:'Στην εκκλησία; Τι κρύβεται εκεί;'},
+      {s:'ΝΤΕΜΗΣ',t:'Δείχνει προς την εκκλησία... Τον Άγιο Νικόλαο.'},
     ]},
+    // Clio waves at the ghost — storyboard iconic moment
     { type: 'npc', who: 'ghost', tilt: 0, wave: 3 },
+    { type: 'dialog', lines: [{s:'ΚΛΕΙΩ',t:'Γεια σου, καπετάνιε! Γεια σου!'}] },
     { type: 'wait', duration: 1.0 },
     { type: 'npc', who: 'ghost', wave: 0 },
     { type: 'callback', fn: () => { npcChars.ghost.arm = -1; }},
@@ -6097,8 +6275,7 @@ function startGhostSequence() {
     ]},
     { type: 'wait', duration: 1.5 },
     { type: 'dialog', lines: [
-      {s:'ΑΙΑΣ',t:'Αυτό... αυτό μόλις έγινε. Δεν ονειρεύομαι.'},
-      {s:'ΚΛΕΙΩ',t:'Περίμενε 120 χρόνια. Για κάποιον σαν εμάς.'},
+      {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται...'},
       {s:'ΝΤΕΜΗΣ',t:'Στον Άγιο Νικόλαο. Τώρα.'},
     ]},
     { type: 'callback', fn: () => {
