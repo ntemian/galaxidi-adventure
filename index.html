@@ -3758,6 +3758,46 @@ function drawSceneAmbience(tick) {
   }
 }
 
+// Treasure island ambience: terrain cover + sea shimmer
+function drawTreasureAmbience(tick) {
+  ctx.save();
+  // Cover chest in background with nearby terrain before discovery
+  if (!state.flags.chest_visible) {
+    const bgImg = images['bg-treasure'];
+    if (bgImg) {
+      const imgW = bgImg.naturalWidth, imgH = bgImg.naturalHeight;
+      const cr = GW / GH, ir = imgW / imgH;
+      let sy0 = 0, sh = imgH, sx0 = 0, sw = imgW;
+      if (ir < cr) { sh = imgW / cr; sy0 = (imgH - sh) / 2; }
+      else if (ir > cr) { sw = imgH * cr; sx0 = (imgW - sw) / 2; }
+      const scX = sw / GW, scY = sh / GH;
+      // Source: clean rocky ground right of chest (game coords 250,290)
+      // Destination: over the chest area (game coords 55,240)
+      ctx.drawImage(bgImg,
+        sx0 + 250 * scX, sy0 + 290 * scY, 150 * scX, 90 * scY,
+        55, 240, 195, 140
+      );
+      // Soften edges with radial gradient
+      const eg = ctx.createRadialGradient(152, 310, 40, 152, 310, 110);
+      eg.addColorStop(0, 'rgba(0,0,0,0)');
+      eg.addColorStop(1, 'rgba(60,40,25,0.25)');
+      ctx.fillStyle = eg;
+      ctx.fillRect(55, 240, 195, 140);
+    }
+  }
+  // Sea shimmer on the water
+  for (let i = 0; i < 6; i++) {
+    const ph = tick * 0.02 + i * 2.1;
+    const a = 0.08 + Math.sin(ph * 1.3) * 0.06;
+    if (a > 0) {
+      ctx.globalAlpha = a;
+      ctx.fillStyle = '#b8d4e8';
+      ctx.fillRect(80 + Math.sin(ph * 0.7 + i) * 200, 180 + Math.sin(ph) * 10, 2, 1);
+    }
+  }
+  ctx.restore();
+}
+
 // Kitchen ambience: steam, lamp flicker, dust in window light
 function drawKitchenAmbience(tick) {
   ctx.save();
@@ -4145,187 +4185,266 @@ function drawCaveAmbience(tick) {
   ctx.fillStyle = `rgba(255,220,140,${0.07 + flicker * 2})`;
   ctx.fillRect(lx - 4, ly - 6, 8, 10);
 
-  // ── GLOWING GREEN GEM (jade stone in crack, upper-left area) ──
+  // ── MYSTICAL JADE GEM (floating in cave alcove) ──
   if (!state.flags.jade_found) {
     const gemX = 210, gemY = 48;
     const pulse = Math.sin(tick * 0.04) * 0.5 + 0.5;
     const glow2 = Math.sin(tick * 0.025) * 0.3 + 0.7;
     const breathe = Math.sin(tick * 0.018) * 0.5 + 0.5;
+    // Floating bob — gem hovers gently up and down
+    const bobY = Math.sin(tick * 0.025) * 3;
 
     ctx.save();
-    ctx.translate(gemX, gemY);
+    ctx.translate(gemX, gemY + bobY);
 
-    // Layer 1: Wide mystical aura — soft diffuse glow
-    const auraR = 30 + pulse * 6;
-    const aura = ctx.createRadialGradient(0, 0, 2, 0, 0, auraR);
-    aura.addColorStop(0, `rgba(80,255,140,${0.12 + pulse * 0.06})`);
-    aura.addColorStop(0.4, `rgba(50,200,100,${0.06 + breathe * 0.03})`);
-    aura.addColorStop(0.7, `rgba(30,150,60,${0.02 + pulse * 0.01})`);
-    aura.addColorStop(1, 'rgba(20,100,40,0)');
+    // ═══ OUTER AURA: wide cave-illuminating glow ═══
+    const auraR = 50 + pulse * 10;
+    const aura = ctx.createRadialGradient(0, 0, 3, 0, 0, auraR);
+    aura.addColorStop(0, `rgba(60,255,120,${0.20 + pulse * 0.08})`);
+    aura.addColorStop(0.3, `rgba(40,200,90,${0.10 + breathe * 0.04})`);
+    aura.addColorStop(0.6, `rgba(25,140,60,${0.04 + pulse * 0.02})`);
+    aura.addColorStop(1, 'rgba(15,80,30,0)');
     ctx.fillStyle = aura;
     ctx.beginPath();
-    ctx.ellipse(0, 1, auraR, auraR * 0.85, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 2, auraR, auraR * 0.8, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Layer 2: Light rays emanating outward
-    ctx.globalAlpha = 0.04 + pulse * 0.03;
-    for (let r = 0; r < 6; r++) {
-      const angle = (r / 6) * Math.PI * 2 + tick * 0.005;
-      const rayLen = 18 + Math.sin(tick * 0.03 + r * 1.7) * 6;
-      ctx.strokeStyle = `rgba(100,255,160,${0.3 + Math.sin(tick * 0.05 + r) * 0.15})`;
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(angle) * 6, Math.sin(angle) * 6);
-      ctx.lineTo(Math.cos(angle) * rayLen, Math.sin(angle) * rayLen);
-      ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-
-    // Subtle slow rotation for life
-    const rot = Math.sin(tick * 0.008) * 0.06;
-    ctx.rotate(rot);
-
-    // Layer 3: Dark jade base (outer faceted shape — irregular hexagonal cut)
-    ctx.fillStyle = '#12382a';
+    // ═══ PULSING RING — expanding mystical ripple ═══
+    const ringPhase = (tick * 0.015) % 1;
+    const ringR = 14 + ringPhase * 30;
+    const ringAlpha = (1 - ringPhase) * 0.25;
+    ctx.strokeStyle = `rgba(80,255,140,${ringAlpha})`;
+    ctx.lineWidth = 1.5 * (1 - ringPhase);
     ctx.beginPath();
-    ctx.moveTo(0, -11);    // top
-    ctx.lineTo(10, -6);    // upper-right
-    ctx.lineTo(12, 4);     // right
-    ctx.lineTo(6, 11);     // lower-right
-    ctx.lineTo(-6, 11);    // lower-left
-    ctx.lineTo(-12, 4);    // left
-    ctx.lineTo(-10, -6);   // upper-left
-    ctx.closePath();
-    ctx.fill();
-
-    // Layer 4: Mid-tone jade body
-    ctx.fillStyle = `rgb(${32 + breathe * 8},${100 + breathe * 15},${55 + breathe * 10})`;
+    ctx.ellipse(0, 0, ringR, ringR * 0.7, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    // Second ring offset
+    const ringPhase2 = (tick * 0.015 + 0.5) % 1;
+    const ringR2 = 14 + ringPhase2 * 30;
+    const ringAlpha2 = (1 - ringPhase2) * 0.15;
+    ctx.strokeStyle = `rgba(100,255,160,${ringAlpha2})`;
+    ctx.lineWidth = 1.2 * (1 - ringPhase2);
     ctx.beginPath();
-    ctx.moveTo(0, -9);
-    ctx.lineTo(8, -5);
-    ctx.lineTo(10, 3);
-    ctx.lineTo(5, 9);
-    ctx.lineTo(-5, 9);
-    ctx.lineTo(-10, 3);
-    ctx.lineTo(-8, -5);
-    ctx.closePath();
-    ctx.fill();
-
-    // Layer 5: Upper facet — lighter (catches light from above)
-    ctx.fillStyle = `rgba(${55 + pulse * 20},${160 + pulse * 30},${90 + pulse * 15},0.85)`;
-    ctx.beginPath();
-    ctx.moveTo(0, -9);
-    ctx.lineTo(8, -5);
-    ctx.lineTo(4, 0);
-    ctx.lineTo(-4, 0);
-    ctx.lineTo(-8, -5);
-    ctx.closePath();
-    ctx.fill();
-
-    // Layer 6: Lower facet — deeper tone
-    ctx.fillStyle = `rgba(25,${75 + breathe * 15},${45 + breathe * 8},0.7)`;
-    ctx.beginPath();
-    ctx.moveTo(4, 0);
-    ctx.lineTo(10, 3);
-    ctx.lineTo(5, 9);
-    ctx.lineTo(-5, 9);
-    ctx.lineTo(-10, 3);
-    ctx.lineTo(-4, 0);
-    ctx.closePath();
-    ctx.fill();
-
-    // Layer 7: Central gem table — brightest face
-    const tblBright = 140 + glow2 * 50;
-    ctx.fillStyle = `rgba(${60 + glow2 * 30},${tblBright},${80 + glow2 * 25},0.9)`;
-    ctx.beginPath();
-    ctx.moveTo(0, -4);
-    ctx.lineTo(4, -1);
-    ctx.lineTo(3, 4);
-    ctx.lineTo(-3, 4);
-    ctx.lineTo(-4, -1);
-    ctx.closePath();
-    ctx.fill();
-
-    // Layer 8: Facet edge lines — gives depth and cut definition
-    ctx.strokeStyle = `rgba(15,50,25,${0.25 + pulse * 0.1})`;
-    ctx.lineWidth = 0.5;
-    // Upper facet divisions
-    ctx.beginPath(); ctx.moveTo(0, -9); ctx.lineTo(0, -4); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, -4); ctx.lineTo(4, -1); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, -4); ctx.lineTo(-4, -1); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(4, -1); ctx.lineTo(8, -5); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-4, -1); ctx.lineTo(-8, -5); ctx.stroke();
-    // Lower facet divisions
-    ctx.beginPath(); ctx.moveTo(4, -1); ctx.lineTo(10, 3); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-4, -1); ctx.lineTo(-10, 3); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(3, 4); ctx.lineTo(5, 9); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-3, 4); ctx.lineTo(-5, 9); ctx.stroke();
-    // Table edges
-    ctx.strokeStyle = `rgba(100,200,130,${0.15 + glow2 * 0.1})`;
-    ctx.lineWidth = 0.4;
-    ctx.beginPath();
-    ctx.moveTo(0, -4); ctx.lineTo(4, -1); ctx.lineTo(3, 4);
-    ctx.lineTo(-3, 4); ctx.lineTo(-4, -1); ctx.closePath();
+    ctx.ellipse(0, 0, ringR2, ringR2 * 0.7, 0, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Layer 9: Jade veins — organic mineral texture
-    ctx.strokeStyle = `rgba(18,60,30,${0.2 + breathe * 0.08})`;
-    ctx.lineWidth = 0.4;
-    ctx.beginPath(); ctx.moveTo(-6, -3); ctx.quadraticCurveTo(-1, 1, 5, -2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-3, 6); ctx.quadraticCurveTo(1, 3, 7, 5); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(-8, 2); ctx.quadraticCurveTo(-3, 5, -1, 8); ctx.stroke();
+    // ═══ LIGHT RAYS — god-rays emanating from gem ═══
+    for (let r = 0; r < 8; r++) {
+      const angle = (r / 8) * Math.PI * 2 + tick * 0.006;
+      const rayLen = 22 + Math.sin(tick * 0.035 + r * 1.4) * 10;
+      const rayAlpha = 0.10 + Math.sin(tick * 0.05 + r * 2.1) * 0.06;
+      ctx.strokeStyle = `rgba(80,255,140,${rayAlpha})`;
+      ctx.lineWidth = 1.5 - (r % 2) * 0.5;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(angle) * 10, Math.sin(angle) * 8);
+      ctx.lineTo(Math.cos(angle) * rayLen, Math.sin(angle) * rayLen * 0.8);
+      ctx.stroke();
+    }
 
-    // Layer 10: Specular highlight — polished surface gleam
-    ctx.fillStyle = `rgba(200,255,220,${0.25 + pulse * 0.15})`;
+    // Subtle slow rotation
+    const rot = Math.sin(tick * 0.008) * 0.05;
+    ctx.rotate(rot);
+
+    // ═══ SHADOW beneath floating gem (grounds it) ═══
+    ctx.fillStyle = `rgba(0,30,10,${0.12 + breathe * 0.04})`;
     ctx.beginPath();
-    ctx.ellipse(-2, -3, 3.5, 1.8, -0.35, 0, Math.PI * 2);
-    ctx.fill();
-    // Secondary smaller highlight
-    ctx.fillStyle = `rgba(230,255,240,${0.15 + glow2 * 0.1})`;
-    ctx.beginPath();
-    ctx.ellipse(2, 2, 1.5, 1.0, 0.3, 0, Math.PI * 2);
+    ctx.ellipse(0, 16 - bobY * 0.5, 12, 3, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Layer 11: Inner luminous heart — the jade's mystical energy
-    ctx.globalAlpha = 0.15 + breathe * 0.1;
-    const innerGlow = ctx.createRadialGradient(0, 1, 0, 0, 1, 8);
-    innerGlow.addColorStop(0, `rgba(${140 + pulse * 60},255,${180 + pulse * 40},0.5)`);
-    innerGlow.addColorStop(0.5, 'rgba(80,220,120,0.15)');
-    innerGlow.addColorStop(1, 'rgba(40,150,60,0)');
+    // ═══ GEM BODY — large brilliant-cut jade ═══
+    const S = 1.6; // Scale factor — big and readable
+
+    // Outer dark rim (border)
+    ctx.fillStyle = '#0a2e1a';
+    ctx.beginPath();
+    ctx.moveTo(0 * S, -14 * S);
+    ctx.lineTo(12 * S, -7 * S);
+    ctx.lineTo(14 * S, 4 * S);
+    ctx.lineTo(8 * S, 13 * S);
+    ctx.lineTo(-8 * S, 13 * S);
+    ctx.lineTo(-14 * S, 4 * S);
+    ctx.lineTo(-12 * S, -7 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // Main jade body — rich deep green
+    const bR = 28 + breathe * 12, bG = 95 + breathe * 20, bB = 50 + breathe * 12;
+    ctx.fillStyle = `rgb(${bR},${bG},${bB})`;
+    ctx.beginPath();
+    ctx.moveTo(0 * S, -12 * S);
+    ctx.lineTo(10 * S, -6 * S);
+    ctx.lineTo(12 * S, 3 * S);
+    ctx.lineTo(7 * S, 11 * S);
+    ctx.lineTo(-7 * S, 11 * S);
+    ctx.lineTo(-12 * S, 3 * S);
+    ctx.lineTo(-10 * S, -6 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // ═══ FACETS — 4 distinct faces for cut-gem look ═══
+    // Top crown facet (brightest — catches cave light)
+    ctx.fillStyle = `rgba(${50 + pulse * 35},${150 + pulse * 45},${80 + pulse * 25},0.9)`;
+    ctx.beginPath();
+    ctx.moveTo(0 * S, -12 * S);
+    ctx.lineTo(10 * S, -6 * S);
+    ctx.lineTo(5 * S, -1 * S);
+    ctx.lineTo(-5 * S, -1 * S);
+    ctx.lineTo(-10 * S, -6 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // Right facet (medium tone)
+    ctx.fillStyle = `rgba(22,${70 + breathe * 18},${40 + breathe * 10},0.8)`;
+    ctx.beginPath();
+    ctx.moveTo(5 * S, -1 * S);
+    ctx.lineTo(10 * S, -6 * S);
+    ctx.lineTo(12 * S, 3 * S);
+    ctx.lineTo(7 * S, 11 * S);
+    ctx.lineTo(3 * S, 5 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // Left facet (darker — in shadow)
+    ctx.fillStyle = `rgba(18,${55 + breathe * 12},${32 + breathe * 8},0.8)`;
+    ctx.beginPath();
+    ctx.moveTo(-5 * S, -1 * S);
+    ctx.lineTo(-10 * S, -6 * S);
+    ctx.lineTo(-12 * S, 3 * S);
+    ctx.lineTo(-7 * S, 11 * S);
+    ctx.lineTo(-3 * S, 5 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // Bottom pavilion facet (deepest)
+    ctx.fillStyle = `rgba(15,${50 + breathe * 10},${30 + breathe * 6},0.85)`;
+    ctx.beginPath();
+    ctx.moveTo(-3 * S, 5 * S);
+    ctx.lineTo(3 * S, 5 * S);
+    ctx.lineTo(7 * S, 11 * S);
+    ctx.lineTo(-7 * S, 11 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // ═══ CENTER TABLE — the gem's heart, brightest face ═══
+    const tG = 155 + glow2 * 60;
+    ctx.fillStyle = `rgba(${55 + glow2 * 40},${tG},${75 + glow2 * 35},0.95)`;
+    ctx.beginPath();
+    ctx.moveTo(0 * S, -3 * S);
+    ctx.lineTo(5 * S, -1 * S);
+    ctx.lineTo(3 * S, 5 * S);
+    ctx.lineTo(-3 * S, 5 * S);
+    ctx.lineTo(-5 * S, -1 * S);
+    ctx.closePath();
+    ctx.fill();
+
+    // ═══ FACET EDGE LINES — crisp gem-cut definition ═══
+    ctx.strokeStyle = `rgba(8,35,15,${0.5 + pulse * 0.2})`;
+    ctx.lineWidth = 1;
+    // Crown edges
+    ctx.beginPath(); ctx.moveTo(0 * S, -12 * S); ctx.lineTo(0 * S, -3 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(5 * S, -1 * S); ctx.lineTo(10 * S, -6 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-5 * S, -1 * S); ctx.lineTo(-10 * S, -6 * S); ctx.stroke();
+    // Girdle line (horizontal belt)
+    ctx.beginPath();
+    ctx.moveTo(-12 * S, 3 * S); ctx.lineTo(-5 * S, -1 * S); ctx.lineTo(5 * S, -1 * S);
+    ctx.lineTo(12 * S, 3 * S);
+    ctx.stroke();
+    // Pavilion edges
+    ctx.beginPath(); ctx.moveTo(5 * S, -1 * S); ctx.lineTo(3 * S, 5 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-5 * S, -1 * S); ctx.lineTo(-3 * S, 5 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(3 * S, 5 * S); ctx.lineTo(7 * S, 11 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-3 * S, 5 * S); ctx.lineTo(-7 * S, 11 * S); ctx.stroke();
+    // Table outline (bright edge)
+    ctx.strokeStyle = `rgba(100,220,140,${0.2 + glow2 * 0.15})`;
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.moveTo(0 * S, -3 * S); ctx.lineTo(5 * S, -1 * S); ctx.lineTo(3 * S, 5 * S);
+    ctx.lineTo(-3 * S, 5 * S); ctx.lineTo(-5 * S, -1 * S); ctx.closePath();
+    ctx.stroke();
+
+    // ═══ JADE VEINS — organic mineral inclusions ═══
+    ctx.strokeStyle = `rgba(12,50,22,${0.30 + breathe * 0.1})`;
+    ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.moveTo(-8 * S, -4 * S); ctx.quadraticCurveTo(-2 * S, 1 * S, 6 * S, -3 * S); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-4 * S, 8 * S); ctx.quadraticCurveTo(1 * S, 4 * S, 8 * S, 6 * S); ctx.stroke();
+
+    // ═══ SPECULAR HIGHLIGHTS — polished gemstone gleam ═══
+    // Main highlight — elongated bright slash
+    ctx.fillStyle = `rgba(210,255,225,${0.40 + pulse * 0.25})`;
+    ctx.beginPath();
+    ctx.ellipse(-3 * S, -5 * S, 5 * S, 2.2 * S, -0.35, 0, Math.PI * 2);
+    ctx.fill();
+    // Hard bright core
+    ctx.fillStyle = `rgba(255,255,255,${0.30 + pulse * 0.2})`;
+    ctx.beginPath();
+    ctx.ellipse(-2 * S, -5 * S, 2.5 * S, 1.2 * S, -0.35, 0, Math.PI * 2);
+    ctx.fill();
+    // Secondary lower highlight
+    ctx.fillStyle = `rgba(180,255,210,${0.15 + glow2 * 0.12})`;
+    ctx.beginPath();
+    ctx.ellipse(3 * S, 3 * S, 2.5 * S, 1.5 * S, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // ═══ INNER LUMINOUS HEART — mystical energy core ═══
+    ctx.globalAlpha = 0.25 + breathe * 0.15;
+    const innerGlow = ctx.createRadialGradient(0, 1 * S, 0, 0, 1 * S, 10 * S);
+    innerGlow.addColorStop(0, `rgba(${120 + pulse * 80},255,${160 + pulse * 60},0.6)`);
+    innerGlow.addColorStop(0.4, 'rgba(60,220,100,0.2)');
+    innerGlow.addColorStop(1, 'rgba(30,120,50,0)');
     ctx.fillStyle = innerGlow;
     ctx.beginPath();
-    ctx.ellipse(0, 1, 8, 6, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 1 * S, 10 * S, 8 * S, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.globalAlpha = 1;
+
+    // ═══ ANIMATED SPARKLE STAR — moving bright point on gem surface ═══
+    const starAngle = tick * 0.03;
+    const starX = Math.cos(starAngle) * 4 * S;
+    const starY = Math.sin(starAngle * 0.7) * 3 * S;
+    const starA = Math.sin(tick * 0.06) * 0.3 + 0.4;
+    ctx.fillStyle = `rgba(255,255,255,${starA})`;
+    // 4-point star
+    ctx.beginPath();
+    ctx.moveTo(starX, starY - 2); ctx.lineTo(starX + 1, starY);
+    ctx.lineTo(starX, starY + 2); ctx.lineTo(starX - 1, starY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillRect(starX - 2, starY, 4, 1);
+    ctx.fillRect(starX, starY - 2, 1, 4);
 
     ctx.restore(); // undo translate+rotate
 
-    // Layer 12: Orbiting sparkle particles
-    for (let sp = 0; sp < 5; sp++) {
-      const orbitAngle = tick * 0.02 + sp * (Math.PI * 2 / 5);
-      const orbitR = 14 + Math.sin(tick * 0.015 + sp * 2.3) * 4;
+    // ═══ ORBITING SPARKLES — magical particles circling the gem ═══
+    for (let sp = 0; sp < 7; sp++) {
+      const orbitAngle = tick * 0.018 + sp * (Math.PI * 2 / 7);
+      const orbitR = 22 + Math.sin(tick * 0.012 + sp * 2.3) * 6;
       const spx = gemX + Math.cos(orbitAngle) * orbitR;
-      const spy = gemY + Math.sin(orbitAngle) * orbitR * 0.7;
-      const spa = Math.sin(tick * 0.05 + sp * 1.8) * 0.5 + 0.5;
-      if (spa > 0.2) {
-        // Sparkle cross shape
-        ctx.fillStyle = `rgba(180,255,200,${spa * 0.15})`;
+      const spy = gemY + bobY + Math.sin(orbitAngle) * orbitR * 0.6;
+      const spa = Math.sin(tick * 0.045 + sp * 1.6) * 0.5 + 0.5;
+      if (spa > 0.15) {
+        // Cross sparkle
+        ctx.fillStyle = `rgba(150,255,190,${spa * 0.35})`;
         ctx.fillRect(spx - 1, spy, 3, 1);
         ctx.fillRect(spx, spy - 1, 1, 3);
-        // Core bright pixel
-        ctx.fillStyle = `rgba(220,255,230,${spa * 0.2})`;
+        // Bright core pixel
+        ctx.fillStyle = `rgba(220,255,240,${spa * 0.5})`;
         ctx.fillRect(spx, spy, 1, 1);
       }
     }
 
-    // Layer 13: Floating dust motes drawn upward (mystical energy rising)
-    for (let m = 0; m < 4; m++) {
-      const my = gemY + 20 - ((tick * 0.3 + m * 30) % 40);
-      const mx = gemX + Math.sin(tick * 0.02 + m * 2.5) * 8;
-      const ma = 1.0 - ((tick * 0.3 + m * 30) % 40) / 40;
-      if (ma > 0.1 && ma < 0.9) {
-        ctx.fillStyle = `rgba(120,255,160,${ma * 0.08})`;
+    // ═══ RISING ENERGY MOTES — mystical particles floating upward ═══
+    for (let m = 0; m < 6; m++) {
+      const my = gemY + 25 - ((tick * 0.4 + m * 22) % 50);
+      const mx = gemX + Math.sin(tick * 0.018 + m * 2.1) * 12;
+      const mLife = ((tick * 0.4 + m * 22) % 50) / 50;
+      const ma = Math.sin(mLife * Math.PI); // fade in and out
+      if (ma > 0.1) {
+        ctx.fillStyle = `rgba(100,255,150,${ma * 0.18})`;
         ctx.fillRect(mx, my, 1, 1);
+        if (ma > 0.5) {
+          ctx.fillStyle = `rgba(160,255,200,${(ma - 0.5) * 0.15})`;
+          ctx.fillRect(mx - 1, my, 1, 1);
+        }
       }
     }
   }
@@ -4752,7 +4871,7 @@ function hitTestExit(gx, gy) {
 // ════════════════════════════════════════════════════════════
 const voiceAudio = new Audio();
 voiceAudio.volume = 0.8;
-voiceAudio.onerror = () => console.error('Failed to load voice:', voiceAudio.src);
+voiceAudio.onerror = () => { voiceFinished = true; console.error('Failed to load voice:', voiceAudio.src); };
 
 const VOICE_MAP = {
   'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.': 'voice/narrator/001.mp3',
@@ -5359,7 +5478,7 @@ let voiceFinished = true;
 
 function playVoice(text) {
   voiceAudio.pause();
-  voiceAudio.currentTime = 0;
+  voiceAudio.onended = null;
   voiceFinished = true;
   const src = VOICE_MAP[text];
   if (src) {
@@ -5367,12 +5486,16 @@ function playVoice(text) {
     voiceAudio.src = src;
     voiceAudio.onended = () => { voiceFinished = true; };
     voiceAudio.play().catch(() => { voiceFinished = true; });
+  } else {
+    voiceAudio.removeAttribute('src');
+    voiceAudio.load();
   }
 }
 
 function stopVoice() {
   voiceAudio.pause();
-  voiceAudio.currentTime = 0;
+  voiceAudio.removeAttribute('src');
+  voiceAudio.load(); // fully reset audio element
   voiceFinished = true;
   if ('speechSynthesis' in window) speechSynthesis.cancel();
 }
@@ -5383,6 +5506,7 @@ function stopVoice() {
 function showDlg(lines, cb) {
   const filtered = lines.filter(l => l.t);
   if (!filtered.length) { if (cb) cb(); return; }
+  stopVoice(); // kill any lingering voice from previous dialog
   state.dlg.queue = [...filtered];
   state.dlg.active = true;
   state.dlg.cb = cb || null;
@@ -7260,7 +7384,7 @@ function render() {
   }
 
   // Hotspot highlight on hover — prominent pulsing glow
-  if (state.hoverObj && state.hoverObj.w) {
+  if (state.hoverObj && state.hoverObj.w && !state.hoverObj._hidden) {
     const obj = state.hoverObj;
     const pulse = 0.5 + Math.sin(state.tick * 0.08) * 0.3;
     ctx.save();
