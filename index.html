@@ -154,7 +154,7 @@
 <body>
 
 <div id="fade"></div>
-<button id="st-toggle" onclick="document.getElementById('scene-tester').classList.toggle('open')">TEST</button>
+<button id="st-toggle">TEST</button>
 <div id="scene-tester"></div>
 
 <!-- Title screen is canvas-rendered -->
@@ -311,7 +311,7 @@ async function loadAllAssets() {
     loadImg('bg-terrace', 'assets/pixel-terrace.webp'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
     loadImg('bg-port', 'assets/pixel-port.webp'),
-    loadImg('bg-museum', 'assets/pixel-museum.webp'),
+    loadImg('bg-museum', 'assets/pixel-museum-new.png'),
     loadImg('bg-liotrivi', 'assets/pixel-liotrivi.webp'),
     loadImg('bg-cave', 'assets/pixel-cave-new.png'),
     loadImg('bg-church', 'assets/pixel-church-new.png'),
@@ -1314,6 +1314,23 @@ const scenes = {
     for (const [objId, coords] of Object.entries(objects)) {
       const obj = sc.objects.find(o => o.id === objId);
       if (obj) Object.assign(obj, coords);
+    }
+  }
+
+  // walkTo overrides for objects whose centers fall outside/near walkBounds
+  const walkToOverrides = {
+    port:      { elpida_dock: 400 },
+    windmill:  { telescope: 460, windmill_tower: 480 },
+    graveyard: { visvikis_grave: 430, angel_statue: 480 },
+    boat:      { galaxidi_view: 380 },
+    cave:      { jade_stone: 440 },
+  };
+  for (const [sceneId, overrides] of Object.entries(walkToOverrides)) {
+    const sc = scenes[sceneId];
+    if (!sc) continue;
+    for (const [objId, walkTo] of Object.entries(overrides)) {
+      const obj = sc.objects.find(o => o.id === objId);
+      if (obj) obj.walkTo = walkTo;
     }
   }
 })();
@@ -3077,7 +3094,80 @@ function playCaveDrip() {
   osc.stop(now + 0.4);
 }
 
-// ── SFX — procedural sound effects ──────────────────────────
+// ── SFX Sample System — real audio samples with synthesis fallback ──
+const sfxBuffers = {};  // path → AudioBuffer (decoded)
+const sfxSampleMap = {
+  // Footsteps — multiple variants per surface for natural randomization
+  'step-stone':  ['assets/sfx/step-stone-1.mp3','assets/sfx/step-stone-2.mp3','assets/sfx/step-stone-3.mp3','assets/sfx/step-stone-4.mp3'],
+  'step-wood':   ['assets/sfx/step-wood-1.mp3','assets/sfx/step-wood-2.mp3','assets/sfx/step-wood-3.mp3','assets/sfx/step-wood-4.mp3'],
+  'step-sand':   ['assets/sfx/step-sand-1.mp3','assets/sfx/step-sand-2.mp3'],
+  'step-dirt':   ['assets/sfx/step-dirt-1.mp3','assets/sfx/step-dirt-2.mp3'],
+  // Interaction SFX
+  'door':        ['assets/sfx/door-open.mp3','assets/sfx/door-open-2.mp3'],
+  'key':         ['assets/sfx/key-turn.mp3'],
+  'chest':       ['assets/sfx/chest-open.mp3'],
+  'drawer':      ['assets/sfx/drawer-open.mp3'],
+  'pickup':      ['assets/sfx/pickup.mp3','assets/sfx/pickup-2.mp3'],
+  'whoosh':      ['assets/sfx/whoosh.mp3','assets/sfx/whoosh-2.mp3'],
+  'click':       ['assets/sfx/click.mp3'],
+  'stone':       ['assets/sfx/stone.mp3','assets/sfx/stone-2.mp3'],
+  'metallic_hit':['assets/sfx/metallic-hit.mp3','assets/sfx/metallic-hit-2.mp3'],
+  'wood_creak':  ['assets/sfx/wood-creak.mp3'],
+  // New SFX types (samples only, no synthesis fallback needed)
+  'coins':       ['assets/sfx/coins.mp3','assets/sfx/coins-2.mp3','assets/sfx/coins-3.mp3'],
+  'glass_clink': ['assets/sfx/glass-clink.mp3','assets/sfx/glass-clink-2.mp3'],
+  'ghost_shade': ['assets/sfx/ghost-shade.mp3','assets/sfx/ghost-shade-2.mp3','assets/sfx/ghost-shade-3.mp3'],
+  'metal_ring':  ['assets/sfx/metal-ring.mp3'],
+  'cloth':       ['assets/sfx/cloth.mp3'],
+  'bottle':      ['assets/sfx/bottle.mp3'],
+};
+const sfxVolume = {
+  'step-stone': 0.18, 'step-wood': 0.22, 'step-sand': 0.14, 'step-dirt': 0.18,
+  'door': 0.35, 'key': 0.30, 'chest': 0.35, 'drawer': 0.30,
+  'pickup': 0.25, 'whoosh': 0.20, 'click': 0.25, 'stone': 0.30,
+  'metallic_hit': 0.35, 'wood_creak': 0.25,
+  'coins': 0.30, 'glass_clink': 0.20, 'ghost_shade': 0.40,
+  'metal_ring': 0.25, 'cloth': 0.20, 'bottle': 0.25,
+};
+let sfxSamplesLoaded = false;
+
+async function loadSFXSamples() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const allPaths = new Set();
+  for (const paths of Object.values(sfxSampleMap)) paths.forEach(p => allPaths.add(p));
+  const promises = [...allPaths].map(async path => {
+    try {
+      const resp = await fetch(path);
+      if (!resp.ok) throw new Error(resp.status);
+      const arrayBuf = await resp.arrayBuffer();
+      sfxBuffers[path] = await ctx.decodeAudioData(arrayBuf);
+    } catch (e) { /* sample missing — synthesis fallback will handle it */ }
+  });
+  await Promise.all(promises);
+  sfxSamplesLoaded = true;
+  console.log(`SFX: loaded ${Object.keys(sfxBuffers).length}/${allPaths.size} samples`);
+}
+
+function playSampleSFX(sampleKey, opts = {}) {
+  const paths = sfxSampleMap[sampleKey];
+  if (!paths || !sfxSamplesLoaded) return false;
+  const available = paths.filter(p => sfxBuffers[p]);
+  if (!available.length) return false;
+  const path = available[Math.floor(Math.random() * available.length)];
+  const ctx = getAudioCtx();
+  const src = ctx.createBufferSource();
+  src.buffer = sfxBuffers[path];
+  if (opts.playbackRate) src.playbackRate.value = opts.playbackRate;
+  const g = ctx.createGain();
+  g.gain.value = opts.volume || sfxVolume[sampleKey] || 0.25;
+  src.connect(g);
+  g.connect(ambientSounds.masterGain);
+  src.start(0);
+  return true;
+}
+
+// ── SFX — procedural sound effects (synthesis fallback) ─────
 const sceneSurface = {
   exterior: 'stone', terrace: 'stone', kitchen: 'wood',
   port: 'stone', museum: 'wood', liotrivi: 'stone',
@@ -6654,10 +6744,10 @@ function updateActionLine() {
 
 function objClick(obj) {
   if (state.dlg.active) return;
-  const objCenterX = obj.x + obj.w / 2;
+  const walkTarget = obj.walkTo !== undefined ? obj.walkTo : (obj.x + obj.w / 2);
 
   // Walk Ntemis to object, then execute verb
-  startWalk('ntemis', objCenterX, () => {
+  startWalk('ntemis', walkTarget, () => {
     let d = obj.verbs[state.verb];
     // Verb fallback: "use" tries open/push/close if no direct match
     if (!d && verbFallbacks[state.verb]) {
@@ -6679,7 +6769,7 @@ function objClick(obj) {
     if (typeof d === 'string') { playSFX('door'); changeScene(d); return; }
     if (Array.isArray(d) && d.length) showDlg(d);
   });
-  familyFollow(objCenterX);
+  familyFollow(walkTarget);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -7566,6 +7656,7 @@ function startScene(id) {
     chars[who].fadeIn = 0; // start fade-in
     chars[who].dir = 1;
   }
+  snapNPCsToWalkLine();
 
   initParticles();
   initAmbientSound();
@@ -8077,33 +8168,67 @@ function render() {
 }
 
 // ════════════════════════════════════════════════════════════
-// DEBUG HOTSPOT OVERLAY — press D to toggle
+// DEBUG OVERLAY — press F2 (or D) to toggle
 // ════════════════════════════════════════════════════════════
 function drawDebugHotspots() {
   const sc = scenes[state.scene];
-  if (!sc || !sc.objects) return;
+  if (!sc) return;
   ctx.save();
-  const colors = ['#ff000080','#00ff0080','#0088ff80','#ff880080','#ff00ff80','#00ffff80','#ffff0080'];
-  for (let i = 0; i < sc.objects.length; i++) {
-    const obj = sc.objects[i];
-    if (obj._hidden) continue;
-    const c = colors[i % colors.length];
-    ctx.fillStyle = c;
-    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
-    ctx.strokeStyle = c.replace('80','ff');
-    ctx.lineWidth = 1;
-    ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
-    ctx.fillStyle = '#fff';
-    ctx.font = '8px monospace';
-    ctx.fillText(obj.id, obj.x + 2, obj.y + 9);
+
+  // WalkLine (yellow)
+  if (sc.walkLine && sc.walkLine.length >= 2) {
+    ctx.strokeStyle = '#ffff00';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(sc.walkLine[0][0], sc.walkLine[0][1]);
+    for (let i = 1; i < sc.walkLine.length; i++) ctx.lineTo(sc.walkLine[i][0], sc.walkLine[i][1]);
+    ctx.stroke();
+    for (const pt of sc.walkLine) { ctx.fillStyle = '#ffff00'; ctx.beginPath(); ctx.arc(pt[0], pt[1], 3, 0, Math.PI * 2); ctx.fill(); }
   }
-  // Mouse coordinates
+
+  // WalkBounds (red dashed)
+  const bounds = getWalkBounds(state.scene);
+  ctx.strokeStyle = '#ff4444'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(bounds[0], 0); ctx.lineTo(bounds[0], GH); ctx.moveTo(bounds[1], 0); ctx.lineTo(bounds[1], GH); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Hotspot rects + walkTo markers
+  if (sc.objects) {
+    const colors = ['#00ffff80','#ff00ff80','#00ff8080','#ff880080','#8888ff80','#ffff0080'];
+    for (let i = 0; i < sc.objects.length; i++) {
+      const obj = sc.objects[i];
+      if (obj._hidden) continue;
+      const c = colors[i % colors.length];
+      ctx.fillStyle = c; ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+      ctx.strokeStyle = c.replace('80','ff'); ctx.lineWidth = 1; ctx.strokeRect(obj.x, obj.y, obj.w, obj.h);
+      ctx.fillStyle = '#fff'; ctx.font = '7px monospace'; ctx.fillText(obj.id, obj.x + 2, obj.y + 8);
+      if (obj.walkTo !== undefined) {
+        const wy = getGroundY(state.scene, obj.walkTo);
+        ctx.fillStyle = '#00ff00'; ctx.beginPath();
+        ctx.moveTo(obj.walkTo, wy - 6); ctx.lineTo(obj.walkTo + 4, wy); ctx.lineTo(obj.walkTo, wy + 6); ctx.lineTo(obj.walkTo - 4, wy);
+        ctx.closePath(); ctx.fill();
+      }
+    }
+  }
+
+  // Character anchors (white) + NPC anchors (magenta)
+  for (const who of ['ntemis', 'ajax', 'clio']) {
+    const c = chars[who]; if (!c.visible) continue;
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(c.x - 5, c.y); ctx.lineTo(c.x + 5, c.y); ctx.moveTo(c.x, c.y - 5); ctx.lineTo(c.x, c.y + 5); ctx.stroke();
+    ctx.fillStyle = '#fff'; ctx.font = '6px monospace'; ctx.fillText(who, c.x + 6, c.y - 2);
+  }
+  for (const [npcId, npc] of Object.entries(npcChars)) {
+    if (npc.scene !== state.scene || !npc.visible) continue;
+    ctx.strokeStyle = '#ff00ff'; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(npc.x - 5, npc.y); ctx.lineTo(npc.x + 5, npc.y); ctx.moveTo(npc.x, npc.y - 5); ctx.lineTo(npc.x, npc.y + 5); ctx.stroke();
+    ctx.fillStyle = '#ff00ff'; ctx.font = '6px monospace'; ctx.fillText(npcId, npc.x + 6, npc.y - 2);
+  }
+
+  // Mouse coords
   const mx = Math.round(state.mouseGX || 0), my = Math.round(state.mouseGY || 0);
-  ctx.fillStyle = '#000';
-  ctx.fillRect(GW - 80, 2, 78, 14);
-  ctx.fillStyle = '#0f0';
-  ctx.font = '10px monospace';
-  ctx.fillText(`${mx}, ${my}`, GW - 76, 13);
+  ctx.fillStyle = '#000c'; ctx.fillRect(GW - 90, 2, 88, 14);
+  ctx.fillStyle = '#0f0'; ctx.font = '10px monospace'; ctx.fillText(`${mx}, ${my}`, GW - 86, 13);
   ctx.restore();
 }
 
