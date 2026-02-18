@@ -1081,7 +1081,7 @@ const scenes = {
                   state.flags.letter_read=1;
                   playSFX('paper');
                   showDlg([
-                    {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»', auto:4},
+                    {s:'ΝΤΕΜΗΣ',t:'«Αναζητήστε ότι σας ενώνει και πηγαίνετε με τη ροή. — Καπ. Λ. Βισβίκης»', auto:4},
                     {s:'',t:'Σιωπή. Κύματα και γλάροι.', auto:3},
                     {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. ΕΜΕΙΣ το βρήκαμε.'},
                     {s:'ΝΤΕΜΗΣ',t:'Κανείς δεν ταξιδεύει μόνος. Θα το δώσουμε στο Γαλαξίδι.'},
@@ -1362,7 +1362,7 @@ const MAP_LOCATIONS = [
   { id:'cave',     sceneIds:['cave'],                        label:'Σπήλαιο',   x:390, y:235 },
   { id:'windmill', sceneIds:['windmill'],                    label:'Ο Μύλος',    x:199, y:150 },
   { id:'graveyard',sceneIds:['graveyard'],                   label:'Νεκροταφείο',x:280, y:150 },
-  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:220, y:330 },
+  { id:'boat',     sceneIds:['boat'],                        label:'Ελπίδα',     x:370, y:345 },
   { id:'treasure', sceneIds:['treasure','new_era'],          label:'Αγ. Γεώργιος', x:430, y:145 },
 ];
 
@@ -1370,7 +1370,7 @@ const MAP_LOCATIONS = [
 const MAP_PATHS = [
   ['exterior','port'], ['exterior','liotrivi'], ['port','museum'],
   ['museum','liotrivi'], ['liotrivi','church'], ['church','cave'],
-  ['exterior','windmill'], ['windmill','graveyard'],
+  ['exterior','windmill'], ['windmill','graveyard'], ['port','boat'],
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -2386,7 +2386,7 @@ function drawLetterSingle(t, p, tick) {
 
 function drawCaveEntrance(t, p, tick) {
   // Pan forward into the cave, lantern light flickers
-  drawKenBurns('cutscene-cave', 1.05 + p * 0.08, 0, 30 - p * 8);
+  drawKenBurns('cutscene-cave', 1.05 + p * 0.08, 0, -20 - p * 8);
   ctx.save();
   ctx.globalAlpha = 0.05 + Math.sin(tick * 0.06) * 0.03;
   ctx.fillStyle = '#FFa040';
@@ -3040,7 +3040,7 @@ function drawHeatHaze(tick) {
   ctx.restore();
 }
 
-// ── Ambient Sound Manager (Web Audio API — procedural, no files) ──
+// ── Ambient Sound Manager (sample-based with procedural fallback) ──
 let audioCtx = null;
 const ambientSounds = {
   wavesNode: null, cicadasNode: null, windNode: null, dripsInterval: null,
@@ -3048,26 +3048,32 @@ const ambientSounds = {
   tavernaNode: null, tavernaTimer: 0, tavernaInterval: 4,
   crowdNode: null, crowdTimer: 0, crowdInterval: 6,
   creakTimer: 0, creakInterval: 5,
+  // Sample-based ambient layers
+  birdsNode: null, fireNode: null, harborNode: null, boatCreakNode: null,
+  caveNode: null,
+  catTimer: 0, catInterval: 25,
+  dogTimer: 0, dogInterval: 40,
+  owlTimer: 0, owlInterval: 18,
   masterGain: null, active: false, currentScene: null,
 };
 
 // Per-scene ambient config: which layers play and at what volume
 const sceneAmbientConfig = {
-  exterior:  { waves: 0.12, wind: 0.04, gulls: false, cicadas: 0.03, bell: true, bellFreq: [25,20] },
-  terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8], cicadas: 0.04, bell: true, bellFreq: [30,25] },
-  kitchen:   { waves: 0.03, wind: 0.01 },
-  port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4], bell: true, bellFreq: [35,30] },
-  waterfront:{ waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6], bell: true, bellFreq: [30,25] },
+  exterior:  { waves: 0.12, wind: 0.04, gulls: false, cicadas: 0.03, bell: true, bellFreq: [25,20], birds: 0.06, cats: true, catFreq: [30,20], dogs: true, dogFreq: [45,30] },
+  terrace:   { waves: 0.10, wind: 0.03, gulls: true,  gullFreq: [10,8], cicadas: 0.04, bell: true, bellFreq: [30,25], birds: 0.08, cats: true, catFreq: [25,15] },
+  kitchen:   { waves: 0.03, wind: 0.01, fire: 0.10 },
+  port:      { waves: 0.18, wind: 0.06, gulls: true,  gullFreq: [5,4], bell: true, bellFreq: [35,30], harbor: 0.10, cats: true, catFreq: [20,15], dogs: true, dogFreq: [40,25] },
+  waterfront:{ waves: 0.14, wind: 0.04, gulls: true,  gullFreq: [8,6], bell: true, bellFreq: [30,25], harbor: 0.08 },
   museum:    { waves: 0.02, wind: 0.01 },
-  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02, bell: true, bellFreq: [25,20], taverna: true, tavernaFreq: [3,4] },
+  liotrivi:  { waves: 0.04, wind: 0.02, cicadas: 0.02, bell: true, bellFreq: [25,20], taverna: true, tavernaFreq: [3,4], cats: true, catFreq: [35,20] },
   cave:      { drips: true,  wind: 0.02 },
-  windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10], cicadas: 0.05, bell: true, bellFreq: [40,30] },
-  graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02, bell: true, bellFreq: [20,15] },
-  church:    { waves: 0.02, wind: 0.01, cicadas: 0.02, bell: true, bellFreq: [12,10] },
+  windmill:  { waves: 0.06, wind: 0.12, gulls: true,  gullFreq: [12,10], cicadas: 0.05, bell: true, bellFreq: [40,30], birds: 0.04 },
+  graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02, bell: true, bellFreq: [20,15], owls: true, owlFreq: [15,12] },
+  church:    { waves: 0.02, wind: 0.01, cicadas: 0.02, bell: true, bellFreq: [12,10], birds: 0.03 },
   church_interior: { waves: 0, wind: 0, bell: true, bellFreq: [15,12] },
-  boat:      { waves: 0.22, wind: 0.10, gulls: true,  gullFreq: [6,5], creak: true, creakFreq: [4,6] },
+  boat:      { waves: 0.22, wind: 0.10, gulls: true,  gullFreq: [6,5], creak: true, creakFreq: [4,6], boatCreak: 0.08 },
   treasure:  { waves: 0.08, wind: 0.06 },
-  new_era:   { waves: 0.14, wind: 0.04, crowd: true, crowdVol: 0.08, crowdFreq: [4,5] },
+  new_era:   { waves: 0.14, wind: 0.04, crowd: true, crowdVol: 0.08, crowdFreq: [4,5], birds: 0.05, dogs: true, dogFreq: [35,20] },
 };
 
 function getAudioCtx() {
@@ -3264,6 +3270,10 @@ const sfxSampleMap = {
   'metal_ring':  ['assets/sfx/metal-ring.mp3'],
   'cloth':       ['assets/sfx/cloth.mp3'],
   'bottle':      ['assets/sfx/bottle.mp3'],
+  // ElevenLabs-generated ambient one-shots (usable as interaction SFX too)
+  'heavy_door':      ['assets/sfx/ambient/heavy-door-creak.mp3'],
+  'treasure_reveal': ['assets/sfx/ambient/treasure-reveal.mp3'],
+  'ghost_whisper':   ['assets/sfx/ambient/ghost-whisper.mp3'],
 };
 const sfxVolume = {
   'step-stone': 0.18, 'step-wood': 0.22, 'step-sand': 0.14, 'step-dirt': 0.18,
@@ -3274,6 +3284,7 @@ const sfxVolume = {
   'bell': 0.25, 'gong': 0.30,
   'coins': 0.30, 'glass_clink': 0.20, 'ghost_shade': 0.40,
   'metal_ring': 0.25, 'cloth': 0.20, 'bottle': 0.25,
+  'heavy_door': 0.35, 'treasure_reveal': 0.40, 'ghost_whisper': 0.30,
 };
 let sfxSamplesLoaded = false;
 
@@ -3293,6 +3304,88 @@ async function loadSFXSamples() {
   await Promise.all(promises);
   sfxSamplesLoaded = true;
   console.log(`SFX: loaded ${Object.keys(sfxBuffers).length}/${allPaths.size} samples`);
+}
+
+// ── Ambient Sample System — real MP3 loops & one-shots for atmosphere ──
+const ambientBuffers = {}; // path → AudioBuffer
+let ambientSamplesLoaded = false;
+const ambientSamplePaths = {
+  // Looping layers
+  'waves-gentle':   'assets/sfx/ambient/waves-gentle-loop.mp3',
+  'waves-strong':   'assets/sfx/ambient/waves-strong-loop.mp3',
+  'wind-gentle':    'assets/sfx/ambient/wind-gentle-loop.mp3',
+  'wind-strong':    'assets/sfx/ambient/wind-strong-loop.mp3',
+  'crowd-taverna':  'assets/sfx/ambient/crowd-taverna-loop.mp3',
+  'cicadas':        'assets/sfx/ambient/cicadas-loop.mp3',
+  'cave-drips':     'assets/sfx/ambient/cave-drips-loop.mp3',
+  'fire-crackle':   'assets/sfx/ambient/fire-crackle-loop.mp3',
+  'birds-morning':  'assets/sfx/ambient/birds-morning-loop.mp3',
+  'boat-creak':     'assets/sfx/ambient/boat-creak-loop.mp3',
+  'harbor':         'assets/sfx/ambient/harbor-loop.mp3',
+  'festival-crowd': 'assets/sfx/ambient/festival-crowd-loop.mp3',
+  // One-shot spot effects
+  'seagull-1':      'assets/sfx/ambient/seagull-1.mp3',
+  'seagull-2':      'assets/sfx/ambient/seagull-2.mp3',
+  'seagull-3':      'assets/sfx/ambient/seagull-3.mp3',
+  'church-bell':    'assets/sfx/ambient/church-bell-toll.mp3',
+  'chapel-bell':    'assets/sfx/ambient/chapel-bell.mp3',
+  'owl-hoot':       'assets/sfx/ambient/owl-hoot.mp3',
+  'ghost-whisper':  'assets/sfx/ambient/ghost-whisper.mp3',
+  'cat-meow-1':     'assets/sfx/ambient/cat-meow-1.mp3',
+  'cat-meow-2':     'assets/sfx/ambient/cat-meow-2.mp3',
+  'dog-bark':       'assets/sfx/ambient/dog-bark.mp3',
+  'heavy-door':     'assets/sfx/ambient/heavy-door-creak.mp3',
+  'treasure-reveal':'assets/sfx/ambient/treasure-reveal.mp3',
+};
+
+async function loadAmbientSamples() {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const paths = Object.values(ambientSamplePaths);
+  const promises = paths.map(async path => {
+    try {
+      const resp = await fetch(path);
+      if (!resp.ok) throw new Error(resp.status);
+      const arrayBuf = await resp.arrayBuffer();
+      ambientBuffers[path] = await ctx.decodeAudioData(arrayBuf);
+    } catch (e) { /* sample missing — procedural fallback */ }
+  });
+  await Promise.all(promises);
+  ambientSamplesLoaded = true;
+  console.log(`Ambient: loaded ${Object.keys(ambientBuffers).length}/${paths.length} samples`);
+}
+
+// Create a looping ambient sample node (waves, wind, cicadas, etc.)
+function createAmbientSampleLoop(sampleKey, volume) {
+  const ctx = getAudioCtx();
+  const path = ambientSamplePaths[sampleKey];
+  const buf = path && ambientBuffers[path];
+  if (!ctx || !buf) return null;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.loop = true;
+  const gain = ctx.createGain();
+  gain.gain.value = volume;
+  src.connect(gain);
+  gain.connect(ambientSounds.masterGain);
+  src.start();
+  return { src, gain };
+}
+
+// Play an ambient one-shot (seagull, bell, cat, dog, owl)
+function playAmbientOneShot(sampleKey, volume) {
+  const ctx = getAudioCtx();
+  const path = ambientSamplePaths[sampleKey];
+  const buf = path && ambientBuffers[path];
+  if (!ctx || !buf) return false;
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const gain = ctx.createGain();
+  gain.gain.value = volume || 0.2;
+  src.connect(gain);
+  gain.connect(ambientSounds.masterGain);
+  src.start();
+  return true;
 }
 
 function playSampleSFX(sampleKey, opts = {}) {
@@ -3338,7 +3431,8 @@ function playSFX(type) {
     } else if (type === 'coins' || type === 'glass_clink' || type === 'ghost_shade' ||
                type === 'metal_ring' || type === 'cloth' || type === 'bottle' ||
                type === 'wood_creak' || type === 'fire_loop' || type === 'dishes' ||
-               type === 'bell' || type === 'gong') {
+               type === 'bell' || type === 'gong' ||
+               type === 'heavy_door' || type === 'treasure_reveal' || type === 'ghost_whisper') {
       // Sample-only types (no synthesis fallback)
       playSampleSFX(type); return;
     } else if (type === 'ghost') {
@@ -4018,60 +4112,107 @@ function startSceneAmbience(sceneId) {
   const cfg = sceneAmbientConfig[sceneId];
   if (!cfg) return;
   ambientSounds.currentScene = sceneId;
+  const useSamples = ambientSamplesLoaded;
   try {
-    // Waves layer
+    // Waves layer — sample or procedural
     if (cfg.waves) {
-      ambientSounds.wavesNode = createWavesLoop();
-      ambientSounds.wavesNode.gain.gain.value = cfg.waves;
+      const waveKey = cfg.waves > 0.15 ? 'waves-strong' : 'waves-gentle';
+      if (useSamples) ambientSounds.wavesNode = createAmbientSampleLoop(waveKey, cfg.waves);
+      if (!ambientSounds.wavesNode) {
+        ambientSounds.wavesNode = createWavesLoop();
+        ambientSounds.wavesNode.gain.gain.value = cfg.waves;
+      }
     }
-    // Wind layer
+    // Wind layer — sample or procedural
     if (cfg.wind) {
-      ambientSounds.windNode = createWindLoop(cfg.wind);
+      const windKey = cfg.wind > 0.08 ? 'wind-strong' : 'wind-gentle';
+      if (useSamples) ambientSounds.windNode = createAmbientSampleLoop(windKey, cfg.wind);
+      if (!ambientSounds.windNode) ambientSounds.windNode = createWindLoop(cfg.wind);
     }
-    // Seagull timer
+    // Seagull timer (one-shots handled in updateAmbientSound)
     if (cfg.gulls) {
       ambientSounds.gullTimer = 0;
       ambientSounds.gullInterval = cfg.gullFreq[0] + Math.random() * cfg.gullFreq[1];
     }
-    // Cave drips — periodic random drips
+    // Cave drips — sample loop or procedural
     if (cfg.drips) {
-      const dripFn = () => {
-        playCaveDrip();
-        ambientSounds.dripsInterval = setTimeout(dripFn, 1500 + Math.random() * 3000);
-      };
-      ambientSounds.dripsInterval = setTimeout(dripFn, 500 + Math.random() * 1000);
+      if (useSamples) ambientSounds.caveNode = createAmbientSampleLoop('cave-drips', 0.15);
+      if (!ambientSounds.caveNode) {
+        const dripFn = () => {
+          playCaveDrip();
+          ambientSounds.dripsInterval = setTimeout(dripFn, 1500 + Math.random() * 3000);
+        };
+        ambientSounds.dripsInterval = setTimeout(dripFn, 500 + Math.random() * 1000);
+      }
     }
-    // Cicadas layer
+    // Cicadas layer — sample or procedural
     if (cfg.cicadas) {
-      ambientSounds.cicadasNode = createCicadasLoop();
-      ambientSounds.cicadasNode.gain.gain.value = cfg.cicadas;
+      if (useSamples) ambientSounds.cicadasNode = createAmbientSampleLoop('cicadas', cfg.cicadas);
+      if (!ambientSounds.cicadasNode) {
+        ambientSounds.cicadasNode = createCicadasLoop();
+        ambientSounds.cicadasNode.gain.gain.value = cfg.cicadas;
+      }
     }
-    // Church bell — plays on entry for bell-enabled scenes, then periodically
+    // Church bell — plays on entry, then periodically (one-shots in update)
     if (cfg.bell) {
       ambientSounds.bellTimer = 0;
       ambientSounds.bellInterval = cfg.bellFreq[0] + Math.random() * cfg.bellFreq[1];
-      // Bell on scene entry (with short delay)
       const entryDelay = (sceneId === 'church' || sceneId === 'church_interior' || sceneId === 'graveyard') ? 1500 : 3000;
-      setTimeout(() => playChurchBell(), entryDelay);
+      setTimeout(() => {
+        if (useSamples && !playAmbientOneShot('church-bell', 0.25)) playChurchBell();
+        else if (!useSamples) playChurchBell();
+      }, entryDelay);
     }
-    // Taverna sounds — murmur loop + periodic glass/cutlery
+    // Taverna — sample loop or procedural
     if (cfg.taverna) {
-      ambientSounds.tavernaNode = createTavernaMurmurLoop();
+      if (useSamples) ambientSounds.tavernaNode = createAmbientSampleLoop('crowd-taverna', 0.06);
+      if (!ambientSounds.tavernaNode) ambientSounds.tavernaNode = createTavernaMurmurLoop();
       ambientSounds.tavernaTimer = 0;
       ambientSounds.tavernaInterval = cfg.tavernaFreq[0] + Math.random() * cfg.tavernaFreq[1];
-      // Initial clink on entry
       setTimeout(() => playTavernaGlassClink(), 1500);
     }
-    // Festival crowd — murmur loop + periodic cheers/claps
+    // Festival crowd — sample loop or procedural
     if (cfg.crowd) {
-      ambientSounds.crowdNode = createCrowdLoop();
-      if (ambientSounds.crowdNode && cfg.crowdVol) {
-        ambientSounds.crowdNode.gain.gain.value = cfg.crowdVol;
+      if (useSamples) ambientSounds.crowdNode = createAmbientSampleLoop('festival-crowd', cfg.crowdVol || 0.08);
+      if (!ambientSounds.crowdNode) {
+        ambientSounds.crowdNode = createCrowdLoop();
+        if (ambientSounds.crowdNode && cfg.crowdVol) ambientSounds.crowdNode.gain.gain.value = cfg.crowdVol;
       }
       ambientSounds.crowdTimer = 0;
       ambientSounds.crowdInterval = cfg.crowdFreq[0] + Math.random() * cfg.crowdFreq[1];
-      // Initial cheer on scene entry (delayed for dramatic effect)
       setTimeout(() => playCrowdCheer(), 2000);
+    }
+    // ── New sample-based ambient layers ──
+    // Birds — morning chirping for outdoor scenes
+    if (cfg.birds && useSamples) {
+      ambientSounds.birdsNode = createAmbientSampleLoop('birds-morning', cfg.birds);
+    }
+    // Fire — crackling hearth for indoor scenes
+    if (cfg.fire && useSamples) {
+      ambientSounds.fireNode = createAmbientSampleLoop('fire-crackle', cfg.fire);
+    }
+    // Harbor — dock ambience with rigging and lapping water
+    if (cfg.harbor && useSamples) {
+      ambientSounds.harborNode = createAmbientSampleLoop('harbor', cfg.harbor);
+    }
+    // Boat creaking — wooden hull sounds
+    if (cfg.boatCreak && useSamples) {
+      ambientSounds.boatCreakNode = createAmbientSampleLoop('boat-creak', cfg.boatCreak);
+    }
+    // Cat timer
+    if (cfg.cats) {
+      ambientSounds.catTimer = 0;
+      ambientSounds.catInterval = cfg.catFreq[0] + Math.random() * cfg.catFreq[1];
+    }
+    // Dog timer
+    if (cfg.dogs) {
+      ambientSounds.dogTimer = 0;
+      ambientSounds.dogInterval = cfg.dogFreq[0] + Math.random() * cfg.dogFreq[1];
+    }
+    // Owl timer (graveyard)
+    if (cfg.owls) {
+      ambientSounds.owlTimer = 0;
+      ambientSounds.owlInterval = cfg.owlFreq[0] + Math.random() * cfg.owlFreq[1];
     }
   } catch (e) { /* Web Audio not available */ }
   // Visual ambience
@@ -4112,6 +4253,13 @@ function stopSceneAmbience() {
     } catch (e) {}
     ambientSounds.crowdNode = null;
   }
+  // Stop sample-based ambient layers
+  for (const key of ['birdsNode','fireNode','harborNode','boatCreakNode','caveNode']) {
+    if (ambientSounds[key]) {
+      try { ambientSounds[key].src.stop(); } catch (e) {}
+      ambientSounds[key] = null;
+    }
+  }
   boatCutout = null;
   boatWaterPatch = null;
   petals.length = 0;
@@ -4123,22 +4271,33 @@ function updateAmbientSound(dt) {
   if (!ambientSounds.active) return;
   const cfg = sceneAmbientConfig[state.scene];
   if (!cfg) return;
-  // Seagull timer
+  const useSamples = ambientSamplesLoaded;
+  // Seagull timer — sample one-shots or procedural
   if (cfg.gulls) {
     ambientSounds.gullTimer += dt;
     if (ambientSounds.gullTimer >= ambientSounds.gullInterval) {
       ambientSounds.gullTimer = 0;
       ambientSounds.gullInterval = cfg.gullFreq[0] + Math.random() * cfg.gullFreq[1];
-      playSeagullCry();
+      if (useSamples) {
+        const gullKey = ['seagull-1','seagull-2','seagull-3'][Math.floor(Math.random()*3)];
+        if (!playAmbientOneShot(gullKey, 0.15 + Math.random() * 0.1)) playSeagullCry();
+      } else {
+        playSeagullCry();
+      }
     }
   }
-  // Church bell timer — periodic distant tolls
+  // Church bell timer — sample or procedural
   if (cfg.bell) {
     ambientSounds.bellTimer += dt;
     if (ambientSounds.bellTimer >= ambientSounds.bellInterval) {
       ambientSounds.bellTimer = 0;
       ambientSounds.bellInterval = cfg.bellFreq[0] + Math.random() * cfg.bellFreq[1];
-      playChurchBell();
+      if (useSamples) {
+        const bellKey = Math.random() < 0.6 ? 'church-bell' : 'chapel-bell';
+        if (!playAmbientOneShot(bellKey, 0.20)) playChurchBell();
+      } else {
+        playChurchBell();
+      }
     }
   }
   // Taverna sounds — periodic glass clinks & cutlery
@@ -4166,6 +4325,34 @@ function updateAmbientSound(dt) {
       ambientSounds.creakTimer = 0;
       ambientSounds.creakInterval = cfg.creakFreq[0] + Math.random() * cfg.creakFreq[1];
       playSFX('wood_creak');
+    }
+  }
+  // ── New sample-based periodic sounds ──
+  // Cat meows — village atmosphere
+  if (cfg.cats && useSamples) {
+    ambientSounds.catTimer += dt;
+    if (ambientSounds.catTimer >= ambientSounds.catInterval) {
+      ambientSounds.catTimer = 0;
+      ambientSounds.catInterval = cfg.catFreq[0] + Math.random() * cfg.catFreq[1];
+      playAmbientOneShot(Math.random() < 0.5 ? 'cat-meow-1' : 'cat-meow-2', 0.10 + Math.random() * 0.05);
+    }
+  }
+  // Dog barks — distant village dogs
+  if (cfg.dogs && useSamples) {
+    ambientSounds.dogTimer += dt;
+    if (ambientSounds.dogTimer >= ambientSounds.dogInterval) {
+      ambientSounds.dogTimer = 0;
+      ambientSounds.dogInterval = cfg.dogFreq[0] + Math.random() * cfg.dogFreq[1];
+      playAmbientOneShot('dog-bark', 0.08 + Math.random() * 0.04);
+    }
+  }
+  // Owl hoots — graveyard atmosphere
+  if (cfg.owls && useSamples) {
+    ambientSounds.owlTimer += dt;
+    if (ambientSounds.owlTimer >= ambientSounds.owlInterval) {
+      ambientSounds.owlTimer = 0;
+      ambientSounds.owlInterval = cfg.owlFreq[0] + Math.random() * cfg.owlFreq[1];
+      playAmbientOneShot('owl-hoot', 0.12);
     }
   }
 }
@@ -4649,24 +4836,6 @@ function drawWindmillAmbience(tick) {
 // Graveyard ambience: fireflies, mist, moonlight rays, cypress shadow sway
 function drawGraveyardAmbience(tick) {
   ctx.save();
-  // ── TOMBSTONE TEXT CORRECTION ──
-  // Cover old "ΠΛΟΙΑΡΧΟΣ / Λ. ΒΙΣΒΙΖΗΣ" and draw correct name
-  ctx.fillStyle = '#A09890';
-  ctx.fillRect(454, 270, 98, 62);
-  ctx.fillStyle = '#A8A098';
-  ctx.fillRect(456, 272, 94, 58);
-  // Subtle stone texture lines
-  ctx.fillStyle = '#9A9488';
-  ctx.fillRect(456, 290, 94, 1);
-  ctx.fillRect(456, 310, 94, 1);
-  // Draw correct name: Καπετάνιος Λουκάς Βισβίκης
-  ctx.fillStyle = '#28241E';
-  ctx.font = 'bold 11px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('ΚΑΠΕΤΑΝΙΟΣ', 503, 287);
-  ctx.fillText('ΛΟΥΚΑΣ', 503, 303);
-  ctx.fillText('ΒΙΣΒΙΚΗΣ', 503, 319);
-  ctx.textAlign = 'left';
   // ── FIREFLIES (yellow-green pulsing dots) ──
   for (let f = 0; f < 8; f++) {
     const fx = 80 + Math.sin(tick * 0.006 + f * 2.7) * 200 + f * 50;
@@ -7493,9 +7662,9 @@ function drawMap() {
   if (!state.mapOpen) return;
   const mx = 30, my = 20, mw = GW - 60, mh = GH - 40;
 
-  // Dark backdrop
+  // Dark backdrop (fully opaque to hide scene underneath)
   ctx.save();
-  ctx.globalAlpha = 0.9;
+  ctx.globalAlpha = 1.0;
   ctx.fillStyle = '#0a0806';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
@@ -7643,21 +7812,23 @@ function drawMap() {
     }
     ctx.restore();
 
-    // Label for current + hover (with dark background for readability on map)
-    if (isCurrent || isHover) {
+    // Label for all locations (with dark background for readability on map)
+    {
       ctx.save();
       const label = loc.label + (isLocked ? ' 🔒' : '');
-      ctx.font = '7px "Press Start 2P", monospace';
+      const fontSize = (isCurrent || isHover) ? 7 : 6;
+      ctx.font = fontSize + 'px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
       const tw = ctx.measureText(label).width;
       // Dark pill behind label
-      ctx.fillStyle = 'rgba(15, 12, 6, 0.75)';
+      ctx.fillStyle = (isCurrent || isHover) ? 'rgba(15, 12, 6, 0.85)' : 'rgba(15, 12, 6, 0.65)';
       const lx = loc.x - tw / 2 - 4, ly = loc.y - 20;
       ctx.beginPath();
       ctx.roundRect(lx, ly, tw + 8, 12, 3);
       ctx.fill();
       // Label text
-      ctx.fillStyle = isCurrent ? '#FFE8A0' : (isLocked ? '#8a7a4a' : '#D4A03C');
+      ctx.globalAlpha = isLocked ? 0.5 : 1.0;
+      ctx.fillStyle = isCurrent ? '#FFE8A0' : (isHover ? '#FFE8A0' : (isLocked ? '#6a5a3a' : '#C09030'));
       ctx.shadowColor = '#000'; ctx.shadowBlur = 2;
       ctx.fillText(label, loc.x, loc.y - 11);
       ctx.restore();
@@ -10366,8 +10537,9 @@ function parseTestParams() {
 // ════════════════════════════════════════════════════════════
 loadAllAssets().then(() => {
   if (DATA_ONLY) return; // test mode — data is ready, skip game loop
-  // Load SFX samples in background (non-blocking — game starts immediately, synthesis fallback until loaded)
+  // Load SFX + ambient samples in background (non-blocking — game starts immediately, synthesis fallback until loaded)
   loadSFXSamples().catch(e => console.warn('SFX samples failed to load, using synthesis:', e));
+  loadAmbientSamples().catch(e => console.warn('Ambient samples failed to load, using procedural:', e));
   const tp = parseTestParams();
   if (tp) {
     if (tp.all) { stSetAllFlags(); stSetAllInv(); stMarkAllVisited(); }
