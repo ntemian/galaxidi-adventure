@@ -313,6 +313,11 @@ async function loadAllAssets() {
     loadImg('cutscene-treasure-letter', 'assets/cutscene-treasure-letter.png'),
     loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
     loadImg('cutscene-epilogue-signing', 'assets/cutscene-epilogue-signing.png'),
+    loadImg('cutscene-festival-celebration', 'assets/cutscene-festival-celebration.png'),
+    loadImg('cutscene-festival-fireworks', 'assets/cutscene-festival-fireworks.png'),
+    loadImg('cutscene-festival-ghost', 'assets/cutscene-festival-ghost.png'),
+    loadImg('cutscene-festival-lantern', 'assets/cutscene-festival-lantern.png'),
+    loadImg('cutscene-festival-panorama', 'assets/cutscene-festival-panorama.png'),
     loadImg('map-bg', 'assets/map-galaxidi.png'),
     loadImg('intro-parchment', 'assets/intro-parchment-v4.png'),
   ]);
@@ -850,11 +855,13 @@ const scenes = {
           use: () => {
             if (state.flags.ghost_summoned) return [{s:'',t:'Η πέτρα ήδη τοποθετήθηκε. Η πλάκα λάμπει αχνά.'}];
             if (!state.inv.find(i => i.id === 'green_stone')) return [{s:'ΝΤΕΜΗΣ',t:'Λείπει κάτι. Η εσοχή στην πλάκα... σαν να περιμένει κάτι.'}];
-            state.flags.ghost_summoned = true;
-            showDlg([{s:'ΝΤΕΜΗΣ',t:'Η εσοχή... αυτό ζητάει η πλάκα.'}], () => {
+            showDlg([
+              {s:'ΝΤΕΜΗΣ',t:'Η εσοχή... αυτό ζητάει η πλάκα.'},
+              {s:'',t:'Η πράσινη πέτρα ταιριάζει ακριβώς. Λάμπει αχνά...', sfx:'stone'}
+            ], () => {
               removeInv('green_stone');
-              playSFX('stone');
-              showDlg([{s:'',t:'Η πράσινη πέτρα ταιριάζει ακριβώς. Λάμπει αχνά...'}], () => startGhostSequence());
+              state.flags.ghost_summoned = true;
+              startGhostSequence();
             });
             return [];
           },
@@ -1146,29 +1153,31 @@ const scenes = {
               {s:'ΝΤΕΜΗΣ',t:'Ο Βισβίκης δεν μας άφησε θησαυρό. Μας άφησε ερώτηση.'},
               {s:'ΝΤΕΜΗΣ',t:'Τι κάνεις όταν ο κόσμος αλλάζει κι εσύ αγαπάς αυτό που ήταν;'},
               {s:'ΝΤΕΜΗΣ',t:'Οι καπεταναίοι αρνήθηκαν τον ατμό. Δεν θα κάνουμε το ίδιο λάθος.'},
+              {s:'ΝΤΕΜΗΣ',t:'Αλλά ξέρετε ποιο ήταν το πραγματικό τους μυστικό; Η αλληλεγγύη.'},
+              {s:'ΝΤΕΜΗΣ',t:'Να βρούμε αυτά που μας ενώνουν. Όχι αυτά που μας χωρίζουν.'},
+              {s:'ΝΤΕΜΗΣ',t:'Τα χρήματα θα γίνουν αρχή. Για να μπει το Γαλαξίδι στη νέα εποχή.'},
               {s:'ΝΤΕΜΗΣ',t:'Το Γαλαξίδι δεν χρειάζεται να γίνει σαν την Αθήνα. Χρειάζεται να γίνει περισσότερο Γαλαξίδι.'},
               {s:'',t:'Σιωπή. Μετά, η γριά με τα μαύρα σηκώνεται πρώτη. Πλησιάζει το βιβλίο και υπογράφει.'},
               {s:'',t:'Ένας-ένας, οι Γαλαξειδιώτες ακολουθούν. Ψαράδες, ταβερνιάρηδες, νέοι, γέροι.'},
               {s:'ΑΙΑΣ',t:'Μπαμπά, πόσες υπογραφές;'},
               {s:'ΝΤΕΜΗΣ',t:'Εκατόν τρεις. Λείπει μία.'},
               {s:'',t:'Ο Αίας αρπάζει το στυλό και υπογράφει.'},
-              {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις.'},
-              {s:'',t:'Ο ίδιος αριθμός με το αρχικό σύμφωνο.'},
-              {s:'ΚΛΕΙΩ',t:'ΕΛΠΙΔΑ.'},
+              {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις. Σαν τότε.'},
+              {s:'ΚΛΕΙΩ',t:'ΕΛΠΙΔΑ!'},
             ];
             showDlg(lines, () => {
               document.getElementById('ui-panel').classList.remove('on');
               document.getElementById('action-line').classList.remove('on');
-              const origComplete = cutscenes.epilogue.onComplete;
-              cutscenes.epilogue.onComplete = () => {
-                if(origComplete) origComplete();
+              // Switch to epic festival music
+              changeSceneMusic('_festival');
+              cutscenes.festival.onComplete = () => {
                 state.phase = 'epilogue';
                 state.epiloguePage = 0;
                 const el = document.getElementById('epilogue-screen');
                 el.classList.add('show');
                 showEpiloguePage();
               };
-              startCutscene('epilogue');
+              startCutscene('festival');
             });
             return [];
           },
@@ -1406,9 +1415,10 @@ const introPages = [
 
 const epiloguePages = [
   'Ο Καπετάν Βισβίκης\nταξίδεψε στην Ανατολή,\nγύρισε πλούσιος,\nκι έκρυψε τον θησαυρό του\nγια κάποιον που θα αγαπούσε\nτο Γαλαξίδι αρκετά\nγια να τον βρει.',
-  'Εκατόν είκοσι χρόνια αργότερα,\nτρεις ταξιδιώτες τον βρήκαν.',
+  'Εκατόν είκοσι χρόνια αργότερα,\nτρεις ταξιδιώτες τον βρήκαν.\n\nΚαι έκαναν αυτό\nπου ο Καπετάνιος ονειρευόταν.',
+  'Να βρούμε αυτά που μας ενώνουν.\nΌχι αυτά που μας χωρίζουν.\n\nΚράτα την αλληλεγγύη.\nΆλλαξε το πλοίο.',
   'Η θάλασσα θυμάται.\nΚι εμείς τώρα,\nαλλάζουμε μαζί της.',
-  'ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ\n\nΚράτα την αλληλεγγύη.\nΆλλαξε το πλοίο.\n\n\nΓια τον Αίαντα και την Κλειώ.',
+  'ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ\n\n104 υπογραφές.\nΤότε και τώρα.\n\n\nΓια τον Αίαντα και την Κλειώ.',
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -1720,32 +1730,49 @@ const cutscenes = {
     },
   },
 
-  // ── EPILOGUE — The new αλληλασφάλεια (triggered at the end)
+  // ── FESTIVAL — Epic celebration cutscene (5 frames, ~63 seconds)
+  festival: {
+    frames: [
+      { duration: 11, draw: drawFestivalCelebration, dialogue: [
+        { s: '', t: 'Η πλατεία εκρήγνυται. Χειροκροτήματα, αγκαλιές, δάκρυα χαράς.', at: 1.0 },
+        { s: 'ΑΙΑΣ', t: 'Αυτό είναι! Αυτά μας ενώνουν! Όχι αυτά που μας χωρίζουν!', at: 4.0 },
+        { s: '', t: 'Η μελωδία των ναυτικών ξαναρχίζει. Τώρα δεν είναι αποχαιρετισμός. Είναι αρχή.', at: 7.5 },
+      ]},
+      { duration: 12, draw: drawFestivalFireworks, dialogue: [
+        { s: '', t: 'Βεγγαλικά φωτίζουν τον Κορινθιακό. Σκάφη με φαναράκια — μια ρεγκάτα φωτός.', at: 1.5 },
+        { s: 'ΑΙΑΣ', t: 'Κοίτα! Η Ελπίδα μπροστά! Με σημαίες!', at: 5.0 },
+        { s: '', t: 'Τριακόσια καράβια κάποτε. Απόψε, η θάλασσα θυμάται.', at: 8.5 },
+      ]},
+      { duration: 13, draw: drawFestivalGhost, dialogue: [
+        { s: '', t: 'Κι εκεί, στην πλώρη της Ελπίδας... ένα φως.', at: 1.5 },
+        { s: 'ΚΛΕΙΩ', t: 'Μπαμπά... ο Καπετάνιος. Τον βλέπεις;', at: 4.0 },
+        { s: '', t: 'Ο Βισβίκης, διάφανος κι ήρεμος. Χαμογελάει. Δεν περιμένει πια.', at: 7.0 },
+        { s: 'ΝΤΕΜΗΣ', t: 'Καλό ταξίδι, Καπετάνιε.', at: 10.5 },
+      ]},
+      { duration: 13, draw: drawFestivalLantern, dialogue: [
+        { s: 'ΚΛΕΙΩ', t: 'Κάτι πρέπει να στείλουμε κι εμείς.', at: 1.5 },
+        { s: '', t: 'Η Κλειώ βάζει ένα φαναράκι χαρτί στο νερό. Η φλόγα αντανακλά στη θάλασσα.', at: 4.0 },
+        { s: '', t: 'Πλέει αργά, προς την Ελπίδα. Η σκιά του Βισβίκη γνέφει. Κι εξαφανίζεται.', at: 7.5 },
+        { s: 'ΚΛΕΙΩ', t: 'Καληνύχτα, Καπετάνιε.', at: 11.0 },
+      ]},
+      { duration: 14, draw: drawFestivalPanorama, dialogue: [
+        { s: '', t: 'Ολόκληρο το Γαλαξίδι ζωντανό. Μουσική, γέλιο, φως.', at: 1.5 },
+        { s: '', t: 'Να βρούμε αυτά που μας ενώνουν. Όχι αυτά που μας χωρίζουν.', at: 4.5 },
+        { s: 'ΑΙΑΣ', t: 'Μπαμπά; Ξέρω τι θα γίνω μεγάλος.', at: 8.0 },
+        { s: 'ΝΤΕΜΗΣ', t: 'Τι;', at: 10.0 },
+        { s: 'ΑΙΑΣ', t: 'Καπετάνιος.', at: 11.5 },
+      ]},
+    ],
+    onComplete: () => { state.phase = 'playing'; },
+  },
+  // ── EPILOGUE (legacy)
   epilogue: {
     frames: [
-      {
-        duration: 10,
-        draw: drawEpilogueHarbor,
-        dialogue: [
-          { s: 'ΝΤΕΜΗΣ', t: 'Ο Βισβίκης δεν μας άφησε χρυσάφι. Μας άφησε μια ιδέα.', at: 1.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Την αλληλεγγύη. Κράτα τον διπλανό σου. Άλλαξε το πλοίο.', at: 4.5 },
-          { s: 'ΑΚΗΣ', t: 'Γυρνάω την κάμερα. Αυτό πρέπει να το δει ο κόσμος.', at: 8.0 },
-        ],
-      },
-      {
-        duration: 10,
-        draw: drawEpilogueClose,
-        dialogue: [
-          { s: 'ΑΙΑΣ', t: 'Εκατόν τρεις... Μένει μία ακόμα υπογραφή.', at: 1.5 },
-          { s: 'ΚΛΕΙΩ', t: 'Εγώ! Θέλω να υπογράψω εγώ!', at: 4.0 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.', at: 7.5 },
-        ],
-      },
+      { duration: 8, draw: drawEpilogueHarbor, dialogue: [
+        { s: 'ΝΤΕΜΗΣ', t: 'Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.', at: 2.0 },
+      ]},
     ],
-    onComplete: () => {
-      state.phase = 'playing';
-      // Game complete — could show credits
-    },
+    onComplete: () => { state.phase = 'playing'; },
   },
 };
 
@@ -2369,6 +2396,132 @@ function drawEpilogueClose(t, p, tick) {
   ctx.save();
   ctx.globalAlpha = 0.05 + Math.sin(tick * 0.025) * 0.02;
   ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CUTSCENE: FESTIVAL — Epic celebration with particle effects
+// ═══════════════════════════════════════════════════════════
+
+// Fireworks particle pool
+const festivalParticles = [];
+function spawnFirework(x, y) {
+  const colors = ['#FF4444','#FFD700','#44FF44','#4488FF','#FF44FF','#FF8800','#FFFFFF'];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  const count = 14 + Math.floor(Math.random() * 10);
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
+    const speed = 1.2 + Math.random() * 2.5;
+    festivalParticles.push({
+      x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 0.5,
+      life: 1.0, decay: 0.008 + Math.random() * 0.012,
+      color, size: 1.5 + Math.random() * 1.5,
+    });
+  }
+}
+function updateAndDrawFireworks(tick) {
+  if (tick % 35 === 0 || tick % 61 === 0 || tick % 83 === 0) {
+    spawnFirework(80 + Math.random() * 480, 20 + Math.random() * 90);
+  }
+  ctx.save();
+  for (let i = festivalParticles.length - 1; i >= 0; i--) {
+    const p = festivalParticles[i];
+    p.x += p.vx; p.y += p.vy; p.vy += 0.025; p.life -= p.decay;
+    if (p.life <= 0) { festivalParticles.splice(i, 1); continue; }
+    ctx.globalAlpha = p.life * 0.85;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = p.life * 0.25;
+    ctx.beginPath();
+    ctx.arc(p.x - p.vx * 0.5, p.y - p.vy * 0.5, p.size * p.life * 1.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+function drawStringLights(tick) {
+  ctx.save();
+  for (let i = 0; i < 22; i++) {
+    const x = 20 + (i / 22) * 600;
+    const y = 18 + Math.sin(i * 0.7 + 0.3) * 8;
+    const flicker = 0.5 + Math.sin(tick * 0.06 + i * 1.4) * 0.3 + Math.random() * 0.15;
+    const colors = ['#FFD700','#FF6600','#FF4444','#44FF44','#4488FF','#FF44FF'];
+    ctx.globalAlpha = flicker;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = flicker * 0.3;
+    ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawFestivalCelebration(t, p, tick) {
+  drawKenBurns('cutscene-festival-celebration', 1.06 + p * 0.10, p * 8, 0);
+  drawStringLights(tick);
+  ctx.save();
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.03) * 0.03;
+  ctx.fillStyle = '#FFB860';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawFestivalFireworks(t, p, tick) {
+  drawKenBurns('cutscene-festival-fireworks', 1.04 + p * 0.06, -p * 4, 0);
+  updateAndDrawFireworks(tick);
+  ctx.save();
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.02) * 0.03;
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(0, GH * 0.65, GW, GH * 0.35);
+  ctx.restore();
+}
+
+function drawFestivalGhost(t, p, tick) {
+  drawKenBurns('cutscene-festival-ghost', 1.08 + p * 0.08, p * 5, -p * 3);
+  ctx.save();
+  const pulse = 0.08 + Math.sin(tick * 0.04) * 0.05;
+  ctx.globalAlpha = pulse;
+  ctx.fillStyle = '#88BBFF';
+  ctx.fillRect(0, 0, GW, GH);
+  const grd = ctx.createRadialGradient(GW * 0.5, GH * 0.4, 20, GW * 0.5, GH * 0.4, 180);
+  grd.addColorStop(0, 'rgba(150, 200, 255, 0.35)');
+  grd.addColorStop(1, 'rgba(150, 200, 255, 0)');
+  ctx.globalAlpha = 0.25 + Math.sin(tick * 0.03) * 0.12;
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+function drawFestivalLantern(t, p, tick) {
+  drawKenBurns('cutscene-festival-lantern', 1.05 + p * 0.10, -p * 6, p * -5);
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.02;
+  ctx.fillStyle = '#FFB040';
+  ctx.fillRect(0, 0, GW, GH);
+  const grd = ctx.createRadialGradient(GW * 0.4, GH * 0.6, 8, GW * 0.4, GH * 0.6, 110);
+  grd.addColorStop(0, 'rgba(255, 180, 60, 0.4)');
+  grd.addColorStop(1, 'rgba(255, 180, 60, 0)');
+  ctx.globalAlpha = 0.3 + Math.sin(tick * 0.04) * 0.15;
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, GW, GH);
+  for (let i = 0; i < 6; i++) {
+    const sx = GW * 0.15 + Math.sin(tick * 0.01 + i * 2) * GW * 0.35;
+    const sy = GH * 0.72 + Math.sin(tick * 0.015 + i * 1.5) * GH * 0.08;
+    ctx.globalAlpha = 0.12 + Math.sin(tick * 0.05 + i) * 0.08;
+    ctx.fillStyle = '#FFD080';
+    ctx.fillRect(sx, sy, 4 + Math.sin(tick * 0.03 + i) * 3, 1);
+  }
+  ctx.restore();
+}
+
+function drawFestivalPanorama(t, p, tick) {
+  drawKenBurns('cutscene-festival-panorama', 1.10 + p * 0.06, p * 3, -p * 2);
+  updateAndDrawFireworks(tick);
+  drawStringLights(tick);
+  ctx.save();
+  ctx.globalAlpha = 0.03 + p * 0.07;
+  ctx.fillStyle = '#FFD040';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
@@ -3600,6 +3753,8 @@ function drawSceneAmbience(tick) {
     drawChurchAmbience(tick);
   } else if (state.scene === 'boat') {
     drawBoatAmbience(tick);
+  } else if (state.scene === 'treasure') {
+    drawTreasureAmbience(tick);
   }
 }
 
@@ -5287,6 +5442,7 @@ function closeDlg() {
 // SCRIPTED SEQUENCE ENGINE
 // ════════════════════════════════════════════════════════════
 function startSequence(steps) {
+  if (clioTimer) { clearTimeout(clioTimer); clioTimer = null; }
   state.seq.active = true;
   state.seq.steps = steps;
   state.seq.stepIdx = 0;
@@ -6807,12 +6963,23 @@ function drawStatus() {
 const SCENE_CUTSCENES = {
   cave: 'cave_enter',
   boat: 'crossing',
-  treasure: 'treasure',
+  // treasure cutscene now triggered manually when player opens the chest
 };
 
 // ════════════════════════════════════════════════════════════
 // SCENE MANAGEMENT
 // ════════════════════════════════════════════════════════════
+
+// Dynamic visibility for treasure scene objects — called on enter & every frame
+function updateTreasureVisibility(sc) {
+  if (!sc) sc = scenes.treasure;
+  for (const obj of sc.objects) {
+    if (obj.id === 'sea_chest')    obj._hidden = !state.flags.chest_visible;
+    if (obj.id === 'final_letter') obj._hidden = !state.flags.chest_opened;
+    if (obj.id === 'dig_spot')     obj._hidden = false; // always clickable (verb handles gating)
+  }
+}
+
 function startScene(id) {
   if (state.phase === 'playing') saveGame('auto');
   const sc = scenes[id];
@@ -6852,6 +7019,7 @@ function startScene(id) {
     const tile = sc.objects.find(o => o.id === 'floor_tile');
     if (tile) tile._hidden = false;
   }
+  if (id === 'treasure') updateTreasureVisibility(sc);
 
   // Entry dialogue (first visit only) — with cutscene triggers
   if (!state.visited.has(id)) {
@@ -6966,7 +7134,7 @@ function scheduleClio(sceneId) {
   const delay = 3000 + Math.random() * 2000;
   clioTimer = setTimeout(() => {
     clioTimer = null;
-    if (state.dlg.active || state.scene !== sceneId) return;
+    if (state.dlg.active || state.seq.active || state.scene !== sceneId) return;
     showDlg([{ s: 'ΚΛΕΙΩ', t: pool[idx] }]);
   }, delay);
 }
@@ -7070,6 +7238,7 @@ function render() {
     const t = state.tick;
     for (let i = 0; i < sc.objects.length; i++) {
       const obj = sc.objects[i];
+      if (obj._hidden) continue;
       if (obj === state.hoverObj) continue;
       const seed = (obj.x * 7 + obj.y * 13 + i * 31);
       const sparkleT = (t + seed) * 0.03;
@@ -7513,6 +7682,9 @@ function update(dt) {
   if (state.phase === 'cutscene') { updateCutscene(dt); return; }
   if (state.phase !== 'playing') return;
 
+  // Dynamic object visibility (treasure scene)
+  if (state.scene === 'treasure') updateTreasureVisibility();
+
   // Walking
   updateWalking(dt);
 
@@ -7819,6 +7991,7 @@ const sceneMusic = {
   treasure:  'music/the-treasure-1.mp3',
   new_era:   'music/the-sea-remembers-1.mp3',
   epilogue:  'music/the-sea-remembers-1.mp3',
+  _festival: 'music/the-festival-of-galaxidi-1.mp3',
   _ghost:    'music/graveyard-veil-1.mp3',
   _jade:     'music/the-ghost-of-captain-visvikis-1.mp3',
 };
