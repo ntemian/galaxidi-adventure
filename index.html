@@ -1376,23 +1376,14 @@ const cutscenes = {
   letter: {
     frames: [
       {
-        duration: 10,
-        draw: drawLetterClose,
-        dialogue: [
-          { s: 'ΝΤΕΜΗΣ', t: '«Σε όποιον βρει αυτό το γράμμα...»', at: 1.0 },
-          { s: 'ΝΤΕΜΗΣ', t: '«...εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα.»', at: 3.0 },
-          { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο.»', at: 6.5 },
-        ],
-      },
-      {
         duration: 14,
-        draw: drawLetterRoom,
+        draw: drawLetterSingle,
         dialogue: [
-          { s: 'ΑΙΑΣ', t: '«Φέρε τη σε μένα»... Είναι νεκρός εδώ και εκατό χρόνια.', at: 1.0 },
-          { s: 'ΚΛΕΙΩ', t: 'Στο νεκροταφείο, βλάκα.', at: 3.5 },
-          { s: 'ΝΤΕΜΗΣ', t: '...Κλειώ.', at: 5.0 },
-          { s: 'ΚΛΕΙΩ', t: 'Τι; Λογικό είναι.', at: 6.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.', at: 8.5 },
+          { s: 'ΝΤΕΜΗΣ', t: '«...εγώ, Καπετάν Λουκάς Βισβίκης, αφήνω πίσω μου τον θησαυρό μιας ζωής στη θάλασσα.»', at: 1.0 },
+          { s: 'ΝΤΕΜΗΣ', t: '«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο.»', at: 4.5 },
+          { s: 'ΑΙΑΣ', t: 'Είναι νεκρός εδώ και εκατό χρόνια!', at: 8.0 },
+          { s: 'ΚΛΕΙΩ', t: 'Στο νεκροταφείο, βλάκα. Λογικό είναι.', at: 9.5 },
+          { s: 'ΝΤΕΜΗΣ', t: 'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.', at: 11.5 },
         ],
       },
     ],
@@ -1663,7 +1654,13 @@ function skipCutscene() {
 
 // Debug: play all cutscenes back to back (call from console: playAllCutscenes())
 function playAllCutscenes() {
-  const ids = ['arrival','letter','reunion','museum','liotrivi','windmill','cave_enter','ghost','church_tile','crossing','treasure','epilogue'];
+  const ids = ['arrival','letter','cave_enter','ghost','church_tile','crossing','treasure','epilogue'].filter(id => {
+    if (!cutscenes[id]) {
+      console.warn('playAllCutscenes: unknown cutscene "' + id + '" skipped');
+      return false;
+    }
+    return true;
+  });
   let i = 0;
   const savedCompletes = {};
   ids.forEach(id => { savedCompletes[id] = cutscenes[id].onComplete; });
@@ -1950,22 +1947,16 @@ function drawArrivalHarbor(t, p, tick) {
 // CUTSCENE: THE LETTER — Quest begins
 // ═══════════════════════════════════════════════════════════
 
-function drawLetterClose(t, p, tick) {
-  // Slow zoom into the letter, candlelight flicker
-  drawKenBurns('cutscene-letter', 1.05 + p * 0.15, 0, p * -20);
+function drawLetterSingle(t, p, tick) {
+  // Smooth zoom in then slowly pull back — no reload
+  const zoom = p < 0.5
+    ? 1.05 + p * 0.30          // zoom in first half
+    : 1.20 - (p - 0.5) * 0.15; // ease back second half
+  const panY = p < 0.5 ? p * -20 : -10 + (p - 0.5) * 20;
+  drawKenBurns('cutscene-letter', zoom, 0, panY);
   ctx.save();
   ctx.globalAlpha = 0.04 + Math.sin(tick * 0.08) * 0.02;
   ctx.fillStyle = '#FFB040';
-  ctx.fillRect(0, 0, GW, GH);
-  ctx.restore();
-}
-
-function drawLetterRoom(t, p, tick) {
-  // Pull back to reveal the captain's study
-  drawKenBurns('cutscene-letter', 1.20 - p * 0.15, p * 10, -20 + p * 20);
-  ctx.save();
-  ctx.globalAlpha = 0.03;
-  ctx.fillStyle = '#D4A03C';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
