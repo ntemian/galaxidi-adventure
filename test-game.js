@@ -3302,6 +3302,68 @@ test('Exterior and terrace scene texts all have matching voice entries', () => {
     `${missing.length} exterior/terrace lines have no voice entry`);
 });
 
+test('Voice files use the correct character voice for each speaker', () => {
+  // Map game speakers to expected voice directories
+  const speakerToDir = {
+    '': 'narrator', 'ΝΤΕΜΗΣ': 'ntemis', 'ΑΙΑΣ': 'ajax', 'ΚΛΕΙΩ': 'clio',
+    'ΑΘΟΣ': 'athos', 'ΕΠΙΜΕΛΗΤΗΣ': 'curator', 'ΓΙΑΝΝΗΣ': 'giannis',
+    'ΣΤΑΘΗΣ': 'stathis', 'ΑΚΗΣ': 'akis', 'ΠΑΠΑΣ': 'papas',
+    'ΧΡΥΣΟΣΤΟΜΟΣ': 'chrysostomos', 'ΦΑΝΤΑΣΜΑ': 'ghost'
+  };
+
+  // Build game dialogue: speaker + text
+  const gameLines = [];
+  const dlgRegex = /\{s:\s*'([^']*)',\s*t:\s*'([^']+)'\}/g;
+  let m;
+  while ((m = dlgRegex.exec(js)) !== null) {
+    gameLines.push({ speaker: m[1], text: m[2] });
+  }
+
+  // Build VOICE_MAP: text → directory
+  const vmRegex = /'([^']+)':\s*'voice\/([^/]+)\/[^']+\.mp3'/g;
+  const textToDir = {};
+  while ((m = vmRegex.exec(js)) !== null) {
+    textToDir[m[1]] = m[2];
+  }
+
+  // Find texts spoken by multiple characters (VOICE_MAP can only map to one)
+  const textSpeakers = {};
+  for (const line of gameLines) {
+    if (!textSpeakers[line.text]) textSpeakers[line.text] = new Set();
+    textSpeakers[line.text].add(line.speaker);
+  }
+  const sharedTexts = new Set(
+    Object.entries(textSpeakers).filter(([, s]) => s.size > 1).map(([t]) => t)
+  );
+
+  // Check each game line's voice uses the right character
+  const mismatches = [];
+  const seen = new Set();
+  for (const line of gameLines) {
+    const key = line.speaker + '|' + line.text;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (sharedTexts.has(line.text)) continue; // same text, multiple speakers — VOICE_MAP limitation
+    const voiceDir = textToDir[line.text];
+    if (!voiceDir) continue; // no voice file — tested elsewhere
+    const expectedDir = speakerToDir[line.speaker];
+    if (!expectedDir) continue;
+    if (voiceDir !== expectedDir) {
+      mismatches.push(line);
+    }
+  }
+
+  if (mismatches.length > 0) {
+    for (const m of mismatches.slice(0, 5)) {
+      const dir = textToDir[m.text];
+      console.log(`      [${m.speaker}] uses ${dir}/ instead of ${speakerToDir[m.speaker]}/: "${m.text.substring(0, 50)}..."`);
+    }
+    if (mismatches.length > 5) console.log(`      ... and ${mismatches.length - 5} more`);
+  }
+  assert(mismatches.length === 0,
+    `${mismatches.length} voice files use the wrong character voice`);
+});
+
 // ════════════════════════════════════════════════════════════
 // SUMMARY
 // ════════════════════════════════════════════════════════════
