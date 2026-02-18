@@ -2697,7 +2697,7 @@ function drawFestivalFireworks(t, p, tick) {
 }
 
 function drawFestivalGhost(t, p, tick) {
-  drawKenBurns('cutscene-festival-ghost', 1.08 + p * 0.08, p * 5, -p * 3);
+  drawKenBurns('cutscene-festival-ghost', 1.0 + p * 0.06, p * 3, 100 - p * 15);
   ctx.save();
   const pulse = 0.08 + Math.sin(tick * 0.04) * 0.05;
   ctx.globalAlpha = pulse;
