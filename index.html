@@ -1083,7 +1083,11 @@ const scenes = {
     charPos: { ntemis: { x: 320, y: 375 }, ajax: { x: 400, y: 377 }, clio: { x: 240, y: 377 } },
     objects: [
       { id:'crowd', x:0, y:200, w:300, h:150, label:'Κόσμος',
-        verbs: { look:[{s:'',t:'Ολόκληρο το Γαλαξίδι μαζεμένο στο λιμάνι. Ψαράδες, ταβερνιάρηδες, γριές με μαύρα, παιδιά.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, είναι ΟΛΟΙ εδώ!'}] }},
+        verbs: { look:[{s:'',t:'Ολόκληρο το Γαλαξίδι μαζεμένο στο λιμάνι. Ψαράδες, ταβερνιάρηδες, γριές με μαύρα, παιδιά.'},{s:'ΚΛΕΙΩ',t:'Μπαμπά, είναι ΟΛΟΙ εδώ!'}],
+                 talk:()=>{
+                   const podium = scenes.new_era.objects.find(o => o.id === 'podium');
+                   return podium.verbs.talk();
+                 } }},
       { id:'podium', x:250, y:180, w:150, h:100, label:'Βήμα',
         verbs: {
           look:[{s:'',t:'Ένα απλό ξύλινο βήμα μπροστά στη θάλασσα. Πάνω του το κιβώτιο και το βιβλίο.'}],
@@ -8113,6 +8117,22 @@ const sceneMusic = {
 };
 
 let currentMusicSrc = '';
+
+function fadeAllAudio(targetVol, duration, cb) {
+  const startBgm = bgm.volume;
+  const targetBgm = targetVol * 0.25;
+  const startAmb = (ambientSounds.masterGain && ambientSounds.masterGain.gain) ? ambientSounds.masterGain.gain.value : 1;
+  const targetAmb = targetVol;
+  const t0 = performance.now();
+  const step = () => {
+    const p = Math.min(1, (performance.now() - t0) / duration);
+    bgm.volume = startBgm + (targetBgm - startBgm) * p;
+    if (ambientSounds.masterGain) ambientSounds.masterGain.gain.value = startAmb + (targetAmb - startAmb) * p;
+    if (p < 1) requestAnimationFrame(step);
+    else if (cb) cb();
+  };
+  requestAnimationFrame(step);
+}
 
 function changeSceneMusic(sceneId) {
   const newSrc = sceneMusic[sceneId];
