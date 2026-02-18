@@ -314,7 +314,7 @@ async function loadAllAssets() {
     loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
     loadImg('cutscene-epilogue-signing', 'assets/cutscene-epilogue-signing.png'),
     loadImg('map-bg', 'assets/map-galaxidi.png'),
-    loadImg('intro-parchment', 'assets/intro-parchment-v2.png'),
+    loadImg('intro-parchment', 'assets/intro-parchment-v4.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -7451,6 +7451,19 @@ CVS.addEventListener('mousemove', (e) => {
   // Help/Status overlay — block hover
   if (state.helpOpen || state.statusOpen) { state.cursorMode ='default'; return; }
 
+  // Toolbar button hover — pointer cursor
+  {
+    const _tbW = 32, _tbGap = 3, _tbY = 4, _tbH = 28;
+    const _tbTotalW = _tbW * 4 + _tbGap * 3;
+    const _tbX0 = GW - _tbTotalW - 6;
+    if (g.y >= _tbY && g.y <= _tbY + _tbH && g.x >= _tbX0 && g.x <= _tbX0 + _tbTotalW) {
+      state.cursorMode = 'pointer';
+      state.hoverObj = null;
+      updateActionLine();
+      return;
+    }
+  }
+
   // Check hotspots
   const obj = hitTestObj(g.x, g.y);
   state.hoverObj = obj;
@@ -7595,25 +7608,27 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     if (state.dlg.active) advanceDlg();
   }
+  // Use e.code for letter keys — works regardless of keyboard layout (Greek/English)
+  const code = e.code;
   // Map toggle
-  if ((e.key === 'm' || e.key === 'M') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
+  if (code === 'KeyM' && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
     state.mapOpen = !state.mapOpen; state.helpOpen = false; state.statusOpen = false; state.mapHover = null; return;
   }
   // Help toggle
-  if ((e.key === 'h' || e.key === 'H') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
+  if (code === 'KeyH' && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
     state.helpOpen = !state.helpOpen; state.mapOpen = false; state.statusOpen = false; return;
   }
   // Debug hotspot overlay toggle
-  if ((e.key === 'd' || e.key === 'D') && state.phase === 'playing') {
+  if (code === 'KeyD' && state.phase === 'playing') {
     state.debugHotspots = !state.debugHotspots; return;
   }
   // Quest status toggle
-  if ((e.key === 'q' || e.key === 'Q') && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
+  if (code === 'KeyQ' && state.phase === 'playing' && !state.dlg.active && !state.seq.active) {
     state.statusOpen = !state.statusOpen; state.helpOpen = false; state.mapOpen = false; return;
   }
   const vk = {'1':'look','2':'talk','3':'open','4':'use'};
   if (vk[e.key] && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) setVerb(vk[e.key]);
-  if ((e.key === 's' || e.key === 'S') && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) { saveGame('manual'); }
+  if (code === 'KeyS' && state.phase === 'playing' && !state.mapOpen && !state.helpOpen && !state.statusOpen) { saveGame('manual'); }
 });
 
 // ════════════════════════════════════════════════════════════
@@ -8070,451 +8085,46 @@ function drawCrawl(tick) {
 
 
   // ═══════════════════════════════════════
-  // NAUTICAL MAP DECORATIONS — illuminated portolan style
-  // Rich colors: deep blue sea, red hulls, cream sails, gold leaf, green serpent
+  // SUBTLE MAP ENHANCEMENTS — animated effects over the atlas map
+  // The new intro-parchment-v2 already has ships, mermaid, compass, treasure X
   // ═══════════════════════════════════════
 
-  // ── Rhumb lines (gold + red alternating, like real portolan charts) ──
+  // ── Subtle treasure X glow (pulsing golden light where X is on map) ──
   ctx.save();
-  ctx.lineWidth = 0.7;
-  const rhumbCx = 95, rhumbCy = GH - 55;
-  for (let a = 0; a < 16; a++) {
-    const angle = (a / 16) * Math.PI * 2;
-    ctx.globalAlpha = a % 2 === 0 ? 0.18 : 0.10;
-    ctx.strokeStyle = a % 4 === 0 ? '#b8860b' : a % 2 === 0 ? '#8b2500' : '#5a4a28';
-    ctx.beginPath();
-    ctx.moveTo(rhumbCx, rhumbCy);
-    ctx.lineTo(rhumbCx + Math.cos(angle) * 220, rhumbCy + Math.sin(angle) * 220);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  // ── Sailing ships (3 colorful schooners) ──
-  const crawlShips = [
-    { x: 130, y: 85, scale: 1.0, speed: 0.08, bob: 1.5, phase: 0, flip: false, hullColor: '#5c2210', sailColor: '#f0e6c8', flagColor: '#c42020' },
-    { x: 470, y: 130, scale: 0.8, speed: -0.05, bob: 1.2, phase: 2.1, flip: true, hullColor: '#3a1a08', sailColor: '#e8dcc0', flagColor: '#1a5fa0' },
-    { x: 310, y: 50, scale: 0.65, speed: 0.04, bob: 0.8, phase: 4.0, flip: false, hullColor: '#4a2010', sailColor: '#f5edd5', flagColor: '#d4a030' },
-  ];
-  ctx.save();
-  for (const ship of crawlShips) {
-    const sx = ship.x + Math.sin(t0 * ship.speed + ship.phase) * 20;
-    const sy = ship.y + Math.sin(t0 * 0.6 + ship.phase) * ship.bob;
-    const tilt = Math.sin(t0 * 0.4 + ship.phase) * 0.03;
-    ctx.save();
-    ctx.translate(sx, sy);
-    ctx.rotate(tilt);
-    ctx.scale(ship.scale * (ship.flip ? -1 : 1), ship.scale);
-
-    // Hull — rich dark wood with waterline
-    ctx.globalAlpha = 0.55;
-    ctx.fillStyle = ship.hullColor;
-    ctx.strokeStyle = '#2a0a00';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(-18, 4); ctx.quadraticCurveTo(-14, 10, 0, 11);
-    ctx.quadraticCurveTo(14, 10, 20, 4);
-    ctx.lineTo(18, 0); ctx.lineTo(-16, 0); ctx.closePath();
-    ctx.fill(); ctx.stroke();
-    // Waterline stripe
-    ctx.strokeStyle = '#a04020';
-    ctx.lineWidth = 0.8;
-    ctx.beginPath();
-    ctx.moveTo(-15, 6); ctx.quadraticCurveTo(0, 9, 17, 6);
-    ctx.stroke();
-
-    // Masts — dark wood
-    ctx.strokeStyle = '#3a1a00';
-    ctx.lineWidth = 1.8;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -26); ctx.stroke();
-    ctx.lineWidth = 1.4;
-    ctx.beginPath(); ctx.moveTo(8, 0); ctx.lineTo(8, -19); ctx.stroke();
-    // Crow's nest
-    ctx.fillStyle = '#3a1a00';
-    ctx.fillRect(-3, -20, 6, 2);
-
-    // Sails — cream/canvas with warm tones
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = ship.sailColor;
-    ctx.strokeStyle = '#a09070';
-    ctx.lineWidth = 0.6;
-    // Main sail
-    ctx.beginPath();
-    ctx.moveTo(1, -24); ctx.quadraticCurveTo(15 + Math.sin(t0 * 0.8 + ship.phase) * 3, -14, 1, -3);
-    ctx.fill(); ctx.stroke();
-    // Fore sail
-    ctx.beginPath();
-    ctx.moveTo(9, -17); ctx.quadraticCurveTo(20 + Math.sin(t0 * 0.7 + ship.phase) * 2, -10, 9, -2);
-    ctx.fill(); ctx.stroke();
-    // Jib
-    ctx.beginPath();
-    ctx.moveTo(0, -22); ctx.quadraticCurveTo(-12 - Math.sin(t0 * 0.7 + ship.phase) * 2, -12, -16, 0);
-    ctx.lineTo(0, -5); ctx.fill(); ctx.stroke();
-
-    // Flag — vivid color
-    ctx.globalAlpha = 0.65;
-    ctx.fillStyle = ship.flagColor;
-    const flagWave = Math.sin(t0 * 1.5 + ship.phase) * 2;
-    ctx.beginPath();
-    ctx.moveTo(0, -26); ctx.lineTo(7 + flagWave, -28);
-    ctx.lineTo(0, -30); ctx.fill();
-    // Cross or stripe on flag
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 0.5;
-    ctx.globalAlpha = 0.4;
-    ctx.beginPath();
-    ctx.moveTo(1, -28); ctx.lineTo(5 + flagWave * 0.5, -28);
-    ctx.stroke();
-
-    // Wake — blue-white water trail
-    ctx.globalAlpha = 0.2;
-    ctx.strokeStyle = '#7aa8c8';
-    ctx.lineWidth = 0.8;
-    for (let w = 1; w <= 3; w++) {
-      const wx = ship.flip ? w * 9 : -w * 9;
-      ctx.beginPath();
-      ctx.arc(wx, 9, w * 3, -0.4, 0.4);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-  ctx.restore();
-
-  // ── Sea serpent — green/teal with red accents (classic cartographic) ──
-  ctx.save();
-  const serpX = 75, serpY = 315;
-  // Body — green with dark outline
-  ctx.globalAlpha = 0.45;
-  ctx.strokeStyle = '#1a4a30';
-  ctx.lineWidth = 3;
+  const txGlow = 0.08 + Math.sin(t0 * 1.2) * 0.06;
+  ctx.globalAlpha = txGlow;
+  ctx.fillStyle = '#d4a030';
+  ctx.shadowColor = '#ffe060';
+  ctx.shadowBlur = 20;
   ctx.beginPath();
-  for (let i = 0; i < 60; i++) {
-    const px = serpX + i * 1.3;
-    const py = serpY + Math.sin(i * 0.18 + t0 * 0.5) * 9 - i * 0.15;
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  }
-  ctx.stroke();
-  // Body fill — green gradient effect
-  ctx.globalAlpha = 0.35;
-  ctx.strokeStyle = '#3a8a50';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  for (let i = 0; i < 60; i++) {
-    const px = serpX + i * 1.3;
-    const py = serpY + Math.sin(i * 0.18 + t0 * 0.5) * 9 - i * 0.15;
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  }
-  ctx.stroke();
-  // Scales pattern (dots along body)
-  ctx.globalAlpha = 0.2;
-  ctx.fillStyle = '#50aa68';
-  for (let i = 5; i < 55; i += 4) {
-    const px = serpX + i * 1.3;
-    const py = serpY + Math.sin(i * 0.18 + t0 * 0.5) * 9 - i * 0.15;
-    ctx.beginPath(); ctx.arc(px, py + 2, 1, 0, Math.PI * 2); ctx.fill();
-  }
-  // Head — larger, colored
-  const headX = serpX, headY = serpY + Math.sin(t0 * 0.5) * 9;
-  ctx.globalAlpha = 0.5;
-  ctx.fillStyle = '#2a6a38';
-  ctx.strokeStyle = '#1a3a20';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.ellipse(headX - 6, headY - 2, 8, 6, -0.3, 0, Math.PI * 2);
-  ctx.fill(); ctx.stroke();
-  // Eye — bright yellow/red
-  ctx.fillStyle = '#e8c020'; ctx.globalAlpha = 0.7;
-  ctx.beginPath(); ctx.arc(headX - 9, headY - 3, 2, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#c02010'; ctx.globalAlpha = 0.8;
-  ctx.beginPath(); ctx.arc(headX - 9, headY - 3, 0.8, 0, Math.PI * 2); ctx.fill();
-  // Open jaw with red inside
-  ctx.globalAlpha = 0.4;
-  ctx.fillStyle = '#a02020';
-  ctx.beginPath();
-  ctx.moveTo(headX - 13, headY + 1);
-  ctx.lineTo(headX - 18, headY + 4);
-  ctx.lineTo(headX - 13, headY + 5);
-  ctx.closePath(); ctx.fill();
-  // Teeth
-  ctx.strokeStyle = '#f0e8d0'; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.5;
-  ctx.beginPath(); ctx.moveTo(headX - 14, headY + 1); ctx.lineTo(headX - 15, headY + 3); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(headX - 16, headY + 2); ctx.lineTo(headX - 16, headY + 4); ctx.stroke();
-  // Dorsal spines — red/orange
-  ctx.globalAlpha = 0.4;
-  ctx.fillStyle = '#c04020';
-  for (let s = 0; s < 8; s++) {
-    const spx = serpX + s * 9 + 5;
-    const spy = serpY + Math.sin((s * 9 + 5) * 0.18 + t0 * 0.5) * 9 - (s * 9 + 5) * 0.15;
-    ctx.beginPath();
-    ctx.moveTo(spx - 2, spy); ctx.lineTo(spx, spy - 7); ctx.lineTo(spx + 2, spy);
-    ctx.fill();
-  }
-  // Tail fin — green with red tips
-  const tailX = serpX + 78, tailY = serpY + Math.sin(60 * 0.18 + t0 * 0.5) * 9 - 60 * 0.15;
-  ctx.globalAlpha = 0.4;
-  ctx.fillStyle = '#2a6a38';
-  ctx.beginPath();
-  ctx.moveTo(tailX, tailY); ctx.lineTo(tailX + 12, tailY - 8); ctx.lineTo(tailX + 10, tailY + 6); ctx.closePath();
+  ctx.arc(GW * 0.47, GH * 0.62, 12, 0, Math.PI * 2);
   ctx.fill();
-  ctx.fillStyle = '#c04020'; ctx.globalAlpha = 0.3;
-  ctx.beginPath();
-  ctx.moveTo(tailX + 8, tailY - 5); ctx.lineTo(tailX + 12, tailY - 8); ctx.lineTo(tailX + 10, tailY - 3); ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-
-  // ── Voyage route (animated gold dotted line with blue water trail) ──
-  ctx.save();
-  const routePoints = [
-    { x: 520, y: 350 }, { x: 470, y: 300 }, { x: 430, y: 260 },
-    { x: 380, y: 230 }, { x: 330, y: 210 }, { x: 280, y: 180 },
-    { x: 220, y: 170 }, { x: 170, y: 155 }, { x: 130, y: 130 },
-  ];
-  const routeProgress = Math.min(1, (t0 % 20) / 12);
-  const drawPts = Math.floor(routeProgress * routePoints.length);
-  // Blue water trail underneath
-  ctx.strokeStyle = '#4a7aa0';
-  ctx.lineWidth = 3;
-  ctx.globalAlpha = 0.12;
-  ctx.beginPath();
-  for (let i = 0; i <= drawPts && i < routePoints.length; i++) {
-    const rp = routePoints[i];
-    if (i === 0) ctx.moveTo(rp.x, rp.y); else ctx.lineTo(rp.x, rp.y);
-  }
-  ctx.stroke();
-  // Gold route line
-  ctx.strokeStyle = '#d4a030';
-  ctx.lineWidth = 1.5;
-  ctx.setLineDash([5, 4]);
-  ctx.globalAlpha = 0.5;
-  ctx.beginPath();
-  for (let i = 0; i <= drawPts && i < routePoints.length; i++) {
-    const rp = routePoints[i];
-    if (i === 0) ctx.moveTo(rp.x, rp.y); else ctx.lineTo(rp.x, rp.y);
-  }
-  ctx.stroke();
-  ctx.setLineDash([]);
-  // Waypoint markers — gold circles with red centers
-  for (let i = 0; i <= drawPts && i < routePoints.length; i++) {
-    ctx.globalAlpha = 0.5;
-    ctx.fillStyle = '#d4a030';
-    ctx.beginPath();
-    ctx.arc(routePoints[i].x, routePoints[i].y, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#b03020';
-    ctx.globalAlpha = 0.4;
-    ctx.beginPath();
-    ctx.arc(routePoints[i].x, routePoints[i].y, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-
-  // ── Treasure X marker (vivid red with gold glow) ──
-  ctx.save();
-  const txX = 130, txY = 130;
-  const xPulse = 0.4 + Math.sin(t0 * 1.2) * 0.2;
-  ctx.globalAlpha = xPulse;
-  ctx.strokeStyle = '#cc2010';
-  ctx.lineWidth = 3.5;
-  ctx.beginPath(); ctx.moveTo(txX - 8, txY - 8); ctx.lineTo(txX + 8, txY + 8); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(txX + 8, txY - 8); ctx.lineTo(txX - 8, txY + 8); ctx.stroke();
-  // Gold glow behind
-  ctx.globalAlpha = xPulse * 0.4;
-  ctx.shadowColor = '#d4a030'; ctx.shadowBlur = 14;
-  ctx.strokeStyle = '#d4a030';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(txX, txY, 6, 0, Math.PI * 2); ctx.stroke();
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // ── Wave patterns — blue sea markings ──
+  // ── Compass rose shimmer (subtle gold sparkle) ──
   ctx.save();
-  ctx.strokeStyle = '#4a7a9a';
-  ctx.lineWidth = 1;
-  ctx.globalAlpha = 0.25;
-  const waveRegions = [
-    { x: 390, y: 75, w: 90, rows: 3 },
-    { x: 45, y: 195, w: 70, rows: 3 },
-    { x: 490, y: 270, w: 80, rows: 3 },
-  ];
-  for (const wr of waveRegions) {
-    for (let row = 0; row < wr.rows; row++) {
-      ctx.beginPath();
-      for (let wx = 0; wx < wr.w; wx += 2) {
-        const wy = wr.y + row * 8 + Math.sin(wx * 0.25 + t0 * 0.3 + row) * 2.5;
-        if (wx === 0) ctx.moveTo(wr.x + wx, wy); else ctx.lineTo(wr.x + wx, wy);
-      }
-      ctx.stroke();
-    }
-  }
-  ctx.restore();
-
-  // ── Dolphins — blue-grey with white bellies ──
-  ctx.save();
-  const crawlDolphins = [
-    { x: 495, y: 305, phase: 0, scale: 0.8 },
-    { x: 518, y: 318, phase: 1.5, scale: 0.65 },
-  ];
-  for (const dph of crawlDolphins) {
-    const ddx = dph.x + Math.sin(t0 * 0.3 + dph.phase) * 10;
-    const ddy = dph.y + Math.sin(t0 * 0.8 + dph.phase) * 5;
-    const jump = Math.sin(t0 * 0.8 + dph.phase);
-    ctx.save();
-    ctx.translate(ddx, ddy);
-    ctx.scale(dph.scale, dph.scale);
-    ctx.rotate(jump * 0.3);
-    // Body — blue-grey
-    ctx.globalAlpha = 0.4;
-    ctx.fillStyle = '#3a5a7a';
-    ctx.strokeStyle = '#2a3a50'; ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(-10, 2); ctx.quadraticCurveTo(-4, -9, 6, -5);
-    ctx.quadraticCurveTo(10, -2, 12, 2);
-    ctx.quadraticCurveTo(6, 6, -4, 5); ctx.closePath();
-    ctx.fill(); ctx.stroke();
-    // Belly — lighter
-    ctx.fillStyle = '#8aaccc';
-    ctx.globalAlpha = 0.25;
-    ctx.beginPath();
-    ctx.moveTo(-6, 3); ctx.quadraticCurveTo(0, 6, 8, 2);
-    ctx.quadraticCurveTo(4, 5, -6, 4); ctx.closePath();
-    ctx.fill();
-    // Tail
-    ctx.globalAlpha = 0.4;
-    ctx.fillStyle = '#3a5a7a';
-    ctx.beginPath();
-    ctx.moveTo(-10, 2); ctx.lineTo(-17, -4); ctx.lineTo(-15, 7); ctx.closePath();
-    ctx.fill();
-    // Dorsal fin
-    ctx.beginPath();
-    ctx.moveTo(0, -5); ctx.lineTo(2, -13); ctx.lineTo(5, -5); ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-  }
-  ctx.restore();
-
-  // ── Anchor ornament — iron with gold accents ──
-  ctx.save();
-  const ancX = GW - 60, ancY = 50;
-  ctx.translate(ancX, ancY);
-  ctx.globalAlpha = 0.4;
-  ctx.strokeStyle = '#3a3a40';
-  ctx.fillStyle = '#4a4a50';
-  ctx.lineWidth = 2.5;
-  // Ring — gold
-  ctx.strokeStyle = '#b8860b';
-  ctx.beginPath(); ctx.arc(0, -16, 5, 0, Math.PI * 2); ctx.stroke();
-  // Shank — dark iron
-  ctx.strokeStyle = '#3a3a40';
-  ctx.beginPath(); ctx.moveTo(0, -11); ctx.lineTo(0, 14); ctx.stroke();
-  // Cross bar — with gold ends
-  ctx.beginPath(); ctx.moveTo(-10, -5); ctx.lineTo(10, -5); ctx.stroke();
-  ctx.fillStyle = '#b8860b'; ctx.globalAlpha = 0.35;
-  ctx.beginPath(); ctx.arc(-10, -5, 2, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(10, -5, 2, 0, Math.PI * 2); ctx.fill();
-  // Curved arms
-  ctx.globalAlpha = 0.4; ctx.strokeStyle = '#3a3a40'; ctx.lineWidth = 2.5;
-  ctx.beginPath(); ctx.moveTo(-10, 9); ctx.quadraticCurveTo(-14, 16, -7, 19); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(10, 9); ctx.quadraticCurveTo(14, 16, 7, 19); ctx.stroke();
-  // Flukes — red tips
-  ctx.fillStyle = '#8b2500'; ctx.globalAlpha = 0.35;
-  ctx.beginPath(); ctx.moveTo(-7, 19); ctx.lineTo(-12, 14); ctx.lineTo(-4, 16); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(7, 19); ctx.lineTo(12, 14); ctx.lineTo(4, 16); ctx.fill();
-  // Crown
-  ctx.fillStyle = '#3a3a40'; ctx.globalAlpha = 0.4;
-  ctx.beginPath(); ctx.moveTo(0, 14); ctx.lineTo(-5, 19); ctx.lineTo(5, 19); ctx.closePath(); ctx.fill();
-  ctx.restore();
-
-  // ── Map annotations — dark ink with colored place names ──
-  ctx.save();
-  const crawlAnnotations = [
-    { text: '38°23\'N', x: 440, y: 42, size: 8, color: '#3a2810' },
-    { text: '22°24\'E', x: 555, y: 90, size: 8, color: '#3a2810' },
-    { text: 'Κορινθιακός Κόλπος', x: 300, y: 72, size: 9, color: '#2a5080' },
-    { text: 'ΑΓ. ΓΕΩΡΓΙΟΣ', x: 155, y: 148, size: 7, color: '#8b2500' },
-    { text: '1860', x: 138, y: 112, size: 9, color: '#b8860b' },
-    { text: 'Ν. Τρίζονια', x: 195, y: 98, size: 7, color: '#2a5080' },
-    { text: 'λιμήν', x: 508, y: 340, size: 7, color: '#2a5080' },
-    { text: 'ΓΑΛΑΞΕΙΔΙ', x: 495, y: 358, size: 9, color: '#8b2500' },
-  ];
-  for (const ann of crawlAnnotations) {
-    ctx.globalAlpha = 0.35;
-    ctx.fillStyle = ann.color;
-    ctx.font = `italic ${ann.size}px Georgia, serif`;
-    ctx.fillText(ann.text, ann.x, ann.y);
-  }
-  ctx.restore();
-
-  // ── Treasure chest — rich wood with gold hardware ──
-  ctx.save();
-  const chX = GW - 75, chY = GH - 65;
-  ctx.translate(chX, chY);
-  // Shadow
-  ctx.globalAlpha = 0.15;
-  ctx.fillStyle = '#000';
-  ctx.fillRect(-10, 12, 20, 4);
-  // Body — warm wood
-  ctx.globalAlpha = 0.5;
-  ctx.fillStyle = '#6a3818';
-  ctx.strokeStyle = '#3a1a08';
-  ctx.lineWidth = 1.5;
-  ctx.fillRect(-12, 0, 24, 14);
-  ctx.strokeRect(-12, 0, 24, 14);
-  // Lid — curved, slightly lighter
-  ctx.fillStyle = '#7a4420';
+  const compassGlint = 0.06 + Math.sin(t0 * 0.7 + 1.5) * 0.04;
+  ctx.globalAlpha = compassGlint;
+  ctx.fillStyle = '#d4a030';
+  ctx.shadowColor = '#b8860b';
+  ctx.shadowBlur = 15;
   ctx.beginPath();
-  ctx.moveTo(-12, 0); ctx.quadraticCurveTo(-12, -10, 0, -11);
-  ctx.quadraticCurveTo(12, -10, 12, 0); ctx.closePath();
-  ctx.fill(); ctx.stroke();
-  // Gold metal bands
-  ctx.strokeStyle = '#d4a030'; ctx.lineWidth = 1.2;
-  ctx.globalAlpha = 0.5;
-  ctx.beginPath(); ctx.moveTo(-12, 5); ctx.lineTo(12, 5); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(-12, 10); ctx.lineTo(12, 10); ctx.stroke();
-  // Gold lock
-  ctx.fillStyle = '#d4a030'; ctx.globalAlpha = 0.6;
-  ctx.fillRect(-3, 1, 6, 5);
-  ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.arc(0, 0, 3, Math.PI, 0); ctx.stroke();
-  // Gold glint from open lid
-  const chGlint = 0.25 + Math.sin(t0 * 1.5) * 0.15;
-  ctx.globalAlpha = chGlint;
-  ctx.fillStyle = '#ffe060';
-  ctx.shadowColor = '#d4a030'; ctx.shadowBlur = 8;
-  ctx.fillRect(-8, -2, 16, 3);
+  ctx.arc(68, 58, 8, 0, Math.PI * 2);
+  ctx.fill();
   ctx.shadowBlur = 0;
   ctx.restore();
 
-  // ── Gold coins — bright with glints ──
+  // ── Cartouche title shimmer ──
   ctx.save();
-  const crawlCoins = [
-    { x: GW - 98, y: GH - 58 }, { x: GW - 60, y: GH - 50 },
-    { x: GW - 90, y: GH - 72 }, { x: GW - 52, y: GH - 63 },
-    { x: GW - 105, y: GH - 45 },
-  ];
-  for (let ci = 0; ci < crawlCoins.length; ci++) {
-    const coinGlint = 0.3 + Math.sin(t0 * 0.9 + ci * 1.3) * 0.15;
-    // Coin shadow
-    ctx.globalAlpha = 0.1;
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.arc(crawlCoins[ci].x + 1, crawlCoins[ci].y + 1, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-    // Coin body
-    ctx.globalAlpha = coinGlint;
-    ctx.fillStyle = '#d4a030';
-    ctx.beginPath();
-    ctx.arc(crawlCoins[ci].x, crawlCoins[ci].y, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 0.8;
-    ctx.stroke();
-    // Highlight
-    ctx.fillStyle = '#ffe870';
-    ctx.globalAlpha = coinGlint * 0.5;
-    ctx.beginPath();
-    ctx.arc(crawlCoins[ci].x - 1, crawlCoins[ci].y - 1, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
+  const cartGlint = 0.04 + Math.sin(t0 * 0.5) * 0.03;
+  ctx.globalAlpha = cartGlint;
+  ctx.fillStyle = '#d4a030';
+  ctx.shadowColor = '#ffe060';
+  ctx.shadowBlur = 12;
+  ctx.fillRect(GW - 180, 18, 160, 55);
+  ctx.shadowBlur = 0;
   ctx.restore();
-
 
   // Warm ambient light overlay — gentle breathing glow
   const warmPulse = 0.06 + Math.sin(t0 * 0.8) * 0.03;
