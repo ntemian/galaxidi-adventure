@@ -3183,6 +3183,28 @@ function playSFX(type) {
   if (!ctx || !state.musicOn) return;
   const now = ctx.currentTime;
 
+  // ── Try sample-based SFX first (much better quality) ──
+  if (sfxSamplesLoaded) {
+    if (type === 'step') {
+      const surface = sceneSurface[state.scene] || 'stone';
+      sfxStepLR ^= 1;
+      if (playSampleSFX('step-' + surface, { playbackRate: sfxStepLR ? 1.05 : 0.95 })) return;
+    } else if (type === 'coins' || type === 'glass_clink' || type === 'ghost_shade' ||
+               type === 'metal_ring' || type === 'cloth' || type === 'bottle' || type === 'wood_creak') {
+      // New sample-only types (no synthesis fallback)
+      playSampleSFX(type); return;
+    } else if (type === 'ghost') {
+      // Layer: sample shade voice + synthesis drone for best effect
+      playSampleSFX('ghost_shade');
+      // ...fall through to also play synthesis ghost drone below
+    } else {
+      // For all other types, try sample first
+      if (playSampleSFX(type)) return;
+    }
+  }
+
+  // ── Synthesis fallback (used when samples not loaded or unavailable) ──
+
   if (type === 'step') {
     // Short noise burst, LP-filtered — pitch varies by L/R and surface
     const surface = sceneSurface[state.scene] || 'stone';
@@ -3624,6 +3646,8 @@ function playSFX(type) {
 function playTavernaGlassClink() {
   const ac = getAudioCtx();
   if (!ac || !state.musicOn) return;
+  // Try real glass sample first
+  if (playSampleSFX('glass_clink', { volume: 0.15 })) return;
   const now = ac.currentTime;
   const freq = 2800 + Math.random() * 1200;
   const osc = ac.createOscillator();
@@ -9697,6 +9721,8 @@ function parseTestParams() {
 // ════════════════════════════════════════════════════════════
 loadAllAssets().then(() => {
   if (DATA_ONLY) return; // test mode — data is ready, skip game loop
+  // Load SFX samples in background (non-blocking — game starts immediately, synthesis fallback until loaded)
+  loadSFXSamples().catch(e => console.warn('SFX samples failed to load, using synthesis:', e));
   const tp = parseTestParams();
   if (tp) {
     if (tp.all) { stSetAllFlags(); stSetAllInv(); stMarkAllVisited(); }
