@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Design Academy — Η Θάλασσα Θυμάται</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: #0a0a14;
+    color: #d4c9a8;
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    padding: 80px 24px 60px;
+    text-align: center;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0d1024 0%, #0f1430 30%, #0c1028 60%, #0a0a14 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 600px 200px at 50% 80%, rgba(232,197,109,0.04) 0%, transparent 100%),
+      radial-gradient(ellipse 300px 300px at 20% 30%, rgba(196,162,77,0.02) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .hero-subtitle {
+    font-size: 13px; letter-spacing: 4px; text-transform: uppercase;
+    color: #8a7f6a; margin-bottom: 16px; position: relative;
+  }
+  .hero-title {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: clamp(28px, 6vw, 48px); font-weight: normal;
+    color: #e8c56d; line-height: 1.2; margin-bottom: 8px; position: relative;
+    text-shadow: 0 0 60px rgba(232,197,109,0.15);
+  }
+  .hero-greek {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: clamp(16px, 3vw, 22px); color: #a89970; font-style: italic;
+    margin-bottom: 24px; position: relative;
+  }
+  .hero-desc {
+    font-size: 15px; color: #7a7060; max-width: 600px; margin: 0 auto;
+    position: relative; line-height: 1.7;
+  }
+
+  /* ── Navigation ── */
+  .chapter-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,20,0.95); backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(232,197,109,0.1);
+    padding: 12px 24px;
+    display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+  }
+  .chapter-nav a {
+    color: #8a7f6a; text-decoration: none; font-size: 13px;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px;
+    transition: all 0.3s;
+  }
+  .chapter-nav a:hover, .chapter-nav a.active {
+    color: #e8c56d; background: rgba(232,197,109,0.08);
+  }
+
+  /* ── Content Area ── */
+  .content { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── Chapter ── */
+  .chapter {
+    margin-bottom: 60px;
+    border-top: 1px solid rgba(232,197,109,0.08);
+    padding-top: 40px;
+  }
+  .chapter-number {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: #5a5040; margin-bottom: 8px;
+  }
+  .chapter h2 {
+    font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+    font-size: clamp(22px, 4vw, 32px); color: #e8c56d; font-weight: normal;
+    margin-bottom: 6px;
+  }
+  .chapter h2 .greek {
+    font-size: 0.6em; color: #a89970; font-style: italic; display: block;
+    margin-top: 4px;
+  }
+  .chapter h3 {
+    font-size: 20px; color: #c4a24d; margin-top: 32px; margin-bottom: 12px;
+    font-weight: normal;
+  }
+  .chapter p { margin-bottom: 16px; }
+  .chapter ul, .chapter ol { margin: 0 0 16px 24px; }
+  .chapter li { margin-bottom: 8px; }
+
+  /* ── Lesson Card ── */
+  .lesson {
+    background: rgba(232,197,109,0.03);
+    border: 1px solid rgba(232,197,109,0.08);
+    border-radius: 8px; padding: 24px; margin: 20px 0;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .lesson:hover { border-color: rgba(232,197,109,0.2); }
+  .lesson.expanded { border-color: rgba(232,197,109,0.15); }
+  .lesson-header {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .lesson-title {
+    font-size: 18px; color: #c4a24d;
+  }
+  .lesson-toggle {
+    font-size: 20px; color: #8a7f6a; transition: transform 0.3s;
+  }
+  .lesson.expanded .lesson-toggle { transform: rotate(45deg); }
+  .lesson-body {
+    max-height: 0; overflow: hidden; transition: max-height 0.5s ease;
+    margin-top: 0;
+  }
+  .lesson.expanded .lesson-body {
+    max-height: 5000px; margin-top: 16px;
+  }
+
+  /* ── Example Box (from YOUR game) ── */
+  .example {
+    background: rgba(72,133,180,0.06);
+    border-left: 3px solid rgba(72,133,180,0.4);
+    padding: 16px 20px; margin: 16px 0; border-radius: 0 6px 6px 0;
+  }
+  .example-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: #4885b4; margin-bottom: 8px;
+  }
+
+  /* ── Principle Box ── */
+  .principle {
+    background: rgba(109,180,72,0.06);
+    border-left: 3px solid rgba(109,180,72,0.4);
+    padding: 16px 20px; margin: 16px 0; border-radius: 0 6px 6px 0;
+  }
+  .principle-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: #6db448; margin-bottom: 8px;
+  }
+
+  /* ── Master Tip ── */
+  .master-tip {
+    background: rgba(180,72,72,0.06);
+    border-left: 3px solid rgba(180,72,72,0.4);
+    padding: 16px 20px; margin: 16px 0; border-radius: 0 6px 6px 0;
+  }
+  .master-tip-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: #b44848; margin-bottom: 8px;
+  }
+
+  /* ── Interactive Quiz ── */
+  .quiz {
+    background: rgba(160,120,200,0.06);
+    border: 1px solid rgba(160,120,200,0.15);
+    border-radius: 8px; padding: 24px; margin: 24px 0;
+  }
+  .quiz-question {
+    font-size: 17px; color: #c4a24d; margin-bottom: 16px;
+  }
+  .quiz-options { list-style: none; margin: 0; padding: 0; }
+  .quiz-options li {
+    padding: 12px 16px; margin: 6px 0; border-radius: 6px;
+    border: 1px solid rgba(232,197,109,0.1); cursor: pointer;
+    transition: all 0.3s;
+  }
+  .quiz-options li:hover { border-color: rgba(232,197,109,0.3); background: rgba(232,197,109,0.04); }
+  .quiz-options li.correct { border-color: rgba(109,180,72,0.6); background: rgba(109,180,72,0.1); color: #9fd48c; }
+  .quiz-options li.wrong { border-color: rgba(180,72,72,0.6); background: rgba(180,72,72,0.08); color: #d48c8c; }
+  .quiz-options li.disabled { pointer-events: none; opacity: 0.6; }
+  .quiz-explanation {
+    margin-top: 12px; padding: 12px 16px; border-radius: 6px;
+    background: rgba(232,197,109,0.04); display: none; font-size: 15px;
+  }
+  .quiz-explanation.visible { display: block; }
+
+  /* ── Emotion Wheel ── */
+  .emotion-wheel {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px; margin: 24px 0;
+  }
+  .emotion-card {
+    background: rgba(232,197,109,0.03); border: 1px solid rgba(232,197,109,0.08);
+    border-radius: 8px; padding: 20px; cursor: pointer; transition: all 0.3s;
+  }
+  .emotion-card:hover { transform: translateY(-2px); border-color: rgba(232,197,109,0.2); }
+  .emotion-card.expanded { border-color: rgba(232,197,109,0.25); }
+  .emotion-icon { font-size: 28px; margin-bottom: 8px; }
+  .emotion-name { font-size: 17px; color: #c4a24d; margin-bottom: 4px; }
+  .emotion-greek { font-size: 13px; color: #8a7f6a; font-style: italic; margin-bottom: 8px; }
+  .emotion-desc { font-size: 14px; color: #9a8f7a; line-height: 1.6; }
+  .emotion-techniques {
+    max-height: 0; overflow: hidden; transition: max-height 0.5s;
+    margin-top: 0;
+  }
+  .emotion-card.expanded .emotion-techniques { max-height: 1000px; margin-top: 12px; }
+  .emotion-techniques ul { margin-left: 16px; }
+  .emotion-techniques li { font-size: 14px; margin-bottom: 6px; }
+
+  /* ── Progress Tracker ── */
+  .progress-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,10,20,0.95); border-top: 1px solid rgba(232,197,109,0.1);
+    padding: 10px 24px; display: flex; align-items: center; gap: 16px;
+  }
+  .progress-label { font-size: 12px; color: #8a7f6a; white-space: nowrap; }
+  .progress-track {
+    flex: 1; height: 4px; background: rgba(232,197,109,0.1); border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #c4a24d, #e8c56d);
+    border-radius: 2px; transition: width 0.5s ease; width: 0%;
+  }
+  .progress-pct { font-size: 12px; color: #e8c56d; min-width: 36px; text-align: right; }
+
+  /* ── Technique Table ── */
+  .technique-table {
+    width: 100%; border-collapse: collapse; margin: 16px 0;
+  }
+  .technique-table th {
+    text-align: left; padding: 10px 14px; font-size: 12px;
+    letter-spacing: 2px; text-transform: uppercase; color: #8a7f6a;
+    border-bottom: 1px solid rgba(232,197,109,0.15);
+  }
+  .technique-table td {
+    padding: 10px 14px; border-bottom: 1px solid rgba(232,197,109,0.06);
+    font-size: 15px;
+  }
+  .technique-table tr:hover td { background: rgba(232,197,109,0.03); }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; margin: 16px 0; padding: 0; }
+  .checklist li {
+    padding: 8px 0 8px 32px; position: relative; cursor: pointer;
+    transition: color 0.3s;
+  }
+  .checklist li::before {
+    content: '○'; position: absolute; left: 6px; top: 8px;
+    font-size: 16px; color: #5a5040; transition: all 0.3s;
+  }
+  .checklist li.checked { color: #6db448; }
+  .checklist li.checked::before { content: '●'; color: #6db448; }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 2px solid rgba(232,197,109,0.2);
+    padding: 8px 20px; margin: 16px 0; font-style: italic;
+    color: #a89970;
+  }
+
+  /* ── Code ── */
+  code {
+    background: rgba(232,197,109,0.06); padding: 2px 6px; border-radius: 3px;
+    font-family: 'SF Mono', Menlo, monospace; font-size: 14px; color: #c4a24d;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center; padding: 40px 24px 100px;
+    border-top: 1px solid rgba(232,197,109,0.06);
+  }
+  .footer p { font-size: 13px; color: #5a5040; }
+
+  strong { color: #e8c56d; font-weight: normal; }
+  em { color: #a89970; }
+  a { color: #4885b4; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ HERO ═══════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-subtitle">Self-Learning Module</div>
+  <div class="hero-title">Game Design Academy</div>
+  <div class="hero-greek">Η Τέχνη του Βυθίσματος — The Art of Immersion</div>
+  <p class="hero-desc">
+    An interactive masterclass on making adventure games that players <em>feel</em>.
+    Every lesson draws from real examples — including your own Galaxidi Adventure.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════ NAV ═══════════════════════════════════════════ -->
+<nav class="chapter-nav">
+  <a href="#ch1">I. Immersion</a>
+  <a href="#ch2">II. Emotions</a>
+  <a href="#ch3">III. Puzzles</a>
+  <a href="#ch4">IV. Dialog</a>
+  <a href="#ch5">V. Pacing</a>
+  <a href="#ch6">VI. World</a>
+  <a href="#ch7">VII. Sound</a>
+  <a href="#ch8">VIII. Psychology</a>
+  <a href="#ch9">IX. Neuroscience</a>
+  <a href="#ch10">X. Applied</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════ CONTENT ═══════════════════════════════════════ -->
+<div class="content">
+
+<!-- ═══════════════════════ CHAPTER 1: IMMERSION ═══════════════════════ -->
+<div class="chapter" id="ch1">
+  <div class="chapter-number">Chapter I</div>
+  <h2>Immersion <span class="greek">Βύθιση — Making players forget they're playing</span></h2>
+
+  <p>Immersion is the moment a player stops <em>using</em> your game and starts <em>living</em> in it. It's not about graphics — it's about the <strong>consistency and density of detail</strong> in every layer of the experience.</p>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">1.1 The Four Layers of Immersion</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Every great adventure game operates on four simultaneous layers. When all four align, immersion is total:</p>
+
+      <table class="technique-table">
+        <tr><th>Layer</th><th>What It Does</th><th>Breaks When...</th></tr>
+        <tr>
+          <td><strong>Sensory</strong></td>
+          <td>What players see and hear — visuals, music, ambient sound</td>
+          <td>Art style is inconsistent, sounds are generic or missing</td>
+        </tr>
+        <tr>
+          <td><strong>Narrative</strong></td>
+          <td>The story pulls forward — curiosity, mystery, stakes</td>
+          <td>Plot holes, unmotivated characters, info dumps</td>
+        </tr>
+        <tr>
+          <td><strong>Systemic</strong></td>
+          <td>The world has rules the player learns — verb logic, inventory</td>
+          <td>Arbitrary puzzle solutions, "use rubber chicken with pulley"</td>
+        </tr>
+        <tr>
+          <td><strong>Emotional</strong></td>
+          <td>The player <em>cares</em> about the outcome</td>
+          <td>No stakes, flat characters, no humor or warmth</td>
+        </tr>
+      </table>
+
+      <div class="example">
+        <div class="example-label">In Your Game — Galaxidi Adventure</div>
+        <p>Your game already has strong sensory immersion — per-scene ambient sound (waves, cicadas, cave drips), procedural visual effects (kitchen steam, graveyard fireflies), and a consistent VGA pixel art style. The narrative layer is solid too: the Visvikis treasure hunt creates genuine curiosity.</p>
+        <p>Where you can grow: the <strong>systemic</strong> layer. Right now verbs are mostly Look/Use/Talk. Adding item combinations and character-specific puzzle actions would deepen the feeling that the world has rules worth learning.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">1.2 Environmental Storytelling</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>The most immersive games tell stories through the <strong>environment itself</strong>, not just dialog. Every object in a scene should tell you something about who lives there, what happened, or what's about to happen.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — The Speaking Room</div>
+        <p>A well-designed room tells the player three things before anyone speaks:</p>
+        <ol>
+          <li><strong>Who</strong> lives/works here (personal objects, mess vs. order)</li>
+          <li><strong>What happened recently</strong> (an open book, a cold cup of coffee, moved furniture)</li>
+          <li><strong>What might happen next</strong> (a locked door, a half-packed suitcase, a letter on the table)</li>
+        </ol>
+      </div>
+
+      <p><strong>LucasArts mastered this.</strong> In <em>Monkey Island 2</em>, every room in the Voodoo Lady's shop told you about her character before she spoke a word. In <em>Fate of Atlantis</em>, the dusty shelves and broken pottery in the opening told you Sophia was passionate but chaotic.</p>
+
+      <div class="example">
+        <div class="example-label">In Your Game — The Kitchen Scene</div>
+        <p>Your kitchen already does this well — the coffee pot, the table, the window to the terrace all suggest a family settling in. <strong>Upgrade idea:</strong> Add a child's drawing on the fridge (Ajax's), a half-unpacked box, and Clio's forgotten book — these tell the story of arrival without a single line of dialog.</p>
+      </div>
+
+      <div class="master-tip">
+        <div class="master-tip-label">Master Technique — The Unremarkable Detail</div>
+        <p>Add one object per scene that has <em>no gameplay purpose</em> but rewards looking. A funny label on a bottle. A date carved in wood. A cat sleeping in an impossible place. Players who notice these feel like the world exists beyond the puzzle.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">1.3 The "First 30 Seconds" Rule</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>When a player enters a new scene, they make an unconscious judgment in the first 30 seconds: <em>"Is this world alive?"</em></p>
+
+      <p>What they notice (in order):</p>
+      <ol>
+        <li><strong>Movement</strong> — Is anything moving? Particles, water, wind, light shifts</li>
+        <li><strong>Sound</strong> — Is there ambient sound that matches what they see?</li>
+        <li><strong>Response</strong> — Does the world respond to them? (hover highlights, entry dialog)</li>
+        <li><strong>Density</strong> — Are there enough objects to explore? (4-6 minimum per scene)</li>
+      </ol>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Never a Still Frame</div>
+        <p>No scene should ever be a completely static image. Even a tiny movement — a flickering candle, dust motes, a swaying curtain — tells the subconscious "this is a place, not a picture."</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">In Your Game — What You Already Do Well</div>
+        <p>You already have procedural ambient effects in most scenes: kitchen steam, museum dust, liotrivi god-rays, windmill shadows, graveyard fireflies, church candles, boat spray, cave formations. This is excellent. The player's brain registers these as "life" even when they're not consciously looking at them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" data-answer="2">
+    <div class="quiz-question">Quick Check: Which scene element contributes MOST to the feeling of immersion?</div>
+    <ul class="quiz-options">
+      <li onclick="checkQuiz(this, 2)">High-resolution graphics</li>
+      <li onclick="checkQuiz(this, 2)">Consistent small details that reward curiosity</li>
+      <li onclick="checkQuiz(this, 2)">Complex puzzle mechanics</li>
+      <li onclick="checkQuiz(this, 2)">Long cutscenes</li>
+    </ul>
+    <div class="quiz-explanation">Immersion comes from <strong>density of consistent detail</strong>, not any single impressive element. A world that rewards the player for being curious — where small details connect and make sense — creates far deeper immersion than spectacular graphics or complex puzzles. The Voodoo Lady's shop in Monkey Island has terrible pixel resolution but <em>every</em> object tells a story.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 2: EMOTIONS ═══════════════════════ -->
+<div class="chapter" id="ch2">
+  <div class="chapter-number">Chapter II</div>
+  <h2>The Emotion Palette <span class="greek">Η Παλέτα Συναισθημάτων</span></h2>
+
+  <p>Adventure games can evoke <strong>every human emotion</strong> — not just puzzlement. The greatest adventure games are remembered not for their puzzles but for how they made people <em>feel</em>. Here are the emotions available to you, and how to trigger each one:</p>
+
+  <div class="emotion-wheel">
+    <div class="emotion-card" onclick="toggleEmotion(this)">
+      <div class="emotion-icon">✨</div>
+      <div class="emotion-name">Wonder</div>
+      <div class="emotion-greek">Θαυμασμός</div>
+      <div class="emotion-desc">The gasp when something unexpected and beautiful appears.</div>
+      <div class="emotion-techniques">
+        <p><strong>How to evoke it:</strong></p>
+        <ul>
+          <li><strong>Scale contrast</strong> — Show something vast after a confined space. Your cave → treasure chamber does this.</li>
+          <li><strong>Hidden beauty</strong> — Reward exploration with something visually stunning that has no puzzle purpose.</li>
+          <li><strong>Light shifts</strong> — Change the entire scene's lighting unexpectedly (torch lights up dark cave, sunrise through a window).</li>
+          <li><strong>Music swell</strong> — Drop music out, then bring it back with a new theme at the moment of revelation.</li>
+        </ul>
+        <div class="example">
+          <div class="example-label">Galaxidi Application</div>
+          <p>When the player first enters the cave and Ajax discovers the jade stone — that's a wonder moment. Amplify it: dim the ambient sound, have a single beam of light hit the stone, play a unique musical phrase that only plays once in the entire game.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="emotion-card" onclick="toggleEmotion(this)">
+      <div class="emotion-icon">🏠</div>
+      <div class="emotion-name">Nostalgia</div>
+      <div class="emotion-greek">Νοσταλγία</div>
+      <div class="emotion-desc">The warm ache of remembering something precious.</div>
+      <div class="emotion-techniques">
+        <p><strong>How to evoke it:</strong></p>
+        <ul>
+          <li><strong>Specificity</strong> — Generic details feel fake. Specific ones trigger memory: "the smell of oregano from the hillside," not "nice smells."</li>
+          <li><strong>Time markers</strong> — Objects from a specific era (an old radio, a hand-written ledger, a brass telescope) anchor the feeling.</li>
+          <li><strong>Familiar rituals</strong> — Morning coffee, opening shutters, a family arriving at a beloved place.</li>
+          <li><strong>Return to a changed place</strong> — Visit a location early, then return later when its meaning has changed.</li>
+        </ul>
+        <div class="example">
+          <div class="example-label">Galaxidi Application</div>
+          <p>Your epilogue should revisit the exterior scene — but now the player knows what the family discovered. Same visual, different meaning. The nostalgia is built-in: Galaxidi is already a real place with real history.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="emotion-card" onclick="toggleEmotion(this)">
+      <div class="emotion-icon">😂</div>
+      <div class="emotion-name">Humor</div>
+      <div class="emotion-greek">Χιούμορ</div>
+      <div class="emotion-desc">Not jokes — the joy of recognizing human absurdity.</div>
+      <div class="emotion-techniques">
+        <p><strong>How to evoke it:</strong></p>
+        <ul>
+          <li><strong>Character voice</strong> — Humor works best through personality, not puns. Each character finds different things funny.</li>
+          <li><strong>Subverted expectations</strong> — Player expects a dramatic response, gets a mundane one (or vice versa).</li>
+          <li><strong>Accumulation</strong> — A running gag that builds: the third time is always the funniest.</li>
+          <li><strong>Fourth wall winks</strong> — Subtle nods that the game knows it's a game (but never breaking character).</li>
+          <li><strong>Wrong verb comedy</strong> — "Use fish on door" → character says something genuinely funny, not just "I can't do that."</li>
+        </ul>
+        <div class="example">
+          <div class="example-label">Galaxidi Application</div>
+          <p>Your TODO mentions "Ajax autocorrect" and "cave echo" comedy beats. These are perfect — Ajax being a modern kid in a historical setting is a natural comedy mine. Let Ajax try to take a selfie with the ghost. Let him Google "how to open ancient chest" with no signal.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="emotion-card" onclick="toggleEmotion(this)">
+      <div class="emotion-icon">😰</div>
+      <div class="emotion-name">Tension</div>
+      <div class="emotion-greek">Ένταση</div>
+      <div class="emotion-desc">The held breath. Uncertainty about what comes next.</div>
+      <div class="emotion-techniques">
+        <p><strong>How to evoke it:</strong></p>
+        <ul>
+          <li><strong>Restrict information</strong> — The player knows something is there but can't see it yet.</li>
+          <li><strong>Ambient sound shift</strong> — Remove music. Let silence build. Then one sound: a footstep, a creak, a whisper.</li>
+          <li><strong>Narrow spaces</strong> — After wide open scenes, confine the player. Caves, corridors, small rooms.</li>
+          <li><strong>Timer suggestion</strong> — Not a literal timer, but language that implies urgency: "The tide is coming in..."</li>
+          <li><strong>Light reduction</strong> — Gradually darken the scene. The lantern's circle becomes the whole world.</li>
+        </ul>
+        <div class="example">
+          <div class="example-label">Galaxidi Application</div>
+          <p>Your cave and graveyard scenes are the tension peaks. The ghost sequence already uses environmental effects. Enhance: before the ghost appears, stop ALL sound for 2 full seconds. The silence after continuous ambient sound is more frightening than any sound effect.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="emotion-card" onclick="toggleEmotion(this)">
+      <div class="emotion-icon">💡</div>
+      <div class="emotion-name">Eureka</div>
+      <div class="emotion-greek">Εύρηκα</div>
+      <div class="emotion-desc">The click of understanding. The best feeling a game can give.</div>
+      <div class="emotion-techniques">
+        <p><strong>How to evoke it:</strong></p>
+        <ul>
+          <li><strong>Plant before payoff</strong> — Show information casually 2-3 scenes before it's needed.</li>
+          <li><strong>Multiple hints, one solution</strong> — At least 3 clues point to every puzzle solution.</li>
+          <li><strong>Reward immediately</strong> — The moment the player solves it, something satisfying happens (sound, animation, new area opens).</li>
+          <li><strong>Character reaction</strong> — The family should celebrate with the player. Ajax should cheer. Clio should explain why it works.</li>
+        </ul>
+        <div class="example">
+          <div class="example-label">Galaxidi Application</div>
+          <p>Your "9 to 3" vote inscription is a great planted clue. The eureka moment comes when the player connects it to the αλληλασφάλεια history they learned at the museum. Amplify: have Clio say "Wait... 9 to 3... that's the vote from the museum!" — let the character voice the player's own realization.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="emotion-card" onclick="toggleEmotion(this)">
+      <div class="emotion-icon">💔</div>
+      <div class="emotion-name">Bittersweet</div>
+      <div class="emotion-greek">Γλυκόπικρο</div>
+      <div class="emotion-desc">Joy and sadness at the same time. The most powerful emotion in storytelling.</div>
+      <div class="emotion-techniques">
+        <p><strong>How to evoke it:</strong></p>
+        <ul>
+          <li><strong>Gifts from the dead</strong> — The treasure is not gold but a letter. The ghost doesn't haunt, he's been waiting.</li>
+          <li><strong>Inherited purpose</strong> — The living carry forward what the dead started.</li>
+          <li><strong>Beauty in endings</strong> — The adventure is over, but what was found will remain.</li>
+          <li><strong>Silence after crescendo</strong> — After the big celebration, one quiet moment alone.</li>
+        </ul>
+        <div class="example">
+          <div class="example-label">Galaxidi Application</div>
+          <p>This is the emotional core of your entire game. Visvikis's final letter is meant to be the most moving moment. The treasure isn't gold — it's solidarity, community, a message across time. The connection to Ntemis's late father adds a personal layer that generic adventure games never reach. This is your unique strength.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" data-answer="1">
+    <div class="quiz-question">Which technique is MOST effective for creating tension in an adventure game?</div>
+    <ul class="quiz-options">
+      <li onclick="checkQuiz(this, 1)">Jump scares and loud sounds</li>
+      <li onclick="checkQuiz(this, 1)">Removing ambient sound and letting silence build</li>
+      <li onclick="checkQuiz(this, 1)">Dark color palette</li>
+      <li onclick="checkQuiz(this, 1)">Ominous dialog from NPCs</li>
+    </ul>
+    <div class="quiz-explanation"><strong>Silence is the most powerful tension tool.</strong> The human brain is wired to notice the <em>absence</em> of expected sound more than any new sound. When your game has been playing waves and cicadas for 20 minutes and then goes silent, the player's body physically tenses. Jump scares are cheap — they startle but don't build real tension. Dark palettes and ominous dialog support tension but don't create it alone.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 3: PUZZLE DESIGN ═══════════════════════ -->
+<div class="chapter" id="ch3">
+  <div class="chapter-number">Chapter III</div>
+  <h2>Puzzle Design Philosophy <span class="greek">Φιλοσοφία Γρίφων</span></h2>
+
+  <p>Puzzles are the verbs of adventure games — they're how the player <em>speaks</em> to the world. A great puzzle doesn't just block progress; it teaches the player something about the world, the characters, or themselves.</p>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">3.1 The Three Laws of Good Puzzles</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <div class="principle">
+        <div class="principle-label">Law 1 — Fairness (The Ron Gilbert Rule)</div>
+        <p>The player must have ALL the information needed to solve a puzzle BEFORE they encounter it. No hidden rooms, no unexaminable objects, no knowledge that only exists in the designer's head. Ron Gilbert wrote this in his 1989 manifesto "Why Adventure Games Suck" — and it's still the golden rule.</p>
+      </div>
+
+      <div class="principle">
+        <div class="principle-label">Law 2 — Logic (The Chain Rule)</div>
+        <p>Every solution must follow from observable cause and effect. "Use key on lock" is logical. "Use monkey on pump" is not (yes, Monkey Island did this — even LucasArts broke their own rules). The test: could a smart 12-year-old figure this out?</p>
+      </div>
+
+      <div class="principle">
+        <div class="principle-label">Law 3 — Reward (The Dopamine Rule)</div>
+        <p>Solving a puzzle must feel <em>better</em> than the frustration of being stuck. This means: immediate feedback (new area, story progress, character reaction), not just a tiny inventory change.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">In Your Game — Puzzle Chain Analysis</div>
+        <p>Your puzzle chain is well-designed by these laws:</p>
+        <ul>
+          <li><strong>Fairness:</strong> The museum teaches αλληλασφάλεια history BEFORE the player needs it. Athos confirms the cave BEFORE you go there. Good.</li>
+          <li><strong>Logic:</strong> Green stone → grave → ghost → church → chart → boat → treasure. Each step follows from the previous. Very good.</li>
+          <li><strong>Reward:</strong> Each major solve opens a NEW SCENE — the highest reward. The ghost appearance is spectacular feedback.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">3.2 Puzzle Difficulty Curve</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>The best adventure games follow a <strong>sawtooth difficulty pattern</strong>:</p>
+
+      <pre style="color:#c4a24d; font-family:monospace; margin:16px 0; line-height:1.4;">
+  Hard ╷     ╱╲          ╱╲
+       │    ╱  ╲        ╱  ╲      ╱
+       │   ╱    ╲  ╱╲  ╱    ╲    ╱
+       │  ╱      ╲╱  ╲╱      ╲  ╱
+  Easy ╵ ╱                     ╲╱
+       └──────────────────────────→
+        START                    END</pre>
+
+      <p>Each "peak" is a major puzzle. Each "valley" is a reward scene with easy interaction and story payoff. <strong>Never stack two hard puzzles back-to-back</strong> — the player needs breathing room.</p>
+
+      <table class="technique-table">
+        <tr><th>Difficulty</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td>Easy</td><td>Single object use, obvious dialog choice</td><td>Teach mechanics, build confidence</td></tr>
+        <tr><td>Medium</td><td>Two-step combination, information from NPCs</td><td>Core gameplay loop</td></tr>
+        <tr><td>Hard</td><td>Multi-scene inventory chain, connect distant clues</td><td>Peak satisfaction moments</td></tr>
+        <tr><td>Breather</td><td>Walking, dialog, cutscene — no puzzle</td><td>Story delivery, emotional beats</td></tr>
+      </table>
+
+      <div class="example">
+        <div class="example-label">Your Game's Curve</div>
+        <p>Exterior (easy) → Port (breather/story) → Museum (breather/story) → Liotrivi (medium) → Windmill (easy: get lantern) → Cave (hard: jade + inscription) → Graveyard (medium: place stone) → Church (medium: find chart) → Boat (breather) → Treasure (payoff).</p>
+        <p>This is a good curve. The only concern: you have three breather scenes in a row (Port → Museum → Liotrivi before the puzzle challenge). Consider adding a small puzzle to the port — perhaps Akis won't talk until you bring him something, or there's a riddle to enter the museum.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">3.3 The "Three Clue Rule"</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>This rule comes from tabletop RPG design (Justin Alexander) but applies perfectly to adventure games:</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — For every puzzle solution, plant at least THREE clues</div>
+        <p>If a puzzle has only one clue, most players will miss it. Two clues? Some will still miss both. Three clues ensures that almost every player will find at least one — and clever players will feel rewarded for noticing all three.</p>
+      </div>
+
+      <p>The three clues should come through <strong>different channels</strong>:</p>
+      <ol>
+        <li><strong>Visual</strong> — Something in the scene art (a marking, an object's position)</li>
+        <li><strong>Dialog</strong> — An NPC mentions it (sometimes casually, not in a "quest" way)</li>
+        <li><strong>Environmental</strong> — Looking at or using objects reveals it</li>
+      </ol>
+
+      <div class="example">
+        <div class="example-label">Applied — The Church Puzzle</div>
+        <p>Player needs to find the nautical chart under a floor tile marked "Λ.Β." Three clues:</p>
+        <ol>
+          <li><strong>Visual:</strong> The tile should be slightly different (cracked, discolored, or have visible initials)</li>
+          <li><strong>Dialog:</strong> The ghost of Visvikis pointed to the church — but earlier, the Papas mentioned Visvikis was the church's "greatest benefactor" who "left his mark everywhere"</li>
+          <li><strong>Environmental:</strong> Looking at the floor mentions old tiles with faded inscriptions — examining more closely reveals "Λ.Β."</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" data-answer="0">
+    <div class="quiz-question">A player is stuck on a puzzle for 10 minutes. What's the BEST design response?</div>
+    <ul class="quiz-options">
+      <li onclick="checkQuiz(this, 0)">An NPC casually drops a hint in nearby dialog</li>
+      <li onclick="checkQuiz(this, 0)">A popup tooltip showing the solution</li>
+      <li onclick="checkQuiz(this, 0)">Make the puzzle easier</li>
+      <li onclick="checkQuiz(this, 0)">Let them be stuck — frustration builds appreciation</li>
+    </ul>
+    <div class="quiz-explanation">The best approach is <strong>progressive hinting through natural dialog</strong>. After some time, a character might say "Hmm, that reminds me of what the curator said about the old captains..." This preserves the player's sense of discovery while preventing frustration. Direct tooltips rob the player of the eureka moment. Making puzzles easier punishes smart players. And letting players stay stuck indefinitely is just cruel design — Ron Gilbert himself said this. Your game's H-key hint system is a good start — make it character-voiced for maximum immersion.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 4: DIALOG ═══════════════════════ -->
+<div class="chapter" id="ch4">
+  <div class="chapter-number">Chapter IV</div>
+  <h2>Writing Great Dialog <span class="greek">Η Τέχνη του Διαλόγου</span></h2>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">4.1 Character Voice — Every Line is a Fingerprint</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>The test of great dialog: <strong>cover the character name and you can still tell who's speaking.</strong></p>
+
+      <p>Each character should have:</p>
+      <ul>
+        <li><strong>Vocabulary level</strong> — Ajax uses modern slang, Clio uses precise words, Ntemis uses warm metaphors, Chrysostomos uses nautical terms</li>
+        <li><strong>Sentence rhythm</strong> — Short and punchy? Long and flowing? Interrupted? Trailing off?</li>
+        <li><strong>Emotional default</strong> — What does this character do when nothing special is happening? Ajax: curious. Clio: observant. Athos: wry.</li>
+        <li><strong>Unique verbal tics</strong> — Not annoying ones, but subtle patterns: the Papas might always bless things, Chrysostomos might reference the sea in every metaphor</li>
+      </ul>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Dialog Does Double Duty</div>
+        <p>Every line of dialog should serve at least TWO purposes from this list:</p>
+        <ol>
+          <li>Reveal character personality</li>
+          <li>Advance the plot</li>
+          <li>Provide puzzle information</li>
+          <li>Set emotional tone</li>
+          <li>Make the player smile</li>
+        </ol>
+        <p>If a line only does one thing, it should be cut or combined with another.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Example — Good vs. Bad Dialog</div>
+        <p><strong>Bad (single purpose — info dump):</strong><br>
+        <code>Curator: "The αλληλασφάλεια was founded in 1860 with 104 signatures at Agia Paraskevi church."</code></p>
+        <p><strong>Good (character + plot + emotion):</strong><br>
+        <code>Curator: "104 signatures. Can you imagine? 104 families who said 'if your ship sinks, my family eats less so yours can eat at all.' That was Galaxidi."</code></p>
+        <p>Same information. But now you feel the curator's passion, you understand the emotional weight, and you want to know more.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">4.2 The Verb Response as Character</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>In adventure games, the player tries verbs on objects constantly. Most games return boring defaults: "I can't do that." This is a <strong>massive missed opportunity</strong>.</p>
+
+      <p>Every verb response should be a tiny window into the character:</p>
+
+      <table class="technique-table">
+        <tr><th>Action</th><th>Generic (bad)</th><th>Character-driven (good)</th></tr>
+        <tr>
+          <td>Look at old painting</td>
+          <td>"It's a painting of a ship."</td>
+          <td><em>Ntemis:</em> "A three-masted schooner. My father had a photo just like this."</td>
+        </tr>
+        <tr>
+          <td>Use fork on door</td>
+          <td>"That doesn't work."</td>
+          <td><em>Ajax:</em> "Μπαμπά, I don't think that's how lockpicking works."</td>
+        </tr>
+        <tr>
+          <td>Talk to cat</td>
+          <td>"The cat doesn't respond."</td>
+          <td><em>Clio:</em> "Γατούλα μου... Do you know who lived here before us?"</td>
+        </tr>
+      </table>
+
+      <div class="master-tip">
+        <div class="master-tip-label">Master Technique — The "Look Twice" Rule</div>
+        <p>If the player looks at the same object twice, give a <em>different</em> response the second time. First look: description. Second look: opinion, memory, or joke. This makes players feel the character is alive, not a description bot.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 5: PACING ═══════════════════════ -->
+<div class="chapter" id="ch5">
+  <div class="chapter-number">Chapter V</div>
+  <h2>Pacing and Rhythm <span class="greek">Ρυθμός — The Heartbeat of the Game</span></h2>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">5.1 Tension and Release Cycles</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Every great story — and every great game — breathes. It inhales (builds tension) and exhales (releases it). The rhythm matters more than the peaks.</p>
+
+      <table class="technique-table">
+        <tr><th>Phase</th><th>Player Feeling</th><th>Tools</th></tr>
+        <tr><td><strong>Build</strong></td><td>Curiosity rising, mild anxiety</td><td>New information, locked doors, ominous hints</td></tr>
+        <tr><td><strong>Peak</strong></td><td>Full engagement, "I need to figure this out"</td><td>The main puzzle of the sequence</td></tr>
+        <tr><td><strong>Release</strong></td><td>Satisfaction, warmth, humor</td><td>Puzzle solved, new area, funny dialog, cutscene</td></tr>
+        <tr><td><strong>Breathe</strong></td><td>Reflection, exploration</td><td>Free-roam, optional dialog, environmental storytelling</td></tr>
+      </table>
+
+      <div class="principle">
+        <div class="principle-label">Principle — The Campfire Moment</div>
+        <p>Every adventure game needs at least one "campfire moment" — a scene with NO puzzles, NO urgency, where characters just <em>talk</em>. About their feelings, their memories, their fears. This is where the player falls in love with the characters.</p>
+        <p>In <em>Monkey Island 2</em>, it's the fire on the beach with Elaine. In <em>Grim Fandango</em>, it's the quiet moments in Rubacava. In <em>The Walking Dead</em>, it's sitting on the porch talking about life.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Your Game's Campfire Moment</div>
+        <p>Your terrace scene could be this. After the day's adventure, the family sits on the terrace with the Galaxidi sunset. Ajax talks about what scared him in the cave. Clio talks about what the αλληλασφάλεια means. Ntemis thinks about his father. No puzzle. Just family. This is where the game stops being a game and becomes a gift.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">5.2 The "Save the Cat" Opening</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Blake Snyder's screenwriting principle: in the first 10 minutes, your protagonist must do something that makes the audience <em>like</em> them. Not admire — <em>like</em>. Something small and human.</p>
+
+      <p>In adventure games, this means the first scene should let the player:</p>
+      <ol>
+        <li>See the protagonist being <strong>kind</strong> (help someone, notice something others miss)</li>
+        <li>See them being <strong>human</strong> (make a joke, be nervous, be excited about something small)</li>
+        <li>Give the player an <strong>easy win</strong> (simple puzzle that makes them feel competent)</li>
+      </ol>
+
+      <div class="example">
+        <div class="example-label">Your Opening</div>
+        <p>Your arrival cutscene + exterior scene does this naturally: a family arriving with excitement, kids exploring, the warmth of a new place. The "Save the Cat" is built into the family dynamic. Ajax's enthusiasm saves the cat for you.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 6: WORLD BUILDING ═══════════════════════ -->
+<div class="chapter" id="ch6">
+  <div class="chapter-number">Chapter VI</div>
+  <h2>World Building <span class="greek">Οικοδομώντας Κόσμους</span></h2>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">6.1 The Iceberg Principle</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Hemingway's iceberg theory applies perfectly to game worlds: <strong>only show 10% of what you know</strong>. The other 90% gives the 10% its weight.</p>
+
+      <p>If you know that Chrysostomos served on twelve ships before the Elpida, you don't need to tell the player all twelve. But when he mentions "the winter of '82, when the waves took the Pandora," the player feels the depth of a life lived. One iceberg tip suggests the whole mountain underneath.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Let Players Discover, Not Be Told</div>
+        <p>Information found by the player is worth 10x information told to them. A letter discovered in a drawer hits harder than an NPC monologue delivering the same facts.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Your Iceberg</div>
+        <p>You have a massive advantage: Galaxidi's real history IS your iceberg. The 3000 years of history in your research file, the 300 ships, the 6000 residents — you don't need to show all of it. But knowing it means every object, every NPC line, every background detail can reference something real. That authenticity bleeds through.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">6.2 Consistency is Magic</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Magic doesn't feel like magic if the rules change. Fantasy worlds work because they have consistent internal logic. Your game world works the same way.</p>
+
+      <ul class="checklist">
+        <li>Art style is consistent across ALL scenes (no mixing pixel art with photorealistic)</li>
+        <li>Time of day is consistent (if it's afternoon in one scene, it's afternoon in all)</li>
+        <li>Characters remember what happened (if Ajax was scared in the cave, he mentions it later)</li>
+        <li>Objects obey physics (a heavy thing stays where you put it)</li>
+        <li>NPCs have lives outside the player (they mention things that happened off-screen)</li>
+        <li>Music matches the emotional arc (doesn't suddenly change genre)</li>
+      </ul>
+
+      <div class="master-tip">
+        <div class="master-tip-label">Master Technique — The Connected World</div>
+        <p>When NPCs reference each other without the player being present, the world feels alive. "Athos mentioned you'd come" from the windmill keeper. "The curator was asking about you" from the port fisherman. These connections cost almost nothing but create the illusion of a living community.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 7: SOUND ═══════════════════════ -->
+<div class="chapter" id="ch7">
+  <div class="chapter-number">Chapter VII</div>
+  <h2>Sound Design <span class="greek">Ο Ήχος — The Invisible Architecture</span></h2>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">7.1 The Three Sound Layers</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Professional game audio operates in three simultaneous layers:</p>
+
+      <table class="technique-table">
+        <tr><th>Layer</th><th>What</th><th>Function</th><th>Your Game</th></tr>
+        <tr>
+          <td><strong>Music</strong></td>
+          <td>Background score</td>
+          <td>Sets emotional tone, signals scene changes</td>
+          <td>40+ scene-specific tracks</td>
+        </tr>
+        <tr>
+          <td><strong>Ambience</strong></td>
+          <td>Environmental sound</td>
+          <td>Makes space feel real and three-dimensional</td>
+          <td>Procedural Web Audio (waves, wind, cicadas, drips)</td>
+        </tr>
+        <tr>
+          <td><strong>SFX</strong></td>
+          <td>Action feedback</td>
+          <td>Confirms player actions, rewards interaction</td>
+          <td>Not yet implemented — your next frontier</td>
+        </tr>
+      </table>
+
+      <p>You have two layers nailed. The third — SFX — is where immersion gets its final 20%. Key sounds to add:</p>
+      <ul>
+        <li><strong>Footsteps</strong> (different on stone, wood, sand, cave floor)</li>
+        <li><strong>Item pickup</strong> (a satisfying "collect" sound)</li>
+        <li><strong>Door/transition</strong> (creak, whoosh, or thud for scene changes)</li>
+        <li><strong>Puzzle solve</strong> (a unique musical sting — like Zelda's chest-open sound)</li>
+        <li><strong>UI sounds</strong> (inventory open/close, verb select)</li>
+      </ul>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Sound Before Sight</div>
+        <p>The ear processes faster than the eye. Before showing something important, let the player <em>hear</em> it first. A creaking door before it opens. Waves getting louder as you approach the shore. A child's laughter from the next room. Sound creates anticipation that visuals fulfill.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">7.2 Music as Narrative</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>The greatest game soundtracks don't just accompany — they <em>narrate</em>.</p>
+
+      <ul>
+        <li><strong>Leitmotifs</strong> — Assign a musical phrase to a character or concept. When it recurs, the player feels the connection subconsciously. Visvikis could have a sailor's melody. The family could have a warm theme. The mystery could have a single repeating piano note.</li>
+        <li><strong>Dynamic music</strong> — Change layers based on what's happening. Add strings when tension rises. Remove drums when the player is thinking. Swell when a discovery is made.</li>
+        <li><strong>Strategic silence</strong> — As discussed in emotions: silence after continuous music is the most powerful sound in your palette.</li>
+      </ul>
+
+      <div class="example">
+        <div class="example-label">Applied — Visvikis's Theme</div>
+        <p>Give the ghost of Visvikis a simple, memorable melody — maybe a Greek nautical folk phrase, played on a lyra or laouto. First heard faintly at the museum (when learning about him). Then at the graveyard when his ghost appears (full arrangement). Then one final time in the epilogue, but now played by Stathis on his guitar — the dead captain's melody, carried by the living. That's sound as narrative.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 8: HUMAN PSYCHOLOGY ═══════════════════════ -->
+<div class="chapter" id="ch8">
+  <div class="chapter-number">Chapter VIII</div>
+  <h2>Human Psychology <span class="greek">Ψυχολογία — Why We Feel What We Feel</span></h2>
+
+  <p>Game design is applied psychology. Every technique in the previous chapters works because of <strong>how the human brain is wired</strong>. Understanding the psychology gives you the power to invent new techniques, not just copy existing ones.</p>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.1 Flow State (Csikszentmihalyi)</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>In 1975, psychologist Mihaly Csikszentmihalyi described <strong>flow</strong> — a mental state where a person is so absorbed in an activity that they lose track of time, forget their surroundings, and experience deep satisfaction.</p>
+
+      <p>Flow happens when two conditions are met simultaneously:</p>
+      <ol>
+        <li><strong>Challenge matches skill</strong> — Too easy = boredom. Too hard = anxiety. The sweet spot = flow.</li>
+        <li><strong>Clear goals with immediate feedback</strong> — The player always knows what they're trying to do, and immediately sees the result of their actions.</li>
+      </ol>
+
+      <pre style="color:#c4a24d; font-family:monospace; margin:16px 0; line-height:1.4;">
+  Anxiety  │         ╱
+  Zone     │       ╱
+           │     ╱
+           │   ╱  ★ FLOW CHANNEL
+           │ ╱
+  Boredom  │╱
+  Zone     └──────────────────→
+           Low    SKILL    High</pre>
+
+      <div class="principle">
+        <div class="principle-label">Principle — The Flow Channel</div>
+        <p>Your puzzle difficulty must <em>grow with the player's skill</em>. Early puzzles teach the verb system. Mid-game puzzles combine multiple verbs. Late-game puzzles require connecting information across scenes. If the player learned the system in scene 3, you can't give them a scene-3-level puzzle in scene 10 — they'll be bored. But you also can't jump to a scene-10 puzzle in scene 5 — they'll be anxious.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">In Galaxidi Adventure</div>
+        <p>Your flow channel is well-calibrated: the early scenes teach Look/Talk/Use on simple objects, the middle scenes require NPC conversations to unlock information, and the late scenes chain inventory items across multiple locations. The key risk is the three-breather stretch (Port → Museum → Liotrivi) where challenge drops below the flow channel — the player has gotten better but the game hasn't gotten harder yet.</p>
+      </div>
+
+      <div class="master-tip">
+        <div class="master-tip-label">Deep Insight — Micro-Flow Moments</div>
+        <p>Flow doesn't only happen at the puzzle level. Every typewriter line of dialog, every animation, every walking sequence is a micro-flow opportunity. If the typewriter speed matches reading speed — flow. If the walking speed matches the player's impatience — flow. If the ambient sound fades in at the rate the brain expects — flow. Flow is fractal.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.2 The Zeigarnik Effect — Unfinished Business</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>In 1927, psychologist Bluma Zeigarnik discovered that <strong>people remember unfinished tasks 90% better than completed ones</strong>. The brain keeps "open loops" running in the background, nagging for closure.</p>
+
+      <p>This is why you can't stop watching a series after a cliffhanger. It's why puzzles you almost solved haunt you in the shower. <strong>Every great adventure game weaponizes this.</strong></p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Open Loops Are Addiction</div>
+        <p>Always have at least 2-3 unresolved questions running simultaneously:</p>
+        <ul>
+          <li><strong>The main mystery</strong> — Who is Visvikis? What's the treasure? (long loop, runs all game)</li>
+          <li><strong>The current puzzle</strong> — How do I get into the cave? (medium loop, 1-3 scenes)</li>
+          <li><strong>A character tease</strong> — Why did Chrysostomos look sad when I mentioned my father? (background loop, resolved later)</li>
+        </ul>
+        <p>When one loop closes, <strong>immediately open a new one</strong>. The player should never have zero open questions. Zero open questions = "I guess I'm done" = they close the game.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Your Open Loops</div>
+        <p>Your main mystery loop is excellent (it runs from the first note to the final letter). But consider adding more background loops: Why does the Papas know so much about Visvikis? What happened to Ntemis's father in Galaxidi? Why does the cat follow Clio specifically? These don't need puzzle solutions — just resolution through dialog at the right moment.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.3 The Peak-End Rule (Kahneman)</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Nobel laureate Daniel Kahneman discovered that <strong>people judge experiences by their peak moment and their ending</strong>, not by the average or duration. A mediocre movie with a stunning finale is remembered as great. A good movie with a weak ending is remembered as disappointing.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Design Your Peak and Your End</div>
+        <p>Before writing a single line of code, answer two questions:</p>
+        <ol>
+          <li><strong>What is the peak?</strong> — The single most intense emotional moment. For Galaxidi: the ghost appearing at the graveyard, or reading Visvikis's final letter.</li>
+          <li><strong>What is the end?</strong> — The last thing the player experiences. For Galaxidi: the epilogue. This must be <em>perfect</em>.</li>
+        </ol>
+        <p>Invest 30% of your emotional design effort into these two moments. Everything else can be good — these two must be extraordinary.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Applied — Your Epilogue</div>
+        <p>Your epilogue is the most important scene in the entire game. Not the treasure, not the ghost — the epilogue. Because of the Peak-End Rule, this scene will disproportionately determine how players remember the entire experience. Make it quiet. Make it beautiful. Make it personal. The new αλληλασφάλεια signing ceremony — 104 signatures again — should feel like it echoes across 170 years of history. The player should feel they were part of something real.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.4 The IKEA Effect — We Love What We Build</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>A 2011 study by Norton, Mochon & Ariely found that people value things they helped create <strong>far more</strong> than equivalent pre-made items — even if the result is objectively worse. They named it after IKEA furniture: wobbly bookshelf you built yourself > perfect bookshelf from the store.</p>
+
+      <p>In games, this means: <strong>the puzzle the player solved is worth more than the cutscene you made.</strong></p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Let The Player Earn Every Revelation</div>
+        <p>Never show the player something for free that they could discover themselves. Every piece of the story should feel <em>earned</em>:</p>
+        <ul>
+          <li>Don't show the treasure in a cutscene — let the player dig it up</li>
+          <li>Don't summarize what an NPC knows — let the player ask the right questions</li>
+          <li>Don't explain the solution — let the player connect the dots</li>
+        </ul>
+        <p>The player who pieces together that "Λ.Β." = Λουκάς Βισβίκης through their own deduction will feel ten times more satisfaction than the player who is told this directly.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.5 Mirror Neurons and Empathy</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>In the 1990s, neuroscientists discovered <strong>mirror neurons</strong> — brain cells that fire both when you do something AND when you watch someone else do the same thing. When you see someone smile, your mirror neurons fire as if <em>you</em> were smiling. This is the biological basis of empathy.</p>
+
+      <p>In games, this means:</p>
+
+      <ul>
+        <li><strong>Character reactions are contagious.</strong> When Ajax laughs with delight at finding the jade stone, the player feels delight. When Clio looks worried in the cave, the player feels worry.</li>
+        <li><strong>Facial expressions matter enormously.</strong> Even in pixel art, a shifted pixel on a portrait's mouth changes the emotional transmission. Your portrait system is a direct mirror-neuron pipeline.</li>
+        <li><strong>Physical gestures work even in low resolution.</strong> A character jumping with excitement, slumping with disappointment, or reaching out to touch something — these trigger mirror neurons even at 640x400.</li>
+      </ul>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Characters Feel First, Players Follow</div>
+        <p>Before the player feels something, a character should feel it first. Don't rely on the player to generate their own emotion from raw events — let the characters model the emotion. When Ntemis reads his father's handwriting in the final letter, show Ntemis being moved. The player's mirror neurons will do the rest.</p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Applied — Three-Character Emotional Bandwidth</div>
+        <p>Your family-as-protagonists setup is a psychological superpower. You have THREE emotional channels instead of one:</p>
+        <ul>
+          <li><strong>Ajax</strong> = mirrors excitement, fear, wonder (primary emotions — easy for mirror neurons)</li>
+          <li><strong>Clio</strong> = mirrors curiosity, insight, compassion (cognitive emotions — deeper processing)</li>
+          <li><strong>Ntemis</strong> = mirrors nostalgia, determination, love (complex emotions — highest empathy reward)</li>
+        </ul>
+        <p>When all three react to the same moment differently, the player gets hit with multiple emotional channels simultaneously. That's how you make moments unforgettable.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.6 Cognitive Load Theory — Less is More</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Working memory can hold approximately <strong>4 items</strong> at a time (Cowan, 2001). Not 7 — that was an older estimate. Four. That's it.</p>
+
+      <p>This has massive implications for game design:</p>
+
+      <table class="technique-table">
+        <tr><th>Too Many</th><th>Problem</th><th>Fix</th></tr>
+        <tr>
+          <td>10+ inventory items</td>
+          <td>Player forgets what they have</td>
+          <td>Keep active inventory under 6. Remove used items immediately.</td>
+        </tr>
+        <tr>
+          <td>8+ interactive objects per scene</td>
+          <td>Overwhelm, random clicking</td>
+          <td>4-6 objects per scene. Distinguish primary from decorative.</td>
+        </tr>
+        <tr>
+          <td>5+ dialog options</td>
+          <td>Decision paralysis</td>
+          <td>Maximum 3-4 dialog choices at a time.</td>
+        </tr>
+        <tr>
+          <td>Long NPC speeches</td>
+          <td>Information lost after line 4</td>
+          <td>Break into dialog exchanges. Let the player ask follow-ups.</td>
+        </tr>
+      </table>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Chunk and Space</div>
+        <p>When you need to convey complex information (like the museum's history lesson), break it into <strong>chunks of 2-3 facts</strong> separated by player interaction. The curator says 2 facts → player asks a question → 2 more facts → player looks at an exhibit → 2 more facts. The same information, but now the brain can process it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.7 Loss Aversion — We Hate Losing More Than We Love Winning</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Kahneman and Tversky proved that <strong>losses feel twice as painful as equivalent gains feel good</strong>. Losing €50 hurts more than finding €50 feels nice. This asymmetry shapes all human decision-making.</p>
+
+      <p>In adventure games (with no fail state), loss aversion works through <strong>narrative loss</strong>:</p>
+
+      <ul>
+        <li><strong>Threatened relationships</strong> — If the player fears a character might leave, be hurt, or be disappointed, they'll work harder to prevent it than to gain something positive.</li>
+        <li><strong>Ticking clocks</strong> — "The tide is coming in" creates more urgency than "there might be treasure over there." The threat of losing the opportunity outweighs the lure of reward.</li>
+        <li><strong>Past investment</strong> — The further into the game, the more the player has invested. Reference their journey: "We've come too far to stop now." This leverages the sunk-cost fallacy — but in a game, that's a feature.</li>
+      </ul>
+
+      <div class="example">
+        <div class="example-label">In Galaxidi — The Ghost Sequence</div>
+        <p>The ghost of Visvikis is powerful because he represents loss — 120 years of waiting, a broken promise, a fading legacy. The player isn't motivated by "find the treasure" (gain). They're motivated by "don't let Visvikis's story be forgotten" (preventing loss). That's twice as powerful, psychologically.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" data-answer="2">
+    <div class="quiz-question">According to the Peak-End Rule, which moment will MOST determine how players remember your game?</div>
+    <ul class="quiz-options">
+      <li onclick="checkQuiz(this, 2)">The opening cutscene, because first impressions matter most</li>
+      <li onclick="checkQuiz(this, 2)">The most complex puzzle, because it required the most effort</li>
+      <li onclick="checkQuiz(this, 2)">The epilogue (final scene) and the single most emotional peak</li>
+      <li onclick="checkQuiz(this, 2)">The average quality across all scenes</li>
+    </ul>
+    <div class="quiz-explanation">Kahneman's research is clear: <strong>the peak emotional moment and the ending</strong> disproportionately shape memory of the whole experience. A player who has a mediocre time but an extraordinary ghost sequence (peak) and a beautiful epilogue (end) will remember the game as extraordinary. This is why your epilogue deserves obsessive attention — it's the last thing in the player's memory, and it colors everything that came before.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 9: NEUROSCIENCE OF PLAY ═══════════════════════ -->
+<div class="chapter" id="ch9">
+  <div class="chapter-number">Chapter IX</div>
+  <h2>Neuroscience of Play <span class="greek">Νευροεπιστήμη — How the Brain Plays</span></h2>
+
+  <p>Beyond psychology, neuroscience reveals the <strong>biological machinery</strong> behind engagement. Understanding these mechanisms lets you design experiences that work with the brain, not against it.</p>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.1 Dopamine — The Anticipation Molecule</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Dopamine is NOT the "pleasure chemical" — that's a myth. Dopamine is the <strong>anticipation chemical</strong>. It fires when you <em>expect</em> a reward, not when you receive it. The brain releases MORE dopamine when a reward is uncertain than when it's guaranteed.</p>
+
+      <p>This has profound implications for game design:</p>
+
+      <table class="technique-table">
+        <tr><th>Dopamine Trigger</th><th>In Games</th><th>Your Game</th></tr>
+        <tr>
+          <td><strong>Novel stimuli</strong></td>
+          <td>New scene, new NPC, unexpected event</td>
+          <td>Every scene transition is a dopamine hit. You have 13 unique scenes — excellent.</td>
+        </tr>
+        <tr>
+          <td><strong>Pattern recognition</strong></td>
+          <td>"Wait... these clues connect!"</td>
+          <td>The 9-to-3 inscription → αλληλασφάλεια connection is a dopamine bomb.</td>
+        </tr>
+        <tr>
+          <td><strong>Uncertain reward</strong></td>
+          <td>"Is there something behind this door?"</td>
+          <td>Every locked object, every unexplored exit, every NPC who "knows something".</td>
+        </tr>
+        <tr>
+          <td><strong>Near-miss</strong></td>
+          <td>"I almost figured it out..."</td>
+          <td>Progressive hints feed this — the player feels close, dopamine sustains engagement.</td>
+        </tr>
+      </table>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Reward the Journey, Not Just the Destination</div>
+        <p>The dopamine system rewards <em>getting warmer</em>, not just finding the answer. Design your puzzle chains so each step reveals a little more — every new clue is a partial reward. The jade stone isn't the treasure, but finding it should feel like progress. The nautical chart isn't the treasure, but reading it should feel like you're getting close. Each step gives dopamine. The final treasure gives satisfaction (a different, slower neurochemical: serotonin).</p>
+      </div>
+
+      <div class="master-tip">
+        <div class="master-tip-label">Deep Insight — The Variable Reward Schedule</div>
+        <p>Slot machines use variable reward schedules to maximize dopamine (and addiction). You don't want addiction — but you want <em>engagement</em>. The healthy version: make some object interactions unexpectedly rewarding. Most "Look" responses are normal. But occasionally, a "Look" reveals something surprising — a hidden detail, a character memory, a joke. The player never knows which object will have the surprise, so they <em>keep looking at everything</em>. This is the explorer's dopamine loop.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.2 The Default Mode Network — Daydreaming is Processing</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Neuroscience discovered that when we stop focusing on a task, a brain network called the <strong>Default Mode Network (DMN)</strong> activates. This is the "daydreaming" network — but it's not idle. It's:</p>
+      <ul>
+        <li>Consolidating memories</li>
+        <li>Making connections between unrelated information</li>
+        <li>Processing emotional experiences</li>
+        <li>Running "what if" simulations</li>
+      </ul>
+
+      <p>This is why solutions to hard puzzles often come in the shower, or right before sleep. The DMN was working on it.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Build In Breathing Room</div>
+        <p>Your game needs "DMN moments" — times when the focused task drops away and the brain can process what it's absorbed. These are:</p>
+        <ul>
+          <li><strong>Walking between locations</strong> — Don't make them instant. The walking time IS the processing time.</li>
+          <li><strong>Ambient scenes</strong> — Sitting on the terrace, watching the sunset. No puzzle, no dialog. Just space.</li>
+          <li><strong>After emotional peaks</strong> — After the ghost sequence, don't immediately throw a puzzle. Let the player breathe.</li>
+        </ul>
+        <p>If your game is non-stop stimulation, the player never consolidates. They leave feeling exhausted, not enriched. <strong>The spaces between moments are as important as the moments.</strong></p>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Your Breathing Spaces</div>
+        <p>Your boat ride to Agios Georgios island is a perfect DMN moment. The player has just survived the graveyard, decoded the church, and now they're sailing. No puzzle. Just waves, music, and anticipation. This is where the brain puts everything together. Don't rush it. Let Chrysostomos tell a story about the sea. Let the camera linger on the water. The player's unconscious mind is doing the real work.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.3 Narrative Transportation — Leaving Your Body</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Psychologists Green & Brock (2000) described <strong>narrative transportation</strong> — when a person becomes so absorbed in a story that they psychologically "leave" their real-world situation and "enter" the narrative world. During transportation:</p>
+      <ul>
+        <li>Real-world concerns temporarily disappear</li>
+        <li>Emotions match the story, not the reader's actual situation</li>
+        <li>Beliefs can shift to align with the narrative</li>
+        <li>Imagery becomes vivid, almost hallucinatory</li>
+      </ul>
+
+      <p>This is the deepest form of immersion — deeper than "engagement." It's temporary belief.</p>
+
+      <div class="principle">
+        <div class="principle-label">Factors that Increase Transportation</div>
+        <ol>
+          <li><strong>Vivid imagery</strong> — Sensory details (what you smell, hear, feel — not just see)</li>
+          <li><strong>Character identification</strong> — The protagonist resembles the reader/player or is deeply empathetic</li>
+          <li><strong>Suspension triggers</strong> — Music, rhythm, repetition, ritual (like a Greek chorus)</li>
+          <li><strong>Reduced real-world anchors</strong> — Full-screen mode, headphones, darkened room</li>
+          <li><strong>Emotional stakes the audience personally cares about</strong> — Family, home, legacy, belonging</li>
+        </ol>
+      </div>
+
+      <div class="example">
+        <div class="example-label">Why Galaxidi Adventure Has High Transportation Potential</div>
+        <p>Your game hits multiple transportation factors naturally:</p>
+        <ul>
+          <li><strong>Real place</strong> → vivid imagery is grounded in reality (players can Google Galaxidi)</li>
+          <li><strong>Family protagonists</strong> → universal identification (everyone has a family)</li>
+          <li><strong>Greek language/music</strong> → exotic enough to suspend disbelief, warm enough to welcome</li>
+          <li><strong>Themes of solidarity and legacy</strong> → universally personal stakes</li>
+        </ul>
+        <p>To push deeper: add sensory dialog. Not just "I see a boat" but "The salt wind hits my face" or "The wood of the boat smells like my grandfather's workshop." Multi-sensory descriptions transport faster than visual-only.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.4 The Mere Exposure Effect — Familiarity Breeds Affection</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Psychologist Robert Zajonc proved that <strong>the more we encounter something, the more we like it</strong> — even if we're not consciously aware of the exposure. This applies to faces, melodies, symbols, places, and words.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Repeat with Variation</div>
+        <p>Key elements should recur throughout the game, each time with slight variation:</p>
+        <ul>
+          <li><strong>Musical themes</strong> — The main melody returns in different arrangements (solo → full orchestra → hummed by a character)</li>
+          <li><strong>Visual motifs</strong> — The schooner image appears on a painting, a stamp, a weather vane, a ghost ship</li>
+          <li><strong>Words and phrases</strong> — "Αλληλεγγύη" is heard from multiple characters in different contexts</li>
+          <li><strong>Locations revisited</strong> — The port looks different in morning, afternoon, and evening</li>
+        </ul>
+        <p>Each repetition deepens affection without the player knowing why. By the time "αλληλασφάλεια" appears in the final letter, the word feels like an old friend — because the brain has been marinating in it for hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.5 Emotional Contagion — Feelings Spread Like Viruses</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Beyond mirror neurons, research shows that <strong>emotions are literally contagious</strong>. Being near someone who is happy makes you happier. Seeing fear creates fear. This happens below conscious awareness — through micro-expressions, voice tone, body language, and even text rhythm.</p>
+
+      <p>In a game with text dialog, emotional contagion works through:</p>
+
+      <table class="technique-table">
+        <tr><th>Channel</th><th>How It Transmits Emotion</th></tr>
+        <tr>
+          <td><strong>Punctuation</strong></td>
+          <td>"..." transmits hesitation. "!" transmits excitement. "—" transmits interruption/urgency.</td>
+        </tr>
+        <tr>
+          <td><strong>Sentence length</strong></td>
+          <td>Short sentences = tension. Long flowing sentences = calm. Fragments = shock.</td>
+        </tr>
+        <tr>
+          <td><strong>Word choice</strong></td>
+          <td>Warm words (home, light, father) vs cold words (dark, forgotten, alone)</td>
+        </tr>
+        <tr>
+          <td><strong>Typewriter speed</strong></td>
+          <td>Faster = urgency/excitement. Slower = gravity/sadness. Pause = dread.</td>
+        </tr>
+        <tr>
+          <td><strong>Portrait expression</strong></td>
+          <td>Even subtle changes (eyebrow position, mouth curve) shift the player's emotion</td>
+        </tr>
+      </table>
+
+      <div class="master-tip">
+        <div class="master-tip-label">Advanced Technique — Typewriter Speed as Emotion</div>
+        <p>Consider varying your typewriter speed per emotional context. Normal dialog: 40ms/char. Excited Ajax: 25ms/char. Grave Chrysostomos: 60ms/char. The moment of reading the final letter: 80ms/char with 500ms pauses between sentences. The player's breathing will literally synchronize with the text speed. That's emotional contagion through interface design.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.6 The Cocktail Party Effect — Your Name in the Noise</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>At a loud party, you can't hear most conversations. But the moment someone says your name across the room, you hear it instantly. The brain has a priority filter for <strong>personally relevant information</strong>.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Make It Personal</div>
+        <p>Any time the game references something specific to the player's experience, attention spikes. This is why personalization is so powerful:</p>
+        <ul>
+          <li>The player chose to examine the painting → later an NPC says "I saw you looking at the painting"</li>
+          <li>The player failed at something → a character references it with encouragement</li>
+          <li>The player's name (if entered) appears in the game world</li>
+          <li>Real-world anchors: real places, real history, real cultural references</li>
+        </ul>
+        <p>For Galaxidi Adventure, the ultimate cocktail party effect: when players from Galaxidi play the game and recognize real locations, real names, real history. Their brains will light up in a way no fictional game can achieve.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">9.7 Nostalgia as Medicine — The Warm Glow</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Research by Constantine Sedikides (University of Southampton) shows that nostalgia is not just a sentimental feeling — it has measurable psychological benefits:</p>
+      <ul>
+        <li>Increases self-esteem and sense of meaning</li>
+        <li>Strengthens social connectedness</li>
+        <li>Reduces existential anxiety</li>
+        <li>Promotes generosity and empathy toward strangers</li>
+      </ul>
+
+      <p>Nostalgia is triggered by sensory cues: a specific song, a smell, a visual pattern, a phrase from childhood. It's the <strong>only emotion that is simultaneously happy and sad</strong> — which is why it's so powerful.</p>
+
+      <div class="principle">
+        <div class="principle-label">Principle — Nostalgia Layers</div>
+        <p>Your game can trigger nostalgia on multiple levels simultaneously:</p>
+        <ol>
+          <li><strong>Game nostalgia</strong> — VGA pixel art evokes Monkey Island / King's Quest memories for players who grew up with them</li>
+          <li><strong>Cultural nostalgia</strong> — Greek summer, coastal villages, family rituals for Greek players</li>
+          <li><strong>Universal nostalgia</strong> — Childhood adventure, family togetherness, discovering a secret place</li>
+          <li><strong>In-game nostalgia</strong> — Revisiting the exterior at the end, after everything that happened there</li>
+        </ol>
+        <p>When multiple nostalgia layers fire simultaneously, the effect is overwhelming. This is your secret weapon. No AAA studio can manufacture what you have naturally.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz" data-answer="1">
+    <div class="quiz-question">Dopamine is released MOST when...</div>
+    <ul class="quiz-options">
+      <li onclick="checkQuiz(this, 1)">A reward is received after a long wait</li>
+      <li onclick="checkQuiz(this, 1)">A reward is anticipated but uncertain</li>
+      <li onclick="checkQuiz(this, 1)">Multiple small rewards are given rapidly</li>
+      <li onclick="checkQuiz(this, 1)">The reward exceeds expectations</li>
+    </ul>
+    <div class="quiz-explanation"><strong>Dopamine is the anticipation molecule, not the pleasure molecule.</strong> It fires most intensely when a reward is expected but uncertain — "there might be something amazing behind this door." This is why mystery, exploration, and puzzle-solving are such powerful engagement drivers. The moment of receiving the reward actually produces a <em>different</em> neurochemical response (serotonin/endorphins). Design for anticipation, and the dopamine system does your work for you.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ CHAPTER 10: APPLIED TO YOUR GAME ═══════════════════════ -->
+<div class="chapter" id="ch10">
+  <div class="chapter-number">Chapter X</div>
+  <h2>Applied: Your Galaxidi Playbook <span class="greek">Εφαρμογή — Πράξη, Όχι Θεωρία</span></h2>
+
+  <p>Everything above, distilled into concrete actions for your game. These are ordered by impact — do them in order.</p>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.1 High-Impact Improvements (Do First)</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <ol>
+        <li><strong>Add SFX layer</strong> — Footsteps (4 surface types), item pickup, door transitions, puzzle-solve sting. This alone lifts immersion 20%.</li>
+        <li><strong>"Look Twice" responses</strong> — For every major object, add a second Look response that reveals character personality. Player looks at painting once: description. Looks again: Ntemis remembers his father had one like it.</li>
+        <li><strong>Campfire scene on terrace</strong> — After the cave/graveyard sequence, let the family return to the terrace at sunset. No puzzles. Just reflection. This is your emotional anchor.</li>
+        <li><strong>NPC cross-references</strong> — Have NPCs mention each other: "Athos told me you'd come." "The curator is a friend of mine." This costs 10 lines of dialog but makes Galaxidi feel like a living town.</li>
+        <li><strong>Strategic silence</strong> — Before the ghost appears, cut ALL sound for 2-3 seconds. After the treasure is found, do the same. Silence is your most powerful tool.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.2 Medium-Impact Polish (Do Next)</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <ol>
+        <li><strong>Wrong-verb comedy</strong> — Write funny responses for absurd actions. "Use fish on ghost" → Ajax: "I don't think he's hungry, μπαμπά." These delight players and reward experimentation.</li>
+        <li><strong>One unremarkable detail per scene</strong> — An object with no gameplay purpose that just rewards curiosity. A cat sleeping on a wall. A carved date in the windmill. A child's drawing in the museum guest book.</li>
+        <li><strong>Progressive hints</strong> — After 3 minutes stuck, the next time the player clicks the H key, make the hint more specific. After 5 minutes, very specific. Voice it through Ajax or Clio for immersion.</li>
+        <li><strong>Visvikis's musical leitmotif</strong> — A melody that recurs in three key scenes (museum, graveyard, epilogue) connecting the ghost's story across time.</li>
+        <li><strong>Item combination system</strong> — Even 3-4 combinable items would deepen the systemic layer: lantern + matches, stone + grave, chart + compass.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.3 Your Unique Strengths (Lean Into These)</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>Every game has strengths that make it unique. Yours are:</p>
+
+      <table class="technique-table">
+        <tr><th>Strength</th><th>Why It Matters</th><th>How to Amplify</th></tr>
+        <tr>
+          <td><strong>Real place, real history</strong></td>
+          <td>Authenticity that fictional settings can never match</td>
+          <td>Add more real historical details to Look responses. Players will Google Galaxidi and be amazed it's real.</td>
+        </tr>
+        <tr>
+          <td><strong>Family as protagonists</strong></td>
+          <td>Most adventure games star a lone hero. A family creates unique dynamics.</td>
+          <td>Let each family member react differently to the same object. Ajax is excited, Clio is analytical, Ntemis is nostalgic.</td>
+        </tr>
+        <tr>
+          <td><strong>Emotional core: solidarity</strong></td>
+          <td>The treasure is an idea, not gold. This is rare and powerful.</td>
+          <td>The final letter should make players cry. Build to it with smaller emotional moments throughout.</td>
+        </tr>
+        <tr>
+          <td><strong>Bilingual heritage</strong></td>
+          <td>The Greek dialog gives it a unique voice in the genre.</td>
+          <td>Use untranslatable Greek concepts (αλληλεγγύη, φιλότιμο) — let English players discover them.</td>
+        </tr>
+        <tr>
+          <td><strong>Procedural animation system</strong></td>
+          <td>Your walk/idle system is technically impressive for a single-file game.</td>
+          <td>Add more procedural effects: character gestures during dialog, looking at nearby objects, fidgeting when idle too long.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">8.4 The Immersion Checklist</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p>For every scene in your game, verify:</p>
+
+      <ul class="checklist">
+        <li>At least ONE thing is moving (particles, light, water, wind)</li>
+        <li>Ambient sound matches what the player sees</li>
+        <li>Entry dialog establishes mood in 2-3 lines</li>
+        <li>4-6 interactive objects minimum</li>
+        <li>At least one object rewards "Look" with character personality</li>
+        <li>At least one object has no puzzle purpose (environmental storytelling)</li>
+        <li>Wrong verbs give funny or character-driven responses (not "I can't do that")</li>
+        <li>NPCs reference events from other scenes</li>
+        <li>Music matches the emotional tone</li>
+        <li>Second "Look" gives a different response for key objects</li>
+        <li>Characters react to the scene, not just to objects</li>
+        <li>Exit transitions feel natural (not just "you walk to...")</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<div class="footer">
+  <p>Game Design Academy — Η Θάλασσα Θυμάται</p>
+  <p style="margin-top:8px;">Learning by building. Every lesson drawn from practice, not theory.</p>
+</div>
+
+</div><!-- /content -->
+
+<!-- ═══════════════════════ PROGRESS BAR ═══════════════════════ -->
+<div class="progress-bar">
+  <span class="progress-label">Progress</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-pct" id="progressPct">0%</span>
+</div>
+
+<script>
+// ── Lesson Toggle ──
+function toggleLesson(el) {
+  el.classList.toggle('expanded');
+  updateProgress();
+}
+
+// ── Emotion Card Toggle ──
+function toggleEmotion(el) {
+  el.classList.toggle('expanded');
+  updateProgress();
+}
+
+// ── Quiz System ──
+function checkQuiz(li, correctIdx) {
+  const quiz = li.closest('.quiz');
+  const options = quiz.querySelectorAll('.quiz-options li');
+  const correctLi = options[correctIdx];
+  const explanation = quiz.querySelector('.quiz-explanation');
+
+  // Disable all
+  options.forEach(o => o.classList.add('disabled'));
+
+  if (li === correctLi) {
+    li.classList.add('correct');
+  } else {
+    li.classList.add('wrong');
+    correctLi.classList.add('correct');
+  }
+
+  explanation.classList.add('visible');
+  updateProgress();
+}
+
+// ── Checklist Toggle ──
+document.querySelectorAll('.checklist li').forEach(li => {
+  li.addEventListener('click', () => {
+    li.classList.toggle('checked');
+    updateProgress();
+  });
+});
+
+// ── Progress Tracker ──
+function updateProgress() {
+  const lessons = document.querySelectorAll('.lesson');
+  const expanded = document.querySelectorAll('.lesson.expanded');
+  const quizzes = document.querySelectorAll('.quiz');
+  const answeredQuizzes = document.querySelectorAll('.quiz-explanation.visible');
+  const checkItems = document.querySelectorAll('.checklist li');
+  const checkedItems = document.querySelectorAll('.checklist li.checked');
+  const emotionCards = document.querySelectorAll('.emotion-card');
+  const expandedEmotions = document.querySelectorAll('.emotion-card.expanded');
+
+  const total = lessons.length + quizzes.length + checkItems.length + emotionCards.length;
+  const done = expanded.length + answeredQuizzes.length + checkedItems.length + expandedEmotions.length;
+
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+// ── Sticky Nav Active State ──
+const chapters = document.querySelectorAll('.chapter');
+const navLinks = document.querySelectorAll('.chapter-nav a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+chapters.forEach(ch => observer.observe(ch));
+
+// Init progress
+updateProgress();
+</script>
+</body>
+</html>
