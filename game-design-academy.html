@@ -306,6 +306,7 @@
   <a href="#ch8">VIII. Psychology</a>
   <a href="#ch9">IX. Neuroscience</a>
   <a href="#ch10">X. Applied</a>
+  <a href="#log">Progress</a>
 </nav>
 
 <!-- ═══════════════════════════════════════════ CONTENT ═══════════════════════════════════════ -->
@@ -352,8 +353,8 @@
 
       <div class="example">
         <div class="example-label">In Your Game — Galaxidi Adventure</div>
-        <p>Your game already has strong sensory immersion — per-scene ambient sound (waves, cicadas, cave drips), procedural visual effects (kitchen steam, graveyard fireflies), and a consistent VGA pixel art style. The narrative layer is solid too: the Visvikis treasure hunt creates genuine curiosity.</p>
-        <p>Where you can grow: the <strong>systemic</strong> layer. Right now verbs are mostly Look/Use/Talk. Adding item combinations and character-specific puzzle actions would deepen the feeling that the world has rules worth learning.</p>
+        <p>Your game has strong sensory immersion — per-scene ambient sound (waves, cicadas, cave drips), procedural visual effects (kitchen steam, graveyard fireflies), and a consistent VGA pixel art style. The narrative layer is solid too: the Visvikis treasure hunt creates genuine curiosity. <strong>Update (v0.1-pilot):</strong> All 13 scenes are now complete including treasure, new_era, and epilogue. Right-click default verbs (SCUMM-style) add systemic depth. Cat companion follows Clio across outdoor scenes. Custom cursor with verb-aware icons.</p>
+        <p>Where you can grow next: the <strong>systemic</strong> layer. Adding item combinations and character-specific puzzle actions (Ajax climbs, Clio observes) would deepen the feeling that the world has rules worth learning.</p>
       </div>
     </div>
   </div>
@@ -914,7 +915,7 @@
           <td><strong>SFX</strong></td>
           <td>Action feedback</td>
           <td>Confirms player actions, rewards interaction</td>
-          <td>Not yet implemented — your next frontier</td>
+          <td>Not yet implemented — next frontier (footsteps, item pickup, doors, puzzle-solve stings)</td>
         </tr>
       </table>
 
@@ -1459,11 +1460,11 @@
     </div>
     <div class="lesson-body">
       <ol>
-        <li><strong>Add SFX layer</strong> — Footsteps (4 surface types), item pickup, door transitions, puzzle-solve sting. This alone lifts immersion 20%.</li>
-        <li><strong>"Look Twice" responses</strong> — For every major object, add a second Look response that reveals character personality. Player looks at painting once: description. Looks again: Ntemis remembers his father had one like it.</li>
-        <li><strong>Campfire scene on terrace</strong> — After the cave/graveyard sequence, let the family return to the terrace at sunset. No puzzles. Just reflection. This is your emotional anchor.</li>
-        <li><strong>NPC cross-references</strong> — Have NPCs mention each other: "Athos told me you'd come." "The curator is a friend of mine." This costs 10 lines of dialog but makes Galaxidi feel like a living town.</li>
-        <li><strong>Strategic silence</strong> — Before the ghost appears, cut ALL sound for 2-3 seconds. After the treasure is found, do the same. Silence is your most powerful tool.</li>
+        <li><strong>Add SFX layer</strong> — Footsteps (4 surface types), item pickup, door transitions, puzzle-solve sting. This alone lifts immersion 20%. <em>(Still TODO — P1)</em></li>
+        <li><strong>"Look Twice" responses</strong> — For every major object, add a second Look response that reveals character personality. Player looks at painting once: description. Looks again: Ntemis remembers his father had one like it. <em>(Still TODO)</em></li>
+        <li><strong>Campfire scene on terrace</strong> — After the cave/graveyard sequence, let the family return to the terrace at sunset. No puzzles. Just reflection. This is your emotional anchor. <em>(Still TODO — would be powerful between graveyard and church)</em></li>
+        <li><strong>NPC cross-references</strong> — Have NPCs mention each other: "Athos told me you'd come." "The curator is a friend of mine." This costs 10 lines of dialog but makes Galaxidi feel like a living town. <em>(Still TODO)</em></li>
+        <li><strong>Strategic silence</strong> — Before the ghost appears, cut ALL sound for 2-3 seconds. After the treasure is found, do the same. Silence is your most powerful tool. <em>(Partially done — ghost sequence has environmental effects)</em></li>
       </ol>
     </div>
   </div>
@@ -1475,11 +1476,11 @@
     </div>
     <div class="lesson-body">
       <ol>
-        <li><strong>Wrong-verb comedy</strong> — Write funny responses for absurd actions. "Use fish on ghost" → Ajax: "I don't think he's hungry, μπαμπά." These delight players and reward experimentation.</li>
-        <li><strong>One unremarkable detail per scene</strong> — An object with no gameplay purpose that just rewards curiosity. A cat sleeping on a wall. A carved date in the windmill. A child's drawing in the museum guest book.</li>
-        <li><strong>Progressive hints</strong> — After 3 minutes stuck, the next time the player clicks the H key, make the hint more specific. After 5 minutes, very specific. Voice it through Ajax or Clio for immersion.</li>
-        <li><strong>Visvikis's musical leitmotif</strong> — A melody that recurs in three key scenes (museum, graveyard, epilogue) connecting the ghost's story across time.</li>
-        <li><strong>Item combination system</strong> — Even 3-4 combinable items would deepen the systemic layer: lantern + matches, stone + grave, chart + compass.</li>
+        <li><strong>Wrong-verb comedy</strong> — Write funny responses for absurd actions. "Use fish on ghost" → Ajax: "I don't think he's hungry, μπαμπά." These delight players and reward experimentation. <em>(Still TODO — P1)</em></li>
+        <li><strong>One unremarkable detail per scene</strong> — An object with no gameplay purpose that just rewards curiosity. A cat sleeping on a wall. A carved date in the windmill. A child's drawing in the museum guest book. <em>(Partially done — cat companion follows Clio in 10 scenes!)</em></li>
+        <li><strong>Progressive hints</strong> — After 3 minutes stuck, the next time the player clicks the H key, make the hint more specific. After 5 minutes, very specific. Voice it through Ajax or Clio for immersion. <em>(DONE — H key context-sensitive hint system implemented)</em></li>
+        <li><strong>Visvikis's musical leitmotif</strong> — A melody that recurs in three key scenes (museum, graveyard, epilogue) connecting the ghost's story across time. <em>(Partially done — 6 graveyard/ghost track variants exist, needs cross-scene leitmotif threading)</em></li>
+        <li><strong>Item combination system</strong> — Even 3-4 combinable items would deepen the systemic layer: lantern + matches, stone + grave, chart + compass. <em>(Still TODO — P2)</em></li>
       </ol>
     </div>
   </div>
@@ -1549,10 +1550,111 @@
   </div>
 </div>
 
+<!-- ═══════════════════════ PROGRESS LOG ═══════════════════════ -->
+<div class="chapter" id="log">
+  <div class="chapter-number">Development Progress</div>
+  <h2>Progress Log <span class="greek">Ημερολόγιο Προόδου</span></h2>
+
+  <p>Tracking which Academy recommendations have been implemented in the game. <strong>Last updated: 2026-02-18.</strong></p>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">Pilot Status (v0.1) — What's Done</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <table class="technique-table">
+        <tr><th>Area</th><th>Status</th><th>Details</th></tr>
+        <tr><td><strong>Scenes</strong></td><td style="color:#6db448">ALL 13 DONE</td><td>exterior, terrace, kitchen, port, museum, liotrivi, cave, church, church_interior, windmill, boat, graveyard, treasure, new_era + epilogue</td></tr>
+        <tr><td><strong>NPCs</strong></td><td style="color:#6db448">8 complete</td><td>All with portraits, dialog, scene integration. Chrysostomos added.</td></tr>
+        <tr><td><strong>Puzzle Chain</strong></td><td style="color:#6db448">VERIFIED</td><td>note → museum → liotrivi → windmill (lantern) → cave (jade) → graveyard (ghost) → church_interior (chart) → boat → treasure → new_era → epilogue</td></tr>
+        <tr><td><strong>Cutscenes</strong></td><td style="color:#6db448">12 scripted</td><td>Ken Burns animation on 26 anime stills</td></tr>
+        <tr><td><strong>Music</strong></td><td style="color:#6db448">41 tracks</td><td>2 variants per scene + 6 title themes</td></tr>
+        <tr><td><strong>Ambient Sound</strong></td><td style="color:#6db448">DONE</td><td>Procedural Web Audio: waves, wind, cicadas, seagulls, cave drips, church bell</td></tr>
+        <tr><td><strong>Visual Ambience</strong></td><td style="color:#6db448">DONE</td><td>Per-scene effects: steam, dust, god-rays, shadows, fireflies, candles, spray, formations, heat haze, light shafts, petals</td></tr>
+        <tr><td><strong>Walk Animation</strong></td><td style="color:#6db448">DONE</td><td>Procedural two-leg scissoring + compound sine idle</td></tr>
+        <tr><td><strong>Save/Load</strong></td><td style="color:#6db448">DONE</td><td>Auto-save on scene change, manual (S key), Continue on title</td></tr>
+        <tr><td><strong>Map</strong></td><td style="color:#6db448">DONE</td><td>M key fast-travel to visited locations</td></tr>
+        <tr><td><strong>Hints</strong></td><td style="color:#6db448">DONE</td><td>H key context-sensitive hint system</td></tr>
+        <tr><td><strong>Quest Tracking</strong></td><td style="color:#6db448">DONE</td><td>Q key panel, 14 tracked steps, progress bar</td></tr>
+        <tr><td><strong>Right-Click Verbs</strong></td><td style="color:#6db448">DONE</td><td>SCUMM-style contextmenu: Look for objects, Talk for NPCs, Open for doors</td></tr>
+        <tr><td><strong>Cat Companion</strong></td><td style="color:#6db448">DONE</td><td>Pixel-art orange tabby follows Clio across 10 outdoor scenes</td></tr>
+        <tr><td><strong>Custom Cursor</strong></td><td style="color:#6db448">DONE</td><td>Canvas-drawn cursor with verb-aware icons</td></tr>
+        <tr><td><strong>Ghost Sequence</strong></td><td style="color:#6db448">DONE</td><td>Full environmental effects, arm raise, wave, fade</td></tr>
+        <tr><td><strong>Y-Depth Sorting</strong></td><td style="color:#6db448">DONE</td><td>Characters + NPCs sorted by Y for proper overlap</td></tr>
+        <tr><td><strong>Code</strong></td><td>6,875 lines</td><td>Single monolithic index.html</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">Academy Recommendations — Status Tracker</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <p><strong>Implemented from Academy suggestions:</strong></p>
+      <ul class="checklist">
+        <li class="checked">Never a Still Frame — all scenes have procedural ambient effects</li>
+        <li class="checked">Ambient sound matches what player sees — waves, cicadas, drips per scene</li>
+        <li class="checked">Entry dialog establishes mood (all 13 scenes)</li>
+        <li class="checked">4-6+ interactive objects per scene</li>
+        <li class="checked">Multiple emotional channels (Ajax/Clio/Ntemis react differently)</li>
+        <li class="checked">Breathing spaces (boat ride to island, terrace)</li>
+        <li class="checked">Progressive hints voiced through characters (H key)</li>
+        <li class="checked">Flow channel — early simple verbs → mid NPC info → late cross-scene chains</li>
+        <li class="checked">Right-click default verbs (SCUMM-style systemic depth)</li>
+        <li class="checked">Cat companion as unremarkable environmental detail</li>
+        <li class="checked">Ghost sequence with environmental effects and strategic silence</li>
+        <li class="checked">Epilogue as emotional anchor (4 pages, click-to-advance)</li>
+      </ul>
+
+      <p style="margin-top:24px"><strong>Still TODO from Academy suggestions:</strong></p>
+      <ul class="checklist">
+        <li>SFX layer — footsteps, item pickup, door transitions, puzzle-solve sting (P1)</li>
+        <li>Wrong-verb comedy responses (P1)</li>
+        <li>"Look Twice" responses with character personality (P1)</li>
+        <li>Campfire/reflection scene on terrace (P1)</li>
+        <li>NPC cross-references ("Athos told me you'd come") (P1)</li>
+        <li>Item combination system (P2)</li>
+        <li>Character-specific puzzle actions — Ajax climbs, Clio observes (P2)</li>
+        <li>Visvikis leitmotif threading across museum → graveyard → epilogue (P1)</li>
+        <li>Bilingual system — Greek/English toggle (P1)</li>
+        <li>Clio's notebook / journal UI (P1)</li>
+        <li>NPC dialog branching (P1)</li>
+        <li>Comedy beats — Ajax autocorrect, cave echo (P1)</li>
+        <li>Variable typewriter speed per emotional context (P2)</li>
+        <li>Historical accuracy tags — VERIFIED / BASED ON / DRAMATIZED (P2)</li>
+        <li>Encyclopedia system — unlockable entries (P2)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lesson" onclick="toggleLesson(this)">
+    <div class="lesson-header">
+      <span class="lesson-title">Session Log</span>
+      <span class="lesson-toggle">+</span>
+    </div>
+    <div class="lesson-body">
+      <table class="technique-table">
+        <tr><th>Date</th><th>Session</th><th>Key Changes</th></tr>
+        <tr><td>2026-02-15</td><td>Initial creation</td><td>8 scenes, puzzle chain, SCUMM verb interface, dialog, inventory, mini-map</td></tr>
+        <tr><td>2026-02-15</td><td>MI2 graphics overhaul</td><td>Pixel art backgrounds, character sprites, portraits, Web Audio engine, iris wipes, save/load</td></tr>
+        <tr><td>2026-02-16</td><td>Animation overhaul</td><td>Procedural two-leg walk, compound sine idle, sub-pixel rendering, project reorganization</td></tr>
+        <tr><td>2026-02-16</td><td>Content expansion</td><td>Scenes expanded to 13, all NPCs + portraits, 12 cutscenes with Ken Burns on 26 anime stills, 41 music tracks</td></tr>
+        <tr><td>2026-02-17</td><td>End-to-end audit</td><td>Full puzzle chain verified, church candle bug fix, right-click verbs, church interior art, cat companion in 10 scenes, cicadas ambient</td></tr>
+        <tr><td>2026-02-17</td><td>Pilot polish</td><td>Quest panel (Q key), custom cursor, Y-depth sorting, hotspot highlights, debug removal, version stamp v0.1-pilot</td></tr>
+        <tr><td>2026-02-18</td><td>Academy update</td><td>Updated Game Design Academy to reflect pilot-complete state, added progress log</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
 <div class="footer">
   <p>Game Design Academy — Η Θάλασσα Θυμάται</p>
   <p style="margin-top:8px;">Learning by building. Every lesson drawn from practice, not theory.</p>
+  <p style="margin-top:8px; color: #8a7f6a;">Last updated: 2026-02-18 · Game version: v0.1-pilot</p>
 </div>
 
 </div><!-- /content -->
