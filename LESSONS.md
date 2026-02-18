@@ -80,3 +80,34 @@
 - Each scene needs: 4-6 interactive objects, at least one with story progression
 - Entry dialog establishes mood (2-4 lines)
 - Verb responses should reveal character personality, not just describe objects
+
+### When Replacing a Background Image — Coordinate Update Checklist
+
+When a scene's background image changes (e.g. `pixel-treasure-new.png`), hotspot coordinates WILL be wrong. Follow this procedure:
+
+1. **Open the game in Chrome** and navigate to the scene
+2. **Open console** → use mouse position to identify where objects are now:
+   ```js
+   // Add temporarily to drawGame() to see mouse coords in game space:
+   ctx.fillStyle='#0f0'; ctx.font='10px monospace';
+   ctx.fillText(`${Math.round(mouseGX)},${Math.round(mouseGY)}`, mouseGX+5, mouseGY-5);
+   ```
+3. **Update the calibration table** (search for `// Hotspot calibration per background`) — this overrides scene defaults:
+   ```js
+   sceneName: {
+     objectId: { x:__, y:__, w:__, h:__ },
+   }
+   ```
+4. **Check these properties** in the scene definition:
+   - `charPos` — where characters stand (must match ground level)
+   - `walkLine` — the walkable path points (y values = ground height)
+   - `walkBounds` — left/right limits of walkable area
+5. **Test every hotspot**: hover each object, check hover label appears correctly
+6. **Test exits**: walk to left/right edges, verify scene transitions
+
+**Key principle**: The calibration table at `(function calibrateHotspots(){...})()` is the SINGLE place to update coordinates. Don't edit the scene definition directly — the calibration table overrides it.
+
+### Character Name Consistency
+- Captain's name is **Λουκάς Βισβίκης** (Loukas Visvikis) everywhere
+- "Λ.Β." = Λουκάς Βισβίκης — never Λεωνίδας, never Λεονάρδος
+- When adding new dialogue mentioning the captain, grep for existing lines to match

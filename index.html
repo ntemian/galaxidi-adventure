@@ -250,7 +250,7 @@ const npcChars = {
   athos:   { scene: 'liotrivi', x: 510, y: 375, dir: -1, visible: true, scale: 0.85 },
   stathis: { scene: 'port', x: 80, y: 343, dir: 1, visible: true, scale: 0.85 },
   akis:    { scene: 'port', x: 150, y: 342, dir: 1, visible: true, scale: 0.85 },
-  giannis: { scene: 'windmill', x: 150, y: 340, dir: 1, visible: true, scale: 0.85 },
+  giannis: { scene: 'windmill', x: 150, y: 378, dir: 1, visible: true, scale: 0.85 },
   curator: { scene: 'museum', x: 230, y: 377, dir: 1, visible: true, scale: 0.85 },
   papas:   { scene: 'church_interior', x: 480, y: 375, dir: -1, visible: true, scale: 0.85 },
   chrysostomos: { scene: 'boat', x: 100, y: 375, dir: 1, visible: true, scale: 0.85 },
@@ -903,7 +903,7 @@ const scenes = {
     objects: [
       { id:'visvikis_grave', x:355, y:248, w:80, h:90, label:'Τάφος Βισβίκη',
         verbs: {
-          look:[{s:'',t:'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίκης».'},{s:'ΚΛΕΙΩ',t:'Κοίτα κάτω — «Η θάλασσα θυμάται».'},{s:'ΑΙΑΣ',t:'Αυτός είναι ο καπετάνιος από το γράμμα!'}],
+          look:[{s:'',t:'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Καπετάν Λουκάς Βισβίκης».'},{s:'ΚΛΕΙΩ',t:'Κοίτα κάτω — «Η θάλασσα θυμάται».'},{s:'ΑΙΑΣ',t:'Αυτός είναι ο καπετάνιος από το γράμμα!'}],
           use: () => {
             if (state.flags.ghost_summoned) return [{s:'',t:'Η πέτρα ήδη τοποθετήθηκε. Η πλάκα λάμπει αχνά.'}];
             if (!state.inv.find(i => i.id === 'green_stone')) return [{s:'ΝΤΕΜΗΣ',t:'Λείπει κάτι. Η εσοχή στην πλάκα... σαν να περιμένει κάτι.'}];
@@ -1011,12 +1011,10 @@ const scenes = {
             if(state.flags.chest_opened) return [{s:'',t:'Ο θησαυρός ήδη βγήκε στο φως.'}];
             if(!state.inv.find(i=>i.id==='shovel')) return [{s:'ΑΙΑΣ',t:'Πώς θα σκάψουμε; Χρειαζόμαστε φτυάρι!'},{s:'ΝΤΕΜΗΣ',t:'Ποιος θα είχε φτυάρι εδώ γύρω...'}];
             removeInv('shovel');
-            // Dig sequence → silence pocket → metallic hit → chest → cutscene → letter
+            // Dig sequence — quick, then straight to cutscene
             playSFX('dig');
             showDlg([
-              {s:'',t:'Πατέρας κι γιος σκάβουν μαζί. Σκληρό χώμα, ρίζες θυμαριού, πέτρες.'},
-              {s:'ΚΛΕΙΩ',t:'Κι αν δεν υπάρχει τίποτα;'},
-              {s:'ΝΤΕΜΗΣ',t:'Τότε ήρθαμε για τη θέα.'},
+              {s:'',t:'Σκάβουν μαζί. Σκληρό χώμα, ρίζες θυμαριού...'},
             ], () => {
               // Silence pocket — fade ALL audio before the CLANG
               fadeAllAudio(0, 600, () => {
@@ -1026,58 +1024,37 @@ const scenes = {
                 }, 800);
               });
               showDlg([
-                {s:'',t:'ΚΛΑΝΓΚ! Το φτυάρι χτυπάει κάτι σκληρό.'},
-                {s:'ΑΙΑΣ',t:'ΧΤΥΠΗΣΕ! ΚΑΤΙ ΧΤΥΠΗΣΕ!'},
-                {s:'ΚΛΕΙΩ',t:'Βλέπω σίδερο... μαντάλια! Είναι κιβώτιο!'},
-                {s:'ΑΙΑΣ',t:'ΒΡΗΚΑΜΕ! Μπαμπά, βρήκαμε!'},
+                {s:'',t:'ΚΛΑΝΓΚ! Σίδερο κάτω από το χώμα.'},
+                {s:'ΑΙΑΣ',t:'ΒΡΗΚΑΜΕ! Κιβώτιο!'},
               ], () => {
-                // Pause before opening
-                showDlg([
-                  {s:'',t:'Ένα σιδερόδετο ξύλινο κιβώτιο αναδύεται από τη γη. Εκατόν είκοσι χρόνια κάτω από τη γη.'},
-                  {s:'ΝΤΕΜΗΣ',t:'Εκατόν είκοσι χρόνια περίμενε. Μπορεί να περιμένει κι ένα λεπτό ακόμα.'},
-                  {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται.'},
-                  {s:'ΝΤΕΜΗΣ',t:'Ας δούμε τι μας άφησε ο Βισβίκης.'},
-                ], () => {
-                  // Open chest → cutscene
-                  state.flags.chest_opened=1;
-                  playSFX('chest');
+                // Straight to cutscene — let the visuals tell the story
+                state.flags.chest_opened=1;
+                playSFX('chest');
+                document.getElementById('ui-panel').classList.remove('on');
+                document.getElementById('action-line').classList.remove('on');
+                const origComplete = cutscenes.treasure.onComplete;
+                cutscenes.treasure.onComplete = () => {
+                  if(origComplete) origComplete();
+                  state.phase = 'playing';
+                  document.getElementById('ui-panel').classList.add('on');
+                  document.getElementById('action-line').classList.add('on');
+                  state.flags.letter_read=1;
+                  playSFX('paper');
                   showDlg([
-                    {s:'',t:'Το καπάκι ανοίγει αργά... Χρυσό φως ξεχύνεται.'},
-                    {s:'',t:'Νομίσματα — Οθωμανικά, Βενετικά, αρχαία. Ένα κολιέ νεφρίτη. Ένα βιβλίο.'},
-                    {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις υπογραφές. Σαν ομάδα.'},
-                    {s:'',t:'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.'},
-                  ], () => {
-                    // Launch cutscene
-                    document.getElementById('ui-panel').classList.remove('on');
-                    document.getElementById('action-line').classList.remove('on');
-                    const origComplete = cutscenes.treasure.onComplete;
-                    cutscenes.treasure.onComplete = () => {
-                      if(origComplete) origComplete();
-                      state.phase = 'playing';
-                      document.getElementById('ui-panel').classList.add('on');
-                      document.getElementById('action-line').classList.add('on');
-                      // After cutscene, show the letter reading & family decision
-                      state.flags.letter_read=1;
-                      playSFX('paper');
-                      showDlg([
-                        {s:'ΝΤΕΜΗΣ',t:'«Αυτός ο θησαυρός δεν είναι δικός μου. Είναι του Γαλαξειδίου.»', auto:3.5},
-                        {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»', auto:4},
-                        {s:'',t:'Σιωπή. Κύματα και γλάροι.', auto:3},
-                        {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. ΕΜΕΙΣ το βρήκαμε.'},
-                        {s:'ΝΤΕΜΗΣ',t:'Αίαντα. Τι έλεγε η αλληλασφάλεια;'},
-                        {s:'ΑΙΑΣ',t:'...Ότι κανείς δεν ταξιδεύει μόνος. Οκ. Το δίνουμε.'},
-                        {s:'ΝΤΕΜΗΣ',t:'Όλο. Αλλά εσύ κράτα το κολιέ, Κλειώ.'},
-                        {s:'ΚΛΕΙΩ',t:'Η θάλασσα μου το χάρισε.'},
-                        {s:'ΑΙΑΣ',t:'Κι εγώ; Τι κρατάω;'},
-                        {s:'ΝΤΕΜΗΣ',t:'Τη μνήμη. Κι αυτό αξίζει περισσότερο.'},
-                        {s:'ΑΙΑΣ',t:'...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.'},
-                        {s:'',t:'Ώρα να γυρίσουν στο Γαλαξίδι.'},
-                      ]);
-                    };
-                    playSFX('fanfare');
-                    startCutscene('treasure');
-                  });
-                });
+                    {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. — Καπ. Λ. Βισβίκης»', auto:4},
+                    {s:'',t:'Σιωπή. Κύματα και γλάροι.', auto:3},
+                    {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. ΕΜΕΙΣ το βρήκαμε.'},
+                    {s:'ΝΤΕΜΗΣ',t:'Κανείς δεν ταξιδεύει μόνος. Θα το δώσουμε στο Γαλαξίδι.'},
+                    {s:'ΝΤΕΜΗΣ',t:'Κλειώ, κράτα το κολιέ. Η θάλασσα σου το χάρισε.'},
+                    {s:'ΚΛΕΙΩ',t:'Η θάλασσα μου το χάρισε!'},
+                    {s:'ΑΙΑΣ',t:'Κι εγώ; Τι κρατάω;'},
+                    {s:'ΝΤΕΜΗΣ',t:'Τη μνήμη. Κι αυτό αξίζει περισσότερο.'},
+                    {s:'ΑΙΑΣ',t:'...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.'},
+                    {s:'',t:'Ώρα να γυρίσουν στο Γαλαξίδι.'},
+                  ]);
+                };
+                playSFX('fanfare');
+                startCutscene('treasure');
               });
             });
             return [];
@@ -1382,6 +1359,20 @@ const epiloguePages = [
   'Να βρούμε αυτά που μας ενώνουν.\nΌχι αυτά που μας χωρίζουν.\n\nΚράτα την αλληλεγγύη.\nΆλλαξε το πλοίο.',
   'Η θάλασσα θυμάται.\nΚι εμείς τώρα,\nαλλάζουμε μαζί της.',
   'ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ\n\n104 υπογραφές.\nΤότε και τώρα.\n\n\nΓια τον Αίαντα και την Κλειώ.',
+
+  // ── END CREDITS ──
+
+  '— Η  Θ Α Λ Α Σ Σ Α  Θ Υ Μ Α Τ Α Ι —\n\nΈνα παιχνίδι αγάπης\nαπό έναν αφοσιωμένο Γαλαξιδιώτη.',
+
+  '— ΠΡΩΤΑΓΩΝΙΣΤΕΣ —\n\nΝΤΕΜΗΣ\nΑΙΑΣ\nΚΛΕΙΩ',
+
+  '— ΧΑΡΑΚΤΗΡΕΣ —\n\nΆΚΗΣ — Ντοκιμαντερίστας & Φλογεράς\nΣΤΑΘΗΣ — Κιθαρίστας\nΆΘΟΣ — Δικηγόρος & Ιδιοκτήτης Λιοτριβιού\nΓΙΑΝΝΗΣ — Ο Μυλωνάς\nΕΠΙΜΕΛΗΤΗΣ — Ναυτικό Μουσείο\nΠΑΠΑΣ — Ιερέας Αγίου Νικολάου\nΧΡΥΣΟΣΤΟΜΟΣ — Ναυτικός της Ελπίδας',
+
+  '— —\n\nΚΑΠΕΤΑΝ ΛΟΥΚΑΣ ΒΙΣΒΙΚΗΣ\n\nΤο φάντασμα που περίμενε\n120 χρόνια.',
+
+  'Οποιαδήποτε ομοιότητα\nμε πραγματικά πρόσωπα\nείναι απολύτως σκόπιμη\nκαι τους ευχαριστούμε.',
+
+  'Ευχαριστούμε το Γαλαξίδι\nπου μας δίδαξε ότι\n\nη θάλασσα θυμάται.\n\n\n· · ·',
 ];
 
 // ════════════════════════════════════════════════════════════
@@ -5094,7 +5085,7 @@ function hitTestExit(gx, gy) {
 // ════════════════════════════════════════════════════════════
 const voiceAudio = new Audio();
 voiceAudio.volume = 0.8;
-voiceAudio.onerror = () => { voiceFinished = true; console.error('Failed to load voice:', voiceAudio.src); };
+voiceAudio.onerror = () => { voiceFinished = true; console.warn('Failed to load voice:', voiceAudio.src); };
 
 const VOICE_MAP = {
   'Ξύλινη πόρτα βαμμένη μπλε. Το χρώμα του Αιγαίου.': 'voice/narrator/001.mp3',
@@ -5562,7 +5553,7 @@ const VOICE_MAP = {
   'Η θάλασσα δεν σε ρωτάει τι αγαπάς. Αλλάζει κι εσύ αλλάζεις μαζί της.': 'voice/chrysostomos/008.mp3',
   'Γνώριζες τον Βισβίκη;': 'voice/ntemis/070.mp3',
   'Ήταν ο τελευταίος ρομαντικός. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.': 'voice/chrysostomos/009.mp3',
-  'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίκης».': 'voice/narrator/157.mp3',
+  'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Καπετάν Λουκάς Βισβίκης».': 'voice/narrator/157.mp3',
   'Μαρμάρινοι σταυροί και πλάκες. Χαραγμένα πλοία στις πέτρες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς.': 'voice/narrator/158.mp3',
   'Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι στο φεγγαρόφωτο.': 'voice/narrator/159.mp3',
   'Μαρμάρινος άγγελος με σκυμμένο κεφάλι. Προσεύχεται πάνω από τον τάφο του Βισβίκη.': 'voice/narrator/160.mp3',
@@ -8432,7 +8423,7 @@ document.addEventListener('keydown', e => {
 // ════════════════════════════════════════════════════════════
 const bgm = document.getElementById('bgm');
 bgm.volume = 0.25;
-bgm.onerror = () => console.error('Failed to load music:', bgm.src);
+bgm.onerror = () => console.warn('Failed to load music:', bgm.src);
 
 // Per-scene music map
 const sceneMusic = {
@@ -9279,9 +9270,106 @@ document.getElementById('epilogue-screen').onclick = () => {
 };
 
 // ════════════════════════════════════════════════════════════
+// SCENE TESTER — URL params to jump directly into scenes/cutscenes
+// Usage:
+//   ?scene=port              — jump to port scene
+//   ?scene=cave&flags=key_found,vote_read  — with flags pre-set
+//   ?scene=church_interior&inv=green_stone,lantern — with inventory
+//   ?cutscene=arrival        — play a cutscene directly
+//   ?scene=graveyard&visited=exterior,port,cave — mark scenes visited
+//   ?scene=treasure&all      — all flags + all inventory (full progress)
+// ════════════════════════════════════════════════════════════
+function parseTestParams() {
+  const p = new URLSearchParams(window.location.search);
+  if (!p.has('scene') && !p.has('cutscene')) return null;
+  return {
+    scene: p.get('scene'),
+    cutscene: p.get('cutscene'),
+    flags: p.get('flags') ? p.get('flags').split(',') : [],
+    inv: p.get('inv') ? p.get('inv').split(',') : [],
+    visited: p.get('visited') ? p.get('visited').split(',') : [],
+    all: p.has('all'),
+    nofirstvisit: p.has('nofirstvisit'),
+  };
+}
+
+// All known inventory items for &all mode
+const ALL_INV = [
+  { id: 'brass_key', label: 'Χάλκινο Κλειδί', desc: 'An old brass key' },
+  { id: 'visvikis_letter', label: 'Γράμμα Βισβίζη', desc: 'Letter from Visvikis' },
+  { id: 'lantern', label: 'Φανάρι', desc: 'A brass lantern' },
+  { id: 'green_stone', label: 'Πράσινη Πέτρα', desc: 'Green jade stone' },
+  { id: 'nautical_chart', label: 'Ναυτικός Χάρτης', desc: 'Nautical chart with X' },
+];
+
+// All known flags for &all mode
+const ALL_FLAGS = [
+  'photo_seen','key_found','drawer_open','vote_read','candle_lit',
+  'threshold_done','dolphins','lantern_given','green_stone_found',
+  'ghost_done','chart_found','treasure_open',
+];
+
+function applyTestParams(params) {
+  // Set flags
+  const flagList = params.all ? ALL_FLAGS : params.flags;
+  for (const f of flagList) state.flags[f] = 1;
+
+  // Set inventory
+  if (params.all) {
+    state.inv = [...ALL_INV];
+  } else {
+    for (const id of params.inv) {
+      const known = ALL_INV.find(i => i.id === id);
+      if (known) state.inv.push({ ...known });
+      else state.inv.push({ id, label: id, desc: id });
+    }
+  }
+
+  // Mark scenes as visited
+  const visitList = params.all
+    ? Object.keys(scenes)
+    : params.visited;
+  for (const v of visitList) state.visited.add(v);
+
+  // If nofirstvisit, mark target scene as visited to skip entry dialog
+  if (params.nofirstvisit && params.scene) {
+    state.visited.add(params.scene);
+  }
+
+  state.musicOn = true;
+  renderInvUI();
+
+  if (params.cutscene) {
+    if (cutscenes[params.cutscene]) {
+      startCutscene(params.cutscene);
+    } else {
+      console.warn('[SceneTester] Unknown cutscene:', params.cutscene,
+        '— available:', Object.keys(cutscenes).join(', '));
+    }
+  } else if (params.scene) {
+    if (scenes[params.scene]) {
+      state.phase = 'playing';
+      startScene(params.scene);
+    } else {
+      console.warn('[SceneTester] Unknown scene:', params.scene,
+        '— available:', Object.keys(scenes).join(', '));
+    }
+  }
+
+  console.log('%c[SceneTester]%c Active — scene:%c ' + (params.scene || '-') +
+    ' %cflags: ' + Object.keys(state.flags).join(',') +
+    ' inv: ' + state.inv.map(i => i.id).join(','),
+    'color:#0f0;font-weight:bold', 'color:#ccc', 'color:#ff0', 'color:#888');
+}
+
+// ════════════════════════════════════════════════════════════
 // BOOT
 // ════════════════════════════════════════════════════════════
 loadAllAssets().then(() => {
+  const testParams = parseTestParams();
+  if (testParams) {
+    applyTestParams(testParams);
+  }
   requestAnimationFrame(gameLoop);
 });
 </script>
