@@ -7,6 +7,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
   body { background: #000; overflow: hidden; font-family: 'Press Start 2P', monospace; display: flex; flex-direction: column; height: 100vh; }
 
@@ -313,7 +314,7 @@ async function loadAllAssets() {
     loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
     loadImg('cutscene-epilogue-signing', 'assets/cutscene-epilogue-signing.png'),
     loadImg('map-bg', 'assets/map-galaxidi.png'),
-    loadImg('intro-parchment', 'assets/intro-parchment.png'),
+    loadImg('intro-parchment', 'assets/intro-parchment-v2.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -896,49 +897,189 @@ const scenes = {
   },
 
   // ── SCENE 10: THE TREASURE ──
+  // Expanded 6-phase structure:
+  // Phase 1: Arrival & atmospheric exploration (cross, thyme, panorama, seagulls, chapel)
+  // Phase 2: Puzzle — USE chart ON cross → reveals dig spot
+  // Phase 3: Multi-stage dig (4 clicks) → chest emerges → "ΒΡΗΚΑΜΕ!"
+  // Phase 4: Emotional pause before opening
+  // Phase 5: OPEN chest → expanded 5-frame cutscene
+  // Phase 6: Read letter → family decision dialogue
   treasure: {
     label: 'Ο ΘΗΣΑΥΡΟΣ', bg: 'bg-treasure',
     walkLine: [[50, 380], [320, 377], [560, 380]],
-    walkBounds: [50, 560], // island terrain bounds
+    walkBounds: [50, 560],
     charPos: { ntemis: { x: 320, y: 377 }, ajax: { x: 410, y: 379 }, clio: { x: 230, y: 378 } },
     objects: [
+      // ── Phase 1: Arrival — atmospheric exploration ──
+      { id:'stone_cross', x:420, y:200, w:80, h:100, label:'Πέτρινος σταυρός',
+        verbs: {
+          look:()=>{
+            if(state.flags.cross_examined) return [{s:'',t:'Ο σταυρός του Βισβίκη. «Λ.Β. 1860». Πέντε βήματα νοτιοδυτικά.'},{s:'ΚΛΕΙΩ',t:'Ξέρουμε πού να σκάψουμε.'}];
+            state.flags.cross_examined=1;
+            return [
+              {s:'',t:'Ένας χαμηλός πέτρινος σταυρός. Φαγωμένος από τον χρόνο και την αλμύρα.'},
+              {s:'ΚΛΕΙΩ',t:'Κοίτα — γράμματα! Αλλά δεν φαίνονται καλά...'},
+              {s:'ΑΙΑΣ',t:'Λ... Β... 1860!'},
+              {s:'ΝΤΕΜΗΣ',t:'Λ.Β. — Λεονάρδος Βισβίκης. Ο ίδιος έστησε αυτόν τον σταυρό.'},
+              {s:'ΚΛΕΙΩ',t:'Εκατόν είκοσι χρόνια εδώ. Μόνος.'},
+            ];
+          },
+          use:()=>{
+            if(state.flags.spot_found) return [{s:'',t:'Ο χάρτης ήδη μας έδειξε. Πέντε βήματα νοτιοδυτικά.'}];
+            if(!state.inv.find(i=>i.id==='nautical_chart')) return [{s:'ΝΤΕΜΗΣ',t:'Ο σταυρός. Αρχή. Αλλά χρειάζομαι τον χάρτη για τα υπόλοιπα.'}];
+            if(!state.flags.cross_examined) return [{s:'ΝΤΕΜΗΣ',t:'Ας τον εξετάσω πρώτα.'}];
+            state.flags.spot_found=1;
+            return [
+              {s:'ΝΤΕΜΗΣ',t:'Ο χάρτης λέει: «Κάτω από τον σταυρό, πέντε βήματα νοτιοδυτικά. Σκάψε.»'},
+              {s:'ΑΙΑΣ',t:'Πέντε βήματα! Ένα... δύο... τρία... τέσσερα... πέντε!'},
+              {s:'ΚΛΕΙΩ',t:'Εδώ! Το χώμα εδώ είναι πιο σκούρο. Σαν να το έχουν σκάψει ξανά.'},
+              {s:'ΝΤΕΜΗΣ',t:'Ακριβώς εδώ.'},
+            ];
+          },
+        }},
+      { id:'wild_thyme', x:480, y:300, w:120, h:60, label:'Θυμάρι',
+        verbs: { look:[
+          {s:'',t:'Θυμάρι και αγριολούλουδα φυτρώνουν ανάμεσα στις πέτρες. Μυρωδιά Ελλάδας.'},
+          {s:'ΚΛΕΙΩ',t:'Σαν να μας περίμενε το νησί.'},
+        ]}},
+      { id:'panorama', x:0, y:40, w:350, h:120, label:'Θέα στο Γαλαξίδι',
+        verbs: { look:[
+          {s:'',t:'Το Γαλαξίδι λάμπει στον πρωινό ήλιο απέναντι. Σπίτια, εκκλησίες, το λιμάνι. Σπίτι.'},
+          {s:'ΝΤΕΜΗΣ',t:'Από εδώ τα έβλεπε όλα ο Βισβίκης. Τη θάλασσα, την πόλη, τα πλοία.'},
+          {s:'ΑΙΑΣ',t:'Γυρνάμε πίσω πλουσιότεροι. Αλλά όχι όπως νόμιζα.'},
+        ]}},
+      { id:'seagulls', x:150, y:0, w:200, h:60, label:'Γλάροι',
+        verbs: { look:[
+          {s:'',t:'Δύο γλάροι κυκλοφορούν πάνω από τα βράχια. Φωνάζουν σαν να ανακοινώνουν κάτι.'},
+          {s:'ΚΛΕΙΩ',t:'Κι αυτοί ψάχνουν θησαυρό;'},
+          {s:'ΑΙΑΣ',t:'Ψάρια ψάχνουν. Αλλά ναι, είναι σαν πειρατές.'},
+        ]}},
+      { id:'chapel_ext', x:500, y:100, w:140, h:200, label:'Εκκλησάκι Αγ. Γεωργίου',
+        verbs: {
+          look:[
+            {s:'',t:'Λευκό εκκλησάκι με μπλε τρούλο. Ο Άγιος Γεώργιος φυλάει αυτόν τον βράχο εδώ και αιώνες.'},
+            {s:'ΚΛΕΙΩ',t:'Τι ωραίο... Σαν ζαχαρωτό!'},
+          ],
+          open:[{s:'',t:'Η πόρτα κλειδωμένη. Αλλά δεν ήρθαμε για λειτουργία.'}],
+        }},
+
+      // ── Phase 2–3: Dig spot (meaningful after chart used on cross) ──
+      { id:'dig_spot', x:80, y:300, w:160, h:70, label:'Σημείο ανασκαφής',
+        verbs: {
+          look:()=>{
+            if(!state.flags.spot_found) return [{s:'',t:'Χώμα και πέτρες. Τίποτα ιδιαίτερο — χωρίς τον χάρτη.'}];
+            if(state.flags.chest_visible) return [{s:'',t:'Η τρύπα στη γη. Πέντε βήματα νοτιοδυτικά από τον σταυρό, ακριβώς όπως έγραψε ο Βισβίκης.'}];
+            if((state.flags.dig_stage||0)>=1) return [{s:'',t:'Το χώμα γίνεται πιο σκληρό. Κοντεύουμε;'}];
+            return [{s:'',t:'Σκούρο χώμα, πατημένο. Πέντε βήματα ακριβώς νοτιοδυτικά. Εδώ λέει ο χάρτης.'},{s:'ΑΙΑΣ',t:'Τι περιμένουμε; ΣΚΑΒΟΥΜΕ!'}];
+          },
+          use:()=>{
+            if(!state.flags.spot_found) return [{s:'ΝΤΕΜΗΣ',t:'Πρέπει να βρούμε το σωστό σημείο πρώτα. Ψάξε τον σταυρό.'}];
+            if(state.flags.chest_visible) return [{s:'',t:'Ο θησαυρός ήδη βγήκε στο φως.'}];
+            const stage = state.flags.dig_stage || 0;
+            if(stage===0){
+              state.flags.dig_stage=1;
+              playSFX('dig');
+              return [
+                {s:'',t:'Ο Ντέμης σκάβει. Σκληρό χώμα, ρίζες θυμαριού, πέτρες.'},
+                {s:'ΑΙΑΣ',t:'Άσε κι εμένα! Ξέρω να σκάβω!'},
+                {s:'ΝΤΕΜΗΣ',t:'Έλα. Μαζί.'},
+              ];
+            }
+            if(stage===1){
+              state.flags.dig_stage=2;
+              playSFX('dig');
+              return [
+                {s:'',t:'Πιο βαθιά. Πέτρες κι υγρασία. Ο Αίαντας σκάβει δίπλα στον πατέρα του.'},
+                {s:'ΚΛΕΙΩ',t:'Κι αν δεν υπάρχει τίποτα;'},
+                {s:'ΝΤΕΜΗΣ',t:'Τότε ήρθαμε για τη θέα.'},
+                {s:'ΚΛΕΙΩ',t:'...Η θέα είναι αρκετά καλή.'},
+              ];
+            }
+            if(stage===2){
+              state.flags.dig_stage=3;
+              playSFX('metallic_hit');
+              return [
+                {s:'',t:'ΚΛΑΝΓΚ! Το φτυάρι χτυπάει κάτι σκληρό.'},
+                {s:'ΑΙΑΣ',t:'ΧΤΥΠΗΣΕ! ΚΑΤΙ ΧΤΥΠΗΣΕ!'},
+                {s:'ΝΤΕΜΗΣ',t:'Σιγά... σιγά. Μην το σπάσεις.'},
+                {s:'ΚΛΕΙΩ',t:'Εγώ! Εγώ θα καθαρίσω!'},
+              ];
+            }
+            if(stage===3){
+              state.flags.dig_stage=4;
+              state.flags.chest_visible=1;
+              playSFX('dig');
+              showDlg([
+                {s:'',t:'Η Κλειώ γονατίζει, καθαρίζει το χώμα με τα χέρια. Σιδερόδετες γωνίες αναδύονται.'},
+                {s:'ΚΛΕΙΩ',t:'Βλέπω σίδερο... μαντάλια! Είναι κιβώτιο!'},
+                {s:'',t:'Αργά, ένα σιδερόδετο ξύλινο κιβώτιο αναδύεται από τη γη. Εκατόν είκοσι χρόνια κάτω από τη γη.'},
+                {s:'ΑΙΑΣ',t:'ΒΡΗΚΑΜΕ! Μπαμπά, βρήκαμε!'},
+                {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται...'},
+              ]);
+              return [];
+            }
+            return [{s:'',t:'Ήδη σκάψαμε εδώ.'}];
+          },
+        }},
+
+      // ── Phase 4–5: The chest (meaningful after digging complete) ──
       { id:'sea_chest', x:80, y:260, w:180, h:110, label:'Θαλασσινό κιβώτιο',
         verbs: {
           look:()=>{
+            if(!state.flags.chest_visible) return [{s:'',t:'Δεν βλέπεις κιβώτιο εδώ. Μόνο χώμα και πέτρες.'}];
             if(state.flags.chest_opened) return [{s:'',t:'Το κιβώτιο ανοιχτό. Ο θησαυρός του Βισβίκη αποκαλύφθηκε.'}];
-            return [{s:'',t:'Σιδερόδετο ξύλινο κιβώτιο. Εκατόν είκοσι χρόνια κάτω από τη γη. Ο Βισβίκης έχτιζε πράγματα που αντέχουν.'},{s:'ΑΙΑΣ',t:'Ανοίξτε το! ΑΝΟΙΞΤΕ ΤΟ!'}];
+            return [
+              {s:'',t:'Σιδερόδετο ξύλινο κιβώτιο. Ο Βισβίκης έχτιζε πράγματα που αντέχουν.'},
+              {s:'ΑΙΑΣ',t:'Ανοίξτε το! ΑΝΟΙΞΤΕ ΤΟ!'},
+            ];
           },
           open:()=>{
+            if(!state.flags.chest_visible) return [{s:'',t:'Δεν βλέπεις κιβώτιο εδώ.'}];
             if(state.flags.chest_opened) return [{s:'',t:'Ήδη ανοιχτό.'}];
-            state.flags.chest_opened=1;
+            // ── Phase 4: The pause — a moment of stillness before opening ──
             showDlg([
-              {s:'',t:'Το σιδερένιο κλείδωμα υποχωρεί. Το καπάκι ανοίγει αργά...', sfx:'chest'},
-              {s:'ΚΛΕΙΩ',t:'Χρυσάφι!'},
-              {s:'',t:'Νομίσματα — Οθωμανικά, Βενετικά, αρχαία Ελληνικά. Ένας θησαυρός αιώνων.'},
-              {s:'',t:'Ένα κολιέ από νεφρίτη. Ταιριάζει τέλεια με την πράσινη πέτρα.'},
-              {s:'ΑΙΑΣ',t:'Κοίτα! Ένα βιβλίο!'},
-              {s:'',t:'Το πρωτότυπο βιβλίο της αλληλασφάλειας. 104 υπογραφές καπεταναίων, 1860.'},
-              {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις. Σαν ομάδα.'},
-              {s:'',t:'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.'},
+              {s:'',t:'Σιωπή. Μόνο ο άνεμος και τα κύματα.'},
+              {s:'ΝΤΕΜΗΣ',t:'Εκατόν είκοσι χρόνια περίμενε. Μπορεί να περιμένει κι ένα λεπτό ακόμα.'},
+              {s:'ΑΙΑΣ',t:'Μπαμπά... νομίζεις ο παππούς ήξερε;'},
+              {s:'ΝΤΕΜΗΣ',t:'Νομίζω ότι μας οδήγησε εδώ.'},
+              {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται.'},
+              {s:'ΝΤΕΜΗΣ',t:'Ας δούμε τι μας άφησε ο Βισβίκης.'},
             ], () => {
-              document.getElementById('ui-panel').classList.remove('on');
-              document.getElementById('action-line').classList.remove('on');
-              const origComplete = cutscenes.treasure.onComplete;
-              cutscenes.treasure.onComplete = () => {
-                if(origComplete) origComplete();
-                state.phase = 'playing';
-                document.getElementById('ui-panel').classList.add('on');
-                document.getElementById('action-line').classList.add('on');
-              };
-              playSFX('fanfare');
-              startCutscene('treasure');
+              // ── Phase 5: Chest opens → expanded cutscene ──
+              state.flags.chest_opened=1;
+              playSFX('chest');
+              showDlg([
+                {s:'',t:'Το σιδερένιο κλείδωμα υποχωρεί. Το καπάκι ανοίγει αργά...'},
+                {s:'',t:'Χρυσό φως ξεχύνεται. Νομίσματα — Οθωμανικά, Βενετικά, αρχαία Ελληνικά.'},
+                {s:'ΚΛΕΙΩ',t:'Χρυσάφι!'},
+                {s:'',t:'Ένα κολιέ από νεφρίτη. Ταιριάζει τέλεια με την πράσινη πέτρα.'},
+                {s:'ΑΙΑΣ',t:'Κοίτα! Ένα βιβλίο!'},
+                {s:'',t:'Το πρωτότυπο βιβλίο της αλληλασφάλειας. 104 υπογραφές καπεταναίων, 1860.'},
+                {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις. Σαν ομάδα.'},
+                {s:'',t:'Και στον πάτο... ένα γράμμα. Σφραγισμένο με κερί.'},
+              ], () => {
+                document.getElementById('ui-panel').classList.remove('on');
+                document.getElementById('action-line').classList.remove('on');
+                const origComplete = cutscenes.treasure.onComplete;
+                cutscenes.treasure.onComplete = () => {
+                  if(origComplete) origComplete();
+                  state.phase = 'playing';
+                  document.getElementById('ui-panel').classList.add('on');
+                  document.getElementById('action-line').classList.add('on');
+                };
+                playSFX('fanfare');
+                startCutscene('treasure');
+              });
             });
             return [];
           },
           use:()=>{
+            if(!state.flags.chest_visible) return [{s:'',t:'Δεν βλέπεις κιβώτιο εδώ.'}];
             return scenes.treasure.objects.find(o=>o.id==='sea_chest').verbs.open();
           },
         }},
+
+      // ── Phase 6: The letter & family decision ──
       { id:'final_letter', x:280, y:330, w:100, h:50, label:'Γράμμα Βισβίκη',
         verbs: {
           look:()=>{
@@ -953,11 +1094,19 @@ const scenes = {
               {s:'ΝΤΕΜΗΣ',t:'«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»'},
               {s:'ΝΤΕΜΗΣ',t:'«— Καπ. Λ. Βισβίκης»'},
               {s:'',t:'Σιωπή. Κύματα και γλάροι.'},
-              {s:'ΚΛΕΙΩ',t:'Μπαμπά, τι θα κάνουμε;'},
-              {s:'ΝΤΕΜΗΣ',t:'Αυτό που ήθελε ο Βισβίκης. Θα τα δώσουμε στο Γαλαξίδι.'},
-              {s:'ΑΙΑΣ',t:'Εκατόν τέσσερις υπογραφές. Κανείς δεν ταξιδεύει μόνος.'},
-              {s:'ΚΛΕΙΩ',t:'Αν ο Βισβίκης μπορούσε να δει τώρα, θα χαμογελούσε;'},
-              {s:'ΝΤΕΜΗΣ',t:'Ναι, μικρή μου. Νομίζω ότι τώρα, μπορεί επιτέλους να κοιμηθεί.'},
+              {s:'ΑΙΑΣ',t:'Μπαμπά... τόσο χρυσάφι. Θα ήμασταν πλούσιοι.'},
+              {s:'ΚΛΕΙΩ',t:'Αλλά ο Βισβίκης είπε ότι δεν είναι δικό του.'},
+              {s:'ΑΙΑΣ',t:'Ναι αλλά... ΕΜΕΙΣ το βρήκαμε.'},
+              {s:'ΝΤΕΜΗΣ',t:'Αίαντα. Τι έλεγε η αλληλασφάλεια;'},
+              {s:'ΑΙΑΣ',t:'...Ότι κανείς δεν ταξιδεύει μόνος.'},
+              {s:'ΑΙΑΣ',t:'Οκ. Το δίνουμε.'},
+              {s:'ΚΛΕΙΩ',t:'ΟΛΟ.'},
+              {s:'ΝΤΕΜΗΣ',t:'Όλο. Αλλά εσύ κράτα το κολιέ, Κλειώ.'},
+              {s:'ΚΛΕΙΩ',t:'Αλήθεια;'},
+              {s:'ΝΤΕΜΗΣ',t:'Η θάλασσα σου το χάρισε.'},
+              {s:'ΑΙΑΣ',t:'Κι εγώ; Τι κρατάω;'},
+              {s:'ΝΤΕΜΗΣ',t:'Τη μνήμη. Κι αυτό αξίζει περισσότερο.'},
+              {s:'ΑΙΑΣ',t:'...Ε ντάξει. Αλλά θα το πω σε ΟΛΟΥΣ στο σχολείο.'},
             ];
           },
           use:()=>{
@@ -965,22 +1114,16 @@ const scenes = {
             return [{s:'',t:'Κοίταξέ το πρώτα.'}];
           },
         }},
-      { id:'island_view', x:200, y:40, w:260, h:120, label:'Νησάκι',
-        verbs: { look:[{s:'',t:'Ο βράχος, ο σταυρός, τα πέντε βήματα. Ο Βισβίκης ήταν ακριβής μέχρι το τέλος.'},{s:'ΚΛΕΙΩ',t:'Μύριζε θυμάρι. Σαν να μας περίμενε.'}] }},
-      { id:'galaxidi_far', x:200, y:100, w:240, h:100, label:'Γαλαξίδι στον ορίζοντα',
-        verbs: { look:[{s:'',t:'Το Γαλαξίδι λάμπει στον πρωινό ήλιο. Σπίτια, εκκλησίες, το λιμάνι. Σπίτι.'},{s:'ΑΙΑΣ',t:'Γυρνάμε πίσω πλουσιότεροι. Αλλά όχι όπως νόμιζα.'}] }},
-      { id:'dig_site', x:80, y:300, w:160, h:70, label:'Σημείο ανασκαφής',
-        verbs: { look:[{s:'',t:'Η τρύπα στη γη. Πέντε βήματα νοτιοδυτικά από τον σταυρό, ακριβώς όπως έγραψε ο Βισβίκης.'}] }},
     ],
     exits: [
       { side:'left', target:'boat', label:'← Ελπίδα' },
       { side:'right', target:'new_era', label:'Γαλαξίδι →' },
     ],
     entry: [
-      {s:'',t:'Το φτυάρι χτυπάει ξύλο. Ένα κιβώτιο αναδύεται από τη γη.', sfx:'dig'},
-      {s:'ΑΙΑΣ',t:'ΒΡΗΚΑΜΕ! Μπαμπά, βρήκαμε!'},
-      {s:'ΚΛΕΙΩ',t:'Η θάλασσα θυμάται...'},
-      {s:'ΝΤΕΜΗΣ',t:'Ας δούμε τι μας άφησε ο Βισβίκης.'},
+      {s:'',t:'Ο Άγιος Γεώργιος. Ένα ξεχασμένο νησάκι στον κόλπο. Θυμάρι, πέτρα, κι ο ήχος του ανέμου.'},
+      {s:'ΑΙΑΣ',t:'Πού σκάβουμε;'},
+      {s:'ΝΤΕΜΗΣ',t:'Σιγά. Πρώτα βρίσκουμε τον σταυρό.'},
+      {s:'ΚΛΕΙΩ',t:'Εκεί! Βλέπω σταυρό στα βράχια!'},
     ],
   },
 
@@ -1172,11 +1315,14 @@ const scenes = {
       ghost_npc:      { x:430, y:232, w:65,  h:120 },
     },
     treasure: {
+      stone_cross:  { x:420, y:200, w:80,  h:100 },
+      wild_thyme:   { x:480, y:300, w:120, h:60  },
+      panorama:     { x:0,   y:40,  w:350, h:120 },
+      seagulls:     { x:150, y:0,   w:200, h:60  },
+      chapel_ext:   { x:500, y:100, w:140, h:200 },
+      dig_spot:     { x:80,  y:300, w:160, h:70  },
       sea_chest:    { x:80,  y:240, w:180, h:120 },
       final_letter: { x:280, y:310, w:100, h:60  },
-      island_view:  { x:350, y:30,  w:240, h:140 },
-      galaxidi_far: { x:300, y:60,  w:240, h:100 },
-      dig_site:     { x:80,  y:300, w:160, h:70  },
     },
     new_era: {
       crowd:          { x:0,   y:180, w:280, h:160 },
@@ -1519,21 +1665,48 @@ const cutscenes = {
     },
   },
 
-  // ── THE TREASURE — The chest opens (triggered when digging on the island)
+  // ── THE TREASURE — Expanded 5-frame reveal (triggered when opening chest)
   treasure: {
     frames: [
+      // Frame 1: Chest opens — golden light, let the image speak
       {
-        duration: 9,
-        draw: drawTreasureReveal,
+        duration: 7,
+        draw: drawTreasureGlow,
         dialogue: [
-          { s: 'ΑΙΑΣ', t: 'Χρυσάφι! Και ένα βιβλίο... Κοίτα, μπαμπά!', at: 1.5 },
-          { s: 'ΚΛΕΙΩ', t: 'Ένα κολιέ! Πράσινο σαν το πέτρωμα... Μπορώ να το φορέσω;', at: 4.5 },
-          { s: 'ΝΤΕΜΗΣ', t: 'Η αλληλασφάλεια... 104 υπογραφές. Και ένα γράμμα.', at: 7.0 },
+          { s: '', t: 'Το καπάκι ανοίγει. Χρυσό φως πλημμυρίζει τον βράχο.', at: 2.0 },
         ],
       },
+      // Frame 2: Coins and necklace — kids react
+      {
+        duration: 8,
+        draw: drawTreasureCoins,
+        dialogue: [
+          { s: 'ΑΙΑΣ', t: 'Χρυσάφι! Βλέπεις, Κλειώ; Χρυσάφι παντού!', at: 1.5 },
+          { s: 'ΚΛΕΙΩ', t: 'Ένα κολιέ! Πράσινο σαν το πέτρωμα... Μπορώ να το φορέσω;', at: 5.0 },
+        ],
+      },
+      // Frame 3: The ledger — 104 signatures
+      {
+        duration: 8,
+        draw: drawTreasureLedger,
+        dialogue: [
+          { s: 'ΝΤΕΜΗΣ', t: 'Η αλληλασφάλεια... Εκατόν τέσσερις ψυχές. 1860.', at: 1.5 },
+          { s: 'ΑΙΑΣ', t: 'Εκατόν τέσσερις. Σαν ομάδα.', at: 5.5 },
+        ],
+      },
+      // Frame 4: The letter — Ntemis breaks the wax seal
+      {
+        duration: 9,
+        draw: drawTreasureLetterLift,
+        dialogue: [
+          { s: '', t: 'Στον πάτο, κάτω από τα νομίσματα... ένα γράμμα. Σφραγισμένο με κερί σαν να ήταν χθες.', at: 1.0 },
+          { s: '', t: 'Ο Ντέμης σπάει αργά τη σφραγίδα. Τα χέρια του τρέμουν.', at: 5.5 },
+        ],
+      },
+      // Frame 5: Family reads together — the climax
       {
         duration: 10,
-        draw: drawTreasureFamily,
+        draw: drawTreasureFamilyRead,
         dialogue: [
           { s: 'ΝΤΕΜΗΣ', t: '«Κράτα την αλληλεγγύη. Άλλαξε το πλοίο.»', at: 1.5 },
           { s: 'ΑΙΑΣ', t: 'Τι εννοεί "άλλαξε το πλοίο";', at: 4.5 },
@@ -2088,24 +2261,61 @@ function drawCrossingClose(t, p, tick) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// CUTSCENE: THE TREASURE — The chest opens
+// CUTSCENE: THE TREASURE — 5-frame expanded reveal
 // ═══════════════════════════════════════════════════════════
 
-function drawTreasureReveal(t, p, tick) {
-  drawKenBurns('cutscene-treasure-open', 1.06 + p * 0.12, 0, p * -15);
-  // Building golden glow from the chest
+// Frame 1: Chest opening — wide shot, golden glow building from darkness
+function drawTreasureGlow(t, p, tick) {
+  drawKenBurns('cutscene-treasure-open', 1.0 + p * 0.06, 0, 0);
+  // Golden glow builds from nothing to intense
   ctx.save();
-  ctx.globalAlpha = 0.03 + p * 0.06 + Math.sin(tick * 0.03) * 0.02;
+  ctx.globalAlpha = p * 0.12 + Math.sin(tick * 0.04) * 0.03;
   ctx.fillStyle = '#FFD040';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
 }
 
-function drawTreasureFamily(t, p, tick) {
-  drawKenBurns('cutscene-treasure-letter', 1.10 + p * 0.06, -p * 5, p * -8);
-  // Warm emotional glow
+// Frame 2: Coins and necklace — zoom into chest contents
+function drawTreasureCoins(t, p, tick) {
+  drawKenBurns('cutscene-treasure-open', 1.12 + p * 0.15, -p * 10, p * -20);
+  // Sparkling gold shimmer
   ctx.save();
-  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.015;
+  ctx.globalAlpha = 0.06 + Math.sin(tick * 0.05) * 0.03;
+  ctx.fillStyle = '#FFD040';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// Frame 3: The ledger — slow zoom to book area
+function drawTreasureLedger(t, p, tick) {
+  drawKenBurns('cutscene-treasure-open', 1.20 + p * 0.08, p * 15, p * -10);
+  // Warm amber glow
+  ctx.save();
+  ctx.globalAlpha = 0.05 + Math.sin(tick * 0.03) * 0.02;
+  ctx.fillStyle = '#FFB850';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// Frame 4: Hands lifting the letter — close-up with dramatic pause
+function drawTreasureLetterLift(t, p, tick) {
+  drawKenBurns('cutscene-treasure-letter', 1.15 + p * 0.08, 0, p * -12);
+  // Warm parchment glow
+  ctx.save();
+  ctx.globalAlpha = 0.04 + Math.sin(tick * 0.025) * 0.02;
+  ctx.fillStyle = '#FFD880';
+  ctx.fillRect(0, 0, GW, GH);
+  ctx.restore();
+}
+
+// Frame 5: Family reading together — pull back, emotional
+function drawTreasureFamilyRead(t, p, tick) {
+  // Slow zoom in then settle
+  const zoom = p < 0.5 ? 1.10 + p * 0.12 : 1.16 + (p - 0.5) * 0.04;
+  drawKenBurns('cutscene-treasure-letter', zoom, -p * 5, p * -8);
+  // Warm emotional glow intensifying
+  ctx.save();
+  ctx.globalAlpha = 0.04 + p * 0.03 + Math.sin(tick * 0.025) * 0.015;
   ctx.fillStyle = '#FFD880';
   ctx.fillRect(0, 0, GW, GH);
   ctx.restore();
@@ -3154,6 +3364,37 @@ function playSFX(type) {
     g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
     osc.connect(g); g.connect(ambientSounds.masterGain);
     osc.start(now); osc.stop(now + 0.15);
+
+  } else if (type === 'metallic_hit') {
+    // Shovel hitting iron — sharp metallic clang + resonance
+    const mClang = ctx.createOscillator();
+    mClang.type = 'square';
+    mClang.frequency.setValueAtTime(800, now);
+    mClang.frequency.exponentialRampToValueAtTime(200, now + 0.3);
+    const mCG = ctx.createGain();
+    mCG.gain.setValueAtTime(0.12, now);
+    mCG.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+    mClang.connect(mCG); mCG.connect(ambientSounds.masterGain);
+    mClang.start(now); mClang.stop(now + 0.4);
+    // Metallic ring overtone
+    const mRing = ctx.createOscillator();
+    mRing.type = 'sine';
+    mRing.frequency.value = 1200;
+    const mRG = ctx.createGain();
+    mRG.gain.setValueAtTime(0.06, now + 0.02);
+    mRG.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+    mRing.connect(mRG); mRG.connect(ambientSounds.masterGain);
+    mRing.start(now + 0.02); mRing.stop(now + 0.6);
+    // Impact thud
+    const mThud = ctx.createOscillator();
+    mThud.type = 'sine';
+    mThud.frequency.setValueAtTime(120, now);
+    mThud.frequency.exponentialRampToValueAtTime(40, now + 0.1);
+    const mTG = ctx.createGain();
+    mTG.gain.setValueAtTime(0.08, now);
+    mTG.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    mThud.connect(mTG); mTG.connect(ambientSounds.masterGain);
+    mThud.start(now); mThud.stop(now + 0.12);
 
   } else if (type === 'paper') {
     // Paper/letter unfolding — gentle crinkle
@@ -4335,6 +4576,8 @@ const VOICE_MAP = {
   'Η πόρτα! Κοιτάξτε αυτή την τεράστια πόρτα!': 'voice/ajax/019.mp3',
   'Πάλι γάτα;': 'voice/ajax/020.mp3',
   'Τι; Τι βλέπεις;': 'voice/ajax/021.mp3',
+  'Πού; Δείξε μου!': 'voice/ajax/113.mp3',
+  'Πώς φτάνεις εκεί; Με βάρκα;': 'voice/ajax/114.mp3',
   'Μπαμπά, βλέπω μέχρι την Ιτέα!': 'voice/ajax/022.mp3',
   'ΤΕΛΕΙΟ! Βλέπω τα πάντα από εδώ!': 'voice/ajax/023.mp3',
   'Ξέρω κόμπους! Ο παππούς μου έμαθε.': 'voice/ajax/024.mp3',
@@ -4391,7 +4634,7 @@ const VOICE_MAP = {
   'Αφήστε με να κοιτάξω!': 'voice/clio/034.mp3',
   'Βλέπω... ένα νησάκι! Με ένα λευκό εκκλησάκι πάνω στον βράχο!': 'voice/clio/035.mp3',
   'Εκεί, στη μέση του κόλπου. Λάμπει στον ήλιο!': 'voice/clio/036.mp3',
-  'Κοίτα... ένα νησάκι με εκκλησάκι! Στη μέση του κόλπου!': 'voice/clio/035.mp3',
+  'Κοίτα... ένα νησάκι με εκκλησάκι! Στη μέση του κόλπου!': 'voice/clio/113.mp3',
   'Και τους Δελφούς! Εκεί πάνω!': 'voice/clio/037.mp3',
   'Θέλω να ζωγραφίσω αυτά.': 'voice/clio/038.mp3',
   'Μπαμπά, κοίτα — ένα τηλεσκόπιο!': 'voice/clio/039.mp3',
@@ -4442,6 +4685,8 @@ const VOICE_MAP = {
   'Κάθε καπετάνιος προσευχόταν εδώ πριν φύγει. Και η οικογένειά του μετά.': 'voice/ntemis/030.mp3',
   'Ο Άγιος Νικόλαος. Προστάτης των ναυτικών. Κατάλληλος για το Γαλαξίδι.': 'voice/ntemis/031.mp3',
   'Σημείωσέ το, Κλειώ.': 'voice/ntemis/032.mp3',
+  'Ο Άγιος Γεώργιος. Σημείωσέ τον, Κλειώ.': 'voice/ntemis/130.mp3',
+  'Ο Άγιος Γεώργιος. Λένε ότι οι ψαράδες πάνε εκεί πριν κάθε ταξίδι.': 'voice/ntemis/131.mp3',
   'Γεια σου. Ψάχνουμε το σπήλαιο του Κάρκαρου.': 'voice/ntemis/033.mp3',
   'Ένα σημείο παρατήρησης. Κάποιος παρακολουθούσε τα πλοία από εδώ.': 'voice/ntemis/034.mp3',
   'Ελπίδα. Πάντα υπάρχει ελπίδα.': 'voice/ntemis/035.mp3',
@@ -7269,13 +7514,15 @@ CVS.addEventListener('click', (e) => {
   // Block all interaction during sequences (dialog already handled above)
   if (state.seq.active) return;
 
-  // Top-right toolbar clicks — matches button positions (tbY=5, tbH=18, tbW=22, tbGap=4)
-  if (g.y >= 5 && g.y <= 23) {
-    const bx0 = GW - 98; // help button left edge
-    if (g.x >= bx0 && g.x <= bx0 + 22) { state.helpOpen = !state.helpOpen; state.mapOpen = false; state.statusOpen = false; return; }
-    if (g.x >= bx0 + 26 && g.x <= bx0 + 48) { state.statusOpen = !state.statusOpen; state.helpOpen = false; state.mapOpen = false; return; }
-    if (g.x >= bx0 + 52 && g.x <= bx0 + 74) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.statusOpen = false; state.mapHover = null; return; }
-    if (g.x >= bx0 + 78 && g.x <= bx0 + 100) { toggleMusic(); return; }
+  // Top-right toolbar clicks — must match render positions (tbY=4, tbH=28, tbW=32, tbGap=3)
+  const tbW = 32, tbGap = 3, tbY = 4, tbH = 28;
+  const tbTotalW = tbW * 4 + tbGap * 3; // 137
+  const tbX0 = GW - tbTotalW - 6;       // 497
+  if (g.y >= tbY && g.y <= tbY + tbH) {
+    if (g.x >= tbX0 && g.x < tbX0 + tbW) { state.helpOpen = !state.helpOpen; state.mapOpen = false; state.statusOpen = false; return; }
+    if (g.x >= tbX0 + tbW + tbGap && g.x < tbX0 + tbW * 2 + tbGap) { state.statusOpen = !state.statusOpen; state.helpOpen = false; state.mapOpen = false; return; }
+    if (g.x >= tbX0 + (tbW + tbGap) * 2 && g.x < tbX0 + (tbW + tbGap) * 2 + tbW) { state.mapOpen = !state.mapOpen; state.helpOpen = false; state.statusOpen = false; state.mapHover = null; return; }
+    if (g.x >= tbX0 + (tbW + tbGap) * 3 && g.x < tbX0 + (tbW + tbGap) * 3 + tbW) { toggleMusic(); return; }
   }
 
   // Check exit zones
@@ -8329,7 +8576,7 @@ function drawCrawl(tick) {
   const scrollY = state.crawlScroll;
   const vanishY = GH * 0.10;
   const nearY = GH * 0.92;
-  const crawlFont = 'Cinzel, Georgia, serif';
+  const crawlFont = "'Cormorant Garamond', 'Cinzel', Georgia, serif";
   // Fixed font sizes — all scaling done via canvas transform for buttery smoothness
   const basePx = 16;
   const titlePx = 28;
