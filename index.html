@@ -7242,58 +7242,75 @@ function drawCrawl(tick) {
   }
   ctx.restore();
 
-  // ── Perspective text crawl ──
+  // ── Perspective text crawl (sub-pixel smooth) ──
   const scrollY = state.crawlScroll;
   const vanishY = GH * 0.10;
   const nearY = GH * 0.92;
-  const baseFontSize = 16;
   const crawlFont = 'Cinzel, Georgia, serif';
+  // Fixed font sizes — all scaling done via canvas transform for buttery smoothness
+  const basePx = 16;
+  const titlePx = 28;
 
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  ctx.imageSmoothingEnabled = true;
 
   for (let i = 0; i < CRAWL_LINES.length; i++) {
     const line = CRAWL_LINES[i];
     if (!line) continue;
 
+    // Smooth fractional distance
     const dist = scrollY - i * CRAWL_LINE_SPACING;
-    if (dist < 0) continue;
+    if (dist < -1) continue;
     if (dist > CRAWL_VISIBLE_DEPTH) continue;
 
-    const t = dist / CRAWL_VISIBLE_DEPTH;
-    const scale = 1 - t * 0.82;
-    const screenY = nearY - (nearY - vanishY) * Math.pow(t, 0.55);
+    const tRaw = dist / CRAWL_VISIBLE_DEPTH;
+    const t = Math.max(0, Math.min(1, tRaw));
 
-    let alpha = t < 0.82 ? 1 : (1 - t) / 0.18;
-    if (t < 0.06) alpha *= t / 0.06;
-    if (alpha <= 0) continue;
+    // Smooth perspective scale (never zero)
+    const scale = 1 - t * 0.82;
+    if (scale < 0.04) continue;
+
+    // Smooth screen Y — cubic ease for more natural perspective
+    const screenY = nearY - (nearY - vanishY) * (1 - Math.pow(1 - t, 1.8));
+
+    // Smooth alpha — hermite (smoothstep) fade at both edges
+    let alpha = 1;
+    if (t > 0.78) {
+      const f = (t - 0.78) / 0.22;
+      alpha = 1 - f * f * (3 - 2 * f); // smoothstep out
+    }
+    if (t < 0.08) {
+      const f = t / 0.08;
+      alpha = f * f * (3 - 2 * f); // smoothstep in
+    }
+    if (alpha <= 0.005) continue;
 
     const isTitle = (i === 0);
-    const fontSize = Math.max(4, (isTitle ? baseFontSize * 1.8 : baseFontSize) * scale);
+    const fontPx = isTitle ? titlePx : basePx;
     const weight = isTitle ? '700' : '400';
+    ctx.font = `${weight} ${fontPx}px ${crawlFont}`;
 
-    // Golden text glow (drawn behind)
+    // Golden text glow (drawn first, behind)
     ctx.save();
     ctx.translate(GW / 2, screenY);
-    ctx.scale(scale, 1);
-    ctx.globalAlpha = alpha * 0.4;
+    ctx.scale(scale, scale); // uniform scale — smooth sub-pixel
+    ctx.globalAlpha = alpha * 0.35;
     ctx.shadowColor = '#c8a040';
-    ctx.shadowBlur = isTitle ? 18 : 10;
-    ctx.font = `${weight} ${Math.round(fontSize)}px ${crawlFont}`;
+    ctx.shadowBlur = isTitle ? 16 : 8;
     ctx.fillStyle = '#b8922e';
     ctx.fillText(line, 0, 0);
     ctx.restore();
 
-    // Main text (warm golden amber)
+    // Main text
     ctx.save();
     ctx.translate(GW / 2, screenY);
-    ctx.scale(scale, 1);
+    ctx.scale(scale, scale);
     ctx.globalAlpha = alpha;
-    ctx.shadowColor = 'rgba(0,0,0,0.6)';
-    ctx.shadowBlur = 3;
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 2;
     ctx.shadowOffsetY = 1;
-    ctx.font = `${weight} ${Math.round(fontSize)}px ${crawlFont}`;
     ctx.fillStyle = isTitle ? '#d4a030' : '#5a3a12';
     ctx.fillText(line, 0, 0);
     ctx.restore();
