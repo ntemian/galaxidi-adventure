@@ -3150,9 +3150,14 @@ function createCicadasLoop() {
   return { oscs, merger, gain };
 }
 
+const seagullSfx = new Audio('sfx/seagull-cry.mp3');
+seagullSfx.volume = 0.3;
+
 function playSeagullCry() {
-  // Disabled: procedural synth seagull removed — replace with ElevenLabs SFX when available
-  // To enable: load sfx/seagull-cry.mp3 and play it here
+  const clone = seagullSfx.cloneNode();
+  clone.volume = 0.15 + Math.random() * 0.2;
+  clone.playbackRate = 0.9 + Math.random() * 0.3;
+  clone.play().catch(() => {});
 }
 
 function playChurchBell() {

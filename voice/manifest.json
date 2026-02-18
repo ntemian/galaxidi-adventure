@@ -4229,11 +4229,11 @@
     "similarity_boost": 0.75,
     "style": 0
   },
-  "ΚΛΕΙΩ|Στο νεκροταφείο, βλάκα.": {
+  "ΚΛΕΙΩ|Στο νεκροταφείο!": {
     "file": "clio/087.mp3",
     "voice_id": "cgSgspJ2msm6clMCkdW9",
     "speaker": "ΚΛΕΙΩ",
-    "text": "Στο νεκροταφείο, βλάκα.",
+    "text": "Στο νεκροταφείο!",
     "stability": 0.45,
     "similarity_boost": 0.75,
     "style": 0

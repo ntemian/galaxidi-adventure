@@ -122,7 +122,7 @@ His marks **Λ.Β.** are found: in the cave (1887 + vote record), on a floor til
 2. Clio: "Ποιος είναι αυτός;" — Ntemis: "Ο Καπετάν Βισβίκης. Ο προπάππους μου."
 3. Ajax finds a locked desk drawer. Clio finds the key in a copper pot on the mantle.
 4. Inside the drawer: **Visvikis's letter** (1887). Sealed with wax. Instructions to find "the green stone" hidden "where the earth speaks — where rocks become cave and sound never leaves."
-5. Ajax: "'Φέρε τη σε μένα'... Είναι νεκρός εδώ και εκατό χρόνια." Clio: "Στο νεκροταφείο, βλάκα." Ntemis: "...Κλειώ." Clio: "Τι; Λογικό είναι."
+5. Ajax: "'Φέρε τη σε μένα'... Είναι νεκρός εδώ και εκατό χρόνια." Clio: "Στο νεκροταφείο!" Ntemis: "...Κλειώ." Clio: "Τι; Λογικό είναι."
 
 **Inventory**: + Γράμμα Βισβίκη, + Φωτογραφία Καπετάνιου
 
