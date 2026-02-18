@@ -307,7 +307,7 @@ async function loadAllAssets() {
   // Backgrounds
   await Promise.all([
     loadImg('title-bg', 'assets/title-bg.webp'),
-    loadImg('bg-exterior', 'assets/pixel-exterior.webp'),
+    loadImg('bg-exterior', 'assets/pixel-exterior-new.png'),
     loadImg('bg-terrace', 'assets/pixel-terrace.webp'),
     loadImg('bg-kitchen', 'assets/pixel-kitchen.png'),
     loadImg('bg-port', 'assets/pixel-port.webp'),
@@ -2858,6 +2858,7 @@ const ambientSounds = {
   bellPlayed: false, gullTimer: 0, gullInterval: 10, bellTimer: 0, bellInterval: 20,
   tavernaNode: null, tavernaTimer: 0, tavernaInterval: 4,
   crowdNode: null, crowdTimer: 0, crowdInterval: 6,
+  creakTimer: 0, creakInterval: 5,
   masterGain: null, active: false, currentScene: null,
 };
 
@@ -2875,7 +2876,7 @@ const sceneAmbientConfig = {
   graveyard: { waves: 0.04, wind: 0.08, cicadas: 0.02, bell: true, bellFreq: [20,15] },
   church:    { waves: 0.02, wind: 0.01, cicadas: 0.02, bell: true, bellFreq: [12,10] },
   church_interior: { waves: 0, wind: 0, bell: true, bellFreq: [15,12] },
-  boat:      { waves: 0.22, wind: 0.10, gulls: true,  gullFreq: [6,5] },
+  boat:      { waves: 0.22, wind: 0.10, gulls: true,  gullFreq: [6,5], creak: true, creakFreq: [4,6] },
   treasure:  { waves: 0.08, wind: 0.06 },
   new_era:   { waves: 0.14, wind: 0.04, crowd: true, crowdVol: 0.08, crowdFreq: [4,5] },
 };
@@ -3102,19 +3103,26 @@ const sfxSampleMap = {
   'step-wood':   ['assets/sfx/step-wood-1.mp3','assets/sfx/step-wood-2.mp3','assets/sfx/step-wood-3.mp3','assets/sfx/step-wood-4.mp3'],
   'step-sand':   ['assets/sfx/step-sand-1.mp3','assets/sfx/step-sand-2.mp3'],
   'step-dirt':   ['assets/sfx/step-dirt-1.mp3','assets/sfx/step-dirt-2.mp3'],
-  // Interaction SFX
-  'door':        ['assets/sfx/door-open.mp3','assets/sfx/door-open-2.mp3'],
-  'key':         ['assets/sfx/key-turn.mp3'],
-  'chest':       ['assets/sfx/chest-open.mp3'],
+  // Interaction SFX — rich variant pools for natural variation
+  'door':        ['assets/sfx/door-open.mp3','assets/sfx/door-open-2.mp3','assets/sfx/door-open-3.mp3','assets/sfx/door-open-4.mp3','assets/sfx/door-open-5.mp3'],
+  'key':         ['assets/sfx/key-turn.mp3','assets/sfx/key-turn-2.mp3','assets/sfx/key-turn-3.mp3','assets/sfx/key-jingle.mp3','assets/sfx/lock-open.mp3','assets/sfx/metal-latch.mp3'],
+  'chest':       ['assets/sfx/chest-open.mp3','assets/sfx/chest-open-2.mp3'],
   'drawer':      ['assets/sfx/drawer-open.mp3'],
+  'paper':       ['assets/sfx/paper-1.mp3','assets/sfx/paper-2.mp3','assets/sfx/paper-flip.mp3','assets/sfx/book-open.mp3'],
   'pickup':      ['assets/sfx/pickup.mp3','assets/sfx/pickup-2.mp3'],
   'whoosh':      ['assets/sfx/whoosh.mp3','assets/sfx/whoosh-2.mp3'],
-  'click':       ['assets/sfx/click.mp3'],
+  'click':       ['assets/sfx/click.mp3','assets/sfx/metal-click.mp3'],
   'stone':       ['assets/sfx/stone.mp3','assets/sfx/stone-2.mp3'],
   'metallic_hit':['assets/sfx/metallic-hit.mp3','assets/sfx/metallic-hit-2.mp3'],
-  'wood_creak':  ['assets/sfx/wood-creak.mp3'],
-  // New SFX types (samples only, no synthesis fallback needed)
-  'coins':       ['assets/sfx/coins.mp3','assets/sfx/coins-2.mp3','assets/sfx/coins-3.mp3'],
+  'candle':      ['assets/sfx/metal-click.mp3'],
+  // Ambient / environmental SFX
+  'wood_creak':  ['assets/sfx/wood-creak.mp3','assets/sfx/wood-squeak-1.mp3','assets/sfx/wood-squeak-2.mp3','assets/sfx/creak-1.mp3','assets/sfx/creak-2.mp3','assets/sfx/wood-crack.mp3'],
+  'fire_loop':   ['assets/sfx/fire-loop.mp3'],
+  'dishes':      ['assets/sfx/dishes-1.mp3','assets/sfx/dishes-2.mp3'],
+  'bell':        ['assets/sfx/bell.mp3'],
+  'gong':        ['assets/sfx/gong.mp3'],
+  // New SFX types (samples only)
+  'coins':       ['assets/sfx/coins.mp3','assets/sfx/coins-2.mp3','assets/sfx/coins-3.mp3','assets/sfx/coins-handle.mp3','assets/sfx/coins-handle-2.mp3'],
   'glass_clink': ['assets/sfx/glass-clink.mp3','assets/sfx/glass-clink-2.mp3'],
   'ghost_shade': ['assets/sfx/ghost-shade.mp3','assets/sfx/ghost-shade-2.mp3','assets/sfx/ghost-shade-3.mp3'],
   'metal_ring':  ['assets/sfx/metal-ring.mp3'],
@@ -3124,8 +3132,10 @@ const sfxSampleMap = {
 const sfxVolume = {
   'step-stone': 0.18, 'step-wood': 0.22, 'step-sand': 0.14, 'step-dirt': 0.18,
   'door': 0.35, 'key': 0.30, 'chest': 0.35, 'drawer': 0.30,
-  'pickup': 0.25, 'whoosh': 0.20, 'click': 0.25, 'stone': 0.30,
-  'metallic_hit': 0.35, 'wood_creak': 0.25,
+  'paper': 0.30, 'pickup': 0.25, 'whoosh': 0.20, 'click': 0.25,
+  'stone': 0.30, 'metallic_hit': 0.35, 'candle': 0.25,
+  'wood_creak': 0.20, 'fire_loop': 0.12, 'dishes': 0.18,
+  'bell': 0.25, 'gong': 0.30,
   'coins': 0.30, 'glass_clink': 0.20, 'ghost_shade': 0.40,
   'metal_ring': 0.25, 'cloth': 0.20, 'bottle': 0.25,
 };
@@ -3190,8 +3200,10 @@ function playSFX(type) {
       sfxStepLR ^= 1;
       if (playSampleSFX('step-' + surface, { playbackRate: sfxStepLR ? 1.05 : 0.95 })) return;
     } else if (type === 'coins' || type === 'glass_clink' || type === 'ghost_shade' ||
-               type === 'metal_ring' || type === 'cloth' || type === 'bottle' || type === 'wood_creak') {
-      // New sample-only types (no synthesis fallback)
+               type === 'metal_ring' || type === 'cloth' || type === 'bottle' ||
+               type === 'wood_creak' || type === 'fire_loop' || type === 'dishes' ||
+               type === 'bell' || type === 'gong') {
+      // Sample-only types (no synthesis fallback)
       playSampleSFX(type); return;
     } else if (type === 'ghost') {
       // Layer: sample shade voice + synthesis drone for best effect
@@ -3673,6 +3685,8 @@ function playTavernaGlassClink() {
 function playTavernaCutlery() {
   const ac = getAudioCtx();
   if (!ac || !state.musicOn) return;
+  // Try real dishes sample first
+  if (playSampleSFX('dishes', { volume: 0.12 })) return;
   const now = ac.currentTime;
   const freq = 1200 + Math.random() * 800;
   const osc = ac.createOscillator();
@@ -4007,6 +4021,15 @@ function updateAmbientSound(dt) {
       ambientSounds.crowdTimer = 0;
       ambientSounds.crowdInterval = cfg.crowdFreq[0] + Math.random() * cfg.crowdFreq[1];
       playCrowdSound();
+    }
+  }
+  // Boat wood creaking — periodic creaks from hull/rigging
+  if (cfg.creak) {
+    ambientSounds.creakTimer += dt;
+    if (ambientSounds.creakTimer >= ambientSounds.creakInterval) {
+      ambientSounds.creakTimer = 0;
+      ambientSounds.creakInterval = cfg.creakFreq[0] + Math.random() * cfg.creakFreq[1];
+      playSFX('wood_creak');
     }
   }
 }
