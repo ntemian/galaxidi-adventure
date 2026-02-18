@@ -2388,7 +2388,7 @@ function drawLetterSingle(t, p, tick) {
 
 function drawCaveEntrance(t, p, tick) {
   // Pan forward into the cave, lantern light flickers
-  drawKenBurns('cutscene-cave', 1.05 + p * 0.08, 0, 30 - p * 8);
+  drawKenBurns('cutscene-cave', 1.0 + p * 0.05, 0, 60 - p * 10);
   ctx.save();
   ctx.globalAlpha = 0.05 + Math.sin(tick * 0.06) * 0.03;
   ctx.fillStyle = '#FFa040';
