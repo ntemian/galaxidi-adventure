@@ -198,7 +198,10 @@ let bgCachedScene = null; // invalidate when scene changes
 // STATE
 // ════════════════════════════════════════════════════════════
 const state = {
-  phase: 'title', // title, intro, playing
+  phase: 'title', // title, crawl, intro, playing
+  crawlScroll: 0,
+  crawlFading: false,
+  crawlFadeAlpha: 0,
   scene: null,
   verb: 'look',
   inv: [],
@@ -307,6 +310,7 @@ async function loadAllAssets() {
     loadImg('cutscene-epilogue-speech', 'assets/cutscene-epilogue-speech.png'),
     loadImg('cutscene-epilogue-signing', 'assets/cutscene-epilogue-signing.png'),
     loadImg('map-bg', 'assets/map-galaxidi.png'),
+    loadImg('intro-parchment', 'assets/intro-parchment.png'),
   ]);
 
   // Character idle sprites (family + NPCs)
@@ -1237,6 +1241,57 @@ const epiloguePages = [
   'Η θάλασσα θυμάται.\nΚι εμείς τώρα,\nαλλάζουμε μαζί της.',
   'ΤΟ ΜΥΣΤΗΡΙΟ ΤΟΥ ΓΑΛΑΞΕΙΔΙΟΥ\n\nΚράτα την αλληλεγγύη.\nΆλλαξε το πλοίο.\n\n\nΓια τον Αίαντα και την Κλειώ.',
 ];
+
+// ════════════════════════════════════════════════════════════
+// STAR WARS STYLE TEXT CRAWL
+// ════════════════════════════════════════════════════════════
+const CRAWL_LINES = [
+  'ΓΑΛΑΞΙΔΙ',
+  '',
+  '',
+  'Κάποτε, τριακόσια καράβια',
+  'σάλπαραν από αυτό το λιμάνι.',
+  '',
+  'Οι καπεταναίοι ταξίδευαν',
+  'ως τη Μαύρη Θάλασσα,',
+  'την Αλεξάνδρεια, τη Σμύρνη.',
+  '',
+  'Έξι χιλιάδες ψυχές.',
+  'Ο μεγαλύτερος στόλος της Ελλάδας.',
+  '',
+  '',
+  'Μέχρι που ήρθε η ψηφοφορία.',
+  '',
+  '«Να φτιάξουμε ατμόπλοια;»',
+  '',
+  'Εννέα είπαν ΟΧΙ.',
+  'Τρεις είπαν ΝΑΙ.',
+  '',
+  '',
+  'Ένας από τους τρεις',
+  'ήταν ο Καπετάν Βισβίκης.',
+  '',
+  'Πριν πεθάνει, έκρυψε κάτι.',
+  '',
+  '«Η θάλασσα θυμάται.»',
+  '',
+  '',
+  '· · ·',
+  '',
+  '',
+  'Σεπτέμβριος 2026.',
+  '',
+  'Ένας πατέρας και δυο παιδιά',
+  'φτάνουν στο Γαλαξίδι',
+  'για ένα ήσυχο Σαββατοκύριακο.',
+  '',
+  '',
+  'Τουλάχιστον, αυτό νόμιζε.',
+];
+
+const CRAWL_LINE_SPACING = 22;
+const CRAWL_VISIBLE_DEPTH = 350;
+const CRAWL_SPEED = 25; // world units per second
 
 // ════════════════════════════════════════════════════════════
 // CUTSCENE ENGINE
@@ -4032,31 +4087,21 @@ const VOICE_MAP = {
   'Πόσα χρόνια, ρε παιδιά;': 'voice/ntemis/053.mp3',
   'Αρκετά. Αλλά το Γαλαξίδι δε σ\' αφήνει να ξεχάσεις.': 'voice/akis/003.mp3',
   'Λυπημένο αλλά ωραίο.': 'voice/clio/059.mp3',
-  'Ήταν το τραγούδι των ναυτικών. Το τραγουδούσαν όταν έφευγαν.': 'voice/stathis/003.mp3',
-  'Ταξίδεψε στη Σμύρνη, στην Αλεξάνδρεια, στη Βηρυτό. Λέγανε ότι γύρισε με κάτι πράσινο... κάτι που δεν έδειξε σε κανέναν.': 'voice/akis/004.mp3',
-  'Ο Κάρκαρος. Το σπήλαιο πίσω από την πλατεία Μάμα. Μπαίνεις μέσα και η φωνή σου γυρίζει πίσω τρεις φορές.': 'voice/akis/005.mp3',
-  'Αν θέλεις να καταλάβεις τον Βισβίκη, πρέπει να δεις πρώτα τι έχασε το Γαλαξίδι. Εκεί ζει η ιστορία.': 'voice/akis/006.mp3',
+        'Αν θέλεις να καταλάβεις τον Βισβίκη, πρέπει να δεις πρώτα τι έχασε το Γαλαξίδι. Εκεί ζει η ιστορία.': 'voice/akis/006.mp3',
   'Και μίλα στον Άθο στο Λιοτρίβι. Ξέρει κάθε οικογένεια, κάθε μυστικό. Διάβασε και τη διαθήκη.': 'voice/stathis/004.mp3',
   'Σαν να παίζουν για τη θάλασσα.': 'voice/clio/060.mp3',
   'Γιατί αυτό κάνουμε, μικρή.': 'voice/akis/007.mp3',
-  'Τριακόσια καράβια. Έξι χιλιάδες κάτοικοι. Το Γαλαξίδι ήταν η ναυτική πρωτεύουσα της Ελλάδας.': 'voice/curator/004.mp3',
-  '...ήρθε ο ατμός. Κι αυτοί που ήξεραν τα πάντα για τα πανιά, αρνήθηκαν να μάθουν κάτι καινούριο.': 'voice/curator/005.mp3',
-  'Δηλαδή... ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;': 'voice/ajax/036.mp3',
-  'Ακριβώς, μικρέ μου. Ακριβώς αυτό.': 'voice/curator/006.mp3',
-  'Εκατόν τέσσερις υπογραφές. Σαν ομάδα.': 'voice/ajax/037.mp3',
+      'Δηλαδή... ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;': 'voice/ajax/036.mp3',
+    'Εκατόν τέσσερις υπογραφές. Σαν ομάδα.': 'voice/ajax/037.mp3',
   'Η πιο σημαντική ομάδα που είχε ποτέ αυτή η πόλη.': 'voice/curator/007.mp3',
-  'Ξέρεις ότι διάβασα τη διαθήκη του; Τα άφησε όλα στο Γαλαξίδι. Όχι σε πρόσωπο. Στην πόλη.': 'voice/athos/004.mp3',
-  'Εμείς ξέρουμε! Εκεί που η γη μιλάει.': 'voice/ajax/038.mp3',
-  'Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ\' το.': 'voice/athos/005.mp3',
-  'Αλλά στο μουσείο είπαν ότι οι καπεταναίοι ήταν σπουδαίοι ΚΑΙ πεισματάρηδες.': 'voice/ajax/039.mp3',
+    'Εμείς ξέρουμε! Εκεί που η γη μιλάει.': 'voice/ajax/038.mp3',
+  'Μη με ρωτήσεις αν αξίζεις. Πήγαινε και δείξ\  'Αλλά στο μουσείο είπαν ότι οι καπεταναίοι ήταν σπουδαίοι ΚΑΙ πεισματάρηδες.': 'voice/ajax/039.mp3',
   'Ήταν. Τα δύο πάνε μαζί πιο συχνά απ\' ό,τι νομίζεις.': 'voice/athos/006.mp3',
   'Ποιο είναι το ατμόπλοιο σήμερα; Ποιο είναι αυτό που έρχεται, και πρέπει να το πιάσουμε αυτή τη φορά;': 'voice/athos/007.mp3',
   'Μοιάζεις με δικαστή.': 'voice/clio/061.mp3',
   'Χειρότερα. Δικηγόρος.': 'voice/athos/008.mp3',
   'Ξέρεις γιατί αγόρασα τον μύλο; Γιατί από εδώ βλέπεις τα πάντα.': 'voice/giannis/004.mp3',
-  'Εκεί κάτω. Πίσω από την πλατεία Μάμα. Θα χρειαστείτε φως.': 'voice/giannis/005.mp3',
-  'Ήταν του πατέρα μου. Ναυτικός. Πάρ\' το.': 'voice/giannis/006.mp3',
-  'Βλέπω το νησάκι! Εκεί θα πάμε;': 'voice/ajax/040.mp3',
+    'Ήταν του πατέρα μου. Ναυτικός. Πάρ\  'Βλέπω το νησάκι! Εκεί θα πάμε;': 'voice/ajax/040.mp3',
   'Αν βρούμε αυτό που ψάχνουμε στο σπήλαιο.': 'voice/ntemis/054.mp3',
   'Σαν τον Βισβίκη. Αυτός ήθελε να μείνει κάτι.': 'voice/clio/062.mp3',
   'Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. Λ.Β. 1887.': 'voice/ajax/041.mp3',
@@ -4081,8 +4126,7 @@ const VOICE_MAP = {
   'Ένα πλακάκι κοντά στο ιερό έχει το σημάδι του Βισβίκη — Λ.Β. Είναι χαλαρό.': 'voice/narrator/114.mp3',
   'Κάτω από το πλακάκι: ένας τυλιγμένος ναυτικός χάρτης, σφραγισμένος σε κηρόπανο.': 'voice/narrator/115.mp3',
   'Ξέρω αυτό το νησάκι! Μπορούμε να πάμε με βάρκα!': 'voice/ajax/046.mp3',
-  'Αν βρείτε κάτι... θυμηθείτε ποιος το σώζει. Αυτή η πόλη χρειάζεται θαύματα.': 'voice/papas/006.mp3',
-  'Παιδί μου, ο Θεός και η θάλασσα κανένα δεν σε ρωτάει αν είσαι έτοιμος.': 'voice/papas/007.mp3',
+    'Παιδί μου, ο Θεός και η θάλασσα κανένα δεν σε ρωτάει αν είσαι έτοιμος.': 'voice/papas/007.mp3',
   'Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν. Δεν πίστευα ότι θα ζούσα να το δω.': 'voice/chrysostomos/001.mp3',
   'Ήταν ο τελευταίος ρομαντικός. Ταξίδεψε μέχρι την Ανατολή κι επέστρεψε. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.': 'voice/chrysostomos/002.mp3',
   'Η θάλασσα δεν σε ρωτάει τι αγαπάς. Η θάλασσα αλλάζει κι εσύ αλλάζεις μαζί της, αλλιώς πνίγεσαι.': 'voice/chrysostomos/003.mp3',
@@ -4118,108 +4162,108 @@ const VOICE_MAP = {
   'Εκατόν τέσσερις υπογραφές. Τότε και τώρα.': 'voice/narrator/128.mp3',
   'Η θάλασσα θυμάται. Κι εμείς τώρα, αλλάζουμε μαζί της.': 'voice/narrator/129.mp3',
   'Κράτα την αλληλεγγύη. Άλλαξε το πλοίο. Το Μυστήριο του Γαλαξειδίου.': 'voice/narrator/130.mp3',
-  'Μοντέλα πλοίων σε ράφια — σκούνες, μπρίκια, τρικάταρτα. Μικρογραφίες μιας χαμένης αυτοκρατορίας.': 'voice/narrator/110.mp3',
-  'Μια ξεθωριασμένη φωτογραφία σε χρυσή κορνίζα. Ένας άντρας με καπετάνιος στολή, λευκά μουστάκια, περήφανο βλέμμα.': 'voice/narrator/111.mp3',
-  'Ο Καπετάν Λουκάς Βισβίκης. Τα μάτια του σε ακολουθούν.': 'voice/narrator/112.mp3',
-  'Το συρτάρι είναι ανοιχτό. Άδειο πλέον.': 'voice/narrator/113.mp3',
-  'Μπαμπά, είναι κλειδωμένο! Πού είναι το κλειδί;': 'voice/ajax/034.mp3',
-  'Το συρτάρι είναι ήδη ανοιχτό.': 'voice/narrator/115.mp3',
-  'Κλειδωμένο. Χρειάζεσαι κλειδί.': 'voice/narrator/116.mp3',
-  'Ψάξτε γύρω! Πρέπει να είναι κάπου εδώ.': 'voice/clio/056.mp3',
-  'Γυρίζεις το κλειδί. Κλικ. Το συρτάρι ανοίγει αργά...': 'voice/narrator/117.mp3',
-  'Μέσα — ένα παλιό γράμμα, σφραγισμένο με κερί.': 'voice/narrator/118.mp3',
-  'Μπαμπά, διάβασέ το!': 'voice/clio/057.mp3',
-  'Ένα χάλκινο δοχείο στο τζάκι. Τώρα άδειο.': 'voice/narrator/119.mp3',
-  'Το δοχείο είναι άδειο.': 'voice/narrator/121.mp3',
-  'Ανοίγεις το δοχείο. Μέσα — ένα μικρό ορειχάλκινο κλειδί!': 'voice/narrator/122.mp3',
-  'Εγώ το βρήκα! Εγώ κοίταξα πρώτη!': 'voice/clio/058.mp3',
-  'Δοκίμασέ το στο συρτάρι!': 'voice/ajax/035.mp3',
-  'Πέτρινο τζάκι με στάχτες. Πάνω του — ένα χάλκινο δοχείο.': 'voice/narrator/123.mp3',
-  'Ορειχάλκινα ναυτικά όργανα: πυξίδα, εξάντας, τηλεσκόπιο. Γυαλισμένα σαν χθες.': 'voice/narrator/124.mp3',
-  'Χάρτες στους τοίχους. Δρομολόγια προς Σμύρνη, Αλεξάνδρεια, Βηρυτό. Με μελάνι σημειωμένα.': 'voice/narrator/125.mp3',
-  'Το γραφείο του καπετάνιου. Σκόνη και μνήμη.': 'voice/narrator/126.mp3',
-  'Μοντέλα πλοίων σε ράφια, ορειχάλκινα όργανα, χάρτες στους τοίχους.': 'voice/narrator/127.mp3',
-  'Ουάου! Κοιτάξτε όλα αυτά τα πλοία!': 'voice/ajax/037.mp3',
-  'Μπαμπά, ποιος ζούσε εδώ;': 'voice/clio/060.mp3',
-  'Ένα ξύλινο ιστιοφόρο δεμένο στην προβλήτα. «ΕΛΠΙΔΑ» γράφει στην πλώρη.': 'voice/narrator/128.mp3',
-  'Ωραίο πλοίο! Πάμε βόλτα;': 'voice/ajax/038.mp3',
-  'Ίσως αργότερα. Δεν ξέρουμε πού να πάμε ακόμα.': 'voice/ntemis/052.mp3',
-  'Η Ελπίδα περιμένει. Ο Χρυσόστομος στο τιμόνι.': 'voice/narrator/129.mp3',
-  'Ο χάρτης δείχνει τον Άγιο Γεώργιο. Πάμε.': 'voice/ntemis/053.mp3',
-  'Δεν ξέρουμε πού να πάμε ακόμα. Χρειαζόμαστε χάρτη.': 'voice/ntemis/054.mp3',
-  'Η επιγραφή στον βράχο: «Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.»': 'voice/narrator/130.mp3',
-  'Μπαμπά, κοίτα εκεί πάνω! Κάτι γράφει στον βράχο.': 'voice/ajax/040.mp3',
-  'Είναι ψηλά. Μπορείς να σκαρφαλώσεις, Αία;': 'voice/ntemis/055.mp3',
-  'Εύκολο!': 'voice/ajax/041.mp3',
+  'Μοντέλα πλοίων σε ράφια — σκούνες, μπρίκια, τρικάταρτα. Μικρογραφίες μιας χαμένης αυτοκρατορίας.': 'voice/narrator/208.mp3',
+  'Μια ξεθωριασμένη φωτογραφία σε χρυσή κορνίζα. Ένας άντρας με καπετάνιος στολή, λευκά μουστάκια, περήφανο βλέμμα.': 'voice/narrator/207.mp3',
+  'Ο Καπετάν Λουκάς Βισβίκης. Τα μάτια του σε ακολουθούν.': 'voice/narrator/210.mp3',
+  'Το συρτάρι είναι ανοιχτό. Άδειο πλέον.': 'voice/narrator/215.mp3',
+  'Μπαμπά, είναι κλειδωμένο! Πού είναι το κλειδί;': 'voice/ajax/086.mp3',
+  'Το συρτάρι είναι ήδη ανοιχτό.': 'voice/narrator/216.mp3',
+  'Κλειδωμένο. Χρειάζεσαι κλειδί.': 'voice/narrator/205.mp3',
+  'Ψάξτε γύρω! Πρέπει να είναι κάπου εδώ.': 'voice/clio/110.mp3',
+  'Γυρίζεις το κλειδί. Κλικ. Το συρτάρι ανοίγει αργά...': 'voice/narrator/200.mp3',
+  'Μέσα — ένα παλιό γράμμα, σφραγισμένο με κερί.': 'voice/narrator/206.mp3',
+  'Μπαμπά, διάβασέ το!': 'voice/clio/105.mp3',
+  'Ένα χάλκινο δοχείο στο τζάκι. Τώρα άδειο.': 'voice/narrator/202.mp3',
+  'Το δοχείο είναι άδειο.': 'voice/narrator/214.mp3',
+  'Ανοίγεις το δοχείο. Μέσα — ένα μικρό ορειχάλκινο κλειδί!': 'voice/narrator/199.mp3',
+  'Εγώ το βρήκα! Εγώ κοίταξα πρώτη!': 'voice/clio/101.mp3',
+  'Δοκίμασέ το στο συρτάρι!': 'voice/ajax/082.mp3',
+  'Πέτρινο τζάκι με στάχτες. Πάνω του — ένα χάλκινο δοχείο.': 'voice/narrator/212.mp3',
+  'Ορειχάλκινα ναυτικά όργανα: πυξίδα, εξάντας, τηλεσκόπιο. Γυαλισμένα σαν χθες.': 'voice/narrator/211.mp3',
+  'Χάρτες στους τοίχους. Δρομολόγια προς Σμύρνη, Αλεξάνδρεια, Βηρυτό. Με μελάνι σημειωμένα.': 'voice/narrator/217.mp3',
+  'Το γραφείο του καπετάνιου. Σκόνη και μνήμη.': 'voice/narrator/213.mp3',
+  'Μοντέλα πλοίων σε ράφια, ορειχάλκινα όργανα, χάρτες στους τοίχους.': 'voice/narrator/209.mp3',
+  'Ουάου! Κοιτάξτε όλα αυτά τα πλοία!': 'voice/ajax/090.mp3',
+  'Μπαμπά, ποιος ζούσε εδώ;': 'voice/clio/106.mp3',
+  'Ένα ξύλινο ιστιοφόρο δεμένο στην προβλήτα. «ΕΛΠΙΔΑ» γράφει στην πλώρη.': 'voice/narrator/201.mp3',
+  'Ωραίο πλοίο! Πάμε βόλτα;': 'voice/ajax/093.mp3',
+  'Ίσως αργότερα. Δεν ξέρουμε πού να πάμε ακόμα.': 'voice/ntemis/121.mp3',
+  'Η Ελπίδα περιμένει. Ο Χρυσόστομος στο τιμόνι.': 'voice/narrator/203.mp3',
+  'Ο χάρτης δείχνει τον Άγιο Γεώργιο. Πάμε.': 'voice/ntemis/125.mp3',
+  'Δεν ξέρουμε πού να πάμε ακόμα. Χρειαζόμαστε χάρτη.': 'voice/ntemis/119.mp3',
+  'Η επιγραφή στον βράχο: «Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.»': 'voice/narrator/204.mp3',
+  'Μπαμπά, κοίτα εκεί πάνω! Κάτι γράφει στον βράχο.': 'voice/ajax/088.mp3',
+  'Είναι ψηλά. Μπορείς να σκαρφαλώσεις, Αία;': 'voice/ntemis/120.mp3',
+  'Εύκολο!': 'voice/ajax/083.mp3',
   'Ο Αίαντας σκαρφαλώνει στον βράχο και διαβάζει δυνατά:': 'voice/narrator/131.mp3',
-  '«Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.»': 'voice/ajax/042.mp3',
+  '«Πρόταση για ατμόπλοιο. Απορρίφθηκε, 9 προς 3.»': 'voice/ajax/080.mp3',
   'Σιωπή.': 'voice/narrator/132.mp3',
-  'Ψηφοφορία. Κάποιος πρότεινε να αγοράσουν ατμόπλοιο. Εννιά καπεταναίοι είπαν όχι. Τρεις είπαν ναι.': 'voice/ntemis/056.mp3',
-  'Ο Βισβίκης ήταν ένας από τους τρεις.': 'voice/ntemis/057.mp3',
+  'Ψηφοφορία. Κάποιος πρότεινε να αγοράσουν ατμόπλοιο. Εννιά καπεταναίοι είπαν όχι. Τρεις είπαν ναι.': 'voice/narrator/218.mp3',
+  'Ο Βισβίκης ήταν ένας από τους τρεις.': 'voice/ntemis/124.mp3',
   'Χαραγμένα σύμβολα στον βράχο. Ονόματα πλοίων, αρχικά, ημερομηνίες.': 'voice/narrator/133.mp3',
-  'Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. «Λ.Β. 1887.»': 'voice/ajax/043.mp3',
+  'Μπαμπά, κοίτα — ο Βισβίκης ήταν εδώ. «Λ.Β. 1887.»': 'voice/ajax/087.mp3',
   'Τυρκουάζ νερό λάμπει από το φως του φαναριού. Κρυστάλλινο.': 'voice/narrator/134.mp3',
   'Η ρωγμή στον βράχο. Εκεί βρήκε η Κλειώ την πράσινη πέτρα.': 'voice/narrator/135.mp3',
   'Η ρωγμή είναι άδεια τώρα.': 'voice/narrator/136.mp3',
-  'Ψάξτε παντού. Η πέτρα πρέπει να είναι εδώ κάπου.': 'voice/ntemis/058.mp3',
-  'Κοίταξα σε κάθε σχισμή. Τίποτα.': 'voice/ajax/044.mp3',
-  'Περιμένετε...': 'voice/clio/061.mp3',
+  'Ψάξτε παντού. Η πέτρα πρέπει να είναι εδώ κάπου.': 'voice/ntemis/128.mp3',
+  'Κοίταξα σε κάθε σχισμή. Τίποτα.': 'voice/ajax/084.mp3',
+  'Περιμένετε...': 'voice/clio/108.mp3',
   'Η Κλειώ κοιτάζει ΠΑΝΩ — η γωνία που μόνο μια επτάχρονη θα δοκίμαζε.': 'voice/narrator/137.mp3',
-  'ΕΚΕΙ! Κάτι πράσινο!': 'voice/clio/062.mp3',
+  'ΕΚΕΙ! Κάτι πράσινο!': 'voice/clio/102.mp3',
   'Ήδη βρήκατε την πράσινη πέτρα.': 'voice/narrator/138.mp3',
   'Η Κλειώ δείχνει ψηλά. Σφηνωμένη σε μια ρωγμή πάνω από το ύψος των ματιών: μια πέτρα. Σκούρα πράσινη, λεία, ζεστή στο χέρι.': 'voice/narrator/139.mp3',
-  'Νεφρίτης. Jade. Από την Ανατολή.': 'voice/ntemis/059.mp3',
+  'Νεφρίτης. Jade. Από την Ανατολή.': 'voice/ntemis/123.mp3',
   'Ο Κάρκαρος. Το φανάρι φωτίζει τοίχους γεμάτους αρχαία σημάδια. Σταγόνες ηχούν στο σκοτάδι.': 'voice/narrator/140.mp3',
-  'Κοιτάξτε τους τοίχους! Παντού σημάδια!': 'voice/ajax/047.mp3',
-  'Ονόματα πλοίων, αρχικά, ημερομηνίες. Αιώνες ιστορίας χαραγμένοι στον βράχο.': 'voice/ntemis/060.mp3',
+  'Κοιτάξτε τους τοίχους! Παντού σημάδια!': 'voice/ajax/085.mp3',
+  'Ονόματα πλοίων, αρχικά, ημερομηνίες. Αιώνες ιστορίας χαραγμένοι στον βράχο.': 'voice/ntemis/126.mp3',
   'Η πόρτα του Αγίου Νικολάου. Ξύλινη, βαριά, ανοιχτή.': 'voice/narrator/141.mp3',
   'Χρυσές εικόνες αγίων λάμπουν στο φως των κεριών. Αφιερώματα καπεταναίων και οικογενειών τους.': 'voice/narrator/142.mp3',
-  'Κοίτα αυτή — ένα πλοίο στο φόντο πίσω από τον άγιο.': 'voice/clio/064.mp3',
-  'Κάθε εικόνα ήταν ευχαριστία για ασφαλή επιστροφή.': 'voice/ntemis/061.mp3',
+  'Κοίτα αυτή — ένα πλοίο στο φόντο πίσω από τον άγιο.': 'voice/clio/104.mp3',
+  'Κάθε εικόνα ήταν ευχαριστία για ασφαλή επιστροφή.': 'voice/ntemis/122.mp3',
   'Σκαλιστό ξύλινο τέμπλο. Φύλλα αμπέλου, ρόδια, δελφίνια — ο καλλιτέχνης ήξερε τη θάλασσα.': 'voice/narrator/143.mp3',
-  'Αριστούργημα λαϊκής τέχνης. Δεν υπάρχει σαν αυτό.': 'voice/ntemis/062.mp3',
-  'Μπορώ να σκαρφαλώσω;': 'voice/ajax/048.mp3',
-  '...εντάξει.': 'voice/ajax/049.mp3',
-  'Χαχαχα!': 'voice/clio/065.mp3',
+  'Αριστούργημα λαϊκής τέχνης. Δεν υπάρχει σαν αυτό.': 'voice/ntemis/115.mp3',
+  'Μπορώ να σκαρφαλώσω;': 'voice/ajax/089.mp3',
+  '...εντάξει.': 'voice/papas/008.mp3',
+  'Χαχαχα!': 'voice/ajax/092.mp3',
   'Μανουάλι με κεριά. Μερικά καίνε ακόμα — κάποιος πέρασε πρόσφατα.': 'voice/narrator/144.mp3',
   'Το κερί της Κλειώς καίει ήσυχα.': 'voice/narrator/145.mp3',
-  'Θέλω να ανάψω ένα κερί.': 'voice/clio/066.mp3',
-  'Για ποιον, αγάπη μου;': 'voice/ntemis/063.mp3',
-  'Για τους καπεταναίους και τα πλοία τους.': 'voice/clio/067.mp3',
+  'Θέλω να ανάψω ένα κερί.': 'voice/clio/103.mp3',
+  'Για ποιον, αγάπη μου;': 'voice/ntemis/116.mp3',
+  'Για τους καπεταναίους και τα πλοία τους.': 'voice/ntemis/117.mp3',
   'Η φλόγα τρεμοπαίζει. Σκιές χορεύουν στους τοίχους.': 'voice/narrator/146.mp3',
   'Τίποτα ιδιαίτερο στο πάτωμα.': 'voice/narrator/147.mp3',
-  'Μπαμπά! Κοίτα αυτή την πλάκα — έχει γράμματα!': 'voice/clio/068.mp3',
-  '«Λ.Β.» — Λεωνίδας Βισβίκης!': 'voice/ntemis/064.mp3',
-  'Ανοίξτε την! Ανοίξτε την!': 'voice/ajax/050.mp3',
-  'Δεν βλέπω τίποτα εδώ κάτω.': 'voice/ntemis/065.mp3',
+  'Μπαμπά! Κοίτα αυτή την πλάκα — έχει γράμματα!': 'voice/clio/107.mp3',
+  '«Λ.Β.» — Λεωνίδας Βισβίκης!': 'voice/ntemis/114.mp3',
+  'Ανοίξτε την! Ανοίξτε την!': 'voice/ajax/081.mp3',
+  'Δεν βλέπω τίποτα εδώ κάτω.': 'voice/ntemis/118.mp3',
   'Η κρυψώνα κάτω από την πλάκα είναι άδεια τώρα.': 'voice/narrator/148.mp3',
   'Κάτω από την πλάκα — ένα δερμάτινο κύλινδρο. Μέσα, ένας χειρόγραφος χάρτης.': 'voice/narrator/149.mp3',
-  'Χειρόγραφος χάρτης του Κορινθιακού. X σημαδεύει τον Άγιο Γεώργιο.': 'voice/ntemis/066.mp3',
-  'Υπάρχει σημείωμα: «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»': 'voice/clio/069.mp3',
+  'Χειρόγραφος χάρτης του Κορινθιακού. X σημαδεύει τον Άγιο Γεώργιο.': 'voice/ntemis/127.mp3',
+  'Υπάρχει σημείωμα: «Κάτω από τον σταυρό, πέντε βήματα. Σκάψε.»': 'voice/clio/109.mp3',
   'ΘΗΣΑΥΡΟΣ!': 'voice/ajax/051.mp3',
   'Πέτρινες πλάκες στο πάτωμα. Μια φαίνεται... διαφορετική. Με χαραγμένα γράμματα.': 'voice/narrator/150.mp3',
   'Πέτρινες πλάκες στο πάτωμα. Με περισσότερο φως ίσως φανεί κάτι...': 'voice/narrator/151.mp3',
   'Ας ανάψουμε ένα κερί!': 'voice/clio/070.mp3',
   'Ο Παπά Νικόλας. Εξήντα χρονών, ζεστό πρόσωπο, πονηρό χαμόγελο.': 'voice/narrator/152.mp3',
-  'Καλώς ήρθατε στον Άγιο Νικόλαο, παιδιά μου.': 'voice/papas/002.mp3',
+  'Καλώς ήρθατε στον Άγιο Νικόλαο, παιδιά μου.': 'voice/papas/011.mp3',
   'Γεια σας, πάτερ. Ψάχνουμε για τον Βισβίκη.': 'voice/ntemis/067.mp3',
-  'Α, τον Λεωνίδα! Ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας.': 'voice/papas/003.mp3',
-  'Αυτός έφτιαξε το τέμπλο, αυτός πλήρωνε τα κεριά, αυτός...': 'voice/papas/004.mp3',
+  'Α, τον Λεωνίδα! Ο μεγαλύτερος ευεργέτης αυτής της εκκλησίας.': 'voice/papas/009.mp3',
+  'Αυτός έφτιαξε το τέμπλο, αυτός πλήρωνε τα κεριά, αυτός...': 'voice/papas/010.mp3',
   'Αυτός τα έκανε ΟΛΑ;': 'voice/ajax/052.mp3',
-  'Σχεδόν, παιδί μου. Σχεδόν. Κοιτάξτε γύρω σας — βλέπετε τα ίχνη του παντού.': 'voice/papas/005.mp3',
+  'Σχεδόν, παιδί μου. Σχεδόν. Κοιτάξτε γύρω σας — βλέπετε τα ίχνη του παντού.': 'voice/ajax/091.mp3',
   'Ημίφως και μυρωδιά λιβανιού. Χρυσές εικόνες λάμπουν στη σιωπή.': 'voice/narrator/153.mp3',
   'Τι ωραία... σαν να μπαίνεις σε άλλο κόσμο.': 'voice/clio/071.mp3',
   'Γιατί είναι σκοτεινά;': 'voice/ajax/053.mp3',
   'Γιατί εδώ μέσα ακούς καλύτερα. Ακόμα κι τη σιωπή.': 'voice/ntemis/068.mp3',
-  'Προσοχή εκεί κάτω. Το σπήλαιο έχει μυστικά.': 'voice/giannis/004.mp3',
+  'Προσοχή εκεί κάτω. Το σπήλαιο έχει μυστικά.': 'voice/giannis/008.mp3',
   'Ο Γιάννης σου δίνει ένα ορειχάλκινο φανάρι. Παλιό, ναυτικό, καλοσυντηρημένο.': 'voice/narrator/154.mp3',
   'Ο αέρας σφυρίζει στα ερείπια του μύλου.': 'voice/narrator/155.mp3',
   'Ο Γιάννης μας έδειξε τον δρόμο. Ώρα να ψάξουμε.': 'voice/ntemis/069.mp3',
   'Ο Χρυσόστομος στο τιμόνι. Εβδομήντα χρονών, μάτια σαν τη θάλασσα.': 'voice/narrator/156.mp3',
-  'Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν.': 'voice/chrysostomos/001.mp3',
-  'Η θάλασσα δεν σε ρωτάει τι αγαπάς. Αλλάζει κι εσύ αλλάζεις μαζί της.': 'voice/chrysostomos/002.mp3',
+  'Ο πατέρας σου μου είπε ότι κάποια μέρα θα ερχόσουν.': 'voice/chrysostomos/010.mp3',
+  'Η θάλασσα δεν σε ρωτάει τι αγαπάς. Αλλάζει κι εσύ αλλάζεις μαζί της.': 'voice/chrysostomos/008.mp3',
   'Γνώριζες τον Βισβίκη;': 'voice/ntemis/070.mp3',
-  'Ήταν ο τελευταίος ρομαντικός. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.': 'voice/chrysostomos/003.mp3',
+  'Ήταν ο τελευταίος ρομαντικός. Κανείς δεν τον πίστεψε. Πέθανε μόνος. Αλλά δεν πέθανε χωρίς σχέδιο.': 'voice/chrysostomos/009.mp3',
   'Μαρμάρινη πλάκα, πιο μεγαλοπρεπής από τις άλλες. Χαραγμένο: «Πλοίαρχος Λ. Βισβίκης».': 'voice/narrator/157.mp3',
   'Μαρμάρινοι σταυροί και πλάκες. Χαραγμένα πλοία στις πέτρες. Ονόματα καπεταναίων: Τσώνης, Ρήγας, Μαμάς.': 'voice/narrator/158.mp3',
   'Κυπαρίσσια ψηλά σαν κατάρτια. Φρουροί αιώνιοι στο φεγγαρόφωτο.': 'voice/narrator/159.mp3',
@@ -4289,7 +4333,7 @@ const VOICE_MAP = {
   'Σελίδες γεμάτες ονόματα. Ψαράδες, δάσκαλοι, ταβερνιάρηδες. Γαλαξειδιώτες.': 'voice/narrator/195.mp3',
   'Ξέρεις τι σημαίνει αλληλασφάλεια; Ότι κανείς δεν βυθίζεται μόνος.': 'voice/ntemis/086.mp3',
   'Ο Άκης με την κάμερά του. Καταγράφει τα πάντα.': 'voice/narrator/196.mp3',
-  'Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή.': 'voice/akis/003.mp3',
+  'Τριάντα χρόνια κινηματογραφώ τόπους που σβήνουν. Αυτή τη φορά δεν γράφω ελεγείο. Γράφω αρχή.': 'voice/akis/009.mp3',
   'Ο ήλιος βυθίζεται στον Κορινθιακό. Χρυσό φως λούζει τα πρόσωπα. Η θάλασσα θυμάται.': 'voice/narrator/197.mp3',
   'Εβδομάδες αργότερα. Το λιμάνι του Γαλαξειδίου στο ηλιοβασίλεμα. Ολόκληρη η πόλη είναι εδώ.': 'voice/narrator/198.mp3',
   'Τι θα πεις;': 'voice/ajax/063.mp3',
@@ -4311,24 +4355,15 @@ const VOICE_MAP = {
   '«Βρες το πράσινο πέτρωμα, εκεί που η γη μιλάει — εκεί που τα βράχια γίνονται σπήλαιο.»': 'voice/ntemis/096.mp3',
   '«Φέρε τη σε μένα»... Είναι νεκρός εδώ και εκατό χρόνια.': 'voice/ajax/066.mp3',
   'Κάποιος στην πόλη θα ξέρει για τον Βισβίκη. Πάμε στο λιμάνι.': 'voice/ntemis/098.mp3',
-  'Ντέμη! Πόσα χρόνια, ρε παιδί μου!': 'voice/akis/004.mp3',
-  'Άκη! Στάθη! Δεν αλλάξατε καθόλου!': 'voice/ntemis/099.mp3',
-  'Εμείς όχι. Εσύ έφερες ολόκληρο στρατό!': 'voice/stathis/003.mp3',
-  'Τι παίζουν; Είναι τέλειο!': 'voice/ajax/067.mp3',
+    'Άκη! Στάθη! Δεν αλλάξατε καθόλου!': 'voice/ntemis/099.mp3',
+    'Τι παίζουν; Είναι τέλειο!': 'voice/ajax/067.mp3',
   'Σσσ... Ζωγραφίζω τους.': 'voice/clio/089.mp3',
   'Η μελωδία των ναυτικών. Χρόνια δεν την άκουσα.': 'voice/ntemis/100.mp3',
-  'Τριακόσια πλοία! Φανταστείτε! Από αυτό το μικρό λιμάνι!': 'voice/curator/004.mp3',
-  'Οι καπεταναίοι του Γαλαξειδίου ταξίδευαν ως τη Μαύρη Θάλασσα.': 'voice/curator/005.mp3',
-  'Τριακόσια; Σαν ολόκληρο στόλο!': 'voice/ajax/068.mp3',
-  'Και τότε ήρθε αυτό. Το ατμόπλοιο. Και αυτοί αρνήθηκαν.': 'voice/curator/006.mp3',
-  'Ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;': 'voice/ajax/069.mp3',
+      'Τριακόσια; Σαν ολόκληρο στόλο!': 'voice/ajax/068.mp3',
+    'Ήταν οι καλύτεροι, κι αυτό τους έκανε χειρότερους;': 'voice/ajax/069.mp3',
   'Εκατόν τέσσερις υπέγραψαν. Αλληλασφάλεια.': 'voice/clio/090.mp3',
-  'Τα άφησε όλα "στο Γαλαξίδι." Όχι σε πρόσωπο. Στην πόλη.': 'voice/athos/004.mp3',
-  'Ποιο είναι το ατμόπλοιο σήμερα;': 'voice/athos/005.mp3',
-  'Θα βρούμε την απάντηση, Άθο. Υπόσχομαι.': 'voice/ntemis/101.mp3',
-  'Από εδώ βλέπεις τα πάντα. Όλο το Γαλαξείδι.': 'voice/giannis/005.mp3',
-  'Εκεί κάτω. Βλέπεις τη σκοτεινή τρύπα στα βράχια;': 'voice/giannis/006.mp3',
-  'Ο Κάρκαρος...': 'voice/ntemis/102.mp3',
+      'Θα βρούμε την απάντηση, Άθο. Υπόσχομαι.': 'voice/ntemis/101.mp3',
+      'Ο Κάρκαρος...': 'voice/ntemis/102.mp3',
   'Βλέπω ένα νησάκι! Με ένα εκκλησάκι!': 'voice/ajax/070.mp3',
   'Αυτός ήθελε να μείνει κάτι.': 'voice/clio/092.mp3',
   'Πάρτε αυτό. Θα το χρειαστείτε εκεί κάτω.': 'voice/giannis/007.mp3',
@@ -4341,8 +4376,7 @@ const VOICE_MAP = {
   'Γεια σου, καπετάνιε! Γεια σου!': 'voice/clio/095.mp3',
   'Δείχνει προς την εκκλησία... Τον Άγιο Νικόλαο.': 'voice/ntemis/105.mp3',
   'Θέλω να ανάψω ένα κερί. Για τους καπεταναίους.': 'voice/clio/096.mp3',
-  'Αυτό το παιδί... Ο Βισβίκης θα χαμογελούσε.': 'voice/papas/006.mp3',
-  'Άναψέ το, κόρη μου.': 'voice/ntemis/106.mp3',
+    'Άναψέ το, κόρη μου.': 'voice/ntemis/106.mp3',
   'Μπαμπά! Κοίτα! Γράμματα στο πάτωμα! «Λ.Β.»!': 'voice/clio/097.mp3',
   'Λάμβδα Βήτα... Λεωνίδας Βισβίκης!': 'voice/ajax/074.mp3',
   'Ένας χάρτης... Δείχνει τον Άγιο Γεώργιο. Με ένα Χ.': 'voice/ntemis/107.mp3',
@@ -4360,8 +4394,7 @@ const VOICE_MAP = {
   'Ο Καπετάνιος... ήξερε.': 'voice/clio/099.mp3',
   'Ο Βισβίκης δεν μας άφησε χρυσάφι. Μας άφησε μια ιδέα.': 'voice/ntemis/111.mp3',
   'Την αλληλεγγύη. Κράτα τον διπλανό σου. Άλλαξε το πλοίο.': 'voice/ntemis/112.mp3',
-  'Γυρνάω την κάμερα. Αυτό πρέπει να το δει ο κόσμος.': 'voice/akis/005.mp3',
-  'Εκατόν τρεις... Μένει μία ακόμα υπογραφή.': 'voice/ajax/079.mp3',
+    'Εκατόν τρεις... Μένει μία ακόμα υπογραφή.': 'voice/ajax/079.mp3',
   'Εγώ! Θέλω να υπογράψω εγώ!': 'voice/clio/100.mp3',
   'Η θάλασσα θυμάται. Κι εμείς τώρα, επίσης.': 'voice/ntemis/113.mp3'
 };
@@ -5957,6 +5990,12 @@ function render() {
     return;
   }
 
+  if (state.phase === 'crawl') {
+    drawCrawl(state.tick);
+    drawCustomCursor();
+    return;
+  }
+
   if (state.phase === 'cutscene') {
     renderCutscene();
     drawCustomCursor();
@@ -6397,6 +6436,16 @@ function update(dt) {
 
   // Title screen — start music on first interaction (handled by click)
   if (state.phase === 'title') return;
+  if (state.phase === 'crawl') {
+    if (!state.crawlFading) {
+      state.crawlScroll += CRAWL_SPEED * dt;
+      const lastLinePos = (CRAWL_LINES.length - 1) * CRAWL_LINE_SPACING;
+      if (state.crawlScroll > lastLinePos + CRAWL_VISIBLE_DEPTH) {
+        endCrawl();
+      }
+    }
+    return;
+  }
   if (state.phase === 'cutscene') { updateCutscene(dt); return; }
   if (state.phase !== 'playing') return;
 
@@ -6466,7 +6515,7 @@ CVS.addEventListener('mousemove', (e) => {
   state.mouseGX = g.x;
   state.mouseGY = g.y;
 
-  if (state.phase === 'title') {
+  if (state.phase === 'title' || state.phase === 'crawl') {
     state.cursorMode ='pointer';
     return;
   }
@@ -6633,8 +6682,9 @@ CVS.addEventListener('contextmenu', (e) => {
 
 // Keyboard
 document.addEventListener('keydown', e => {
-  // Escape: close overlays first, then skip cutscene
+  // Escape: close overlays first, then skip crawl/cutscene
   if (e.key === 'Escape') {
+    if (state.phase === 'crawl') { endCrawl(); return; }
     if (state.mapOpen) { state.mapOpen = false; state.mapHover = null; return; }
     if (state.helpOpen) { state.helpOpen = false; return; }
     if (state.statusOpen) { state.statusOpen = false; return; }
@@ -7078,6 +7128,144 @@ function drawTitleScreen(tick) {
 
 
 // ════════════════════════════════════════════════════════════
+// STAR WARS TEXT CRAWL
+// ════════════════════════════════════════════════════════════
+
+function drawCrawl(tick) {
+  const parchment = images['intro-parchment'];
+
+  // Draw parchment background (cover fit)
+  if (parchment && parchment.complete) {
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    const imgAspect = parchment.naturalWidth / parchment.naturalHeight;
+    const canAspect = GW / GH;
+    let sw, sh, sx, sy;
+    if (imgAspect > canAspect) {
+      sh = parchment.naturalHeight; sw = sh * canAspect;
+      sx = (parchment.naturalWidth - sw) / 2; sy = 0;
+    } else {
+      sw = parchment.naturalWidth; sh = sw / canAspect;
+      sx = 0; sy = (parchment.naturalHeight - sh) / 2;
+    }
+    ctx.drawImage(parchment, sx, sy, sw, sh, 0, 0, GW, GH);
+  } else {
+    ctx.fillStyle = '#2a1f0e';
+    ctx.fillRect(0, 0, GW, GH);
+  }
+
+  // Darken for text readability
+  ctx.fillStyle = 'rgba(10, 5, 0, 0.35)';
+  ctx.fillRect(0, 0, GW, GH);
+
+  // Vignette
+  const vgrd = ctx.createRadialGradient(GW / 2, GH / 2, GW * 0.25, GW / 2, GH / 2, GW * 0.65);
+  vgrd.addColorStop(0, 'rgba(0,0,0,0)');
+  vgrd.addColorStop(1, 'rgba(0,0,0,0.7)');
+  ctx.fillStyle = vgrd;
+  ctx.fillRect(0, 0, GW, GH);
+
+  // ── Perspective text crawl ──
+  const scrollY = state.crawlScroll;
+  const vanishY = GH * 0.10;
+  const nearY = GH * 0.92;
+  const focalLen = 280;
+  const baseFontSize = 11;
+
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  for (let i = 0; i < CRAWL_LINES.length; i++) {
+    const line = CRAWL_LINES[i];
+    if (!line) continue; // blank lines take spacing but don't render
+
+    // Distance this line has traveled from the entry point
+    const dist = scrollY - i * CRAWL_LINE_SPACING;
+    if (dist < 0) continue;       // not yet visible
+    if (dist > CRAWL_VISIBLE_DEPTH) continue; // past vanishing point
+
+    // Normalized: 0 = near (bottom), 1 = vanishing point (top)
+    const t = dist / CRAWL_VISIBLE_DEPTH;
+
+    // Perspective scale: shrinks as text recedes
+    const scale = 1 - t * 0.82;
+
+    // Screen Y with perspective compression
+    const screenY = nearY - (nearY - vanishY) * Math.pow(t, 0.55);
+
+    // Alpha: fade out near vanishing point
+    let alpha = t < 0.82 ? 1 : (1 - t) / 0.18;
+    // Soft fade-in at entry
+    if (t < 0.05) alpha *= t / 0.05;
+
+    if (alpha <= 0) continue;
+
+    // Title line rendered larger
+    const isTitle = (i === 0);
+    const fontSize = Math.max(3, (isTitle ? baseFontSize * 1.6 : baseFontSize) * scale);
+
+    ctx.globalAlpha = alpha;
+    ctx.font = `${Math.round(fontSize)}px 'Press Start 2P', monospace`;
+    ctx.fillStyle = '#3a2410';
+
+    // Horizontal narrowing for perspective
+    ctx.save();
+    ctx.translate(GW / 2, screenY);
+    ctx.scale(scale, 1);
+    ctx.fillText(line, 0, 0);
+    ctx.restore();
+  }
+
+  ctx.restore();
+
+  // Skip hint
+  ctx.save();
+  ctx.globalAlpha = 0.35 + Math.sin(tick * 0.05) * 0.15;
+  ctx.font = "7px 'Press Start 2P', monospace";
+  ctx.fillStyle = '#8a7a5a';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('ESC / ΚΛΙΚ', GW - 10, GH - 8);
+  ctx.restore();
+
+  // Fade overlay (for transition out)
+  if (state.crawlFadeAlpha > 0) {
+    ctx.save();
+    ctx.globalAlpha = state.crawlFadeAlpha;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, GW, GH);
+    ctx.restore();
+  }
+}
+
+function endCrawl() {
+  if (state.crawlFading) return;
+  state.crawlFading = true;
+  const fadeStep = () => {
+    state.crawlFadeAlpha += 0.025;
+    if (state.crawlFadeAlpha < 1) {
+      requestAnimationFrame(fadeStep);
+    } else {
+      state.crawlFadeAlpha = 1;
+      state.phase = 'intro';
+      state.musicOn = true;
+      const intro = document.getElementById('intro-screen');
+      intro.classList.add('show');
+      showIntroPage();
+    }
+  };
+  requestAnimationFrame(fadeStep);
+}
+
+// Click to skip crawl
+CVS.addEventListener('click', () => {
+  if (state.phase === 'crawl' && !state.crawlFading) {
+    endCrawl();
+  }
+});
+
+// ════════════════════════════════════════════════════════════
 // TITLE & INTRO FLOW
 // ════════════════════════════════════════════════════════════
 let titleClicked = false;
@@ -7144,12 +7332,12 @@ CVS.addEventListener('click', function titleClickHandler(e) {
       requestAnimationFrame(fadeStep);
     } else {
       titleFadeOut = 1;
-      // Switch to intro — title music keeps playing
-      state.phase = 'intro';
+      // Switch to text crawl — title music keeps playing
+      state.phase = 'crawl';
+      state.crawlScroll = 0;
+      state.crawlFading = false;
+      state.crawlFadeAlpha = 0;
       state.musicOn = true;
-      const intro = document.getElementById('intro-screen');
-      intro.classList.add('show');
-      showIntroPage();
     }
   };
   requestAnimationFrame(fadeStep);
