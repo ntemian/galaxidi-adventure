@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galaxidi Adventure — Scene Validation Tests</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #1a1a2e; color: #e0e0e0;
+    padding: 24px; line-height: 1.5;
+  }
+  h1 { color: #e0c97f; margin-bottom: 4px; font-size: 1.6rem; }
+  .subtitle { color: #888; margin-bottom: 20px; font-size: 0.9rem; }
+  .summary {
+    display: flex; gap: 24px; margin-bottom: 24px; padding: 16px;
+    background: #16213e; border-radius: 8px; border: 1px solid #0f3460;
+  }
+  .summary-item { text-align: center; }
+  .summary-item .count { font-size: 2rem; font-weight: bold; }
+  .summary-item .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+  .pass .count { color: #4ade80; }
+  .fail .count { color: #f87171; }
+  .warn .count { color: #fbbf24; }
+  .info .count { color: #60a5fa; }
+
+  .section { margin-bottom: 28px; }
+  .section-header {
+    font-size: 1.1rem; font-weight: 600; color: #e0c97f;
+    padding: 8px 12px; background: #16213e; border-radius: 6px 6px 0 0;
+    border-bottom: 2px solid #0f3460; cursor: pointer; user-select: none;
+  }
+  .section-header:hover { background: #1a2744; }
+  .section-header .toggle { float: right; font-size: 0.8rem; color: #888; }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    background: #0f0f23; border-radius: 0 0 6px 6px; overflow: hidden;
+  }
+  th { background: #16213e; color: #aaa; font-size: 0.7rem; text-transform: uppercase;
+       letter-spacing: 1px; padding: 8px 12px; text-align: left; }
+  td { padding: 6px 12px; border-bottom: 1px solid #1a1a2e; font-size: 0.85rem; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  .status { font-weight: bold; font-size: 0.85rem; white-space: nowrap; }
+  .status-pass { color: #4ade80; }
+  .status-fail { color: #f87171; }
+  .status-warn { color: #fbbf24; }
+
+  .tag {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 0.72rem; font-weight: 600; margin-right: 4px;
+  }
+  .tag-scene { background: #1e3a5f; color: #60a5fa; }
+  .tag-obj   { background: #3b2f1e; color: #fbbf24; }
+  .tag-cs    { background: #2d1e3a; color: #c084fc; }
+
+  .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; color: #93c5fd; }
+  .detail { color: #888; font-size: 0.8rem; }
+
+  #loading {
+    text-align: center; padding: 60px; color: #888; font-size: 1.1rem;
+  }
+  #loading .spinner {
+    display: inline-block; width: 20px; height: 20px;
+    border: 2px solid #333; border-top-color: #e0c97f;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+    margin-right: 10px; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-banner {
+    background: #3b1111; border: 1px solid #7f1d1d; padding: 16px;
+    border-radius: 8px; margin-bottom: 20px; color: #fca5a5;
+  }
+  .collapsed { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Scene Validation Tests</h1>
+<div class="subtitle">Galaxidi Adventure -- Automated data integrity checks</div>
+
+<div id="loading">
+  <span class="spinner"></span> Loading game data...
+</div>
+<div id="results" style="display:none;"></div>
+
+<iframe id="game-frame" src="../index.html?data-only" style="position:absolute; left:-9999px; top:-9999px; width:640px; height:400px;"></iframe>
+
+<script>
+// Wait for iframe to load, then extract data and run tests
+const iframe = document.getElementById('game-frame');
+const loadingEl = document.getElementById('loading');
+const resultsEl = document.getElementById('results');
+
+let loadTimeout;
+
+iframe.addEventListener('load', () => {
+  // data-only mode skips asset loading — data is available almost immediately
+  clearTimeout(loadTimeout);
+  setTimeout(() => {
+    try {
+      const testAccess = iframe.contentWindow.scenes;
+      if (testAccess) {
+        runAllTests();
+      } else {
+        setTimeout(runAllTests, 500);
+      }
+    } catch (e) {
+      loadingEl.innerHTML = '<div class="error-banner">Cannot access iframe content. This is likely a browser security restriction with file:// URLs.<br><br>' +
+        '<strong>Fix:</strong> Serve the game locally:<br><code>cd ~/games/galaxidi-adventure && python3 -m http.server 8080</code><br>' +
+        'Then open: <a href="http://localhost:8080/tests/scene-validation.html" style="color:#60a5fa">http://localhost:8080/tests/scene-validation.html</a><br><br>' +
+        'Error: ' + e.message + '</div>';
+    }
+  }, 200);
+});
+
+// Timeout if iframe never loads
+loadTimeout = setTimeout(() => {
+  loadingEl.innerHTML = '<div class="error-banner">Timeout: Game failed to load within 10 seconds. Make sure index.html is accessible at ../index.html</div>';
+}, 10000);
+
+function runAllTests() {
+  let w;
+  try {
+    w = iframe.contentWindow;
+  } catch (e) {
+    loadingEl.innerHTML = '<div class="error-banner">Cannot access iframe contentWindow: ' + e.message + '</div>';
+    return;
+  }
+
+  // Extract globals from the game iframe
+  const scenes = w.scenes;
+  const cutscenes = w.cutscenes;
+  const SCENE_CUTSCENES = w.SCENE_CUTSCENES;
+  const images = w.images;
+  const npcChars = w.npcChars;
+  const chars = w.chars;
+  const getGroundY = w.getGroundY;
+  const getWalkBounds = w.getWalkBounds;
+  const HOTSPOT_PAD = w.HOTSPOT_PAD || 10;
+
+  if (!scenes) {
+    loadingEl.innerHTML = '<div class="error-banner">FATAL: Could not read <code>scenes</code> from iframe. The game may have errored during init, or cross-origin restrictions are blocking access.<br><br>Check the browser console for errors. If you see a CORS/security error, try:<br><code>cd ~/games/galaxidi-adventure && python3 -m http.server 8080</code><br>Then open: <a href="http://localhost:8080/tests/scene-validation.html" style="color:#60a5fa">http://localhost:8080/tests/scene-validation.html</a></div>';
+    return;
+  }
+
+  // Also extract the calibration data by parsing the recalibrateHotspots function
+  // Since it already ran, we need to inspect the actual scene objects for calibrated coords.
+  // We can also extract the loadImg keys from images dict.
+
+  const allResults = [];
+  let passCount = 0, failCount = 0, warnCount = 0;
+
+  function pass(section, test, detail) {
+    allResults.push({ section, status: 'pass', test, detail: detail || '' });
+    passCount++;
+  }
+  function fail(section, test, detail) {
+    allResults.push({ section, status: 'fail', test, detail: detail || '' });
+    failCount++;
+  }
+  function warn(section, test, detail) {
+    allResults.push({ section, status: 'warn', test, detail: detail || '' });
+    warnCount++;
+  }
+
+  // ============================================================
+  // 1. SCENE STRUCTURE VALIDATION
+  // ============================================================
+  const sceneIds = Object.keys(scenes);
+
+  for (const id of sceneIds) {
+    const sc = scenes[id];
+
+    // label
+    if (sc.label && typeof sc.label === 'string' && sc.label.length > 0) {
+      pass('Scenes', `[${id}] has label`, sc.label);
+    } else {
+      fail('Scenes', `[${id}] missing or invalid label`);
+    }
+
+    // bg
+    if (sc.bg && typeof sc.bg === 'string') {
+      pass('Scenes', `[${id}] has bg key`, sc.bg);
+    } else {
+      fail('Scenes', `[${id}] missing bg key`);
+    }
+
+    // charPos
+    if (sc.charPos) {
+      const expected = ['ntemis', 'ajax', 'clio'];
+      const missing = expected.filter(c => !sc.charPos[c]);
+      if (missing.length === 0) {
+        pass('Scenes', `[${id}] charPos has all 3 characters`);
+      } else {
+        fail('Scenes', `[${id}] charPos missing: ${missing.join(', ')}`);
+      }
+      // Validate positions have x and y
+      for (const c of expected) {
+        if (sc.charPos[c]) {
+          if (typeof sc.charPos[c].x !== 'number' || typeof sc.charPos[c].y !== 'number') {
+            fail('Scenes', `[${id}] charPos.${c} missing x/y coordinates`);
+          }
+        }
+      }
+    } else {
+      fail('Scenes', `[${id}] missing charPos entirely`);
+    }
+
+    // walkLine
+    if (sc.walkLine && Array.isArray(sc.walkLine) && sc.walkLine.length >= 2) {
+      pass('Scenes', `[${id}] walkLine has ${sc.walkLine.length} points`);
+    } else {
+      fail('Scenes', `[${id}] missing or insufficient walkLine (need >= 2 points)`);
+    }
+
+    // walkBounds (optional but recommended)
+    if (sc.walkBounds && Array.isArray(sc.walkBounds) && sc.walkBounds.length === 2) {
+      pass('Scenes', `[${id}] walkBounds defined [${sc.walkBounds.join(', ')}]`);
+    } else {
+      warn('Scenes', `[${id}] no walkBounds defined (will default to walkLine extents)`);
+    }
+
+    // entry dialog
+    if (sc.entry && Array.isArray(sc.entry) && sc.entry.length > 0) {
+      pass('Scenes', `[${id}] entry dialog has ${sc.entry.length} lines`);
+    } else {
+      fail('Scenes', `[${id}] missing entry dialog array`);
+    }
+
+    // Object ID uniqueness
+    if (sc.objects && Array.isArray(sc.objects)) {
+      const objIds = sc.objects.map(o => o.id);
+      const dupes = objIds.filter((v, i) => objIds.indexOf(v) !== i);
+      if (dupes.length > 0) {
+        fail('Scenes', `[${id}] duplicate object IDs: ${[...new Set(dupes)].join(', ')}`);
+      } else {
+        pass('Scenes', `[${id}] all ${objIds.length} object IDs unique`);
+      }
+    }
+
+    // Verify all verb values are valid (function, array, or string for scene change)
+    if (sc.objects) {
+      for (const obj of sc.objects) {
+        if (!obj.verbs) continue;
+        for (const [verbName, handler] of Object.entries(obj.verbs)) {
+          const t = typeof handler;
+          if (t === 'function' || Array.isArray(handler) || t === 'string') {
+            // valid
+          } else {
+            fail('Scenes', `[${id}] object "${obj.id}" verb "${verbName}" has invalid type: ${t}`, 'Expected function, array, or string');
+          }
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // 2. EXIT VALIDATION
+  // ============================================================
+  for (const id of sceneIds) {
+    const sc = scenes[id];
+    if (!sc.exits || !Array.isArray(sc.exits)) {
+      warn('Exits', `[${id}] has no exits array`);
+      continue;
+    }
+    for (const exit of sc.exits) {
+      if (!exit.target) {
+        fail('Exits', `[${id}] exit missing target`, JSON.stringify(exit));
+        continue;
+      }
+      if (scenes[exit.target]) {
+        pass('Exits', `[${id}] exit -> "${exit.target}" exists`);
+      } else {
+        fail('Exits', `[${id}] exit -> "${exit.target}" references non-existent scene`);
+      }
+      if (!exit.label) {
+        warn('Exits', `[${id}] exit to "${exit.target}" missing label`);
+      }
+      if (!exit.side) {
+        warn('Exits', `[${id}] exit to "${exit.target}" missing side (left/right)`);
+      }
+    }
+  }
+
+  // Also check verb-based scene transitions (walk/use verbs returning scene name strings)
+  for (const id of sceneIds) {
+    const sc = scenes[id];
+    if (!sc.objects) continue;
+    for (const obj of sc.objects) {
+      if (!obj.verbs) continue;
+      for (const [verbName, handler] of Object.entries(obj.verbs)) {
+        if (typeof handler === 'string') {
+          // This is a scene transition string
+          if (scenes[handler]) {
+            pass('Exits', `[${id}] "${obj.id}".${verbName} -> "${handler}" exists`);
+          } else {
+            fail('Exits', `[${id}] "${obj.id}".${verbName} -> "${handler}" references non-existent scene`);
+          }
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // 3. CUTSCENE VALIDATION
+  // ============================================================
+  if (cutscenes) {
+    const csIds = Object.keys(cutscenes);
+    for (const csId of csIds) {
+      const cs = cutscenes[csId];
+
+      // frames array
+      if (cs.frames && Array.isArray(cs.frames) && cs.frames.length > 0) {
+        pass('Cutscenes', `[${csId}] has ${cs.frames.length} frame(s)`);
+      } else {
+        fail('Cutscenes', `[${csId}] missing or empty frames array`);
+        continue;
+      }
+
+      // Each frame has duration and draw
+      for (let i = 0; i < cs.frames.length; i++) {
+        const frame = cs.frames[i];
+        if (typeof frame.duration !== 'number' || frame.duration <= 0) {
+          fail('Cutscenes', `[${csId}] frame ${i} missing or invalid duration`, `Got: ${frame.duration}`);
+        } else {
+          pass('Cutscenes', `[${csId}] frame ${i} duration: ${frame.duration}s`);
+        }
+        if (typeof frame.draw !== 'function') {
+          fail('Cutscenes', `[${csId}] frame ${i} missing draw function`, `Got: ${typeof frame.draw}`);
+        } else {
+          pass('Cutscenes', `[${csId}] frame ${i} has draw function`);
+        }
+        // Dialogue timestamps should be within duration
+        if (frame.dialogue && Array.isArray(frame.dialogue)) {
+          for (let j = 0; j < frame.dialogue.length; j++) {
+            const dlg = frame.dialogue[j];
+            if (typeof dlg.at !== 'number') {
+              fail('Cutscenes', `[${csId}] frame ${i} dialogue ${j} missing "at" timestamp`);
+            } else if (dlg.at >= frame.duration) {
+              warn('Cutscenes', `[${csId}] frame ${i} dialogue ${j} "at" (${dlg.at}s) >= frame duration (${frame.duration}s)`, 'May not display before frame advances');
+            }
+            if (!dlg.t || typeof dlg.t !== 'string') {
+              fail('Cutscenes', `[${csId}] frame ${i} dialogue ${j} missing text`);
+            }
+          }
+        }
+      }
+
+      // onComplete
+      if (typeof cs.onComplete !== 'function') {
+        fail('Cutscenes', `[${csId}] missing onComplete callback`);
+      } else {
+        pass('Cutscenes', `[${csId}] has onComplete callback`);
+      }
+    }
+  } else {
+    fail('Cutscenes', 'cutscenes object not found in game');
+  }
+
+  // ============================================================
+  // 4. SCENE_CUTSCENES MAPPING
+  // ============================================================
+  if (SCENE_CUTSCENES) {
+    for (const [sceneId, csId] of Object.entries(SCENE_CUTSCENES)) {
+      // Scene exists?
+      if (!scenes[sceneId]) {
+        fail('Scene-Cutscene Map', `SCENE_CUTSCENES["${sceneId}"] references non-existent scene`);
+      } else {
+        pass('Scene-Cutscene Map', `SCENE_CUTSCENES["${sceneId}"] -> scene exists`);
+      }
+      // Cutscene exists?
+      if (!cutscenes || !cutscenes[csId]) {
+        fail('Scene-Cutscene Map', `SCENE_CUTSCENES["${sceneId}"] -> cutscene "${csId}" not found`);
+      } else {
+        pass('Scene-Cutscene Map', `SCENE_CUTSCENES["${sceneId}"] -> cutscene "${csId}" exists`);
+      }
+    }
+    // Verify treasure is NOT in auto-trigger (it should be manual)
+    if (SCENE_CUTSCENES['treasure']) {
+      warn('Scene-Cutscene Map', 'treasure scene has auto-trigger cutscene', 'Treasure cutscene should be manual (player opens chest)');
+    } else {
+      pass('Scene-Cutscene Map', 'treasure scene is NOT auto-triggered (correct: manual chest opening)');
+    }
+    // Verify new_era is NOT in auto-trigger
+    if (SCENE_CUTSCENES['new_era']) {
+      warn('Scene-Cutscene Map', 'new_era scene has auto-trigger cutscene', 'Festival cutscene should be manual (player speech)');
+    } else {
+      pass('Scene-Cutscene Map', 'new_era scene is NOT auto-triggered (correct: manual speech)');
+    }
+  } else {
+    fail('Scene-Cutscene Map', 'SCENE_CUTSCENES object not found in game');
+  }
+
+  // ============================================================
+  // 5. IMAGE VALIDATION (skipped in data-only mode)
+  // ============================================================
+  const dataOnly = w.DATA_ONLY;
+  const loadedImageKeys = images ? Object.keys(images) : [];
+  if (dataOnly) {
+    pass('Images', 'Skipped — running in data-only mode (no assets loaded)');
+  }
+
+  if (!dataOnly) {
+    for (const id of sceneIds) {
+      const sc = scenes[id];
+      if (sc.bg) {
+        if (loadedImageKeys.includes(sc.bg)) {
+          if (images[sc.bg] && images[sc.bg].naturalWidth > 0) {
+            pass('Images', `[${id}] bg "${sc.bg}" loaded (${images[sc.bg].naturalWidth}x${images[sc.bg].naturalHeight})`);
+          } else {
+            fail('Images', `[${id}] bg "${sc.bg}" key exists but image failed to load`);
+          }
+        } else {
+          fail('Images', `[${id}] bg "${sc.bg}" not found in loaded images`, 'Missing loadImg() call?');
+        }
+      }
+    }
+
+    const cutsceneImageKeys = loadedImageKeys.filter(k => k.startsWith('cutscene-'));
+    if (cutsceneImageKeys.length > 0) {
+      pass('Images', `${cutsceneImageKeys.length} cutscene images loaded`, cutsceneImageKeys.join(', '));
+    } else {
+      warn('Images', 'No cutscene images found in loaded images');
+    }
+
+    const charSprites = ['char-ntemis', 'char-ajax', 'char-clio'];
+    for (const key of charSprites) {
+      if (loadedImageKeys.includes(key)) {
+        pass('Images', `Character sprite "${key}" loaded`);
+      } else {
+        fail('Images', `Character sprite "${key}" not found`);
+      }
+    }
+
+    const portraitKeys = loadedImageKeys.filter(k => k.startsWith('port-'));
+    if (portraitKeys.length > 0) {
+      pass('Images', `${portraitKeys.length} portraits loaded`, portraitKeys.join(', '));
+    } else {
+      warn('Images', 'No portrait images found');
+    }
+
+    for (const key of ['title-bg', 'map-bg', 'intro-parchment']) {
+      if (loadedImageKeys.includes(key)) {
+        pass('Images', `Special image "${key}" loaded`);
+      } else {
+        fail('Images', `Special image "${key}" not found`);
+      }
+    }
+  }
+
+  // ============================================================
+  // 6. HITBOX CALIBRATION VALIDATION
+  // ============================================================
+  // Since recalibrateHotspots() already ran, the calibrated values are on the scene objects.
+  // We check that every object in every scene has non-negative x, y, w, h values,
+  // and look for objects that might have been missed by calibration (still at original values).
+
+  // We'll reconstruct what the calibration covered by reading the source.
+  // Instead, we validate that all scene objects have proper hitbox dimensions.
+  for (const id of sceneIds) {
+    const sc = scenes[id];
+    if (!sc.objects || sc.objects.length === 0) {
+      warn('Hitboxes', `[${id}] has no objects`);
+      continue;
+    }
+
+    const objIds = sc.objects.map(o => o.id);
+
+    for (const obj of sc.objects) {
+      // Check hitbox dimensions exist and are sensible
+      if (typeof obj.x !== 'number' || typeof obj.y !== 'number' ||
+          typeof obj.w !== 'number' || typeof obj.h !== 'number') {
+        fail('Hitboxes', `[${id}] "${obj.id}" missing x/y/w/h coordinates`);
+      } else {
+        // Hitbox should have positive dimensions
+        if (obj.w <= 0 || obj.h <= 0) {
+          fail('Hitboxes', `[${id}] "${obj.id}" has zero/negative dimensions (w=${obj.w}, h=${obj.h})`);
+        } else {
+          pass('Hitboxes', `[${id}] "${obj.id}" hitbox: (${obj.x},${obj.y}) ${obj.w}x${obj.h}`);
+        }
+      }
+      // Check label exists
+      if (!obj.label) {
+        warn('Hitboxes', `[${id}] "${obj.id}" missing label`);
+      }
+    }
+  }
+
+  // Cross-check: find objects in calibration data that don't exist in scenes
+  // We do this by checking if the iframe's recalibrateHotspots source is available.
+  // Since we can read the function source:
+  try {
+    // Parse calibration keys from the recalibrateHotspots source embedded in the game
+    const gameScripts = iframe.contentDocument.querySelectorAll('script');
+    let scriptSource = '';
+    for (const s of gameScripts) {
+      if (s.textContent.includes('recalibrateHotspots')) {
+        scriptSource = s.textContent;
+        break;
+      }
+    }
+
+    if (scriptSource) {
+      // Extract the calibration block
+      const calMatch = scriptSource.match(/function recalibrateHotspots\(\)\s*\{[\s\S]*?const cal\s*=\s*(\{[\s\S]*?\});[\s\S]*?for/);
+      if (calMatch) {
+        // Parse scene-level keys from calibration
+        const calBlock = calMatch[1];
+        const sceneMatches = calBlock.match(/(\w+)\s*:\s*\{/g);
+        if (sceneMatches) {
+          for (const sm of sceneMatches) {
+            const calSceneId = sm.match(/(\w+)\s*:/)[1];
+            if (!scenes[calSceneId]) {
+              fail('Hitboxes', `Calibration has scene "${calSceneId}" but it does not exist in scenes`);
+            }
+          }
+        }
+
+        // For each scene in calibration, extract object IDs and cross-check
+        const calSceneRegex = /(\w+)\s*:\s*\{([^}]+)\}/g;
+        let calSceneMatch;
+        while ((calSceneMatch = calSceneRegex.exec(calBlock)) !== null) {
+          const calSceneId = calSceneMatch[1];
+          const calBody = calSceneMatch[2];
+          const calObjIds = [...calBody.matchAll(/(\w+)\s*:/g)].map(m => m[1]).filter(id => !['x','y','w','h'].includes(id));
+
+          if (scenes[calSceneId] && scenes[calSceneId].objects) {
+            const sceneObjIds = scenes[calSceneId].objects.map(o => o.id);
+
+            // Orphaned calibrations (in cal but not in scene)
+            for (const calObj of calObjIds) {
+              if (!sceneObjIds.includes(calObj)) {
+                warn('Hitboxes', `Orphaned calibration: "${calSceneId}.${calObj}" not found in scene objects`);
+              }
+            }
+
+            // Missing calibrations (in scene but not in cal)
+            for (const sceneObj of sceneObjIds) {
+              if (!calObjIds.includes(sceneObj)) {
+                warn('Hitboxes', `[${calSceneId}] "${sceneObj}" has no calibration entry`, 'Uses original coordinates');
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (e) {
+    warn('Hitboxes', 'Could not parse calibration source for cross-check', e.message);
+  }
+
+  // ============================================================
+  // 7. PROGRESSION GATE VALIDATION
+  // ============================================================
+
+  // Define the known progression gates and where the required flags/items are set
+  const progressionGates = [
+    {
+      gate: 'Exit treasure->new_era requires flag "letter_read"',
+      flag: 'letter_read',
+      setIn: 'treasure scene (dig_spot use verb, after chest cutscene)',
+      scene: 'treasure',
+    },
+    {
+      gate: 'Exit to treasure requires inventory "nautical_chart"',
+      flag: 'nautical_chart',
+      setIn: 'church_interior scene (floor_tile use verb)',
+      scene: 'church_interior',
+      isInventory: true,
+    },
+    {
+      gate: 'Elpida dock walk/use requires inventory "nautical_chart"',
+      flag: 'nautical_chart',
+      setIn: 'church_interior scene (floor_tile use verb)',
+      scene: 'church_interior',
+      isInventory: true,
+    },
+    {
+      gate: 'Desk drawer open requires inventory "brass_key"',
+      flag: 'brass_key',
+      setIn: 'kitchen scene (copper_pot open verb)',
+      scene: 'kitchen',
+      isInventory: true,
+    },
+    {
+      gate: 'Grave use requires inventory "green_stone"',
+      flag: 'green_stone',
+      setIn: 'cave scene (jade_stone via startJadeSequence)',
+      scene: 'cave',
+      isInventory: true,
+    },
+    {
+      gate: 'Floor tile requires flag "candle_lit"',
+      flag: 'candle_lit',
+      setIn: 'church_interior scene (candles_ci use verb)',
+      scene: 'church_interior',
+    },
+    {
+      gate: 'Dig spot requires flag "spot_found"',
+      flag: 'spot_found',
+      setIn: 'treasure scene (stone_cross look verb sets cross_examined + spot_found)',
+      scene: 'treasure',
+    },
+  ];
+
+  // Verify the setter scenes and objects actually exist
+  for (const pg of progressionGates) {
+    if (scenes[pg.scene]) {
+      pass('Progression', `Gate: "${pg.gate}"`, `Set in: ${pg.setIn}`);
+    } else {
+      fail('Progression', `Gate: "${pg.gate}" — setter scene "${pg.scene}" does not exist`);
+    }
+  }
+
+  // Verify the puzzle chain is completable: check that key items can be obtained
+  // brass_key -> copper_pot.open in kitchen
+  const kitchenPot = scenes.kitchen && scenes.kitchen.objects ? scenes.kitchen.objects.find(o => o.id === 'copper_pot') : null;
+  if (kitchenPot && kitchenPot.verbs && kitchenPot.verbs.open) {
+    pass('Progression', 'brass_key obtainable: kitchen.copper_pot has open verb');
+  } else {
+    fail('Progression', 'brass_key NOT obtainable: kitchen.copper_pot missing open verb');
+  }
+
+  // visvikis_letter -> desk_drawer.open in kitchen (requires brass_key)
+  const kitchenDrawer = scenes.kitchen && scenes.kitchen.objects ? scenes.kitchen.objects.find(o => o.id === 'desk_drawer') : null;
+  if (kitchenDrawer && kitchenDrawer.verbs && kitchenDrawer.verbs.open) {
+    pass('Progression', 'visvikis_letter obtainable: kitchen.desk_drawer has open verb');
+  } else {
+    fail('Progression', 'visvikis_letter NOT obtainable: kitchen.desk_drawer missing open verb');
+  }
+
+  // lantern -> giannis_npc.talk in windmill
+  const giannisNpc = scenes.windmill && scenes.windmill.objects ? scenes.windmill.objects.find(o => o.id === 'giannis_npc') : null;
+  if (giannisNpc && giannisNpc.verbs && giannisNpc.verbs.talk) {
+    pass('Progression', 'lantern obtainable: windmill.giannis_npc has talk verb');
+  } else {
+    fail('Progression', 'lantern NOT obtainable: windmill.giannis_npc missing talk verb');
+  }
+
+  // green_stone -> cave.jade_stone use verb
+  const jadeStone = scenes.cave && scenes.cave.objects ? scenes.cave.objects.find(o => o.id === 'jade_stone') : null;
+  if (jadeStone && jadeStone.verbs && jadeStone.verbs.use) {
+    pass('Progression', 'green_stone obtainable: cave.jade_stone has use verb');
+  } else {
+    fail('Progression', 'green_stone NOT obtainable: cave.jade_stone missing use verb');
+  }
+
+  // nautical_chart -> church_interior.floor_tile use verb (requires candle_lit)
+  const floorTile = scenes.church_interior && scenes.church_interior.objects ? scenes.church_interior.objects.find(o => o.id === 'floor_tile') : null;
+  if (floorTile && floorTile.verbs && floorTile.verbs.use) {
+    pass('Progression', 'nautical_chart obtainable: church_interior.floor_tile has use verb');
+  } else {
+    fail('Progression', 'nautical_chart NOT obtainable: church_interior.floor_tile missing use verb');
+  }
+
+  // Verify bidirectional navigation: every scene reachable from at least one other scene
+  const reachable = new Set();
+  for (const id of sceneIds) {
+    const sc = scenes[id];
+    if (sc.exits) {
+      for (const exit of sc.exits) {
+        if (exit.target) reachable.add(exit.target);
+      }
+    }
+    // Also check verb-based transitions
+    if (sc.objects) {
+      for (const obj of sc.objects) {
+        if (!obj.verbs) continue;
+        for (const handler of Object.values(obj.verbs)) {
+          if (typeof handler === 'string' && scenes[handler]) {
+            reachable.add(handler);
+          }
+        }
+      }
+    }
+  }
+  // exterior is the starting scene, so it's always reachable
+  reachable.add('exterior');
+
+  for (const id of sceneIds) {
+    if (reachable.has(id)) {
+      pass('Progression', `[${id}] is reachable from at least one other scene`);
+    } else {
+      fail('Progression', `[${id}] is UNREACHABLE — no exit/verb points to it`);
+    }
+  }
+
+  // ============================================================
+  // 8. GENERAL CONSISTENCY CHECKS
+  // ============================================================
+
+  // Total scene count
+  pass('Summary', `Total scenes: ${sceneIds.length}`, sceneIds.join(', '));
+
+  // Total cutscenes
+  if (cutscenes) {
+    const csIds = Object.keys(cutscenes);
+    pass('Summary', `Total cutscenes: ${csIds.length}`, csIds.join(', '));
+  }
+
+  // Total objects across all scenes
+  let totalObjects = 0;
+  for (const id of sceneIds) {
+    totalObjects += (scenes[id].objects || []).length;
+  }
+  pass('Summary', `Total objects across all scenes: ${totalObjects}`);
+
+  // Total images loaded
+  pass('Summary', `Total images loaded: ${loadedImageKeys.length}`);
+
+  // Check no scene bg references a cutscene image
+  for (const id of sceneIds) {
+    const bg = scenes[id].bg;
+    if (bg && bg.startsWith('cutscene-')) {
+      warn('Summary', `[${id}] bg uses a cutscene image "${bg}"`, 'Expected a bg-* image');
+    }
+  }
+
+  // ============================================================
+  // 9. WALKLINE Y CONSISTENCY
+  // ============================================================
+  // Verify charPos.y and NPC.y match getGroundY for their X positions
+  if (getGroundY) {
+    for (const id of sceneIds) {
+      const sc = scenes[id];
+      if (!sc.walkLine || !sc.charPos) continue;
+      for (const [who, pos] of Object.entries(sc.charPos)) {
+        const expectedY = getGroundY(id, pos.x);
+        const diff = Math.abs(pos.y - expectedY);
+        if (diff < 1) {
+          pass('WalkLine Y', `[${id}] ${who} charPos.y=${pos.y.toFixed(1)} matches walkLine (${expectedY.toFixed(1)})`);
+        } else {
+          fail('WalkLine Y', `[${id}] ${who} charPos.y=${pos.y.toFixed(1)} off by ${diff.toFixed(1)}px from walkLine (${expectedY.toFixed(1)})`);
+        }
+      }
+    }
+    // NPC Y consistency
+    if (npcChars) {
+      for (const [npcId, npc] of Object.entries(npcChars)) {
+        if (npcId === 'ghost') continue; // intentionally elevated
+        const sc = scenes[npc.scene];
+        if (!sc || !sc.walkLine) continue;
+        const expectedY = getGroundY(npc.scene, npc.x);
+        const diff = Math.abs(npc.y - expectedY);
+        if (diff < 1) {
+          pass('WalkLine Y', `NPC ${npcId} y=${npc.y.toFixed(1)} matches walkLine in ${npc.scene} (${expectedY.toFixed(1)})`);
+        } else {
+          fail('WalkLine Y', `NPC ${npcId} y=${npc.y.toFixed(1)} off by ${diff.toFixed(1)}px from walkLine in ${npc.scene} (${expectedY.toFixed(1)})`);
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // 10. WALK-TO VALIDATION
+  // ============================================================
+  // Verify walkTo values are within walkBounds; warn when object centers are outside bounds without walkTo
+  if (getWalkBounds) {
+    for (const id of sceneIds) {
+      const sc = scenes[id];
+      if (!sc.objects) continue;
+      const bounds = getWalkBounds(id);
+      for (const obj of sc.objects) {
+        if (obj._hidden) continue;
+        const center = obj.x + obj.w / 2;
+        if (obj.walkTo !== undefined) {
+          if (obj.walkTo >= bounds[0] && obj.walkTo <= bounds[1]) {
+            pass('Walk-To', `[${id}] ${obj.id} walkTo=${obj.walkTo} is within walkBounds [${bounds.join(',')}]`);
+          } else {
+            fail('Walk-To', `[${id}] ${obj.id} walkTo=${obj.walkTo} is OUTSIDE walkBounds [${bounds.join(',')}]`);
+          }
+        } else if (center < bounds[0] || center > bounds[1]) {
+          warn('Walk-To', `[${id}] ${obj.id} center=${center.toFixed(0)} is outside walkBounds [${bounds.join(',')}] — consider adding walkTo`, `Object at x:${obj.x} w:${obj.w}`);
+        }
+      }
+    }
+  }
+
+  // ============================================================
+  // 11. HOTSPOT OVERLAP DETECTION
+  // ============================================================
+  // Flag overlapping hitboxes (including padding) by area percentage
+  for (const id of sceneIds) {
+    const sc = scenes[id];
+    if (!sc.objects) continue;
+    const objs = sc.objects.filter(o => !o._hidden);
+    for (let i = 0; i < objs.length; i++) {
+      for (let j = i + 1; j < objs.length; j++) {
+        const a = objs[i], b = objs[j];
+        const pad = HOTSPOT_PAD;
+        const ax1 = a.x - pad, ay1 = a.y - pad, ax2 = a.x + a.w + pad, ay2 = a.y + a.h + pad;
+        const bx1 = b.x - pad, by1 = b.y - pad, bx2 = b.x + b.w + pad, by2 = b.y + b.h + pad;
+        const ox = Math.max(0, Math.min(ax2, bx2) - Math.max(ax1, bx1));
+        const oy = Math.max(0, Math.min(ay2, by2) - Math.max(ay1, by1));
+        const overlapArea = ox * oy;
+        if (overlapArea > 0) {
+          const aArea = (ax2 - ax1) * (ay2 - ay1);
+          const bArea = (bx2 - bx1) * (by2 - by1);
+          const pctA = ((overlapArea / aArea) * 100).toFixed(0);
+          const pctB = ((overlapArea / bArea) * 100).toFixed(0);
+          if (overlapArea > 200) { // significant overlap
+            warn('Hotspot Overlap', `[${id}] ${a.id} ↔ ${b.id} overlap ${overlapArea}px² (${pctA}%/${pctB}% of each)`, 'May cause wrong click target');
+          }
+        }
+      }
+    }
+    // If no overlaps found in this scene, pass
+    const objs2 = sc.objects.filter(o => !o._hidden);
+    let anyOverlap = false;
+    for (let i = 0; i < objs2.length && !anyOverlap; i++) {
+      for (let j = i + 1; j < objs2.length && !anyOverlap; j++) {
+        const a = objs2[i], b = objs2[j], pad = HOTSPOT_PAD;
+        const ox = Math.max(0, Math.min(a.x+a.w+pad, b.x+b.w+pad) - Math.max(a.x-pad, b.x-pad));
+        const oy = Math.max(0, Math.min(a.y+a.h+pad, b.y+b.h+pad) - Math.max(a.y-pad, b.y-pad));
+        if (ox * oy > 200) anyOverlap = true;
+      }
+    }
+    if (!anyOverlap) pass('Hotspot Overlap', `[${id}] No significant hotspot overlaps`);
+  }
+
+  // ============================================================
+  // 12. NPC-HOTSPOT ALIGNMENT
+  // ============================================================
+  // Verify NPC visual positions fall inside their clickable hotspot rectangles
+  if (npcChars) {
+    for (const [npcId, npc] of Object.entries(npcChars)) {
+      if (!npc.visible) continue;
+      const sc = scenes[npc.scene];
+      if (!sc || !sc.objects) continue;
+      // Find matching NPC hotspot (convention: npcId + '_npc' or just npcId)
+      const hotspot = sc.objects.find(o => o.id === npcId + '_npc' || o.id === npcId);
+      if (!hotspot) {
+        warn('NPC-Hotspot', `NPC ${npcId} in ${npc.scene} has no matching hotspot object`);
+        continue;
+      }
+      const inside = npc.x >= hotspot.x && npc.x <= hotspot.x + hotspot.w &&
+                     npc.y >= hotspot.y && npc.y <= hotspot.y + hotspot.h;
+      if (inside) {
+        pass('NPC-Hotspot', `NPC ${npcId} anchor (${npc.x},${npc.y.toFixed(0)}) is inside hotspot [${hotspot.x},${hotspot.y},${hotspot.w}x${hotspot.h}]`);
+      } else {
+        const dx = npc.x < hotspot.x ? hotspot.x - npc.x : npc.x > hotspot.x + hotspot.w ? npc.x - hotspot.x - hotspot.w : 0;
+        const dy = npc.y < hotspot.y ? hotspot.y - npc.y : npc.y > hotspot.y + hotspot.h ? npc.y - hotspot.y - hotspot.h : 0;
+        warn('NPC-Hotspot', `NPC ${npcId} anchor (${npc.x},${npc.y.toFixed(0)}) is ${Math.round(Math.sqrt(dx*dx+dy*dy))}px outside hotspot`, `Hotspot: [${hotspot.x},${hotspot.y},${hotspot.w}x${hotspot.h}]`);
+      }
+    }
+  }
+
+  // ============================================================
+  // RENDER RESULTS
+  // ============================================================
+  renderResults(allResults, passCount, failCount, warnCount);
+}
+
+function renderResults(results, passCount, failCount, warnCount) {
+  loadingEl.style.display = 'none';
+  resultsEl.style.display = 'block';
+
+  const totalCount = passCount + failCount + warnCount;
+
+  // Summary bar
+  let html = `
+    <div class="summary">
+      <div class="summary-item info"><div class="count">${totalCount}</div><div class="label">Total</div></div>
+      <div class="summary-item pass"><div class="count">${passCount}</div><div class="label">Passed</div></div>
+      <div class="summary-item fail"><div class="count">${failCount}</div><div class="label">Failed</div></div>
+      <div class="summary-item warn"><div class="count">${warnCount}</div><div class="label">Warnings</div></div>
+    </div>
+  `;
+
+  // Group by section
+  const sections = {};
+  for (const r of results) {
+    if (!sections[r.section]) sections[r.section] = [];
+    sections[r.section].push(r);
+  }
+
+  const sectionOrder = ['Scenes', 'Exits', 'Cutscenes', 'Scene-Cutscene Map', 'Images', 'Hitboxes', 'Progression', 'WalkLine Y', 'Walk-To', 'Hotspot Overlap', 'NPC-Hotspot', 'Summary'];
+
+  for (const sectionName of sectionOrder) {
+    const items = sections[sectionName];
+    if (!items) continue;
+
+    const sectionFails = items.filter(i => i.status === 'fail').length;
+    const sectionWarns = items.filter(i => i.status === 'warn').length;
+    const sectionPasses = items.filter(i => i.status === 'pass').length;
+    const statusBadge = sectionFails > 0
+      ? `<span class="status-fail">${sectionFails} FAIL</span>`
+      : sectionWarns > 0
+        ? `<span class="status-warn">${sectionWarns} WARN</span>`
+        : `<span class="status-pass">ALL PASS</span>`;
+
+    // Collapse passing sections by default if no failures
+    const collapsed = sectionFails === 0 && sectionWarns === 0;
+    const sectionId = sectionName.replace(/[^a-z]/gi, '_');
+
+    html += `
+      <div class="section">
+        <div class="section-header" onclick="toggleSection('${sectionId}')">
+          ${sectionName} (${items.length}) &mdash; ${statusBadge}
+          <span class="toggle" id="toggle-${sectionId}">${collapsed ? 'SHOW' : 'HIDE'}</span>
+        </div>
+        <div id="section-${sectionId}" class="${collapsed ? 'collapsed' : ''}">
+          <table>
+            <thead><tr><th style="width:70px">Status</th><th>Test</th><th>Detail</th></tr></thead>
+            <tbody>`;
+
+    for (const item of items) {
+      const statusClass = item.status === 'pass' ? 'status-pass' : item.status === 'fail' ? 'status-fail' : 'status-warn';
+      const statusText = item.status === 'pass' ? 'PASS' : item.status === 'fail' ? 'FAIL' : 'WARN';
+      html += `
+              <tr>
+                <td><span class="status ${statusClass}">${statusText}</span></td>
+                <td>${escHtml(item.test)}</td>
+                <td class="detail">${escHtml(item.detail)}</td>
+              </tr>`;
+    }
+
+    html += `
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  resultsEl.innerHTML = html;
+}
+
+function toggleSection(id) {
+  const el = document.getElementById('section-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  if (el.classList.contains('collapsed')) {
+    el.classList.remove('collapsed');
+    toggle.textContent = 'HIDE';
+  } else {
+    el.classList.add('collapsed');
+    toggle.textContent = 'SHOW';
+  }
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+</script>
+
+</body>
+</html>
