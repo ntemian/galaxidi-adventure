@@ -10552,6 +10552,13 @@ loadAllAssets().then(() => {
     if (tp.cutscene && cutscenes[tp.cutscene]) stPlayCutscene(tp.cutscene);
     else if (tp.scene && scenes[tp.scene]) stJumpScene(tp.scene);
   }
+  // ?map — debug shortcut: skip title/intro, boot straight into the travel map
+  if (new URLSearchParams(window.location.search).has('map')) {
+    stSetAllFlags(); stSetAllInv(); stMarkAllVisited();
+    stJumpScene('port');
+    state.mapOpen = true;
+    state.mapHover = null;
+  }
   requestAnimationFrame(gameLoop);
 });
 </script>
